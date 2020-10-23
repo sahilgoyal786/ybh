@@ -8,6 +8,8 @@ target 'YBH' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+
   target 'YBHTests' do
     inherit! :complete
     # Pods for testing

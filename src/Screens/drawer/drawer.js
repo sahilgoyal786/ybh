@@ -9,91 +9,63 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import storage from '../../components/apis/storage';
+import {AuthContext} from '../../common/AuthContext';
+
 const Drawer = () => {
   const navigation = useNavigation();
-
+  const {signOut} = React.useContext(AuthContext);
   return (
-    <View style={{backgroundColor:'blue',flex:1}}>
-     <BackgroundImage source={menuubackground}> 
-
-      <MainView>
-        <View>
-          <FirstView>
-            <ImagesView
-              source={image8}
-              initHeight="70"
-              initWidth="70"
-              borderRadius={50}
-            />
-          </FirstView>
-        </View>
-        <ThirdView>
-          <UserNameText>Abigail Akon</UserNameText>
-        </ThirdView>
-      </MainView>
-      <MainThirdView>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('GetAdvice');
-          }}>
-          <Text
-            style={{
-              fontSize: 18,
-              color: '#FFFFFF',
-              fontWeight: '400',
-              fontFamily: 'FuturaPT-Light',
+    <View style={{backgroundColor: 'blue', flex: 1}}>
+      <BackgroundImage source={menuubackground}>
+        <MainView>
+          <View>
+            <FirstView>
+              <ImagesView
+                source={image8}
+                initHeight="70"
+                initWidth="70"
+                borderRadius={50}
+              />
+            </FirstView>
+          </View>
+          <ThirdView>
+            <UserNameText>Abigail Akon</UserNameText>
+          </ThirdView>
+        </MainView>
+        <MainThirdView>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('GetAdvice');
             }}>
-            Home
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('ShareImage');
-          }}>
-          <PageText>Share Image</PageText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('GetAdvice2');
-          }}>
-          <PageText>Get Advice</PageText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('RelationMeter');
-          }}>
-          <PageText>Relationship Meter</PageText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('TriviaSec');
-          }}>
-          <PageText>Trivia</PageText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Thrive');
-          }}>
-          <PageText>Thrive</PageText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Profile');
-          }}>
-          <PageText>My Profile</PageText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('MyPhotos');
-          }}>
-          <PageText>My Photos</PageText>
-        </TouchableOpacity>
-        {/* <PageText>Setting</PageText> */}
-        <PageText>Logout</PageText>
-      </MainThirdView>
+            <Text
+              style={{
+                fontSize: 18,
+                color: '#FFFFFF',
+                fontWeight: '400',
+                fontFamily: 'FuturaPT-Light',
+              }}>
+              Home
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Profile');
+            }}>
+            <PageText>My Profile</PageText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('MyPhotos');
+            }}>
+            <PageText>My Photos</PageText>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => signOut()}>
+            <PageText>Logout</PageText>
+          </TouchableOpacity>
+        </MainThirdView>
       </BackgroundImage>
     </View>
-
   );
 };
 const BackgroundImage = styled(ImageBackground)({

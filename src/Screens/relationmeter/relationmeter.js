@@ -9,8 +9,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import RNSpeedometer from '../../components/speedometer/index';
-import {stick, menu,headerView,
-  botomView,} from '../../common/images';
+import {
+  stick,
+  menu,
+  headerView,
+  botomView,
+  bottomCurve,
+} from '../../common/images';
 import {
   widthPercentageToDP,
   heightPercentageToDP,
@@ -27,18 +32,30 @@ import Header from '../../components/header';
 const RelationMeter = () => {
   const navigation = useNavigation();
 
-  return (   
-    <View >
-        <Header title="Love Meter" backButton="true" />
-        <BackgroundImage source={botomView}>
-        <View  style={{ flex:Platform.OS === 'ios' ? 1 : .69}}>
-            <ScrollView >
+  return (
+    <View style={{flex: 1}}>
+      <Image
+        source={bottomCurve}
+        style={{
+          width: widthPercentageToDP(100),
+          height: 200,
+          position: 'absolute',
+          bottom: -100,
+        }}
+        resizeMode="contain"></Image>
+      <Header title="Love Meter" />
+      <ScrollView
+        alwaysBounceHorizontal={false}
+        alwaysBounceVertical={false}
+        bounces={false}
+        style={{paddingTop: 20}}
+        contentContainerStyle={{paddingBottom: 60}}>
         <View>
-          <RNSpeedometer needleImage={stick} value={20} size={400} />
+          <RNSpeedometer needleImage={stick} value={100} size={400} />
         </View>
         <ViewSec
           style={{
-            marginTop: heightPercentageToDP(14),
+            marginTop: heightPercentageToDP(1),
           }}>
           <ViewNumber>
             <OneText>1</OneText>
@@ -61,12 +78,8 @@ const RelationMeter = () => {
             <AgreeText>No</AgreeText>
           </NoView>
         </ContainerView>
-       
-        </ScrollView>
-        </View>
-       </BackgroundImage>
-      </View>
-    
+      </ScrollView>
+    </View>
   );
 };
 const OneText = styled(Text)({
@@ -79,7 +92,6 @@ const ContainerView = styled(View)({
   alignItems: 'center',
   alignSelf: 'center',
   marginTop: heightPercentageToDP(3),
-
 });
 const YesView = styled(View)({
   backgroundColor: '#0BC677',
@@ -140,14 +152,12 @@ const WelcomeView = styled(View)({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginTop: "-14%",
-  marginLeft:15
+  marginTop: '-14%',
+  marginLeft: 15,
 });
 const BackgroundImage = styled(ImageBackground)({
-
- height:Platform.OS === 'ios' ? '87%' : '100%' ,
- bottom:0,
- marginTop:50,
-
+  height: Platform.OS === 'ios' ? '87%' : '100%',
+  bottom: 0,
+  marginTop: 50,
 });
 export default RelationMeter;

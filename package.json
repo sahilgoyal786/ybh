@@ -11,14 +11,18 @@
     "app-build": "cd ./android && rm -rf app/src/main/res/drawable* && ./gradlew app:assembleRelease"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/bottom-tabs": "^5.8.0",
     "@react-navigation/drawer": "^5.9.0",
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.0",
-    "formik": "^2.1.5",
+    "axios": "^0.20.0",
+    "expo": "^39.0.3",
+    "formik": "^2.2.0",
     "native-base": "^2.13.14",
     "react": "16.13.1",
+    "react-dom": "^16.14.0",
     "react-native": "0.63.2",
     "react-native-draggable-grid": "^2.1.2",
     "react-native-elements": "^2.3.2",
@@ -34,9 +38,12 @@
     "react-native-screens": "^2.10.1",
     "react-native-simple-dialogs": "^1.3.0",
     "react-native-snap-carousel": "^3.9.1",
+    "react-native-storage": "^1.0.1",
+    "react-native-web": "~0.11",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "styled-components": "^5.2.0",
+    "yarn": "^1.22.10",
     "yup": "^0.29.3"
   },
   "devDependencies": {

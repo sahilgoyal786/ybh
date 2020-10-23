@@ -37,6 +37,7 @@ export const image12 = require('../assets/icons/img5.png');
 export const image13 = require('../assets/icons/img6.png');
 export const image14 = require('../assets/icons/img7.png');
 export const blogimg = require('../assets/icons/blogoCard.png');
+export const bottomCurve = require('../assets/icons/bottom-curb.png');
 export const image15 = require('../assets/icons/img8.png');
 export const bottomadd = require('../assets/icons/bottom-add-banner.png');
 export const signupsec = require('../assets/icons/login-screen-bgone.png');
@@ -94,9 +95,4 @@ export const sync = require('../assets/icons/sync.png');
 export const dryclnradio = require('../assets/icons/dry-clean.png');
 export const radioon = require('../assets/icons/radio-on-button.png');
 
-
-export const bottomtabshome = require('../assets/icons/bottomtab-selectedhome.png');
-export const bottomtabcamera = require('../assets/icons/bottomtab-selectedcamera.png');
-export const bottomtabsadvice = require('../assets/icons/bottomtab-selectedadvice.png');
-export const bottomtabsmeter = require('../assets/icons/bottomtab-selectedmeter.png');
-export const bottomtabstrivia = require('../assets/icons/bottomtab-selectedtrivia.png');
+export const selectedTabCurve = require('../assets/icons/bottomtab-selected.png');

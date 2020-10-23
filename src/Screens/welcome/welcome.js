@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {Component} from 'react';
 import {
   Text,
   StyleSheet,
   View,
   ImageBackground,
+  ActivityIndicator,
   // TouchableOpacity,
 } from 'react-native';
 import {background, slider1, slider2, slider3} from '../../common/images';
@@ -14,48 +15,47 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {White} from '../../common/colors';
 import {LightPink} from '../../common/colors';
-import {Yellow} from '../../common/colors';
 import {Purple} from '../../common/colors';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import ResponsiveImage from 'react-native-responsive-image';
 import {useNavigation} from '@react-navigation/native';
 import {FlatList} from 'react-native-gesture-handler';
-const Welcome = () => {
-  const [Tab, setTab] = useState(0);
-  const navigation = useNavigation();
-  const data = [
+import storage from '../../components/apis/storage';
+import network from '../../components/apis/network';
+class Welcome extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      Tab: 0,
+      // tokenCheck: false,
+    };
+    // this.checkToken();
+  }
+  // checkToken = () => {};
+  data = [
     {
       image: slider1,
-      // description:
-      //   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.',
     },
     {
       image: slider2,
-      // description:
-      //   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.',
     },
     {
       image: slider3,
-      // description:
-      //   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore .',
     },
   ];
-  const _renderItemWithParallax = ({item, index}) => {
+  _renderItemWithParallax = ({item, index}) => {
     return (
       <View style={[styles.slide]}>
         <ResponsiveImage
           source={item.image}
           initHeight="300"
           initWidth="400"
-          borderRadius={15}
-        >
-        </ResponsiveImage>
+          borderRadius={15}></ResponsiveImage>
         <Text
           style={{
-            fontfamily: 'Futura-Medium',
+            fontFamily: 'Futura-Medium',
             color: 'white',
             textAlign: 'center',
             width: wp(80),
@@ -65,13 +65,14 @@ const Welcome = () => {
       </View>
     );
   };
-  const _renderDots = (activeIndex, total, context) => {
-    console.log(total, 'total', activeIndex);
+  _renderDots = (activeIndex, total, context) => {
+    // console.log(total, 'total', activeIndex);
     return (
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <FlatList
-          data={data}
+          data={this.data}
           horizontal
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
             const value =
               index === activeIndex
@@ -79,6 +80,7 @@ const Welcome = () => {
                 : ['rgba(255,0,0,0)', 'rgba(255,0,0,0)'];
             return (
               <LinearGradient
+                key={index}
                 style={{
                   height: 12,
                   width: 12,
@@ -98,55 +100,63 @@ const Welcome = () => {
       </View>
     );
   };
-  return (
-    <BackgroundImage source={background}>
-      <SafeAreaView style={{flex: 1}}>
-        <Top>
-          <Carousel
-            autoplay
-            loop
-            data={data}
-            renderItem={_renderItemWithParallax}
-            sliderWidth={wp(100)}
-            itemWidth={wp(100)}
-            hasParallaxImages={true}
-            inactiveSlideScale={0.94}
-            containerCustomStyle={styles.slider}
-            onSnapToItem={(index) => setTab(index)}
-            layout={'default'}
-            layoutCardOffset={'10'}
-          />
-          <Pagination
-            dotsLength={data.length}
-            activeDotIndex={Tab}
-            // containerStyle={styles.dotContainerStyle}
-            // dotStyle={styles.activeDotStyle}
-            // inactiveDotStyle={styles.InactiveDotStyle}
-            // inactiveDotOpacity={1}
-            // inactiveDotScale={0.6}
-            renderDots={_renderDots}
-          />
-        </Top>
-        <Bottom>
-          <Button
-            style={{fontfamily: 'Futura-Medium'}}
-            onPress={() => {
-              navigation.navigate('Signup');
-            }}
-            name={'Sign up'}
-            linear
-          />
-          <Button
-            name={'Login'}
-            onPress={() => {
-              navigation.navigate('Login');
-            }}
-          />
-        </Bottom>
-      </SafeAreaView>
-    </BackgroundImage>
-  );
-};
+  render() {
+    const {navigation} = this.props;
+    return (
+      <BackgroundImage source={background}>
+        <SafeAreaView style={{flex: 1}}>
+          <Top>
+            <Carousel
+              autoplay
+              loop
+              data={this.data}
+              renderItem={this._renderItemWithParallax}
+              sliderWidth={wp(100)}
+              itemWidth={wp(100)}
+              hasParallaxImages={true}
+              inactiveSlideScale={0.94}
+              containerCustomStyle={styles.slider}
+              onSnapToItem={(index) => this.setState({Tab: index})}
+              layout={'default'}
+              layoutCardOffset={10}
+            />
+            <Pagination
+              dotsLength={this.data.length}
+              activeDotIndex={this.state.Tab}
+              renderDots={this._renderDots}
+            />
+            {/* {!this.state.tokenCheck && (
+              <ActivityIndicator
+                size="large"
+                animating={true}
+                color="#FFF"
+                style={{marginTop: 120}}
+              />
+            )} */}
+          </Top>
+          {/* {this.state.tokenCheck && ( */}
+          <Bottom>
+            <Button
+              style={{fontfamily: 'Futura-Medium'}}
+              onPress={() => {
+                navigation.navigate('Signup');
+              }}
+              name={'Sign up'}
+              linear
+            />
+            <Button
+              name={'Login'}
+              onPress={() => {
+                navigation.navigate('Login');
+              }}
+            />
+          </Bottom>
+          {/* )} */}
+        </SafeAreaView>
+      </BackgroundImage>
+    );
+  }
+}
 const BackgroundImage = styled(ImageBackground)({
   flex: 1,
 });
@@ -189,4 +199,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Welcome;
+// Wrap and export
+export default function (props) {
+  const navigation = useNavigation();
+
+  return <Welcome {...props} navigation={navigation} />;
+}

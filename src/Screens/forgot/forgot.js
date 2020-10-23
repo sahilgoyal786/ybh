@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {useState, useEffect} from 'react';
 
-import {loginbackground} from '../../common/images';
+import {loginbackground, signupsec} from '../../common/images';
 import {iconchecked} from '../../common/images';
 
 import {unchecked} from '../../common/images';
@@ -27,10 +27,11 @@ import {CheckBox} from 'react-native-elements';
 import ResponsiveImage from 'react-native-responsive-image';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation} from '@react-navigation/native';
-import { menu, image8, backicon, editprofile } from '../../common/images';
+import {menu, image8, backicon, editprofile} from '../../common/images';
 const BackIcon = styled(ResponsiveImage)({
   fontSize: 12,
-  marginTop:30,marginLeft:10
+  marginTop: 30,
+  marginLeft: 10,
 });
 
 const Forgot = () => {
@@ -38,18 +39,18 @@ const Forgot = () => {
 
   const [checked, setChecked] = useState(false);
   return (
-    <BackgroundImage source={loginbackground}>
+    <BackgroundImage source={signupsec}>
       <SafeAreaView style={{flex: 1}}>
         <KeyboardAwareScrollView
           contentContainerStyle={{flex: 1}}
           showsVerticalScrollIndicator={false}>
-<TouchableOpacity
-                onPress={() => {
-                  //navigation.goBack()
-                  navigation.navigate('Login')
-                }}>
-<BackIcon source={backicon} initHeight="16" initWidth="16" />
-</TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              //navigation.goBack()
+              navigation.navigate('Login');
+            }}>
+            <BackIcon source={backicon} initHeight="16" initWidth="16" />
+          </TouchableOpacity>
           <Top>
             <Bottom>FORGOT</Bottom>
             <Bottom>PASSWORD</Bottom>
@@ -98,8 +99,8 @@ const BackgroundImage = styled(ImageBackground)({
   flex: 1,
 });
 const Top = styled(View)({
-  flex: 0.26,
-  marginLeft: wp(8.9),
+  flex: 0.22,
+  marginLeft: wp(8),
   justifyContent: 'flex-end',
 });
 const Bottom = styled(Text)({

@@ -29,7 +29,6 @@ export default StyleSheet.create({
   // },
   imageWrapper: {
     position: 'absolute',
-    left: 0,
     zIndex: 10,
   },
   image: {

@@ -20,7 +20,6 @@
 // import {useNavigation, DrawerActions} from '@react-navigation/native';
 // import ResponsiveImage from 'react-native-responsive-image';
 
-
 // const VotingPage = () => {
 //   const navigation = useNavigation();
 //   const pan = useRef(new Animated.ValueXY()).current;
@@ -215,9 +214,12 @@
 
 // export default VotingPage;
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
-  headerView, menu, vtngpage4, vtngbtn,
+  headerView,
+  menu,
+  vtngpage4,
+  vtngbtn,
   image1,
   image2,
   image3,
@@ -225,31 +227,33 @@ import {
   image5,
   image6,
   image7,
-  image8
+  image8,
 } from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
-
 } from 'react-native-responsive-screen';
-
-
 
 import {
   StyleSheet,
-  View, Text, TouchableOpacity, ScrollView,
-  ImageBackground, Image, Platform, Dimensions
-} from 'react-native'
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  ImageBackground,
+  Image,
+  Platform,
+  Dimensions,
+} from 'react-native';
 //import { Image } from 'native-base';
-import { DraggableGrid } from 'react-native-draggable-grid';
-import { useNavigation, DrawerActions } from '@react-navigation/native';
+import {DraggableGrid} from 'react-native-draggable-grid';
+import {useNavigation, DrawerActions} from '@react-navigation/native';
 import Button from '../../components/button';
 import Header from '../../components/header';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
 
 const BackgroundImage = styled(ImageBackground)({
   height: Platform.OS === 'ios' ? '89%' : '100%',
@@ -280,38 +284,105 @@ class VotingPage extends React.Component {
 
     this.state = {
       data: [
+        {name: image1, key: '1', hideView: true},
+        {
+          name: '',
+          key: '2',
+          disabledDrag: true,
+          disabledReSorted: true,
+          hideView: false,
+        },
+        {
+          name: '',
+          key: '3',
+          disabledDrag: true,
+          disabledReSorted: true,
+          hideView: false,
+        },
+        {
+          name: '',
+          key: '4',
+          disabledDrag: true,
+          disabledReSorted: true,
+          hideView: false,
+        },
 
-        { name: image1, key: '1',hideView: true },
-        { name: '', key: '2' ,disabledDrag: true, disabledReSorted: true,hideView: false},
-        { name: '', key: '3',disabledDrag: true, disabledReSorted: true,hideView: false },
-        { name: '', key: '4' ,disabledDrag: true, disabledReSorted: true,hideView: false},
+        {name: image2, key: '6', hideView: true},
+        {name: image3, key: '7', hideView: true},
+        {
+          name: '',
+          key: '8',
+          disabledDrag: true,
+          disabledReSorted: true,
+          hideView: false,
+        },
+        {
+          name: '',
+          key: '9',
+          disabledDrag: true,
+          disabledReSorted: true,
+          hideView: false,
+        },
 
-        { name: image2, key: '6',hideView: true },
-        { name: image3, key: '7',hideView: true },
-        { name: '', key: '8',disabledDrag: true, disabledReSorted: true ,hideView: false},
-        { name: '', key: '9',disabledDrag: true, disabledReSorted: true ,hideView: false},
+        {
+          name: '',
+          key: '10',
+          disabledDrag: true,
+          disabledReSorted: true,
+          hideView: false,
+        },
+        {name: image4, key: '11', hideView: true},
+        {name: image5, key: '12', hideView: true},
+        {
+          name: '',
+          key: '13',
+          disabledDrag: true,
+          disabledReSorted: true,
+          hideView: false,
+        },
 
-        { name: '', key: '10', disabledDrag: true, disabledReSorted: true,hideView: false},
-        { name: image4, key: '11' ,hideView: true},
-        { name: image5, key: '12' ,hideView: true},
-        { name: '', key: '13' ,disabledDrag: true, disabledReSorted: true,hideView: false},
+        {
+          name: '',
+          key: '14',
+          disabledDrag: true,
+          disabledReSorted: true,
+          hideView: false,
+        },
+        {
+          name: '',
+          key: '15',
+          disabledDrag: true,
+          disabledReSorted: true,
+          hideView: false,
+        },
+        {name: image6, key: '16', hideView: true},
+        {name: image7, key: '17', hideView: true},
 
-
-        { name: '', key: '14',disabledDrag: true, disabledReSorted: true ,hideView: false},
-        { name: '', key: '15',disabledDrag: true, disabledReSorted: true ,hideView: false},
-        { name: image6, key: '16',hideView: true },
-        { name: image7, key: '17',hideView: true },
-
-        { name: '', key: '18',disabledDrag: true, disabledReSorted: true ,hideView: false},
-        { name: '', key: '19',disabledDrag: true, disabledReSorted: true ,hideView: false},
-        { name: '', key: '20',disabledDrag: true, disabledReSorted: true ,hideView: false},
-        { name: image8, key: '21',hideView: true },
-
+        {
+          name: '',
+          key: '18',
+          disabledDrag: true,
+          disabledReSorted: true,
+          hideView: false,
+        },
+        {
+          name: '',
+          key: '19',
+          disabledDrag: true,
+          disabledReSorted: true,
+          hideView: false,
+        },
+        {
+          name: '',
+          key: '20',
+          disabledDrag: true,
+          disabledReSorted: true,
+          hideView: false,
+        },
+        {name: image8, key: '21', hideView: true},
       ],
-
-    }
+    };
   }
-
 
   render_item(item) {
     return (
@@ -320,44 +391,58 @@ class VotingPage extends React.Component {
       //   justifyContent: 'center',
       //   alignItems: 'center',
       // }} />
-      item.hideView === false ?
-        <View  style={{
-          height: widthPercentageToDP(25)-5, width: widthPercentageToDP(25)-5,
-          justifyContent: 'center',backgroundColor:'transparent',
-          alignItems: 'center',
-        }}  /> :
-        <Image source={item.name} style={{
-          height: widthPercentageToDP(25)-5, width: widthPercentageToDP(25)-5,
-          justifyContent: 'center', resizeMode: 'contain',
-          alignItems: 'center',
-        }} />
-
-      
-      
-
+      item.hideView === false ? (
+        <View
+          style={{
+            height: widthPercentageToDP(25) - 5,
+            width: widthPercentageToDP(25) - 5,
+            justifyContent: 'center',
+            backgroundColor: 'transparent',
+            alignItems: 'center',
+          }}
+        />
+      ) : (
+        <Image
+          source={item.name}
+          style={{
+            height: widthPercentageToDP(25) - 5,
+            width: widthPercentageToDP(25) - 5,
+            justifyContent: 'center',
+            resizeMode: 'contain',
+            alignItems: 'center',
+          }}
+        />
+      )
     );
   }
   render() {
-    const { navigation } = this.props;
+    const {navigation} = this.props;
     return (
-      <View >
+      <View>
         <Header title="Voting Page" backButton="true" />
-        <View style={{ marginTop: 10, height: (heightPercentageToDP(100) - 330), paddingLeft: 10, paddingRight: 10 }}>
-            <DraggableGrid
-              numColumns={4}
-              renderItem={this.render_item}
-              onDragStart={this.onDragStart}
-              data={this.state.data}
-              onDragRelease={(data) => {
-                this.setState({ data });// need reset the props data sort after drag release
-              }}
-            />
+        <View
+          style={{
+            marginTop: 10,
+            height: heightPercentageToDP(100) - 330,
+            paddingLeft: 10,
+            paddingRight: 10,
+          }}>
+          <DraggableGrid
+            numColumns={4}
+            renderItem={this.render_item}
+            onDragStart={this.onDragStart}
+            data={this.state.data}
+            onDragRelease={(data) => {
+              this.setState({data}); // need reset the props data sort after drag release
+            }}
+          />
         </View>
 
-        <View style={{
-          paddingLeft: 40,
-          position: 'relative',
-        }}>
+        <View
+          style={{
+            paddingLeft: 40,
+            position: 'relative',
+          }}>
           <ImagesView
             style={{
               marginLeft: -widthPercentageToDP(8),
@@ -368,11 +453,9 @@ class VotingPage extends React.Component {
             initWidth="140"
             borderRadius={5}
           />
-
         </View>
-
       </View>
-    )
+    );
   }
 }
 
@@ -395,7 +478,6 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red',
     // justifyContent: 'center',
     // alignItems: 'center',
-
     // borderTopEndRadius: 60,
     // borderBottomEndRadius: 100,
   },
@@ -403,6 +485,6 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: '#FFFFFF',
   },
-})
+});
 
 export default VotingPage;

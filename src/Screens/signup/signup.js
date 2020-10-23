@@ -4,6 +4,7 @@ import {signupslider1, signupslider2} from '../../common/images';
 import styled from 'styled-components/native';
 import Button from '../../components/button';
 import LinearGradient from 'react-native-linear-gradient';
+import * as yup from 'yup';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -18,8 +19,13 @@ import ResponsiveImage from 'react-native-responsive-image';
 import {useNavigation} from '@react-navigation/native';
 import {signupsec} from '../../common/images';
 import {TextInput, ScrollView} from 'react-native-gesture-handler';
-import {Input, Item, Label} from 'native-base';
+import {Input, Item, Label, Toast} from 'native-base';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
+import {Formik} from 'formik';
+import network from '../../components/apis/network';
+import storage from '../../components/apis/storage';
+import {SignupValidationSchema} from '../../common/validations';
+
 const Signup = () => {
   const [Tab, setTab] = useState(0);
   const navigation = useNavigation();
@@ -41,13 +47,13 @@ const Signup = () => {
       </View>
     );
   };
-  const _renderDots = (activeIndex, total, context) => {
-    console.log(total, 'total', activeIndex);
+  const _renderDots = (activeIndex) => {
     return (
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <FlatList
           data={data}
           horizontal
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
             const value =
               index === activeIndex
@@ -62,6 +68,8 @@ const Signup = () => {
                         width: 10,
                         borderRadius: 10,
                         marginLeft: wp(0.5),
+                        borderWidth: 1,
+                        borderColor: 'transparent',
                       }
                     : {
                         borderColor: 'lightgray',
@@ -104,56 +112,119 @@ const Signup = () => {
             sliderWidth={wp(100)}
             itemWidth={wp(100)}
             hasParallaxImages={true}
-            inactiveSlideScale={0.94}
+            inactiveSlideScale={0.4}
             containerCustomStyle={styles.slider}
             onSnapToItem={(index) => setTab(index)}
             layout={'default'}
-            layoutCardOffset={'10'}
+            layoutCardOffset={10}
           />
           <Pagination
             dotsLength={data.length}
             activeDotIndex={Tab}
-            // containerStyle={styles.dotContainerStyle}
-            // dotStyle={styles.activeDotStyle}
-            // inactiveDotStyle={styles.InactiveDotStyle}
-            // inactiveDotOpacity={1}
-            // inactiveDotScale={0.6}
             renderDots={_renderDots}
           />
         </TopSec>
 
-        <TextInputView>
-          <Input
-            placeholder={'USER NAME'}
-            placeholderTextColor="#484848"
-            style={{fontFamily: 'Futura-Medium'}}
-          />
-        </TextInputView>
-        <TextInputView>
-          <Input
-            placeholder={'EMAIL'}
-            placeholderTextColor="#484848"
-            keyboardType={'email-address'}
-            style={{fontFamily: 'Futura-Medium'}}
-          />
-        </TextInputView>
-        <EmailVerText>
-          Make sure is a valid email because we will be sending verification
-          link.
-        </EmailVerText>
-        <TextInputView>
-          <Input
-            placeholder={'PASSWORD'}
-            secureTextEntry={true}
-            placeholderTextColor="#484848"
-            style={{fontFamily: 'FuturaPT-Medium'}}
-          />
-        </TextInputView>
-        <Button
-          style={{width: wp(78), marginTop: hp(4), alignSelf: 'center'}}
-          name={'Sign up'}
-          linear
-        />
+        <Formik
+          initialValues={{
+            name: 'Sahil',
+            email: 'sahil@32bitsolutions.com',
+            password: '123456789',
+          }}
+          onSubmit={(values) => {
+            values.password_confirmation = values.password;
+            console.log(values);
+            network.getResponse(
+              'register',
+              'POST',
+              values,
+              (response) => {
+                Toast.show({
+                  text:
+                    "Awesome, just click on the verification link in the email and you'll be all set.",
+                  duration: 5000,
+                });
+              },
+              (response) => {
+                if (response.response.data.errors) {
+                  errors = response.response.data.errors;
+                  // console.log(errors);
+                  for (const key in errors) {
+                    if (errors.hasOwnProperty(key)) {
+                      const element = errors[key];
+                      Toast.show({text: element[0]});
+                    }
+                  }
+                }
+              },
+            );
+          }}
+          validationSchema={SignupValidationSchema}
+          validateOnChange={true}>
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+            isValid,
+          }) => (
+            <View>
+              <TextInputView>
+                <TextInput
+                  name="name"
+                  placeholder="YOUR NAME"
+                  placeholderTextColor="#484848"
+                  onChangeText={handleChange('name')}
+                  onBlur={handleBlur('name')}
+                  value={values.name}
+                  style={{fontFamily: 'Futura-Medium', flex: 1}}
+                />
+              </TextInputView>
+              {errors.name && touched.name && (
+                <Text style={styles.error_message}>{errors.name}</Text>
+              )}
+              <TextInputView>
+                <TextInput
+                  name="email"
+                  placeholder="EMAIL"
+                  placeholderTextColor="#484848"
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                  keyboardType="email-address"
+                  style={{fontFamily: 'Futura-Medium', flex: 1}}
+                />
+              </TextInputView>
+              {errors.email && touched.email && (
+                <Text style={styles.error_message}>{errors.email}</Text>
+              )}
+              <TextInputView>
+                <TextInput
+                  name="password"
+                  placeholder={'PASSWORD'}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                  secureTextEntry={true}
+                  placeholderTextColor="#484848"
+                  style={{fontFamily: 'FuturaPT-Medium', flex: 1}}
+                />
+              </TextInputView>
+              {errors.password && touched.password && (
+                <Text style={styles.error_message}>{errors.password}</Text>
+              )}
+              <Button
+                style={{width: wp(78), marginTop: hp(4), alignSelf: 'center'}}
+                name={'Sign up'}
+                onPress={handleSubmit}
+                disabled={!isValid}
+                linear
+              />
+            </View>
+          )}
+        </Formik>
         <AlreadyAccountText>
           Already have an account?{' '}
           <AlreadyAccountText
@@ -190,10 +261,11 @@ const TopSec = styled.View({
   // justifyContent: 'center',
   alignItems: 'center',
 });
-const TextInputView = styled(Item)({
+const TextInputView = styled(View)({
   width: wp(78),
   alignSelf: 'center',
-  borderWidth: 2,
+  borderWidth: 0,
+  borderBottomWidth: 1,
   borderColor: '#000',
   marginTop: hp(1),
 });
@@ -214,6 +286,13 @@ const AlreadyAccountText = styled.Text({
   fontFamily: 'FuturaPT-Light',
 });
 const styles = StyleSheet.create({
+  error_message: {
+    fontSize: 10,
+    color: 'red',
+    width: '100%',
+    marginTop: 5,
+    marginBottom: 10,
+  },
   slider: {
     flexGrow: 0,
   },

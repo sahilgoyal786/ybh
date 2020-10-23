@@ -10,9 +10,6 @@ import {
 import {useState, useEffect} from 'react';
 
 import {signupsec} from '../../common/images';
-import {iconchecked} from '../../common/images';
-
-import {unchecked} from '../../common/images';
 
 import styled from 'styled-components/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -20,18 +17,18 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {White} from '../../common/colors';
 import Button from '../../components/button';
 import {Formik} from 'formik';
-import {CheckBox} from 'react-native-elements';
 import ResponsiveImage from 'react-native-responsive-image';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation} from '@react-navigation/native';
+import {LoginValidationSchema} from '../../common/validations';
+import {AuthContext} from '../../common/AuthContext';
 
 const Login = () => {
   const navigation = useNavigation();
+  const {signIn} = React.useContext(AuthContext);
 
-  const [checked, setChecked] = useState(false);
   return (
     <BackgroundImage source={signupsec}>
       <SafeAreaView style={{flex: 1}}>
@@ -43,8 +40,14 @@ const Login = () => {
             <Discrip>Enter Your User Name and Password</Discrip>
           </Top>
           <Formik
-            initialValues={{email: ''}}
-            onSubmit={(values) => console.log(values)}>
+            initialValues={{
+              email: 'sahilgoyal1@gmail.com',
+              password: 'sahilgoyal1@gmail.com',
+            }}
+            validationSchema={LoginValidationSchema}
+            onSubmit={(values) => {
+              signIn(values);
+            }}>
             {({handleChange, handleBlur, handleSubmit, values}) => (
               <SigninButton>
                 <TextInput
@@ -53,24 +56,25 @@ const Login = () => {
                   value={values.email}
                   placeholder="USER NAME"
                   placeholderTextColor="#484848"
+                  autoCapitalize="none"
                   style={styles.userName}
                 />
                 <TextInput
-                 // onChangeText={handleChange('email')}
-                 // onBlur={handleBlur('email')}
+                  // onChangeText={handleChange('email')}
+                  // onBlur={handleBlur('email')}
                   value={values.pass}
                   placeholder="PASSWORD"
                   secureTextEntry={true}
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
-                  value={values.email}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
                   placeholder="PASSWORD"
                   placeholderTextColor="#484848"
                   style={styles.PassTyle}
                 />
 
                 <MainView>
-                  <CheckBox
+                  {/* <CheckBox
                     title="keep me sign in"
                     checkedIcon={
                       <Checkicons
@@ -89,7 +93,7 @@ const Login = () => {
                     checked={checked}
                     onPress={() => setChecked(!checked)}
                     containerStyle={styles.containerchecked}
-                  />
+                  /> */}
                   <TouchableOpacity
                     style={styles.fogot}
                     onPress={() => {
@@ -100,9 +104,10 @@ const Login = () => {
                 </MainView>
 
                 <Button
-                  onPress={() => {
-                    navigation.navigate('Welcomeuser');
-                  }}
+                  onPress={handleSubmit}
+                  // onPress={() => {
+                  //   navigation.navigate('Welcomeuser');
+                  // }}
                   style={styles.loginbuttin}
                   name={'Login'}
                   linear
@@ -155,10 +160,10 @@ const SigninButton = styled.View({
 });
 const MainView = styled.View({
   flexDirection: 'row',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-end',
   width: wp(87),
   alignSelf: 'center',
-  marginTop: hp(1.3),
+  marginTop: hp(3),
 });
 const Checkicons = styled(ResponsiveImage)({
   tintColor: '#000',

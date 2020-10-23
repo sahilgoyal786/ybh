@@ -63,7 +63,7 @@ class Speedometer extends Component {
 
     const rotate = this.speedometerValue.interpolate({
       inputRange: [minValue, maxValue],
-      outputRange: ['-90deg', '90deg'],
+      outputRange: ['0deg', '180deg'],
     });
 
     const currentSize = validateSize(size, deviceWidth - 20);
@@ -85,50 +85,27 @@ class Speedometer extends Component {
               height: currentSize,
               borderTopLeftRadius: currentSize / 2,
               borderTopRightRadius: currentSize / 2,
-              marginTop: 50,
+              marginTop: 0,
             },
             outerCircleStyle,
           ]}>
-          {/* {labels.map((level, index) => {
-            const circleDegree = 90 + index * perLevelDegree;
-            return (
-              <View
-                key={level.name}
-                style={[
-                  style.halfCircle,
-                  {
-                    backgroundColor: level.activeBarColor,
-                    width: currentSize / 2,
-                    height: currentSize,
-                    borderRadius: currentSize / 2,
-                    transform: [
-                      {translateX: currentSize / 4},
-                      {rotate: `${circleDegree}deg`},
-                      {translateX: (currentSize / 4) * -1},
-                    ],
-                  },
-                  halfCircleStyle,
-                ]}
-              />
-            );
-          })} */}
           <Animated.View
             style={[
               style.imageWrapper,
               {
-                top: heightPercentageToDP(13),
-                left: widthPercentageToDP(41.5),
+                // left: widthPercentageToDP(50),
+                top: widthPercentageToDP(39),
                 alignSelf: 'center',
                 transform: [{rotate}],
               },
-              imageWrapperStyle,
             ]}>
             <Image
+              resizeMode="contain"
               style={[
                 style.image,
                 {
-                  width: 65,
-                  height: 78,
+                  width: widthPercentageToDP(35),
+                  height: 26,
                 },
                 imageStyle,
               ]}
@@ -140,7 +117,6 @@ class Speedometer extends Component {
               alignSelf: 'center',
             }}>
             <ResponsiveImage
-              // style={{marginTop: 300, background: 'red'}}
               source={meterbase}
               initHeight="180"
               initWidth="370"
@@ -159,27 +135,6 @@ class Speedometer extends Component {
             ]}
           />
         </View>
-        {/* <View>
-          <ResponsiveImage
-            // style={{marginTop: 300, background: 'red'}}
-            source={meterbase}
-            initHeight="170"
-            initWidth="350"
-          />
-        </View> */}
-        {/* <View style={[style.labelWrapper, labelWrapperStyle]}>
-          <Text style={[style.label, labelStyle]}>
-            {limitValue(value, minValue, maxValue, allowedDecimals)}
-          </Text>
-          <Text
-            style={[
-              style.labelNote,
-              {color: label.labelColor},
-              labelNoteStyle,
-            ]}>
-            {label.name}
-          </Text>
-        </View> */}
       </View>
     );
   }

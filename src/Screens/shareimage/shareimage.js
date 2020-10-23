@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {Text, SafeAreaView, View, ImageBackground,Dimensions,StyleSheet,Image} from 'react-native';
+import {
+  Text,
+  SafeAreaView,
+  View,
+  ImageBackground,
+  Dimensions,
+  StyleSheet,
+  Image,
+} from 'react-native';
 import styled from 'styled-components/native';
 
 import ResponsiveImage from 'react-native-responsive-image';
@@ -28,6 +36,7 @@ import {
   iconchecked,
   unchecked,
   photoworld,
+  bottomCurve,
 } from '../../common/images';
 import {CheckBox} from 'react-native-elements';
 import Header from '../../components/header';
@@ -35,25 +44,26 @@ import Header from '../../components/header';
 const ShareImage = () => {
   const navigation = useNavigation();
   const [checked, setChecked] = useState(false);
-  const screenHeight = Dimensions.get('window').height
+  const screenHeight = Dimensions.get('window').height;
   return (
-   
-<View >   
-        <Header title="Share My Image" backButton="true" />
-        {/* <WelcomeView>
-          <WelcomeText>Share My Image</WelcomeText>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.dispatch(DrawerActions.openDrawer());
-            }}>
-            <MenuIcon source={menu} initHeight="30" initWidth="30" />
-          </TouchableOpacity>
-        </WelcomeView> */}
-     
-     <BackgroundImage source={botomView}>
-        <View  style={{ flex:Platform.OS === 'ios' ? 1 : .69}}>
-            <ScrollView >
-        <MainView >
+    <View style={{flex: 1}}>
+      <Image
+        source={bottomCurve}
+        style={{
+          width: widthPercentageToDP(100),
+          height: 200,
+          position: 'absolute',
+          bottom: -100,
+        }}
+        resizeMode="contain"></Image>
+      <Header title="Upload Image" />
+      <ScrollView
+        alwaysBounceHorizontal={false}
+        alwaysBounceVertical={false}
+        bounces={false}
+        style={{paddingTop: 20}}
+        contentContainerStyle={{paddingBottom: 40}}>
+        <MainView>
           <SubHeading>Disclaimer Text</SubHeading>
           <FirstText>
             Morbi vel urn et risus efficitururn et risus, Morbi vel urn et risus
@@ -62,7 +72,6 @@ const ShareImage = () => {
           <SecText>
             Morbi vel urn et risus efficitururn et , Morbi vel urn et risus
             efficitururn et risus
-
           </SecText>
         </MainView>
         <MainnnView>
@@ -88,7 +97,7 @@ const ShareImage = () => {
         <View style={{alignItems: 'center'}}>
           <Button
             onPress={() => {
-             // navigation.navigate('PhotoDetail');
+              // navigation.navigate('PhotoDetail');
             }}
             style={{
               marginTop: -heightPercentageToDP(2),
@@ -128,15 +137,10 @@ const ShareImage = () => {
               initHeight="130"
               initWidth="381"
             />
-           
           </View>
         </LastImage>
-        
-        </ScrollView>
-        </View>
-       </BackgroundImage>
-      </View>
-
+      </ScrollView>
+    </View>
   );
 };
 export const styles = StyleSheet.create({
@@ -164,7 +168,7 @@ const LastaddImage = styled(ResponsiveImage)({
   marginTop: -heightPercentageToDP(5),
 });
 const LastImage = styled(View)({
- // marginTop: heightPercentageToDP(2),
+  // marginTop: heightPercentageToDP(2),
 
   marginLeft: widthPercentageToDP(4),
 });
@@ -206,7 +210,9 @@ const MainView = styled(View)({
   borderRadius: 4,
   borderColor: '#DEDFE0',
   margin: 15,
+  marginTop: 0,
   padding: 10,
+  paddingTop: 0,
   backgroundColor: '#FAF9FF',
   borderRightWidth: 4,
   borderBottomWidth: 4,
@@ -224,16 +230,15 @@ const WelcomeText = styled(Text)({
   marginTop: -heightPercentageToDP(0.1),
 });
 const BackgroundImage = styled(ImageBackground)({
-  height:Platform.OS === 'ios' ? '87%' : '100%' ,
-  bottom:0,
-  marginTop:50,
+  height: Platform.OS === 'ios' ? '87%' : '100%',
+  bottom: 0,
+  marginTop: 50,
 });
 const WelcomeView = styled(View)({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginTop: "-14%",
-  marginLeft:12
-
+  marginTop: '-14%',
+  marginLeft: 12,
 });
 export default ShareImage;
