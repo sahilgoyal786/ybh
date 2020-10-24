@@ -11,6 +11,7 @@ import {
 import {useState, useEffect} from 'react';
 
 import {
+  lefticon,
   loginbackground,
   loginFooter,
   loginHeader,
@@ -36,13 +37,14 @@ import {useNavigation} from '@react-navigation/native';
 import {menu, image8, backicon, editprofile} from '../../common/images';
 import network from '../../components/apis/network';
 import endpoints from '../../components/apis/endPoints';
-import userDetailContest from '../../common/userDetailContext';
 import {Toast} from 'native-base';
+import {SetPasswordValidationSchema} from '../../common/validations';
+import globalstyles from '../../common/styles';
 
-const Forgot = () => {
-  const navigation = useNavigation();
-  const userDetail = React.useContext(userDetailContest);
-  const [checked, setChecked] = useState(false);
+const SetPassword = ({route, navigation}) => {
+  const [verified, setVerified] = useState(false);
+  const [otp, setOTP] = useState();
+  console.log(route.params);
   return (
     <KeyboardAwareScrollView
       contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
@@ -61,31 +63,46 @@ const Forgot = () => {
               }}>
               <Image source={backicon} style={{height: 20, width: 20}} />
             </TouchableOpacity>
-            <Bottom>FORGOT</Bottom>
+            <Bottom>SET NEW</Bottom>
             <Bottom>PASSWORD</Bottom>
           </Top>
         </HeaaderBackgroundImage>
       </View>
       <View style={{flex: 1, flexGrow: 1, minHeight: hp(30)}}>
         <Formik
-          initialValues={{email: 'sahilgoyal1@gmail.com'}}
+          initialValues={{}}
+          validationSchema={SetPasswordValidationSchema}
           onSubmit={(values) => {
-            network.getResponse(endpoints.forgotPassword,'POST',values,userDetail.access_token||'',(response)=>{
+            values.email = route.params.email;
+            values.otp = otp;
+            network.getResponse(
+              endpoints.setPassword,
+              'POST',
+              values,
+              (response) => {
                 if (response.message) {
-                  Toast.show({text: response.message, duration: 3000});
-                  navigation.navigate('SetPassword', {email: response.email});
+                  Toast.show({text: response.message});
                 }
+                navigation.navigate('Login');
               },
               (error) => {
                 // console.log(error, 'forgot fail');
                 if (error.message) {
-                  Toast.show({text: error.message});
+                  Toast.show({text: error.message, duration: 4000});
                 }
+                navigation.navigate('Login');
               },
             );
             console.log(values);
           }}>
-          {({handleChange, handleBlur, handleSubmit, values}) => (
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            touched,
+            values,
+            errors,
+          }) => (
             <SigninButton>
               <View
                 style={{
@@ -100,18 +117,80 @@ const Forgot = () => {
                     fontWeight: '200',
                     fontFamily: 'FuturaPT-Medium',
                   }}>
-                  We just need your registered email to send you password reset
-                  instructions
+                  Please enter the verification code sent to your email
                 </Text>
               </View>
               <TextInput
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email}
-                placeholder="EMAIL"
+                // editable={!verified}
+                keyboardType="number-pad"
+                maxLength={6}
+                onChangeText={(text) => {
+                  setOTP(text);
+                  if (text.length == 6) {
+                    network.getResponse(
+                      endpoints.verifyOTP,
+                      'POST',
+                      {otp: text, email: route.params.email},
+                      (response) => {
+                        setVerified(true);
+                        console.log('verified', verified);
+                        console.log(response, 'succcess');
+                        // if (response.message) {
+                        //   Toast.show({text: response.message});
+                        // }
+                      },
+                      (error) => {
+                        console.log(error, 'error');
+                        // console.log(error, 'forgot fail');
+                        if (error.message) {
+                          Toast.show({text: error.message});
+                        }
+                      },
+                    );
+                  }
+                }}
+                onBlur={handleBlur('otp')}
+                value={values.otp}
+                placeholder="Verification Code"
+                placeholderTextColor="#484848"
+                style={{textAlign: 'center', width: '100%', ...styles.PassTyle}}
+              />
+              {verified && (
+                <Text style={{color: 'green', marginTop: 10}}>
+                  Awesome, please set a new password below.
+                </Text>
+              )}
+
+              <TextInput
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                value={values.password}
+                editable={verified}
+                placeholder="Password"
                 placeholderTextColor="#484848"
                 style={styles.PassTyle}
+                secureTextEntry
               />
+              {errors.password && touched.password && (
+                <Text style={styles.error_message}>{errors.password}</Text>
+              )}
+
+              <TextInput
+                onChangeText={handleChange('password_confirmation')}
+                onBlur={handleBlur('password_confirmation')}
+                editable={verified}
+                value={values.password_confirmation}
+                placeholder="Confirm Password"
+                placeholderTextColor="#484848"
+                style={styles.PassTyle}
+                secureTextEntry
+              />
+              {errors.password_confirmation &&
+                touched.password_confirmation && (
+                  <Text style={styles.error_message}>
+                    {errors.password_confirmation}
+                  </Text>
+                )}
 
               <Button
                 style={styles.loginbuttin}
@@ -190,7 +269,7 @@ export const styles = StyleSheet.create({
     paddingVertical: hp(1),
     width: wp(78),
     fontSize: 20,
-    marginTop: hp(6),
+    marginTop: 10,
   },
   Forgotstyle: {
     fontSize: 12,
@@ -212,5 +291,9 @@ export const styles = StyleSheet.create({
     borderWidth: 0,
     marginRight: '4%',
   },
+  error_message: {
+    ...globalstyles.error_message,
+    width: wp(78),
+  },
 });
-export default Forgot;
+export default SetPassword;

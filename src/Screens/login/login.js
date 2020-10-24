@@ -9,11 +9,12 @@ import {
 } from 'react-native';
 import {useState, useEffect} from 'react';
 
-import {signupsec} from '../../common/images';
+import {loginHeader, loginFooter} from '../../common/images';
 
 import styled from 'styled-components/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
+  heightPercentageToDP,
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
@@ -25,109 +26,127 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation} from '@react-navigation/native';
 import {LoginValidationSchema} from '../../common/validations';
 import {AuthContext} from '../../common/AuthContext';
-import  globalstyles from '../../common/styles';
+import globalstyles from '../../common/styles';
 
 const Login = (props) => {
   const navigation = useNavigation();
   const {signIn} = React.useContext(AuthContext);
 
   return (
-    <BackgroundImage source={signupsec}>
-      <SafeAreaView style={{flex: 1}}>
-        <KeyboardAwareScrollView
-          contentContainerStyle={{flex: 1}}
-          showsVerticalScrollIndicator={false}>
+    <KeyboardAwareScrollView
+      contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
+      <View>
+        <HeaaderBackgroundImage source={loginHeader} imageStyle="stretch">
           <Top>
             <Bottom>SIGN IN </Bottom>
             <Discrip>Enter Your User Name and Password</Discrip>
           </Top>
-          <Formik
-            initialValues={{
-              email: 'sahilgoyal1@gmail.com',
-              password: 'sahilgoyal1@gmail.com',
-            }}
-            validationSchema={LoginValidationSchema}
-            onSubmit={(values) => {
-
-              signIn(values);
-            }}>
-            {({handleChange, errors,touched,handleBlur, handleSubmit, values}) => (
-              <SigninButton>
-                <TextInput
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
-                  value={values.email}
-                  placeholder="USER NAME"
-                  placeholderTextColor="#484848"
-                  autoCapitalize="none"
-                  style={styles.userName}
-                />
-                {errors.email && touched.email && (
+        </HeaaderBackgroundImage>
+      </View>
+      <View style={{flex: 1, flexGrow: 1, minHeight: hp(30)}}>
+        <Formik
+          initialValues={{
+            email: 'sahilgoyal1@gmail.com',
+            password: '0987654321',
+          }}
+          validationSchema={LoginValidationSchema}
+          onSubmit={(values) => {
+            signIn(values);
+          }}>
+          {({
+            handleChange,
+            errors,
+            touched,
+            handleBlur,
+            handleSubmit,
+            values,
+          }) => (
+            <SigninButton>
+              <TextInput
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                value={values.email}
+                placeholder="USER NAME"
+                placeholderTextColor="#484848"
+                autoCapitalize="none"
+                style={styles.userName}
+              />
+              {errors.email && touched.email && (
                 <Text style={styles.error_message}>{errors.email}</Text>
               )}
-                <TextInput
-                  // onChangeText={handleChange('email')}
-                  // onBlur={handleBlur('email')}
-                  value={values.pass}
-                  placeholder="PASSWORD"
-                  secureTextEntry={true}
-                  onChangeText={handleChange('password')}
-                  onBlur={handleBlur('password')}
-                  value={values.password}
-                  placeholder="PASSWORD"
-                  placeholderTextColor="#484848"
-                  style={styles.PassTyle}
-                />
-                
-                {errors.password && touched.password && (
+              <TextInput
+                // onChangeText={handleChange('email')}
+                // onBlur={handleBlur('email')}
+                value={values.pass}
+                placeholder="PASSWORD"
+                secureTextEntry={true}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                value={values.password}
+                placeholder="PASSWORD"
+                placeholderTextColor="#484848"
+                style={styles.PassTyle}
+              />
+
+              {errors.password && touched.password && (
                 <Text style={styles.error_message}>{errors.password}</Text>
               )}
 
-                <MainView>
-                  <TouchableOpacity
-                    style={styles.fogot}
-                    onPress={() => {
-                      navigation.navigate('Forgot');
-                    }}>
-                    <Text style={styles.Forgotstyle}>Forgot Password ?</Text>
-                  </TouchableOpacity>
-                </MainView>
+              <MainView>
+                <TouchableOpacity
+                  style={styles.fogot}
+                  onPress={() => {
+                    navigation.navigate('Forgot');
+                  }}>
+                  <Text style={styles.Forgotstyle}>Forgot Password ?</Text>
+                </TouchableOpacity>
+              </MainView>
 
-                <Button
-                  onPress={handleSubmit}
-                  // onPress={() => {
-                  //   navigation.navigate('Welcomeuser');
-                  // }}
-                  style={styles.loginbuttin}
-                  name={'Login'}
-                  linear
-                />
-                <View style={{marginTop: hp(2)}}>
-                  <Text style={styles.account}>
-                    Don't have an account?{' '}
-                    <Text
-                      style={styles.gosignup}
-                      onPress={() => {
-                        navigation.navigate('Signup');
-                      }}>
-                      Sign up
-                    </Text>
+              <Button
+                onPress={handleSubmit}
+                // onPress={() => {
+                //   navigation.navigate('Welcomeuser');
+                // }}
+                style={styles.loginbuttin}
+                name={'Login'}
+                linear
+              />
+              <View style={{marginTop: hp(2)}}>
+                <Text style={styles.account}>
+                  Don't have an account?{' '}
+                  <Text
+                    style={styles.gosignup}
+                    onPress={() => {
+                      navigation.navigate('Signup');
+                    }}>
+                    Sign up
                   </Text>
-                </View>
-              </SigninButton>
-            )}
-          </Formik>
-        </KeyboardAwareScrollView>
-      </SafeAreaView>
-    </BackgroundImage>
+                </Text>
+              </View>
+            </SigninButton>
+          )}
+        </Formik>
+      </View>
+      <FooterBackgroundImage
+        source={loginFooter}
+        imageStyle="stretch"></FooterBackgroundImage>
+    </KeyboardAwareScrollView>
   );
 };
-const BackgroundImage = styled(ImageBackground)({
-  flex: 1,
-  // height: hp(120),
+const HeaaderBackgroundImage = styled(ImageBackground)({
+  height: heightPercentageToDP(40),
+  alignContent: 'center',
+  justifyContent: 'center',
+  marginBottom: 40,
+});
+const FooterBackgroundImage = styled(ImageBackground)({
+  height: heightPercentageToDP(18),
+  alignContent: 'center',
+  justifyContent: 'center',
+  marginBottom: 0,
 });
 const Top = styled(View)({
-  flex: 0.22,
+  flex: 0.5,
   marginLeft: wp(8),
   justifyContent: 'flex-end',
 });
@@ -146,12 +165,11 @@ const Discrip = styled(Text)({
 const SigninButton = styled.View({
   alignItems: 'center',
   justifyContent: 'flex-end',
-  flex: 0.57,
 });
 const MainView = styled.View({
   flexDirection: 'row',
   justifyContent: 'flex-end',
-  width: wp(87),
+  width: wp(88),
   alignSelf: 'center',
   marginTop: hp(3),
 });
@@ -187,7 +205,6 @@ export const styles = StyleSheet.create({
   },
   loginbuttin: {
     marginTop: hp(3),
-    width: wp(78),
   },
   account: {
     color: '#484848',
@@ -206,8 +223,6 @@ export const styles = StyleSheet.create({
     fontFamily: 'FuturaPT-Light',
     color: 'red',
   },
-  error_message:globalstyles.error_message
-
-  
+  error_message: globalstyles.error_message,
 });
 export default Login;

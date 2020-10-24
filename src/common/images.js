@@ -3,6 +3,8 @@ export const slider1 = require('../assets/icons/icon1.png');
 export const slider2 = require('../assets/icons/icon2.png');
 export const slider3 = require('../assets/icons/icon3.png');
 export const loginbackground = require('../assets/icons/login-screen-bgone.png');
+export const loginHeader = require('../assets/icons/login-screen-header.png');
+export const loginFooter = require('../assets/icons/login-screen-footer.png');
 
 export const unchecked = require('../assets/icons/blank-square.png');
 export const iconchecked = require('../assets/icons/check-box.png');

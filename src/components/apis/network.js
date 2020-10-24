@@ -26,11 +26,12 @@ const network = {
         data: data,
       })
         .then((response) => {
-          console.log(response,"axios response")
-          success_callback(response.data);
+          console.log(response, 'axios response');
+          if (response.data) success_callback(response.data);
+          else success_callback(response);
         })
         .catch((error) => {
-          console.log(error.response,"axios  error response")
+          console.log(error.response, 'axios response');
 
           error_callback(error.response.data);
           //   throw error;

@@ -1,10 +1,7 @@
-
- const EndiPoints = {
-
-forgotPassword:"forgot-password",
-profileUpdate:"user/profile/update",
-
+const EndiPoints = {
+  forgotPassword: 'forgot-password',
+  verifyOTP: 'verify-otp',
+  setPassword: 'password-reset',
 };
 
-export default EndiPoints
-
+export default EndiPoints;

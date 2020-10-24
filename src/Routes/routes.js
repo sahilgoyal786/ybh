@@ -26,6 +26,7 @@ import MyQuestionAdvice from '../Screens/myquestionadvice/myquestionadvice';
 import PhotoViewing from '../Screens/photoviewing/photoviewing';
 import ThriveSec from '../Screens/thrivesec/thrivesec';
 import Voting2 from '../Screens/voting2/voting2';
+import SetPassword from '../Screens/setPassword/setPassword';
 import TodayGallery from '../Screens/todaygallery/todaygallery';
 import MyPhotos from '../Screens/myphotos/myphotos';
 import Profile from '../Screens/profile/profile';
@@ -213,11 +214,18 @@ function Routes() {
           (response) => {
             console.log(response,"login response")
             if (response.access_token) {
+<<<<<<< HEAD
               // storage.setData('access_token', response.access_token);
               // storage.setData('user', JSON.stringify(response.user));
               changeUserDetail(response);
               dispatch({type: 'SIGN_IN', token:response.access_token,userDetail:response.user});
             }else{
+=======
+              storage.setData('access_token', response.access_token);
+              storage.setData('user', JSON.stringify(response.user));
+              dispatch({type: 'SIGN_IN', token: response.access_token});
+            } else {
+>>>>>>> 5ea6d51d91b3ecf77015bc5bab92b233b8c2d763
               // console.log('console.log(error),',error)
             }
           },
@@ -256,6 +264,7 @@ function Routes() {
               <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="Signup" component={Signup} />
               <Stack.Screen name="Forgot" component={Forgot} />
+              <Stack.Screen name="SetPassword" component={SetPassword} />
             </Stack.Navigator>
           ) : (
             <Stack.Navigator headerMode="none">
