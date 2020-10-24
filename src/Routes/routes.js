@@ -184,7 +184,7 @@ function Routes() {
           'user',
           'GET',
           {},
-          userDetail.access_token,
+          userDetail.access_token||'',
           (res) => {
             dispatch({type: 'RESTORE_TOKEN', token: userToken});
           },
@@ -214,18 +214,11 @@ function Routes() {
           (response) => {
             console.log(response,"login response")
             if (response.access_token) {
-<<<<<<< HEAD
               // storage.setData('access_token', response.access_token);
               // storage.setData('user', JSON.stringify(response.user));
               changeUserDetail(response);
               dispatch({type: 'SIGN_IN', token:response.access_token,userDetail:response.user});
             }else{
-=======
-              storage.setData('access_token', response.access_token);
-              storage.setData('user', JSON.stringify(response.user));
-              dispatch({type: 'SIGN_IN', token: response.access_token});
-            } else {
->>>>>>> 5ea6d51d91b3ecf77015bc5bab92b233b8c2d763
               // console.log('console.log(error),',error)
             }
           },
