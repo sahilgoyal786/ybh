@@ -1,6 +1,11 @@
 import React, {useState} from 'react';
 import {Text, StyleSheet, View, ImageBackground, FlatList} from 'react-native';
-import {signupslider1, signupslider2} from '../../common/images';
+import {
+  loginFooter,
+  loginHeader,
+  signupslider1,
+  signupslider2,
+} from '../../common/images';
 import styled from 'styled-components/native';
 import Button from '../../components/button';
 import LinearGradient from 'react-native-linear-gradient';
@@ -92,176 +97,199 @@ const Signup = () => {
     );
   };
   return (
-    <KeyboardAwareScrollView contentContainerStyle={{flexGrow: 1}}>
-      {/* <ScrollView> */}
-      <BackgroundImage source={signupsec}>
-        <View
-          style={{
-            justifyContent: 'center',
-            marginTop: hp(7),
-            fontFamily: 'Futura-Medium',
-          }}>
-          <Top>WELCOME TO YBH </Top>
-        </View>
-        <TopSec>
-          <Carousel
-            autoplay
-            loop
-            data={data}
-            renderItem={_renderItemWithParallax}
-            sliderWidth={wp(100)}
-            itemWidth={wp(100)}
-            hasParallaxImages={true}
-            inactiveSlideScale={0.4}
-            containerCustomStyle={styles.slider}
-            onSnapToItem={(index) => setTab(index)}
-            layout={'default'}
-            layoutCardOffset={10}
-          />
-          <Pagination
-            dotsLength={data.length}
-            activeDotIndex={Tab}
-            renderDots={_renderDots}
-          />
-        </TopSec>
-
-        <Formik
-          initialValues={{
-            name: 'Sahil',
-            email: 'sahil@32bitsolutions.com',
-            password: '123456789',
-            password_confirmation: '123456789',
-          }}
-          onSubmit={(values) => {
-            network.getResponse(
-              'register',
-              'POST',
-              values,
-              (response) => {
-                Toast.show({
-                  text:
-                    "Awesome, just click on the verification link in the email and you'll be all set.",
-                  duration: 5000,
-                });
-              },
-              (response) => {
-                console.log( response,typeof response ,"api response");
-                if (response.errors) {
-                  console.log("error in")
-                 const errors = response.errors;
-                  console.log(errors,"error object");
-                  for (const key in errors) {
-                    console.log(key,errors.hasOwnProperty(key));
-                    if (errors.hasOwnProperty(key)) {
-                      console.log("innn loop",errors[key])
-                      const element = errors[key];
-                      Toast.show({text: element[0]});
-                    }
+    <KeyboardAwareScrollView
+      contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
+      <View>
+        <HeaaderBackgroundImage
+          source={loginHeader}
+          imageStyle="stretch"
+          contentContainerStyle={{flex: 1, marginBottom: 100}}>
+          <View
+            style={{
+              justifyContent: 'center',
+              marginTop: hp(7),
+              fontFamily: 'Futura-Medium',
+            }}>
+            <Top>WELCOME TO YBH</Top>
+          </View>
+          <TopSec style={{alignSelf: 'flex-end', marginBottom: -120}}>
+            <Carousel
+              autoplay
+              loop
+              data={data}
+              renderItem={_renderItemWithParallax}
+              sliderWidth={wp(100)}
+              itemWidth={wp(100)}
+              hasParallaxImages={true}
+              inactiveSlideScale={0.4}
+              containerCustomStyle={styles.slider}
+              onSnapToItem={(index) => setTab(index)}
+              layout={'default'}
+              layoutCardOffset={10}
+            />
+            <Pagination
+              dotsLength={data.length}
+              activeDotIndex={Tab}
+              renderDots={_renderDots}
+            />
+          </TopSec>
+        </HeaaderBackgroundImage>
+      </View>
+      <Formik
+        initialValues={{
+          name: 'Sahil',
+          email: 'sahil@32bitsolutions.com',
+          password: '123456789',
+          password_confirmation: '123456789',
+        }}
+        onSubmit={(values) => {
+          network.getResponse(
+            'register',
+            'POST',
+            values,
+            (response) => {
+              Toast.show({
+                text:
+                  "Awesome, just click on the verification link in the email and you'll be all set.",
+                duration: 5000,
+              });
+            },
+            (response) => {
+              console.log(response, typeof response, 'api response');
+              if (response.errors) {
+                console.log('error in');
+                const errors = response.errors;
+                console.log(errors, 'error object');
+                for (const key in errors) {
+                  console.log(key, errors.hasOwnProperty(key));
+                  if (errors.hasOwnProperty(key)) {
+                    console.log('innn loop', errors[key]);
+                    const element = errors[key];
+                    Toast.show({text: element[0]});
                   }
                 }
-              },
-            );
-          }}
-          validationSchema={SignupValidationSchema}
-          validateOnChange={true}>
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            errors,
-            touched,
-            isValid,
-          }) => (
-            <View>
-              <TextInputView>
-                <TextInput
-                  name="name"
-                  placeholder="YOUR NAME"
-                  placeholderTextColor="#484848"
-                  onChangeText={handleChange('name')}
-                  onBlur={handleBlur('name')}
-                  value={values.name}
-                  style={{fontFamily: 'Futura-Medium', flex: 1}}
-                />
-              </TextInputView>
-              {errors.name && touched.name && (
-                <Text style={styles.error_message}>{errors.name}</Text>
-              )}
-              <TextInputView>
-                <TextInput
-                  name="email"
-                  placeholder="EMAIL"
-                  placeholderTextColor="#484848"
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
-                  value={values.email}
-                  keyboardType="email-address"
-                  style={{fontFamily: 'Futura-Medium', flex: 1}}
-                />
-              </TextInputView>
-              {errors.email && touched.email && (
-                <Text style={styles.error_message}>{errors.email}</Text>
-              )}
-              <TextInputView>
-                <TextInput
-                  name="password"
-                  placeholder={'PASSWORD'}
-                  onChangeText={handleChange('password')}
-                  onBlur={handleBlur('password')}
-                  value={values.password}
-                  secureTextEntry={true}
-                  placeholderTextColor="#484848"
-                  style={{fontFamily: 'FuturaPT-Medium', flex: 1}}
-                />
-              </TextInputView>
-              {errors.password && touched.password && (
-                <Text style={styles.error_message}>{errors.password}</Text>
-              )}
-              <TextInputView>
-                <TextInput
-                  name="password_confirmation"
-                  placeholder={'CONFIRM PASSWORD'}
-                  onChangeText={handleChange('password_confirmation')}
-                  onBlur={handleBlur('password_confirmation')}
-                  value={values.password_confirmation}
-                  secureTextEntry={true}
-                  placeholderTextColor="#484848"
-                  style={{fontFamily: 'FuturaPT-Medium', flex: 1}}
-                />
-              </TextInputView>
-              {errors.password_confirmation && (
-                <Text style={styles.error_message}>{errors.password_confirmation}</Text>
-              )}
-              <Button
-                style={{width: wp(78), marginTop: hp(4), alignSelf: 'center'}}
-                name={'Sign up'}
-                onPress={handleSubmit}
-                disabled={!isValid}
-                linear
+              }
+            },
+          );
+        }}
+        validationSchema={SignupValidationSchema}
+        validateOnChange={true}>
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+          isValid,
+        }) => (
+          <View>
+            <TextInputView>
+              <TextInput
+                name="name"
+                placeholder="YOUR NAME"
+                placeholderTextColor="#484848"
+                onChangeText={handleChange('name')}
+                onBlur={handleBlur('name')}
+                value={values.name}
+                style={{fontFamily: 'Futura-Medium', flex: 1}}
               />
-            </View>
-          )}
-        </Formik>
-        <AlreadyAccountText>
-          Already have an account?{' '}
-          <AlreadyAccountText
-            style={{
-              textDecorationLine: 'underline',
-              fontFamily: 'FuturaPT-Light',
-              color: '#484848',
-            }}
-            onPress={() => {
-              navigation.navigate('Login');
-            }}>
-            Sign in
-          </AlreadyAccountText>
+            </TextInputView>
+            {errors.name && touched.name && (
+              <Text style={styles.error_message}>{errors.name}</Text>
+            )}
+            <TextInputView>
+              <TextInput
+                name="email"
+                placeholder="EMAIL"
+                placeholderTextColor="#484848"
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                value={values.email}
+                keyboardType="email-address"
+                style={{fontFamily: 'Futura-Medium', flex: 1}}
+              />
+            </TextInputView>
+            {errors.email && touched.email && (
+              <Text style={styles.error_message}>{errors.email}</Text>
+            )}
+            <TextInputView>
+              <TextInput
+                name="password"
+                placeholder={'PASSWORD'}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                value={values.password}
+                secureTextEntry={true}
+                placeholderTextColor="#484848"
+                style={{fontFamily: 'FuturaPT-Medium', flex: 1}}
+              />
+            </TextInputView>
+            {errors.password && touched.password && (
+              <Text style={styles.error_message}>{errors.password}</Text>
+            )}
+            <TextInputView>
+              <TextInput
+                name="password_confirmation"
+                placeholder={'CONFIRM PASSWORD'}
+                onChangeText={handleChange('password_confirmation')}
+                onBlur={handleBlur('password_confirmation')}
+                value={values.password_confirmation}
+                secureTextEntry={true}
+                placeholderTextColor="#484848"
+                style={{fontFamily: 'FuturaPT-Medium', flex: 1}}
+              />
+            </TextInputView>
+            {errors.password_confirmation && (
+              <Text style={styles.error_message}>
+                {errors.password_confirmation}
+              </Text>
+            )}
+            <Button
+              style={{width: wp(78), marginTop: hp(4), alignSelf: 'center'}}
+              name={'Sign up'}
+              onPress={handleSubmit}
+              disabled={!isValid}
+              linear
+            />
+          </View>
+        )}
+      </Formik>
+      <AlreadyAccountText>
+        Already have an account?{' '}
+        <AlreadyAccountText
+          style={{
+            textDecorationLine: 'underline',
+            fontFamily: 'FuturaPT-Light',
+            color: '#484848',
+          }}
+          onPress={() => {
+            navigation.navigate('Login');
+          }}>
+          Sign in
         </AlreadyAccountText>
-      </BackgroundImage>
+      </AlreadyAccountText>
+
+      <FooterBackgroundImage
+        source={loginFooter}
+        imageStyle="stretch"></FooterBackgroundImage>
       {/* </ScrollView> */}
     </KeyboardAwareScrollView>
   );
 };
+
+const HeaaderBackgroundImage = styled(ImageBackground)({
+  height: hp(40),
+  alignContent: 'center',
+  justifyContent: 'center',
+  marginBottom: 60,
+});
+const FooterBackgroundImage = styled(ImageBackground)({
+  height: hp(18),
+  alignContent: 'center',
+  justifyContent: 'center',
+  marginBottom: 0,
+});
 const BackgroundImage = styled(ImageBackground)({
   flex: 1,
   // height: wp(150),
@@ -274,11 +302,7 @@ const Top = styled(Text)({
   color: '#ffffff',
   fontFamily: 'Futura-Medium',
 });
-const TopSec = styled.View({
-  // flex: 1,
-  // justifyContent: 'center',
-  alignItems: 'center',
-});
+const TopSec = styled.View({});
 const TextInputView = styled(View)({
   width: wp(78),
   alignSelf: 'center',
@@ -300,16 +324,18 @@ const AlreadyAccountText = styled.Text({
   color: '#484848',
   fontSize: 16,
   textAlign: 'center',
-  marginTop: hp(0.5),
+  marginTop: hp(3),
+  marginBottom: hp(3),
   fontFamily: 'FuturaPT-Light',
 });
 const styles = StyleSheet.create({
   error_message: {
     fontSize: 10,
     color: 'red',
-    width: '100%',
+    width: wp(78),
+    alignSelf: 'center',
     marginTop: 5,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   slider: {
     flexGrow: 0,

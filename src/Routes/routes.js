@@ -26,6 +26,7 @@ import MyQuestionAdvice from '../Screens/myquestionadvice/myquestionadvice';
 import PhotoViewing from '../Screens/photoviewing/photoviewing';
 import ThriveSec from '../Screens/thrivesec/thrivesec';
 import Voting2 from '../Screens/voting2/voting2';
+import SetPassword from '../Screens/setPassword/setPassword';
 import TodayGallery from '../Screens/todaygallery/todaygallery';
 import MyPhotos from '../Screens/myphotos/myphotos';
 import Profile from '../Screens/profile/profile';
@@ -200,7 +201,7 @@ function Routes() {
               storage.setData('access_token', response.access_token);
               storage.setData('user', JSON.stringify(response.user));
               dispatch({type: 'SIGN_IN', token: response.access_token});
-            }else{
+            } else {
               // console.log('console.log(error),',error)
             }
           },
@@ -237,6 +238,7 @@ function Routes() {
               <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="Signup" component={Signup} />
               <Stack.Screen name="Forgot" component={Forgot} />
+              <Stack.Screen name="SetPassword" component={SetPassword} />
             </Stack.Navigator>
           ) : (
             <Stack.Navigator headerMode="none">

@@ -22,3 +22,13 @@ export const LoginValidationSchema = yup.object({
     .required('Email Address is Required'),
   password: yup.string().required('Password is required'),
 });
+
+export const SetPasswordValidationSchema = yup.object({
+  password: yup
+    .string()
+    .min(8, ({min}) => `Password must be at least ${min} characters`)
+    .required('Password is required'),
+  password_confirmation: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match'),
+});
