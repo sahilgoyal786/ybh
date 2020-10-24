@@ -44,6 +44,7 @@ import {Root, Toast} from 'native-base';
 import storage from '../components/apis/storage';
 import network from '../components/apis/network';
 import {AuthContext} from '../common/AuthContext';
+import userDetailContest from '../common/userDetailContext';
 import Loading from '../Screens/loading/loading';
 
 const Stack = createStackNavigator();
@@ -111,6 +112,7 @@ function HomeTabs() {
   );
 }
 function HomeDrawer() {
+  // console.log(React.useContext(userDetailContest));
   return (
     <Drawer.Navigator
       drawerPosition={'right'}
@@ -129,6 +131,9 @@ function HomeDrawer() {
 }
 
 function Routes() {
+   const initialUserDetail = React.useContext(userDetailContest);
+  const [userDetail,changeUserDetail] = React.useState(null);
+
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -139,12 +144,16 @@ function Routes() {
             isLoading: false,
           };
         case 'SIGN_IN':
+          console.log(action);
           return {
             ...prevState,
             isSignout: false,
             isLoading: false,
             userToken: action.token,
+            userDetail:action.user
           };
+        
+         
         case 'SIGN_OUT':
           return {
             ...prevState,
@@ -158,32 +167,36 @@ function Routes() {
       isLoading: true,
       isSignout: false,
       userToken: null,
+      userdetail:null
     },
   );
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       let userToken;
-      console.log('userToken');
-      storage.getData('access_token').then((res) => {
-        if (res) {
-          userToken = res;
-          network.getResponse(
-            'user',
-            'GET',
-            {},
-            (res) => {
-              dispatch({type: 'RESTORE_TOKEN', token: userToken});
-            },
-            () => {
-              storage.clear();
-              dispatch({type: 'SIGN_OUT'});
-            },
-          );
-        } else {
-          dispatch({type: 'SIGN_OUT'});
-        }
-      });
+      console.log('userToken',userDetail?.access_token);
+
+
+      if (userDetail?.access_token) {
+        userToken = userDetail.access_token;
+        network.getResponse(
+          'user',
+          'GET',
+          {},
+          userDetail.access_token,
+          (res) => {
+            dispatch({type: 'RESTORE_TOKEN', token: userToken});
+          },
+          () => {
+            changeUserDetail(null);
+            storage.clear();
+            dispatch({type: 'SIGN_OUT'});
+          },
+        );
+      } else {
+        dispatch({type: 'SIGN_OUT'});
+      }
+  
     };
 
     bootstrapAsync();
@@ -191,15 +204,19 @@ function Routes() {
   const authContext = React.useMemo(
     () => ({
       signIn: async (values) => {
+        console.log("signIn",userDetail)
         network.getResponse(
           'login',
           'POST',
           values,
+          '',
           (response) => {
+            console.log(response,"login response")
             if (response.access_token) {
-              storage.setData('access_token', response.access_token);
-              storage.setData('user', JSON.stringify(response.user));
-              dispatch({type: 'SIGN_IN', token: response.access_token});
+              // storage.setData('access_token', response.access_token);
+              // storage.setData('user', JSON.stringify(response.user));
+              changeUserDetail(response);
+              dispatch({type: 'SIGN_IN', token:response.access_token,userDetail:response.user});
             }else{
               // console.log('console.log(error),',error)
             }
@@ -208,7 +225,8 @@ function Routes() {
         );
       },
       signOut: () => {
-        storage.clear();
+        changeUserDetail(null)
+        // storage.clear();
         dispatch({type: 'SIGN_OUT'});
       },
       signUp: async (data) => {
@@ -226,6 +244,7 @@ function Routes() {
   return (
     <Root>
       <AuthContext.Provider value={authContext}>
+      <userDetailContest.Provider value={userDetail} >
         <NavigationContainer>
           {state.isLoading ? (
             <Stack.Navigator headerMode="none">
@@ -244,6 +263,8 @@ function Routes() {
             </Stack.Navigator>
           )}
         </NavigationContainer>
+      </userDetailContest.Provider>
+
       </AuthContext.Provider>
     </Root>
   );

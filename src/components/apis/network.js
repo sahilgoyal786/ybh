@@ -10,13 +10,14 @@ const network = {
     endpoint,
     type,
     data,
+    access_token,
     success_callback,
     error_callback,
   ) {
-    storage.getData('access_token').then((res) => {
+    if(access_token){
       let headers = {};
-      if (res) {
-        headers['Authorization'] = 'Bearer ' + res;
+      if (access_token) {
+        headers['Authorization'] = 'Bearer ' + access_token;
       }
       axios({
         method: type,
@@ -29,12 +30,15 @@ const network = {
           success_callback(response.data);
         })
         .catch((error) => {
-          console.log(error.response,"axios response")
+          console.log(error.response,"axios  error response")
 
           error_callback(error.response.data);
           //   throw error;
         });
-    });
+    }
+    // storage.getData('access_token').then((res) => {
+      
+    // });
   },
 };
 

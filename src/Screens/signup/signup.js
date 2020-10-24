@@ -25,6 +25,8 @@ import {Formik} from 'formik';
 import network from '../../components/apis/network';
 import storage from '../../components/apis/storage';
 import {SignupValidationSchema} from '../../common/validations';
+import userDetailContest from '../../common/userDetailContext';
+
 
 const Signup = () => {
   const [Tab, setTab] = useState(0);
@@ -48,6 +50,10 @@ const Signup = () => {
     );
   };
   const _renderDots = (activeIndex) => {
+    const userDetail = React.useContext(userDetailContest);
+
+
+    
     return (
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <FlatList
@@ -137,6 +143,7 @@ const Signup = () => {
               'register',
               'POST',
               values,
+              {auth:false },
               (response) => {
                 Toast.show({
                   text:

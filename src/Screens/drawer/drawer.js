@@ -11,10 +11,13 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import storage from '../../components/apis/storage';
 import {AuthContext} from '../../common/AuthContext';
+import userDetailContest from '../../common/userDetailContext';
 
 const Drawer = () => {
   const navigation = useNavigation();
   const {signOut} = React.useContext(AuthContext);
+  const userDetail = React.useContext(userDetailContest);
+
   return (
     <View style={{backgroundColor: 'blue', flex: 1}}>
       <BackgroundImage source={menuubackground}>
@@ -22,7 +25,7 @@ const Drawer = () => {
           <View>
             <FirstView>
               <ImagesView
-                source={image8}
+                source={userDetail.user.avtar||image8}
                 initHeight="70"
                 initWidth="70"
                 borderRadius={50}
@@ -30,7 +33,7 @@ const Drawer = () => {
             </FirstView>
           </View>
           <ThirdView>
-            <UserNameText>Abigail Akon</UserNameText>
+            <UserNameText>{userDetail.user.username}</UserNameText>
           </ThirdView>
         </MainView>
         <MainThirdView>

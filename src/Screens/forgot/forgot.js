@@ -30,6 +30,8 @@ import {useNavigation} from '@react-navigation/native';
 import {menu, image8, backicon, editprofile} from '../../common/images';
 import network from '../../components/apis/network';
 import endpoints from '../../components/apis/endPoints';
+import userDetailContest from '../../common/userDetailContext';
+
 const BackIcon = styled(ResponsiveImage)({
   fontSize: 12,
   marginTop: 30,
@@ -38,7 +40,7 @@ const BackIcon = styled(ResponsiveImage)({
 
 const Forgot = () => {
   const navigation = useNavigation();
-
+  const userDetail = React.useContext(userDetailContest);
   const [checked, setChecked] = useState(false);
   return (
     <BackgroundImage source={signupsec}>
@@ -60,7 +62,7 @@ const Forgot = () => {
           <Formik
             initialValues={{email: 'kartik@gmail.com'}}
             onSubmit={(values) =>{
-              network.getResponse(endpoints.forgotPassword,'POST',values,(response)=>{
+              network.getResponse(endpoints.forgotPassword,'POST',values,userDetail.access_token||'',(response)=>{
                 console.log(response,'forgot success')
               },error=>{
                 console.log(error,'forgot fail')

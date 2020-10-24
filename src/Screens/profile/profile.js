@@ -9,6 +9,7 @@ import {
   ScrollView,
   SafeAreaView
 } from 'react-native';
+import {Formik} from 'formik';
 import Button from '../../components/button';
 import { Input } from 'react-native-elements';
 
@@ -27,9 +28,16 @@ import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { menu, image8, backicon, editprofile,botomView,headerView } from '../../common/images';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../../components/header';
+import userDetailContest from '../../common/userDetailContext';
+import network from '../../components/apis/network';
+import endpoint from '../../components/apis/endPoints'
+
+
 
 const Profile = () => {
   const navigation = useNavigation();
+  const userDetail = React.useContext(userDetailContest);
+
 
   return (
     <View >
@@ -40,7 +48,7 @@ const Profile = () => {
         <View style={{ alignSelf: 'center' }}>
           <FirstView>
             <ImagesView
-              source={image8}
+              source={userDetail.user.avtar||image8}
               initHeight="130"
               initWidth="130"
               borderRadius={100}
@@ -48,31 +56,62 @@ const Profile = () => {
           </FirstView>
         </View>
 
-       
-        <View style={{ width: '80%', alignSelf: 'center', marginTop: 20 }}>
+<Formik
+onSubmit= {(values)=>{
+  network.getResponse(
+    endpoint.profileUpdate,
+    "POST",
+    values,
+    userDetail.access_token,
+    (response) => {
+      if (response.access_token) {
+        // storage.setData('access_token', response.access_token);
+        // storage.setData('user', JSON.stringify(response.user));
+        changeUserDetail(response);
+        dispatch({type: 'SIGN_IN', token:response.access_token,userDetail:response.user});
+      }else{
+        // console.log('console.log(error),',error)
+      }
+    },
+    (error) => Toast.show({text: 'Incorrect password.'}),
+  )
+}}>
+  {({values,handleSubmit})=>(
+    <>
+    <View style={{ width: '80%', alignSelf: 'center', marginTop: 20 }}>
           <Input
             style={{ fontFamily: 'FuturaPT-Light' }}
             placeholder='User Name'
             label='Name'
+            value={userDetail.user.username||''}
           />
 
           <Input
             style={{ fontFamily: 'FuturaPT-Light' }}
             placeholder='test@gmail.com'
             label='Email'
+            value={userDetail.user.email||''}
           />
 
         </View>
-
         <Button
-          style={{
-            width: widthPercentageToDP(78),
-            marginTop: heightPercentageToDP(4),
-            alignSelf: 'center',
-          }}
-          name={'Edit Profile'}
-          linear
-        />
+        style={{
+          width: widthPercentageToDP(78),
+          marginTop: heightPercentageToDP(4),
+          alignSelf: 'center',
+        }}
+        onPress={handleSubmit}
+        name={'Edit Profile'}
+        linear
+      />
+      </>
+  )}
+
+</Formik>
+       
+        
+
+        
 
         <View style={{ width: '80%', alignSelf: 'center', marginTop: 20 }}>
           

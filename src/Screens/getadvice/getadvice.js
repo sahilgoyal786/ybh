@@ -18,6 +18,7 @@ import {
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 import Header from '../../components/header';
 import ThriveArticle from '../../components/thriveArticle';
+import userDetailContest from '../../common/userDetailContext';
 
 import {
   menu,
@@ -47,6 +48,7 @@ import LeaderBoard from '../../components/leaderBoard';
 
 const GetAdvice = () => {
   const navigation = useNavigation();
+  const userDetail = React.useContext(userDetailContest);
 
   return (
     <View style={{flex: 1}}>
@@ -59,7 +61,7 @@ const GetAdvice = () => {
           bottom: -100,
         }}
         resizeMode="contain"></Image>
-      <Header title="Welcome John" />
+      <Header title={userDetail.user.username} />
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
