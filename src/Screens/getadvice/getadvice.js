@@ -61,7 +61,7 @@ const GetAdvice = () => {
           bottom: -100,
         }}
         resizeMode="contain"></Image>
-      <Header title={userDetail.user.username} />
+      <Header title={userDetail&& userDetail.user.username|| ''} />
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}

@@ -25,7 +25,7 @@ const Drawer = () => {
           <View>
             <FirstView>
               <ImagesView
-                source={userDetail.user.avtar||image8}
+                source={userDetail&& userDetail.user.avtar||image8}
                 initHeight="70"
                 initWidth="70"
                 borderRadius={50}
@@ -33,7 +33,7 @@ const Drawer = () => {
             </FirstView>
           </View>
           <ThirdView>
-            <UserNameText>{userDetail.user.username}</UserNameText>
+            <UserNameText>{userDetail && userDetail.user.username}</UserNameText>
           </ThirdView>
         </MainView>
         <MainThirdView>

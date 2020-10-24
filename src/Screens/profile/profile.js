@@ -31,12 +31,16 @@ import Header from '../../components/header';
 import userDetailContest from '../../common/userDetailContext';
 import network from '../../components/apis/network';
 import endpoint from '../../components/apis/endPoints'
+import globalstyles from '../../common/styles';
+import {AuthContext} from '../../common/AuthContext';
+
 
 
 
 const Profile = () => {
   const navigation = useNavigation();
   const userDetail = React.useContext(userDetailContest);
+  const {updateUserDetail} = React.useContext(AuthContext);
 
 
   return (
@@ -48,7 +52,7 @@ const Profile = () => {
         <View style={{ alignSelf: 'center' }}>
           <FirstView>
             <ImagesView
-              source={userDetail.user.avtar||image8}
+              source={userDetail && userDetail.user.avtar||image8}
               initHeight="130"
               initWidth="130"
               borderRadius={100}
@@ -57,44 +61,63 @@ const Profile = () => {
         </View>
 
 <Formik
+initialValues={{
+  username: userDetail && userDetail.user.username||'',
+  email: userDetail && userDetail.user.email||''
+}}
 onSubmit= {(values)=>{
+  console.log(values,"valuess")
   network.getResponse(
     endpoint.profileUpdate,
     "POST",
     values,
-    userDetail.access_token,
+    userDetail.access_token||'',
     (response) => {
       if (response.access_token) {
+        updateUserDetail(response.user);
         // storage.setData('access_token', response.access_token);
         // storage.setData('user', JSON.stringify(response.user));
-        changeUserDetail(response);
-        dispatch({type: 'SIGN_IN', token:response.access_token,userDetail:response.user});
+        // dispatch({type: 'SIGN_IN', token:response.access_token,userDetail:response.user});
       }else{
         // console.log('console.log(error),',error)
       }
     },
-    (error) => Toast.show({text: 'Incorrect password.'}),
+    (error) => {
+      console.log(error)
+    }
   )
 }}>
-  {({values,handleSubmit})=>(
-    <>
+  {({values,handleSubmit,handleChange,errors,touched,handleBlur})=>(
     <View style={{ width: '80%', alignSelf: 'center', marginTop: 20 }}>
           <Input
             style={{ fontFamily: 'FuturaPT-Light' }}
             placeholder='User Name'
             label='Name'
-            value={userDetail.user.username||''}
+            name = 'username'
+            value={values.username}
+            onChangeText={handleChange('username')}
+              onBlur={handleBlur('username')}
+           
           />
+             {errors.username && touched.username && (
+              <Text style={styles.error_message}>{errors.username}</Text>
+            )}
 
           <Input
             style={{ fontFamily: 'FuturaPT-Light' }}
             placeholder='test@gmail.com'
             label='Email'
-            value={userDetail.user.email||''}
+            name = 'email'
+            editable={false}
+            value={values.email}
+            onChangeText={handleChange('email')}
+            onBlur={handleBlur('email')}
+            
           />
-
-        </View>
-        <Button
+           {errors.email && touched.email && (
+              <Text style={styles.error_message}>{errors.email}</Text>
+            )}
+          <Button
         style={{
           width: widthPercentageToDP(78),
           marginTop: heightPercentageToDP(4),
@@ -104,7 +127,9 @@ onSubmit= {(values)=>{
         name={'Edit Profile'}
         linear
       />
-      </>
+
+        </View>
+        
   )}
 
 </Formik>
@@ -195,4 +220,10 @@ const WelcomeView = styled(View)({
 const BackIcon = styled(ResponsiveImage)({
   fontSize: 12,
 });
+ const styles = StyleSheet.create({
+    error_message: {
+      ...globalstyles.error_message,
+      // width: wp(78),
+    },
+  })
 export default Profile;

@@ -103,74 +103,6 @@ const Signup = () => {
     );
   };
   return (
-<<<<<<< HEAD
-    <KeyboardAwareScrollView contentContainerStyle={{flexGrow: 1}}>
-      {/* <ScrollView> */}
-      <BackgroundImage source={signupsec}>
-        <View
-          style={{
-            justifyContent: 'center',
-            marginTop: hp(7),
-            fontFamily: 'Futura-Medium',
-          }}>
-          <Top>WELCOME TO YBH </Top>
-        </View>
-        <TopSec>
-          <Carousel
-            autoplay
-            loop
-            data={data}
-            renderItem={_renderItemWithParallax}
-            sliderWidth={wp(100)}
-            itemWidth={wp(100)}
-            hasParallaxImages={true}
-            inactiveSlideScale={0.4}
-            containerCustomStyle={styles.slider}
-            onSnapToItem={(index) => setTab(index)}
-            layout={'default'}
-            layoutCardOffset={10}
-          />
-          <Pagination
-            dotsLength={data.length}
-            activeDotIndex={Tab}
-            renderDots={_renderDots}
-          />
-        </TopSec>
-
-        <Formik
-          initialValues={{
-            name: 'Sahil',
-            email: 'sahil@32bitsolutions.com',
-            password: '123456789',
-            password_confirmation: '123456789',
-          }}
-          onSubmit={(values) => {
-            network.getResponse(
-              'register',
-              'POST',
-              values,
-              {auth:false },
-              (response) => {
-                Toast.show({
-                  text:
-                    "Awesome, just click on the verification link in the email and you'll be all set.",
-                  duration: 5000,
-                });
-              },
-              (response) => {
-                console.log( response,typeof response ,"api response");
-                if (response.errors) {
-                  console.log("error in")
-                 const errors = response.errors;
-                  console.log(errors,"error object");
-                  for (const key in errors) {
-                    console.log(key,errors.hasOwnProperty(key));
-                    if (errors.hasOwnProperty(key)) {
-                      console.log("innn loop",errors[key])
-                      const element = errors[key];
-                      Toast.show({text: element[0]});
-                    }
-=======
     <KeyboardAwareScrollView
       contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
       <View>
@@ -221,6 +153,7 @@ const Signup = () => {
             'register',
             'POST',
             values,
+            '',
             (response) => {
               Toast.show({
                 text:
@@ -240,7 +173,6 @@ const Signup = () => {
                     console.log('innn loop', errors[key]);
                     const element = errors[key];
                     Toast.show({text: element[0]});
->>>>>>> 5ea6d51d91b3ecf77015bc5bab92b233b8c2d763
                   }
                 }
               }

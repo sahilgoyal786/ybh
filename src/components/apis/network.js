@@ -14,7 +14,6 @@ const network = {
     success_callback,
     error_callback,
   ) {
-    if(access_token){
       let headers = {};
       if (access_token) {
         headers['Authorization'] = 'Bearer ' + access_token;
@@ -36,7 +35,7 @@ const network = {
           error_callback(error.response.data);
           //   throw error;
         });
-    }
+    
     // storage.getData('access_token').then((res) => {
       
     // });

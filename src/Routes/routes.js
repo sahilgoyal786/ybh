@@ -132,7 +132,6 @@ function HomeDrawer() {
 }
 
 function Routes() {
-   const initialUserDetail = React.useContext(userDetailContest);
   const [userDetail,changeUserDetail] = React.useState(null);
 
   const [state, dispatch] = React.useReducer(
@@ -143,6 +142,11 @@ function Routes() {
             ...prevState,
             userToken: action.token,
             isLoading: false,
+          };
+          case 'USER_UPDATE':
+            return {
+              ...prevState,
+              userDetail:action.user
           };
         case 'SIGN_IN':
           console.log(action);
@@ -161,6 +165,7 @@ function Routes() {
             isSignout: true,
             isLoading: false,
             userToken: null,
+            userDetail: null
           };
       }
     },
@@ -177,27 +182,37 @@ function Routes() {
       let userToken;
       console.log('userToken',userDetail?.access_token);
 
+try{
+const token = await storage.getData('access_token');
+console.log(token,"token232",userDetail?.access_token||token);
+if (userDetail?.access_token|| token) {
+  userToken = userDetail&& userDetail.access_token||token;
+  network.getResponse(
+    'user',
+    'GET',
+    {},
+    userToken
+   ,
+    (res) => {
 
-      if (userDetail?.access_token) {
-        userToken = userDetail.access_token;
-        network.getResponse(
-          'user',
-          'GET',
-          {},
-          userDetail.access_token||'',
-          (res) => {
-            dispatch({type: 'RESTORE_TOKEN', token: userToken});
-          },
-          () => {
-            changeUserDetail(null);
-            storage.clear();
-            dispatch({type: 'SIGN_OUT'});
-          },
-        );
-      } else {
-        dispatch({type: 'SIGN_OUT'});
-      }
-  
+      dispatch({type: 'RESTORE_TOKEN', token: userToken});
+    },
+    () => {
+      changeUserDetail(null);
+      storage.clear();
+      dispatch({type: 'SIGN_OUT'});
+    },
+  );
+}else {
+  console.log("tokene else")
+  dispatch({type: 'SIGN_OUT'});
+}
+}catch(err){
+  console.log("tokene catch else",err)
+
+  dispatch({type: 'SIGN_OUT'});
+
+}
     };
 
     bootstrapAsync();
@@ -214,8 +229,8 @@ function Routes() {
           (response) => {
             console.log(response,"login response")
             if (response.access_token) {
-              // storage.setData('access_token', response.access_token);
-              // storage.setData('user', JSON.stringify(response.user));
+              storage.setData('access_token', response.access_token);
+              storage.setData('user', JSON.stringify(response.user));
               changeUserDetail(response);
               dispatch({type: 'SIGN_IN', token:response.access_token,userDetail:response.user});
             }else{
@@ -227,8 +242,11 @@ function Routes() {
       },
       signOut: () => {
         changeUserDetail(null)
-        // storage.clear();
+        storage.clear();
         dispatch({type: 'SIGN_OUT'});
+      },
+      updateUserDetail :(userDetail) => {
+        dispatch({type:'USER_UPDATE',userDetail})
       },
       signUp: async (data) => {
         // In a production app, we need to send user data to server and get a token

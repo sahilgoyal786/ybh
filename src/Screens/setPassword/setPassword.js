@@ -79,6 +79,7 @@ const SetPassword = ({route, navigation}) => {
               endpoints.setPassword,
               'POST',
               values,
+              '',
               (response) => {
                 if (response.message) {
                   Toast.show({text: response.message});
