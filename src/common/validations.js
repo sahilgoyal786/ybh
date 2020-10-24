@@ -10,6 +10,9 @@ export const SignupValidationSchema = yup.object({
     .string()
     .min(8, ({min}) => `Password must be at least ${min} characters`)
     .required('Password is required'),
+  password_confirmation: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match'),
 });
 
 export const LoginValidationSchema = yup.object({

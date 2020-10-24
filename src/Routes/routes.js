@@ -1,14 +1,12 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import {View, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Welcome from '../Screens/welcome/welcome';
 import Login from '../Screens/login/login';
 import Signup from '../Screens/signup/signup';
 import Forgot from '../Screens/forgot/forgot';
-import Welcomeuser from '../Screens/welcomeuser/welcomeuser';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
@@ -42,7 +40,7 @@ import {
   trivia,
   homeicon,
 } from '../common/images';
-import {Root} from 'native-base';
+import {Root, Toast} from 'native-base';
 import storage from '../components/apis/storage';
 import network from '../components/apis/network';
 import {AuthContext} from '../common/AuthContext';
@@ -202,9 +200,11 @@ function Routes() {
               storage.setData('access_token', response.access_token);
               storage.setData('user', JSON.stringify(response.user));
               dispatch({type: 'SIGN_IN', token: response.access_token});
+            }else{
+              // console.log('console.log(error),',error)
             }
           },
-          (error) => console.log(error),
+          (error) => Toast.show({text: 'Incorrect password.'}),
         );
       },
       signOut: () => {

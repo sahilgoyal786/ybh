@@ -130,10 +130,9 @@ const Signup = () => {
             name: 'Sahil',
             email: 'sahil@32bitsolutions.com',
             password: '123456789',
+            password_confirmation: '123456789',
           }}
           onSubmit={(values) => {
-            values.password_confirmation = values.password;
-            console.log(values);
             network.getResponse(
               'register',
               'POST',
@@ -146,11 +145,15 @@ const Signup = () => {
                 });
               },
               (response) => {
-                if (response.response.data.errors) {
-                  errors = response.response.data.errors;
-                  // console.log(errors);
+                console.log( response,typeof response ,"api response");
+                if (response.errors) {
+                  console.log("error in")
+                 const errors = response.errors;
+                  console.log(errors,"error object");
                   for (const key in errors) {
+                    console.log(key,errors.hasOwnProperty(key));
                     if (errors.hasOwnProperty(key)) {
+                      console.log("innn loop",errors[key])
                       const element = errors[key];
                       Toast.show({text: element[0]});
                     }
@@ -214,6 +217,21 @@ const Signup = () => {
               </TextInputView>
               {errors.password && touched.password && (
                 <Text style={styles.error_message}>{errors.password}</Text>
+              )}
+              <TextInputView>
+                <TextInput
+                  name="password_confirmation"
+                  placeholder={'CONFIRM PASSWORD'}
+                  onChangeText={handleChange('password_confirmation')}
+                  onBlur={handleBlur('password_confirmation')}
+                  value={values.password_confirmation}
+                  secureTextEntry={true}
+                  placeholderTextColor="#484848"
+                  style={{fontFamily: 'FuturaPT-Medium', flex: 1}}
+                />
+              </TextInputView>
+              {errors.password_confirmation && (
+                <Text style={styles.error_message}>{errors.password_confirmation}</Text>
               )}
               <Button
                 style={{width: wp(78), marginTop: hp(4), alignSelf: 'center'}}

@@ -25,10 +25,13 @@ const network = {
         data: data,
       })
         .then((response) => {
+          console.log(response,"axios response")
           success_callback(response.data);
         })
         .catch((error) => {
-          error_callback(error);
+          console.log(error.response,"axios response")
+
+          error_callback(error.response.data);
           //   throw error;
         });
     });

@@ -28,6 +28,8 @@ import ResponsiveImage from 'react-native-responsive-image';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation} from '@react-navigation/native';
 import {menu, image8, backicon, editprofile} from '../../common/images';
+import network from '../../components/apis/network';
+import endpoints from '../../components/apis/endPoints';
 const BackIcon = styled(ResponsiveImage)({
   fontSize: 12,
   marginTop: 30,
@@ -56,8 +58,17 @@ const Forgot = () => {
             <Bottom>PASSWORD</Bottom>
           </Top>
           <Formik
-            initialValues={{email: ''}}
-            onSubmit={(values) => console.log(values)}>
+            initialValues={{email: 'kartik@gmail.com'}}
+            onSubmit={(values) =>{
+              network.getResponse(endpoints.forgotPassword,'POST',values,(response)=>{
+                console.log(response,'forgot success')
+              },error=>{
+                console.log(error,'forgot fail')
+
+              })
+              console.log(values);
+
+            } }>
             {({handleChange, handleBlur, handleSubmit, values}) => (
               <SigninButton>
                 <View
@@ -86,7 +97,7 @@ const Forgot = () => {
                   style={styles.PassTyle}
                 />
 
-                <Button style={styles.loginbuttin} name={'Send Email'} linear />
+                <Button style={styles.loginbuttin} name={'Send Email'} onPress={handleSubmit} linear />
               </SigninButton>
             )}
           </Formik>

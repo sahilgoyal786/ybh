@@ -18,14 +18,16 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import Button from '../../components/button';
+import axios from 'axios';
 import {Formik} from 'formik';
 import ResponsiveImage from 'react-native-responsive-image';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation} from '@react-navigation/native';
 import {LoginValidationSchema} from '../../common/validations';
 import {AuthContext} from '../../common/AuthContext';
+import  globalstyles from '../../common/styles';
 
-const Login = () => {
+const Login = (props) => {
   const navigation = useNavigation();
   const {signIn} = React.useContext(AuthContext);
 
@@ -46,9 +48,10 @@ const Login = () => {
             }}
             validationSchema={LoginValidationSchema}
             onSubmit={(values) => {
+
               signIn(values);
             }}>
-            {({handleChange, handleBlur, handleSubmit, values}) => (
+            {({handleChange, errors,touched,handleBlur, handleSubmit, values}) => (
               <SigninButton>
                 <TextInput
                   onChangeText={handleChange('email')}
@@ -59,6 +62,9 @@ const Login = () => {
                   autoCapitalize="none"
                   style={styles.userName}
                 />
+                {errors.email && touched.email && (
+                <Text style={styles.error_message}>{errors.email}</Text>
+              )}
                 <TextInput
                   // onChangeText={handleChange('email')}
                   // onBlur={handleBlur('email')}
@@ -72,28 +78,12 @@ const Login = () => {
                   placeholderTextColor="#484848"
                   style={styles.PassTyle}
                 />
+                
+                {errors.password && touched.password && (
+                <Text style={styles.error_message}>{errors.password}</Text>
+              )}
 
                 <MainView>
-                  {/* <CheckBox
-                    title="keep me sign in"
-                    checkedIcon={
-                      <Checkicons
-                        source={iconchecked}
-                        initHeight="18"
-                        initWidth="18"
-                      />
-                    }
-                    uncheckedIcon={
-                      <Checkicons
-                        source={unchecked}
-                        initHeight="18"
-                        initWidth="18"
-                      />
-                    }
-                    checked={checked}
-                    onPress={() => setChecked(!checked)}
-                    containerStyle={styles.containerchecked}
-                  /> */}
                   <TouchableOpacity
                     style={styles.fogot}
                     onPress={() => {
@@ -216,5 +206,8 @@ export const styles = StyleSheet.create({
     fontFamily: 'FuturaPT-Light',
     color: 'red',
   },
+  error_message:globalstyles.error_message
+
+  
 });
 export default Login;
