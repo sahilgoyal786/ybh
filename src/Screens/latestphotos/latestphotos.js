@@ -25,7 +25,8 @@ import {
   backsec,
   bottomCurve,
 } from '../../common/images';
-import {Form, Content, Picker, Container, Icon} from 'native-base';
+import {Form, Content, Container, Icon} from 'native-base';
+import {Picker} from '@react-native-community/picker';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Header from '../../components/header';
 import ImageViewer from 'react-native-image-zoom-viewer';
@@ -113,7 +114,7 @@ const LatestPhotos = ({route, navigation}) => {
               onPress={() => {
                 navigation.navigate('Gallery', {latestPhotosURLS});
               }}>
-              <ViewMoreLink>View More</ViewMoreLink>
+              {/* <ViewMoreLink>View More</ViewMoreLink> */}
             </TouchableOpacity>
           </SectionHeading>
           <ScrollView horizontal={true}>
@@ -126,7 +127,7 @@ const LatestPhotos = ({route, navigation}) => {
               style={{position: 'absolute', left: -20}}
             />
             <TextView>Month</TextView>
-            <Picker
+            {/* <Picker
               style={{
                 justifyContent: 'flex-end',
                 alignSelf: 'flex-end',
@@ -165,7 +166,7 @@ const LatestPhotos = ({route, navigation}) => {
               <Picker.Item label="October" value="9" />
               <Picker.Item label="November" value="10" />
               <Picker.Item label="December" value="11" />
-            </Picker>
+            </Picker> */}
           </SectionHeading>
           <ScrollView horizontal={true}>
             <FirstView>{todaysPhotos}</FirstView>

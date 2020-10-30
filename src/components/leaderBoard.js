@@ -52,7 +52,7 @@ const LeaderBoard = () => {
       <TitleRank style={{fontFamily: 'FuturaPT-Medium'}}>
         Leader Board
       </TitleRank>
-      <View style={{height: 334}}>
+      <View style={{height: 384}}>
         <ScrollView style={{flex: 1}}>{leaderBoardStandings}</ScrollView>
       </View>
     </BoxView>

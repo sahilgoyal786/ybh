@@ -3,16 +3,22 @@ import {View, Text, StyleSheet} from 'react-native';
 import ImageWithBorder from '../components/imageWithBorder';
 import {image15, profile, calendar} from '../common/images';
 import ResponsiveImage from 'react-native-responsive-image';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 let size = 60;
 
 const ThriveArticle = ({article = {}, compact, navigate}) => {
   size = compact ? 60 : 100;
   return (
+    <TouchableOpacity
+    
+    onPress={() => {
+      navigate('Thrivedetails', {article});
+    }}>
     <View style={styles.wrapper}>
-      {article.file && article.file.path != '' ? (
+      {article.file && article.file.url != '' ? (
         <ImageWithBorder
-          src={{uri: article.file.path}}
+          src={{uri: article.file.url}}
           height={size}
           width={size}
         />
@@ -21,19 +27,13 @@ const ThriveArticle = ({article = {}, compact, navigate}) => {
       )}
       <View style={textWrapperStyles(size)}>
         <Text
-          style={styles.title}
-          numberOfLines={2}
-          onPress={() => {
-            navigate('Thrivedetails', {article});
-          }}>
+          style={compact ? styles.title : styles.title_large}
+          numberOfLines={2}>
           {article.title}
         </Text>
         <Text
-          style={styles.text_content}
-          numberOfLines={compact ? 4 : 7}
-          onPress={() => {
-            navigate('Thrivedetails', {article});
-          }}>
+          style={compact ? styles.text_content : styles.text_content_large}
+          numberOfLines={compact ? 4 : 4}>
           {article.content}
         </Text>
         {!compact ? (
@@ -77,7 +77,7 @@ const ThriveArticle = ({article = {}, compact, navigate}) => {
                   marginTop: 5,
                   marginLeft: 5,
                 }}>
-                {article.created_at}
+                {article.created_at_formatted}
               </Text>
             </View>
           </View>
@@ -86,6 +86,7 @@ const ThriveArticle = ({article = {}, compact, navigate}) => {
         )}
       </View>
     </View>
+    </TouchableOpacity>
   );
 };
 
@@ -98,10 +99,10 @@ const textWrapperStyles = function (size) {
     marginLeft: (size - 60) / 2 + 20,
     marginTop: -(size - 60 + 70),
     zIndex: -10,
-    paddingLeft: (size - 60) / 2 + 50,
+    paddingLeft: (size - 60) / 2 + 60,
     paddingTop: 7,
-    paddingRight: 5,
-    paddingBottom: 5,
+    paddingRight: 15,
+    paddingBottom: 10,
     fontFamily: 'FuturaPT-Medium',
     borderWidth: 2,
     borderColor: '#E1E1E1',
@@ -122,8 +123,19 @@ const styles = StyleSheet.create({
     color: '#000',
     fontFamily: 'FuturaPT-Medium',
   },
+  title_large: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 2,
+    color: '#000',
+    fontFamily: 'FuturaPT-Medium',
+  },
   text_content: {
     fontSize: 12,
+    color: 'gray',
+  },
+  text_content_large: {
+    fontSize: 14,
     color: 'gray',
   },
   wrapper: {

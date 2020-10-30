@@ -68,6 +68,7 @@ const RelationMeter = (navigation) => {
       {ques_id: currentQuestionID, ans_id: selectedAnswer},
       userDetail.token,
       (response) => {
+        console.log(response);
         if (response.message) {
           setIsLoading(false);
           //console.log('AnsweredRelationshipMeterQuestions', answeredQuestions);

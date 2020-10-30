@@ -146,7 +146,7 @@ const Thrivedetails = ({route, navigation}) => {
           </View>
 
           <Image
-            source={{uri: article.file.path}}
+            source={{uri: article.file.url}}
             style={{
               height: widthPercentageToDP(100) - 20,
               width: widthPercentageToDP(100) - 20,
@@ -198,10 +198,6 @@ const Thrivedetails = ({route, navigation}) => {
               width: windowWidth - 20,
               marginLeft: 10,
               marginTop: 10,
-              borderBottomColor: 'red',
-              borderBottomWidth: 10,
-              borderRightWidth: 20,
-              borderColor: 'blue',
             }}
           />
         </View>

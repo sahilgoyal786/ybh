@@ -105,7 +105,7 @@ const Forgot = () => {
                     fontWeight: '200',
                     fontFamily: 'FuturaPT-Medium',
                   }}>
-                  We just need your registered email to send you password reset
+                  We need your registered email to send you password reset
                   instructions
                 </Text>
               </View>

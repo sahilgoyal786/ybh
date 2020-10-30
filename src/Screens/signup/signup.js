@@ -34,6 +34,7 @@ import userDetailContest from '../../common/userDetailContext';
 
 const Signup = () => {
   const [Tab, setTab] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const data = [
     {
@@ -140,25 +141,32 @@ const Signup = () => {
       </View>
       <Formik
         initialValues={{
-          name: 'Sahil',
-          email: 'sahil@32bitsolutions.com',
-          password: '123456789',
-          password_confirmation: '123456789',
+          // name: 'Sahil',
+          // email: 'sahil@32bitsolutions.com',
+          // password: '123456789',
+          // password_confirmation: '123456789',
+          name: '',
+          email: '',
+          password: '',
+          password_confirmation: '',
         }}
         onSubmit={(values) => {
+          setIsLoading(true);
           network.getResponse(
             'register',
             'POST',
             values,
             '',
             (response) => {
+              setIsLoading(false);
               Toast.show({
-                text:
-                  "Awesome, just click on the verification link in the email and you'll be all set.",
+                text: "Awesome, you're all set.",
                 duration: 5000,
               });
+              navigation.navigate('Login');
             },
             (response) => {
+              setIsLoading(false);
               console.log(response, typeof response, 'api response');
               if (response.errors) {
                 console.log('error in');
@@ -191,12 +199,11 @@ const Signup = () => {
             <TextInputView>
               <TextInput
                 name="name"
-                placeholder="YOUR NAME"
-                placeholderTextColor="#484848"
+                placeholder="Your Name"
                 onChangeText={handleChange('name')}
                 onBlur={handleBlur('name')}
                 value={values.name}
-                style={{fontFamily: 'Futura-Medium', flex: 1}}
+                style={styles.inputField}
               />
             </TextInputView>
             {errors.name && touched.name && (
@@ -205,13 +212,13 @@ const Signup = () => {
             <TextInputView>
               <TextInput
                 name="email"
-                placeholder="EMAIL"
-                placeholderTextColor="#484848"
+                placeholder="Email"
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
                 value={values.email}
                 keyboardType="email-address"
-                style={{fontFamily: 'Futura-Medium', flex: 1}}
+                autoCapitalize="none"
+                style={styles.inputField}
               />
             </TextInputView>
             {errors.email && touched.email && (
@@ -220,13 +227,12 @@ const Signup = () => {
             <TextInputView>
               <TextInput
                 name="password"
-                placeholder={'PASSWORD'}
+                placeholder={'Password'}
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
                 value={values.password}
                 secureTextEntry={true}
-                placeholderTextColor="#484848"
-                style={{fontFamily: 'FuturaPT-Medium', flex: 1}}
+                style={styles.inputField}
               />
             </TextInputView>
             {errors.password && touched.password && (
@@ -235,13 +241,12 @@ const Signup = () => {
             <TextInputView>
               <TextInput
                 name="password_confirmation"
-                placeholder={'CONFIRM PASSWORD'}
+                placeholder={'Confirm Password'}
                 onChangeText={handleChange('password_confirmation')}
                 onBlur={handleBlur('password_confirmation')}
                 value={values.password_confirmation}
                 secureTextEntry={true}
-                placeholderTextColor="#484848"
-                style={{fontFamily: 'FuturaPT-Medium', flex: 1}}
+                style={styles.inputField}
               />
             </TextInputView>
             {errors.password_confirmation && (
@@ -254,6 +259,7 @@ const Signup = () => {
               name={'Sign up'}
               onPress={handleSubmit}
               disabled={!isValid}
+              isLoading={isLoading}
               linear
             />
           </View>
@@ -311,8 +317,7 @@ const TextInputView = styled(View)({
   width: wp(78),
   alignSelf: 'center',
   borderWidth: 0,
-  borderBottomWidth: 1,
-  borderColor: '#000',
+  borderBottomWidth: 0,
   marginTop: hp(1),
 });
 const EmailVerText = styled.Text({
@@ -367,6 +372,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 1,
     borderColor: LightPink,
+  },
+  inputField: {
+    borderBottomWidth: 1,
+    paddingVertical: hp(1),
+    width: wp(78),
+    fontSize: 20,
+    marginTop: 8,
   },
 });
 export default Signup;

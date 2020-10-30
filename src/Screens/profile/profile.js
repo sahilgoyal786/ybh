@@ -50,8 +50,6 @@ const Profile = () => {
   const userDetail = React.useContext(userDetailContext);
   const {updateUserDetail} = React.useContext(AuthContext);
 
-  console.log(userDetail.user.avatar);
-
   const [isLoading, setIsLoading] = useState(false);
   const [uploaded, setUploaded] = useState(false);
   const handleChoosePhoto = () => {
@@ -86,7 +84,7 @@ const Profile = () => {
       (response) => {
         console.log(response);
         setUploaded(false);
-        if (response.message) Toast.show({text: response.message});
+        if (response.message) Toast.show({text: 'Profile photo uploaded successfully.'});
         setIsLoading(false);
       },
       photoResource,
@@ -271,12 +269,10 @@ const ImagesView = styled(ResponsiveImage)({
     width: 0,
     height: 0.9,
   },
-  shadowOpacity: 0.8,
   shadowRadius: 1,
 });
 const FirstView = styled(View)({
   flexDirection: 'row',
-  marginTop: heightPercentageToDP(6),
 });
 const MenuIcon = styled(ResponsiveImage)({
   alignSelf: 'flex-end',

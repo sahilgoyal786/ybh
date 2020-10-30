@@ -41,7 +41,7 @@ import {Toast} from 'native-base';
 
 const ShareImage = () => {
   const navigation = useNavigation();
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
   const [photo, setPhoto] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [uploaded, setUploaded] = useState(null);
@@ -53,6 +53,7 @@ const ShareImage = () => {
       Toast.show({
         text: 'Please give your consent to the terms and conditions first.',
       });
+      return;
     }
     const options = {
       noData: true,
@@ -90,7 +91,7 @@ const ShareImage = () => {
         setIsLoading(false);
       },
       photoResource,
-      'images',
+      'image',
     );
   };
 
@@ -125,7 +126,7 @@ const ShareImage = () => {
         </MainView>
         <MainnnView>
           <CheckBox
-            title="I agree to tearms & conditions"
+            title="I agree to terms & conditions"
             textStyle={{
               fontSize: 14,
               fontWeight: '400',
@@ -137,7 +138,7 @@ const ShareImage = () => {
             uncheckedIcon={
               <Checkicons source={iconchecked} initHeight="18" initWidth="18" />
             }
-            checked={checked}
+            checked={!checked}
             onPress={() => setChecked(!checked)}
             containerStyle={styles.containerchecked}
           />

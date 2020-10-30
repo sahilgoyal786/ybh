@@ -66,7 +66,7 @@ const Thrive = ({route, navigation}) => {
         userDetail.token,
         (response) => {
           for (let i = 0; i < response.data.length; i++) {
-            response.data[i].url = response.data[i].path;
+            response.data[i].url = response.data[i].url;
             tempBlogsArray.push(response.data[i]);
           }
           if (page == 1) {
@@ -91,6 +91,7 @@ const Thrive = ({route, navigation}) => {
 
   return (
     <FlatList
+    bounces={false}
       onEndReached={() => {
         if (blogs.length && totalPages && page <= totalPages) {
           LoadBlogs();
@@ -117,7 +118,7 @@ const Thrive = ({route, navigation}) => {
         </View>
       }
       ListHeaderComponent={
-        <View style={{backgroundColor: 'white'}}>
+        <View style={{backgroundColor: 'transparent'}}>
           <Header title="Thrive" backButton="true" />
         </View>
       }

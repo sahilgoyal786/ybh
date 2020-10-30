@@ -3,7 +3,7 @@ import axios from 'axios';
 import {call} from 'react-native-reanimated';
 import storage from './storage';
 
-const api_host = 'http://165.232.70.89/api/';
+const api_host = 'https://ybh.32bitsolutions.com/api/';
 
 const network = {
   getResponse: function (
@@ -17,17 +17,21 @@ const network = {
     file_name = 'images',
   ) {
     let headers = {};
-
-    let formData = new FormData();
-    if (file) {
+    let formData = {};
       formData = new FormData();
       for (var key in data) {
-        formData.append(key, data[key]);
+        if(typeof data[key] == 'object' && data[key]){
+          data[key].forEach((item) => {
+            formData.append(key+'[]', item);
+        });
+        }else{
+          console.log('NOT AN OBJECT');
+          formData.append(key, data[key]);
+        }
       }
       if (file) {
-        headers['Content-Type'] = 'multipart/form-data';
         formData.append(file_name, {
-          name: file.fileName,
+          name: Math.random().toString(),
           type: file.type,
           uri:
             Platform.OS === 'android'
@@ -35,15 +39,14 @@ const network = {
               : file.uri.replace('file://', ''),
         });
       }
-    } else {
-      formData = data;
-    }
-    console.log(formData);
+      console.log(formData);
+      console.log(file);
 
+    headers['Content-Type'] = `multipart/form-data boundary=${formData._boundary}`;
     if (access_token) {
       headers['Authorization'] = 'Bearer ' + access_token;
     }
-
+    console.log(api_host + endpoint);
     axios({
       method: type,
       url: api_host + endpoint,
@@ -51,7 +54,7 @@ const network = {
       data: formData,
     })
       .then((response) => {
-        // console.log(response, 'axios response');
+        // console.log(response.data, 'axios response');
         if (response.data) success_callback(response.data);
         else success_callback(response);
       })
@@ -62,7 +65,7 @@ const network = {
           error.response.status == 401
         ) {
         }
-        console.log(error, 'axios response');
+        console.log(error.response.data, 'axios response');
 
         error_callback(error);
         //   throw error;

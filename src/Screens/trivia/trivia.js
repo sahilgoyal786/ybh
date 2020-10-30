@@ -63,11 +63,15 @@ const Trivia = () => {
       Toast.show({text: 'Please choose an answer'});
       return;
     }
+
     setSavedResponses(
-      savedResponses.concat({
+      savedResponses !== null? savedResponses.concat({
         ques_id: currentQuestionID,
         ans_id: selectedAnswer,
-      }),
+      }) : [{
+        ques_id: currentQuestionID,
+        ans_id: selectedAnswer,
+      }]
     );
     setAnsweredQuestions(answeredQuestions.concat(currentQuestionID));
     presentQuestion();
@@ -165,7 +169,9 @@ const Trivia = () => {
         let SavedTriviaResponses = await storage.getData(
           'SavedTriviaResponses',
         );
-        setSavedResponses(JSON.parse(SavedTriviaResponses));
+        if(SavedTriviaResponses !== null){
+          setSavedResponses(JSON.parse(SavedTriviaResponses));
+        }
       } catch (exception) {
         console.log('exception', exception);
       }

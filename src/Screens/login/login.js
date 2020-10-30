@@ -47,8 +47,10 @@ const Login = (props) => {
       <View style={{flex: 1, flexGrow: 1, minHeight: hp(30)}}>
         <Formik
           initialValues={{
-            email: 'sahilgoyal1@gmail.com',
-            password: '0987654321',
+            // email: 'sahilgoyal1@gmail.com',
+            // password: '0987654321',
+            email: '',
+            password: '',
           }}
           validationSchema={LoginValidationSchema}
           onSubmit={(values) => {
@@ -67,8 +69,7 @@ const Login = (props) => {
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
                 value={values.email}
-                placeholder="USER NAME"
-                placeholderTextColor="#484848"
+                placeholder="Email"
                 autoCapitalize="none"
                 style={styles.userName}
               />
@@ -84,8 +85,7 @@ const Login = (props) => {
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
                 value={values.password}
-                placeholder="PASSWORD"
-                placeholderTextColor="#484848"
+                placeholder="Password"
                 style={styles.PassTyle}
               />
 
@@ -110,6 +110,7 @@ const Login = (props) => {
                 // }}
                 style={styles.loginbuttin}
                 name={'Login'}
+                isLoading={isLoading}
                 linear
               />
               <View style={{marginTop: hp(2)}}>
@@ -189,7 +190,6 @@ export const styles = StyleSheet.create({
     width: wp(78),
     fontSize: 17,
     marginTop: hp(1.9),
-    fontFamily: 'FuturaPT-Medium',
   },
   PassTyle: {
     borderBottomWidth: 1,
@@ -197,7 +197,6 @@ export const styles = StyleSheet.create({
     width: wp(78),
     fontSize: 17,
     marginTop: hp(3),
-    fontFamily: 'FuturaPT-Medium',
   },
   Forgotstyle: {
     fontSize: 14,

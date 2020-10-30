@@ -102,11 +102,11 @@ const Home = () => {
         userDetail.token || '',
         (response) => {
           for (let i = 0; i < 8; i++) {
-            votingImagesURLS.push(response[i]['path']);
+            votingImagesURLS.push(response[i]['url']);
             tempVotingImagesArray.push(
               <VotingImage
                 key={i}
-                source={{uri: response[i]['path']}}
+                source={{uri: response[i]['url']}}
                 style={{}}
               />,
             );
@@ -125,7 +125,7 @@ const Home = () => {
         (response) => {
           response = response.data;
           for (let i = 0; i < 6; i++) {
-            latestPhotosURLS.push({url: response[i]['path']});
+            latestPhotosURLS.push({url: response[i]['url']});
             tempLatestPhotosArray.push(
               <LatestPhoto
                 key={i}
@@ -133,11 +133,12 @@ const Home = () => {
                   height: widthPercentageToDP(66.67 / 3) - 13,
                   width: widthPercentageToDP(66.67 / 3) - 13,
                 }}
-                source={{uri: response[i]['path']}}>
+                source={{uri: response[i]['url']}}>
                 {i == 5 && (
                   <ViewMore>
                     <TextMore
                       onPress={() => {
+                        console.log(latestPhotosURLS);
                         navigation.navigate('LatestPhotos', {latestPhotosURLS});
                       }}>
                       More

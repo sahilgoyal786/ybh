@@ -48,7 +48,7 @@ const MyPhotos = () => {
         }}>
         <View key={item.id} style={{margin: widthPercentageToDP(1.25)}}>
           <ImagesView
-            source={{uri: item.path}}
+            source={{uri: item.url}}
             initHeight={widthPercentageToDP(50) - 10}
             initWidth={widthPercentageToDP(50) - 10}
             borderRadius={3}
@@ -87,7 +87,7 @@ const MyPhotos = () => {
         userDetail.token,
         (response) => {
           for (let i = 0; i < response.data.length; i++) {
-            response.data[i].url = response.data[i].path;
+            response.data[i].url = response.data[i].url;
             tempImagesArray.push(response.data[i]);
           }
           if (page == 1) {
@@ -113,6 +113,8 @@ const MyPhotos = () => {
 
   return (
     <FlatList
+      bounces={false}
+      alwaysBounceVertical={false}
       onEndReached={() => {
         if (myPhotos.length && totalPages && page <= totalPages) {
           console.log(page, totalPages);
@@ -122,14 +124,17 @@ const MyPhotos = () => {
       }}
       onEndReachedThreshold={myPhotos.length ? 0.5 : 0}
       contentContainerStyle={
-        myPhotos.length
+        (myPhotos.length
           ? {
               backgroundColor: 'white',
             }
           : {
               backgroundColor: 'white',
               flex: 1,
-            }
+            },
+        {
+          minHeight: heightPercentageToDP(100) - 70,
+        })
       }
       data={myPhotos}
       renderItem={({item, index}) => renderItem(item, index)}
@@ -142,11 +147,16 @@ const MyPhotos = () => {
         </View>
       }
       ListHeaderComponent={
-        <View style={{backgroundColor: 'white'}}>
-          <Header title="My Photos" />
+        <View style={{backgroundColor: 'transparent'}}>
+          <Header title="My Photos" backButton="true" />
         </View>
       }
-      ListFooterComponentStyle={{zIndex: -1, paddingBottom: 40}}
+      ListFooterComponentStyle={{
+        zIndex: -1,
+        paddingBottom: 40,
+        flex: 1,
+        justifyContent: 'flex-end',
+      }}
       ListFooterComponent={
         <View
           style={{
@@ -180,6 +190,10 @@ const MyPhotos = () => {
               onCancel={() => setShowModal(false)}
               index={currentImageIndex}
               renderIndicator={() => {}}
+              enablePreload={true}
+              loadingRender={() => {
+                return <ActivityIndicator color="white" />;
+              }}
             />
           </Modal>
         </View>

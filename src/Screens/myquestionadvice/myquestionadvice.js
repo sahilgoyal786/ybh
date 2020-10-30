@@ -20,7 +20,8 @@ import {
   righticon,
   downarrow,
 } from '../../common/images';
-import {Form, Content, Picker, Container, Icon} from 'native-base';
+import {Form, Content, Container, Icon} from 'native-base';
+import {Picker} from '@react-native-community/picker';
 import {styles} from '../login/login';
 
 const MyQuestionAdvice = () => {
@@ -42,51 +43,50 @@ const MyQuestionAdvice = () => {
         <MainView>
           <FirstViewText>
             <TextMonth>Counseling</TextMonth>
-          </FirstViewText> 
-           
-            <Picker
-              mode="dropdown"
-              placeholder="Select One"
-              textStyle={{
-                fontSize: 19,
-                fontWeight: '400',
-                color: '#484848',
-                fontFamily: 'FuturaPT-Book',
-                marginRight: -widthPercentageToDP(10),
-              }}
-              note={false}
-              iosIcon={
-                <ResponsiveImage
-                  style={{
-                    tintColor: '#000',
-                    marginRight: widthPercentageToDP(4.5),
-                    marginTop: heightPercentageToDP(0.5),
-                    fontSize: 19,
-                    fontWeight: '400',
-                    color: '#484848',
-                    fontFamily: 'FuturaPT-Book',
-                  }}
-                  source={downarrow}
-                  initHeight="10"
-                  initWidth="10"
-                />
-              }
-              selectedValue={Value}
-              onValueChange={(val) => setValue(val)}>
-              <Picker.Item label="January" value="key0" />
-              <Picker.Item label="February" value="key1" />
-              <Picker.Item label="March" value="key2" />
-              <Picker.Item label="April" value="key3" />
-              <Picker.Item label="May" value="key4" />
-              <Picker.Item label="June" value="key5" />
-              <Picker.Item label="July" value="key6" />
-              <Picker.Item label="August" value="key7" />
-              <Picker.Item label="September " value="key8" />
-              <Picker.Item label="October" value="key9" />
-              <Picker.Item label="November " value="key10" />
-              <Picker.Item label="Filter " value="key11" />
-            </Picker>
-         
+          </FirstViewText>
+
+          <Picker
+            mode="dropdown"
+            placeholder="Select One"
+            textStyle={{
+              fontSize: 19,
+              fontWeight: '400',
+              color: '#484848',
+              fontFamily: 'FuturaPT-Book',
+              marginRight: -widthPercentageToDP(10),
+            }}
+            note={false}
+            iosIcon={
+              <ResponsiveImage
+                style={{
+                  tintColor: '#000',
+                  marginRight: widthPercentageToDP(4.5),
+                  marginTop: heightPercentageToDP(0.5),
+                  fontSize: 19,
+                  fontWeight: '400',
+                  color: '#484848',
+                  fontFamily: 'FuturaPT-Book',
+                }}
+                source={downarrow}
+                initHeight="10"
+                initWidth="10"
+              />
+            }
+            selectedValue={Value}
+            onValueChange={(val) => setValue(val)}>
+            <Picker.Item label="January" value="key0" />
+            <Picker.Item label="February" value="key1" />
+            <Picker.Item label="March" value="key2" />
+            <Picker.Item label="April" value="key3" />
+            <Picker.Item label="May" value="key4" />
+            <Picker.Item label="June" value="key5" />
+            <Picker.Item label="July" value="key6" />
+            <Picker.Item label="August" value="key7" />
+            <Picker.Item label="September " value="key8" />
+            <Picker.Item label="October" value="key9" />
+            <Picker.Item label="November " value="key10" />
+            <Picker.Item label="Filter " value="key11" />
+          </Picker>
         </MainView>
         <View>
           <View
@@ -423,7 +423,7 @@ const MyQuestionAdvice = () => {
             navigation.navigate('AdviceFinance');
           }}>
           <MoreeView>
-            <Text style={{alignSelf:"center"}}>View More</Text>
+            <Text style={{alignSelf: 'center'}}>View More</Text>
             <ResponsiveImage
               style={{
                 tintColor: '#000',
@@ -514,10 +514,10 @@ const TextMonth = styled(Text)({
   fontFamily: 'FuturaPT-Book',
 });
 const FirstViewText = styled(View)({
-  width:widthPercentageToDP(70),
+  width: widthPercentageToDP(70),
   marginTop: heightPercentageToDP(1),
   marginLeft: widthPercentageToDP(4.5),
-// backgroundColor:"pink",
+  // backgroundColor:"pink",
   fontSize: 19,
   fontWeight: '600',
   color: '#484848',

@@ -47,7 +47,7 @@ const Gallery = ({route, navigation}) => {
             setcurrentImageIndex(index);
           }}>
           <ImagesView
-            source={{uri: item.path}}
+            source={{uri: item.url}}
             initHeight={widthPercentageToDP(25) - 7}
             initWidth={widthPercentageToDP(25) - 7}
             borderRadius={3}
@@ -68,7 +68,7 @@ const Gallery = ({route, navigation}) => {
         userDetail.token,
         (response) => {
           for (let i = 0; i < response.data.length; i++) {
-            response.data[i].url = response.data[i].path;
+            response.data[i].url = response.data[i].url;
             tempImagesArray.push(response.data[i]);
           }
           if (page == 1) {
@@ -94,6 +94,7 @@ const Gallery = ({route, navigation}) => {
 
   return (
     <FlatList
+      bounces={false}
       onEndReached={() => {
         if (photos.length && totalPages && page <= totalPages) {
           LoadImages();

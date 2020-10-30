@@ -13,12 +13,12 @@ import {backicon} from '../common/images';
 const Header = ({title, backButton = ''}) => {
   const navigation = useNavigation();
   return (
-    <View style={{width: widthPercentageToDP(100), height: 94}}>
+    <View style={{width: widthPercentageToDP(100), height: 114}}>
       <Image
         source={headerView}
         style={{
           width: widthPercentageToDP(100),
-          height: 90,
+          height: 100,
           resizeMode: 'stretch',
         }}
       />
