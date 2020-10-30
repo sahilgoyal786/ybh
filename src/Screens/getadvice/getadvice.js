@@ -1,54 +1,43 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   StyleSheet,
   View,
-  ImageBackground,
   Image,
+  ImageBackground,
+  TouchableOpacity,
   SafeAreaView,
-  Platform,
-  ScrollView,
 } from 'react-native';
-import styled from 'styled-components/native';
-import ResponsiveImage from 'react-native-responsive-image';
+import {Textarea, Form} from 'native-base';
+import {
+  getadvive2background,
+  menu,
+  single,
+  sexual,
+  finance,
+  genral,
+  material,
+  enterprene,
+  headerView,
+  botomView,
+  bottomCurve,
+} from '../../common/images';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
+import styled from 'styled-components/native';
+import ResponsiveImage from 'react-native-responsive-image';
+import Button from '../../components/button';
+import {Dialog} from 'react-native-simple-dialogs';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
+import {ScrollView} from 'react-native-gesture-handler';
 import Header from '../../components/header';
-import ThriveArticle from '../../components/thriveArticle';
-import userDetailContest from '../../common/userDetailContext';
 
-import {
-  menu,
-  dummyimage,
-  botomView,
-  dots,
-  image1,
-  image2,
-  image3,
-  image4,
-  image5,
-  image6,
-  image7,
-  image8,
-  addimage,
-  image9,
-  image10,
-  image11,
-  image12,
-  image13,
-  image14,
-  image15,
-  bottomadd,
-  bottomCurve,
-} from '../../common/images';
-import LeaderBoard from '../../components/leaderBoard';
-
-const GetAdvice = () => {
+const GetAdvice2 = () => {
   const navigation = useNavigation();
-  const userDetail = React.useContext(userDetailContest);
+  const [dialog, setDialog] = useState(false);
 
   return (
     <View style={{flex: 1}}>
@@ -61,197 +50,175 @@ const GetAdvice = () => {
           bottom: -100,
         }}
         resizeMode="contain"></Image>
-      <Header title={userDetail&& userDetail.user.username|| ''} />
+      <Header title="Get Advice" />
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
         bounces={false}
         style={{paddingTop: 20}}
         contentContainerStyle={{paddingBottom: 40}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            flex: 1,
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
-          }}>
-          <View style={{flex: 2}}>
-            <View style={{flexDirection: 'column'}}>
-              <RowimageFirst
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <ImageBackgroundView
-                  source={image1}
-                  style={{
-                    height: widthPercentageToDP(66.67 / 4) - 10,
-                    width: widthPercentageToDP(66.67 / 4) - 10,
-                  }}
-                  borderRadius={5}
-                />
-                <ImageBackgroundView
-                  source={image2}
-                  style={{
-                    height: widthPercentageToDP(66.67 / 4) - 10,
-                    width: widthPercentageToDP(66.67 / 4) - 10,
-                  }}
-                  borderRadius={5}
-                />
-                <ImageBackgroundView
-                  source={image3}
-                  style={{
-                    height: widthPercentageToDP(66.67 / 4) - 10,
-                    width: widthPercentageToDP(66.67 / 4) - 10,
-                  }}
-                  borderRadius={5}
-                />
-                <ImageBackgroundView
-                  source={image4}
-                  style={{
-                    height: widthPercentageToDP(66.67 / 4) - 10,
-                    width: widthPercentageToDP(66.67 / 4) - 10,
-                  }}
-                  borderRadius={5}
-                />
-              </RowimageFirst>
-              <RowimageFirst
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 6,
-                }}>
-                <ImageBackgroundView
-                  source={image5}
-                  style={{
-                    height: widthPercentageToDP(66.67 / 4) - 10,
-                    width: widthPercentageToDP(66.67 / 4) - 10,
-                  }}
-                  borderRadius={5}
-                />
-                <ImageBackgroundView
-                  source={image6}
-                  style={{
-                    height: widthPercentageToDP(66.67 / 4) - 10,
-                    width: widthPercentageToDP(66.67 / 4) - 10,
-                  }}
-                  borderRadius={5}
-                />
-                <ImageBackgroundView
-                  source={image7}
-                  style={{
-                    height: widthPercentageToDP(66.67 / 4) - 10,
-                    width: widthPercentageToDP(66.67 / 4) - 10,
-                  }}
-                  borderRadius={5}
-                />
-                <ImageBackgroundView
-                  source={image8}
-                  style={{
-                    height: widthPercentageToDP(66.67 / 4) - 10,
-                    width: widthPercentageToDP(66.67 / 4) - 10,
-                  }}
-                  borderRadius={5}
-                />
-              </RowimageFirst>
+        <SitutionView>
+          <SitutionText>
+            Sending Your Sitution Anonymously for Advice
+          </SitutionText>
+          <ButtonSUbmit
+            onPress={() => setDialog(true)}
+            name={'Submit'}
+            linear
+          />
+        </SitutionView>
 
-              <ClickVote>
-                <Text
+        <View style={{flex: 1}}>
+          <ScrollView>
+            <ImagesWelcome>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('AdviceFinance');
+                }}>
+                <ImagesView source={finance} initHeight="130" initWidth="130" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('AdviceFinance');
+                }}>
+                <ImagesView source={sexual} initHeight="130" initWidth="130" />
+              </TouchableOpacity>
+            </ImagesWelcome>
+            <NameView>
+              <Text style={styles.categoryHeading}>Finance</Text>
+
+              <Text style={styles.categoryHeading}>Sexual</Text>
+            </NameView>
+            <ImagesWelcome>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('AdviceFinance');
+                }}>
+                <ImagesView
+                  source={material}
+                  initHeight="130"
+                  initWidth="130"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('AdviceFinance');
+                }}>
+                <ImagesView
+                  source={enterprene}
+                  initHeight="130"
+                  initWidth="130"
+                />
+              </TouchableOpacity>
+            </ImagesWelcome>
+            <NameView>
+              <Text style={styles.categoryHeading}>Marital</Text>
+              <Text style={styles.categoryHeading}>Entrepreneurs</Text>
+            </NameView>
+            <ImagesWelcome>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('AdviceFinance');
+                }}>
+                <ImagesView source={single} initHeight="130" initWidth="130" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('AdviceFinance');
+                }}>
+                <ImagesView source={genral} initHeight="130" initWidth="130" />
+              </TouchableOpacity>
+            </ImagesWelcome>
+            <NameView>
+              <Text style={styles.categoryHeading}>Single</Text>
+              <Text style={styles.categoryHeading}>General</Text>
+            </NameView>
+            <Dialog visible={dialog} onTouchoutside={() => setDialog(false)}>
+              <View>
+                <Form>
+                  <Textarea rowSpan={10} placeholder="100 Characters" />
+                </Form>
+              </View>
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Button
                   onPress={() => {
-                    navigation.navigate('VotingPage');
+                    setDialog(false);
+                    navigation.navigate('Welcomeuser');
                   }}
-                  style={{fontFamily: 'FuturaPT-Medium', color: '#000'}}>
-                  Click To Vote
-                </Text>
-              </ClickVote>
-              <MainLatestView>
-                <Text style={styles.sectionHeading}>Latest Photos</Text>
-                <View style={{position: 'relative'}}>
-                  <RowimageFirst style={{justifyContent: 'space-between'}}>
-                    <ImageBackgroundView
-                      source={image12}
-                      style={{
-                        height: widthPercentageToDP(66.67 / 3) - 13,
-                        width: widthPercentageToDP(66.67 / 3) - 13,
-                      }}></ImageBackgroundView>
-                    <ImageBackgroundView
-                      style={{
-                        height: widthPercentageToDP(66.67 / 3) - 13,
-                        width: widthPercentageToDP(66.67 / 3) - 13,
-                      }}
-                      source={image10}></ImageBackgroundView>
-                    <ImageBackgroundView
-                      style={{
-                        height: widthPercentageToDP(66.67 / 3) - 13,
-                        width: widthPercentageToDP(66.67 / 3) - 13,
-                      }}
-                      source={image13}></ImageBackgroundView>
-                  </RowimageFirst>
-                  <RowimageFirst
-                    style={{justifyContent: 'space-between', marginTop: 6}}>
-                    <ImageBackgroundView
-                      style={{
-                        height: widthPercentageToDP(66.67 / 3) - 13,
-                        width: widthPercentageToDP(66.67 / 3) - 13,
-                      }}
-                      source={image15}></ImageBackgroundView>
-                    <ImageBackgroundView
-                      style={{
-                        height: widthPercentageToDP(66.67 / 3) - 13,
-                        width: widthPercentageToDP(66.67 / 3) - 13,
-                      }}
-                      source={image11}></ImageBackgroundView>
-                    <ImageBackgroundView
-                      style={{
-                        height: widthPercentageToDP(66.67 / 3) - 13,
-                        width: widthPercentageToDP(66.67 / 3) - 13,
-                      }}
-                      source={image13}>
-                      <ViewMore>
-                        <TextMore
-                          onPress={() => {
-                            navigation.navigate('PhotoWorld');
-                          }}>
-                          More
-                        </TextMore>
-                      </ViewMore>
-                    </ImageBackgroundView>
-                  </RowimageFirst>
-                </View>
-                <Text style={styles.sectionHeading}>Thrive</Text>
-                <ThriveArticle compact={true} />
-              </MainLatestView>
-            </View>
-          </View>
-          <View
-            style={{
-              flex: 1,
-              alignContent: 'stretch',
-              paddingLeft: 10,
-              paddingRight: 10,
-            }}>
-            <Image
-              source={addimage}
-              style={{
-                width: '100%',
-                height: undefined,
-                aspectRatio: 32 / 21,
-                padding: 0,
-                marginBottom: 10,
-              }}></Image>
-            <LeaderBoard />
-          </View>
+                  style={{
+                    marginTop: heightPercentageToDP(3),
+                    width: widthPercentageToDP(35),
+                  }}
+                  name={'Submit'}
+                  linear
+                />
+                <Button
+                  onPress={() => {
+                    navigation.navigate('Welcomeuser');
+                    setDialog(false);
+                  }}
+                  style={{
+                    marginTop: heightPercentageToDP(3),
+                    width: widthPercentageToDP(35),
+                  }}
+                  name={'Cancel'}
+                  linear
+                />
+              </View>
+            </Dialog>
+          </ScrollView>
         </View>
-        <LastImage>
-          <Image
-            source={bottomadd}
-            style={{
-              width: '100%',
-              height: undefined,
-              aspectRatio: 395 / 100,
-            }}></Image>
-        </LastImage>
       </ScrollView>
     </View>
   );
 };
+const NameView = styled(View)({
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: heightPercentageToDP(1),
+});
+const ImagesView = styled(ResponsiveImage)({});
+const ImagesWelcome = styled(View)({
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: heightPercentageToDP(4),
+  paddingRight: 40,
+  paddingLeft: 40,
+});
+const SitutionView = styled(View)({
+  flex: 1,
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginLeft: widthPercentageToDP(5),
+});
+const ButtonSUbmit = styled(Button)({
+  width: widthPercentageToDP(39),
+  marginRight: widthPercentageToDP(5),
+});
+const MenuIcon = styled(ResponsiveImage)({
+  alignSelf: 'flex-end',
+  marginRight: widthPercentageToDP(4),
+});
+const WelcomeText = styled(Text)({
+  fontSize: 24,
+  color: '#ffffff',
+  fontWeight: '500',
+  fontFamily: 'FuturaPT-Medium',
+  marginTop: -heightPercentageToDP(0.1),
+});
+const SitutionText = styled(Text)({
+  width: widthPercentageToDP(52),
+  fontSize: 19,
+  color: '#000',
+  fontWeight: '500',
+  fontFamily: 'FuturaPT-Book',
+
+  marginTop: -heightPercentageToDP(0.1),
+});
 const WelcomeView = styled(View)({
   flexDirection: 'row',
   justifyContent: 'space-between',
@@ -259,106 +226,16 @@ const WelcomeView = styled(View)({
   marginTop: '-14%',
   marginLeft: 8,
 });
-const WelcomeText = styled(Text)({
-  fontSize: 22,
-  color: '#ffffff',
-  fontWeight: '500',
-  fontFamily: 'FuturaPT-Medium',
-});
-const LastImage = styled(View)({
-  marginTop: heightPercentageToDP(3),
-  marginLeft: 10,
-  marginRight: 10,
-});
-const ImageBackgroundView = styled(ImageBackground)({
-  borderRadius: 6,
-  overflow: 'hidden',
-});
-const ViewMore = styled(View)({
-  backgroundColor: '#F5C84B',
-  flex: 1,
-  opacity: 0.9,
-  //borderRadius: 6,
-  justifyContent: 'center',
-  alignItems: 'center',
-});
-
-const TextMore = styled(Text)({
-  textDecorationLine: 'underline',
-  color: 'white',
-  fontFamily: 'FuturaPT-Medium',
-});
 const BackgroundImage = styled(ImageBackground)({
-  bottom: 0,
-});
-const MainView = styled(View)({
-  flex: 2,
-});
-const SecondView = styled(View)({
-  flexDirection: 'row',
-  marginTop: heightPercentageToDP(1),
-  justifyContent: 'space-around',
-});
-const FirstView = styled(View)({
-  flexDirection: 'row',
-  marginTop: heightPercentageToDP(4),
-  justifyContent: 'space-around',
-  //marginLeft: widthPercentageToDP(1),
-});
-const ThirdView = styled(View)({
-  marginTop: heightPercentageToDP(4),
-  //marginRight:3,
-  marginLeft: 7,
-  borderRadius: 6,
-});
-const ImagesView = styled(ResponsiveImage)({
-  marginLeft: 5,
-});
-const ClickVote = styled(View)({
-  position: 'absolute',
-  top: heightPercentageToDP(5.5),
-  left: widthPercentageToDP(33.33) - 72,
-  backgroundColor: '#F6BC18',
-  paddingVertical: heightPercentageToDP(1),
-  paddingHorizontal: widthPercentageToDP(6.8),
-  opacity: 0.8,
-  borderRadius: 5,
-});
-const MainLatestView = styled(View)({});
-const LatestPhoto = styled(View)({});
-const RowimageSecond = styled(View)({
-  flexDirection: 'row',
-  marginLeft: widthPercentageToDP(1),
-  marginTop: heightPercentageToDP(1),
-});
-const RowimageFirst = styled(View)({
-  flexDirection: 'row',
-  marginLeft: 10,
+  height: '100%',
 });
 
-const Title = styled(Text)({
-  marginLeft: -widthPercentageToDP(14),
-  // marginTop: heightPercentageToDP(3),
-  // fontWeight: 400,
-  fontSize: 18,
-  fontFamily: 'FuturaPT-Medium',
-});
 const styles = StyleSheet.create({
-  item: {
-    color: '#ffffff',
-    marginLeft: widthPercentageToDP(2),
-    fontSize: 12,
-    fontFamily: 'FuturaPT-Medium',
-    width: widthPercentageToDP(27),
-    margin: 6,
-  },
-  sectionHeading: {
-    marginLeft: 10,
-    marginTop: 20,
-    marginBottom: 8,
-    fontSize: 18,
-    fontFamily: 'FuturaPT-Medium',
+  categoryHeading: {
+    fontSize: 20,
+    fontFamily: 'FuturaPT-Book',
+    width: widthPercentageToDP(50),
+    textAlign: 'center',
   },
 });
-
-export default GetAdvice;
+export default GetAdvice2;

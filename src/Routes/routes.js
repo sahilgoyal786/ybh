@@ -12,12 +12,12 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import DrawerScreen from '../Screens/drawer/drawer';
 import BottomTab from '../common/Bottomtabs';
-import GetAdvice from '../Screens/getadvice/getadvice';
+import Home from '../Screens/home/home';
 import ShareImage from '../Screens/shareimage/shareimage';
 import RelationMeter from '../Screens/relationmeter/relationmeter';
 import Trivia from '../Screens/trivia/trivia';
-import PhotoWorld from '../Screens/photoworld/photoworld';
-import GetAdvice2 from '../Screens/getadvice2/getadvice2';
+import LatestPhotos from '../Screens/latestphotos/latestphotos';
+import GetAdvice from '../Screens/getadvice/getadvice';
 import Thrive from '../Screens/thrive/thrive';
 import Thrivedetails from '../Screens/ThriveDetails/Thrivedetails';
 import VotingPage from '../Screens/voting page/votingpage';
@@ -27,7 +27,7 @@ import PhotoViewing from '../Screens/photoviewing/photoviewing';
 import ThriveSec from '../Screens/thrivesec/thrivesec';
 import Voting2 from '../Screens/voting2/voting2';
 import SetPassword from '../Screens/setPassword/setPassword';
-import TodayGallery from '../Screens/todaygallery/todaygallery';
+import Gallery from '../Screens/gallery/gallery';
 import MyPhotos from '../Screens/myphotos/myphotos';
 import Profile from '../Screens/profile/profile';
 import PhotoDetail from '../Screens/photodetail/photodetail';
@@ -45,21 +45,22 @@ import {Root, Toast} from 'native-base';
 import storage from '../components/apis/storage';
 import network from '../components/apis/network';
 import {AuthContext} from '../common/AuthContext';
-import userDetailContest from '../common/userDetailContext';
+import userDetailContext from '../common/userDetailContext';
 import Loading from '../Screens/loading/loading';
+import EndPoints from '../components/apis/endPoints';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
-function GetAdviceComponent() {
+function HomeComponent() {
   return (
     <Stack.Navigator headerMode="none">
-      {/* <Stack.Screen name="GetAdvice2" component={GetAdvice2} /> */}
-      <Stack.Screen name="GetAdvice" component={GetAdvice} />
-      <Stack.Screen name="PhotoWorld" component={PhotoWorld} />
-      <Stack.Screen name="TodayGallery" component={TodayGallery} />
+      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="LatestPhotos" component={LatestPhotos} />
+      <Stack.Screen name="Gallery" component={Gallery} />
       <Stack.Screen name="Thrive" component={Thrive} />
+      <Stack.Screen name="MyPhotos" component={MyPhotos} />
       <Stack.Screen name="Thrivedetails" component={Thrivedetails} />
       <Stack.Screen name="VotingPage" component={VotingPage} />
       <Stack.Screen name="AdviceFinance" component={AdviceFinance} />
@@ -74,7 +75,7 @@ function ShareImageComponent() {
   return (
     <Stack.Navigator headerMode="none">
       <Tab.Screen name="ShareImage" component={ShareImage} />
-      <Stack.Screen name="TodayGallery" component={TodayGallery} />
+      <Stack.Screen name="Gallery" component={Gallery} />
       <Stack.Screen name="MyPhotos" component={MyPhotos} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="PhotoDetail" component={PhotoDetail} />
@@ -90,7 +91,7 @@ function HomeTabs() {
     <Tab.Navigator tabBar={(props) => <BottomTab {...props} />}>
       <Tab.Screen
         name="home"
-        component={GetAdviceComponent}
+        component={HomeComponent}
         options={{icon: homeicon}}
       />
       <Tab.Screen
@@ -99,8 +100,8 @@ function HomeTabs() {
         options={{icon: shareimage}}
       />
       <Tab.Screen
-        name="GetAdvice2"
-        component={GetAdvice2}
+        name="GetAdvice"
+        component={GetAdvice}
         options={{icon: getadvice}}
       />
       <Tab.Screen
@@ -113,16 +114,15 @@ function HomeTabs() {
   );
 }
 function HomeDrawer() {
-  // console.log(React.useContext(userDetailContest));
+  // console.log(React.useContext(userDetailContext));
   return (
     <Drawer.Navigator
       drawerPosition={'right'}
       drawerStyle={{width: widthPercentageToDP(70)}}
       drawerContent={(props) => <DrawerScreen {...props} />}>
       <Drawer.Screen name="Home" component={HomeTabs} />
-      <Drawer.Screen name="GetAdvice" component={GetAdvice} />
       <Drawer.Screen name="ShareImage" component={ShareImage} />
-      <Drawer.Screen name="GetAdvice2" component={GetAdvice2} />
+      <Drawer.Screen name="GetAdvice" component={GetAdvice} />
       <Drawer.Screen name="RelationMeter" component={RelationMeter} />
       <Drawer.Screen name="TriviaSec" component={TriviaSec} />
       <Drawer.Screen name="Thrive" component={Thrive} />
@@ -132,40 +132,41 @@ function HomeDrawer() {
 }
 
 function Routes() {
-  const [userDetail,changeUserDetail] = React.useState(null);
+  const [userDetail, changeUserDetail] = React.useState(null);
 
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
         case 'RESTORE_TOKEN':
+          userDetail;
+          changeUserDetail(action);
           return {
             ...prevState,
             userToken: action.token,
             isLoading: false,
+            userDetail: action.user,
           };
-          case 'USER_UPDATE':
-            return {
-              ...prevState,
-              userDetail:action.user
+        case 'USER_UPDATE':
+          return {
+            ...prevState,
+            userDetail: action.user,
           };
         case 'SIGN_IN':
-          console.log(action);
           return {
             ...prevState,
             isSignout: false,
             isLoading: false,
             userToken: action.token,
-            userDetail:action.user
+            userDetail: action.user,
           };
-        
-         
+
         case 'SIGN_OUT':
           return {
             ...prevState,
             isSignout: true,
             isLoading: false,
             userToken: null,
-            userDetail: null
+            userDetail: null,
           };
       }
     },
@@ -173,46 +174,27 @@ function Routes() {
       isLoading: true,
       isSignout: false,
       userToken: null,
-      userdetail:null
+      userdetail: null,
     },
   );
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       let userToken;
-      console.log('userToken',userDetail?.access_token);
+      // console.log('userToken', userDetail?.access_token);
 
-try{
-const token = await storage.getData('access_token');
-console.log(token,"token232",userDetail?.access_token||token);
-if (userDetail?.access_token|| token) {
-  userToken = userDetail&& userDetail.access_token||token;
-  network.getResponse(
-    'user',
-    'GET',
-    {},
-    userToken
-   ,
-    (res) => {
-
-      dispatch({type: 'RESTORE_TOKEN', token: userToken});
-    },
-    () => {
-      changeUserDetail(null);
-      storage.clear();
-      dispatch({type: 'SIGN_OUT'});
-    },
-  );
-}else {
-  console.log("tokene else")
-  dispatch({type: 'SIGN_OUT'});
-}
-}catch(err){
-  console.log("tokene catch else",err)
-
-  dispatch({type: 'SIGN_OUT'});
-
-}
+      try {
+        const token = await storage.getData('access_token');
+        const user = JSON.parse(await storage.getData('user'));
+        if (userDetail?.access_token || token) {
+          userToken = (userDetail && userDetail.token) || token;
+          dispatch({type: 'RESTORE_TOKEN', token: userToken, user});
+        } else {
+          dispatch({type: 'SIGN_OUT'});
+        }
+      } catch (err) {
+        dispatch({type: 'SIGN_OUT'});
+      }
     };
 
     bootstrapAsync();
@@ -220,20 +202,23 @@ if (userDetail?.access_token|| token) {
   const authContext = React.useMemo(
     () => ({
       signIn: async (values) => {
-        console.log("signIn",userDetail)
         network.getResponse(
-          'login',
+          EndPoints.login,
           'POST',
           values,
           '',
           (response) => {
-            console.log(response,"login response")
             if (response.access_token) {
+              response.token = response.access_token;
               storage.setData('access_token', response.access_token);
               storage.setData('user', JSON.stringify(response.user));
               changeUserDetail(response);
-              dispatch({type: 'SIGN_IN', token:response.access_token,userDetail:response.user});
-            }else{
+              dispatch({
+                type: 'SIGN_IN',
+                token: response.access_token,
+                userDetail: response.user,
+              });
+            } else {
               // console.log('console.log(error),',error)
             }
           },
@@ -241,12 +226,13 @@ if (userDetail?.access_token|| token) {
         );
       },
       signOut: () => {
-        changeUserDetail(null)
+        changeUserDetail(null);
         storage.clear();
         dispatch({type: 'SIGN_OUT'});
       },
-      updateUserDetail :(userDetail) => {
-        dispatch({type:'USER_UPDATE',userDetail})
+      updateUserDetail: (response) => {
+        changeUserDetail(response);
+        dispatch({type: 'USER_UPDATE', user: response.user});
       },
       signUp: async (data) => {
         // In a production app, we need to send user data to server and get a token
@@ -263,28 +249,27 @@ if (userDetail?.access_token|| token) {
   return (
     <Root>
       <AuthContext.Provider value={authContext}>
-      <userDetailContest.Provider value={userDetail} >
-        <NavigationContainer>
-          {state.isLoading ? (
-            <Stack.Navigator headerMode="none">
-              <Stack.Screen name="Loading" component={Loading} />
-            </Stack.Navigator>
-          ) : state.userToken == null ? (
-            <Stack.Navigator headerMode="none">
-              <Stack.Screen name="Welcome" component={Welcome} />
-              <Stack.Screen name="Login" component={Login} />
-              <Stack.Screen name="Signup" component={Signup} />
-              <Stack.Screen name="Forgot" component={Forgot} />
-              <Stack.Screen name="SetPassword" component={SetPassword} />
-            </Stack.Navigator>
-          ) : (
-            <Stack.Navigator headerMode="none">
-              <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
-            </Stack.Navigator>
-          )}
-        </NavigationContainer>
-      </userDetailContest.Provider>
-
+        <userDetailContext.Provider value={userDetail}>
+          <NavigationContainer>
+            {state.isLoading ? (
+              <Stack.Navigator headerMode="none">
+                <Stack.Screen name="Loading" component={Loading} />
+              </Stack.Navigator>
+            ) : state.userToken == null ? (
+              <Stack.Navigator headerMode="none">
+                <Stack.Screen name="Welcome" component={Welcome} />
+                <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="Signup" component={Signup} />
+                <Stack.Screen name="Forgot" component={Forgot} />
+                <Stack.Screen name="SetPassword" component={SetPassword} />
+              </Stack.Navigator>
+            ) : (
+              <Stack.Navigator headerMode="none">
+                <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
+              </Stack.Navigator>
+            )}
+          </NavigationContainer>
+        </userDetailContext.Provider>
       </AuthContext.Provider>
     </Root>
   );

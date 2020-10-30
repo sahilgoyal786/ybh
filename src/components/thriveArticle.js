@@ -1,35 +1,40 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import ImageWithBorder from '../components/imageWithBorder';
-import {image15, profile, calaender} from '../common/images';
+import {image15, profile, calendar} from '../common/images';
 import ResponsiveImage from 'react-native-responsive-image';
 
 let size = 60;
 
-const ThriveArticle = ({article = {}, compact}) => {
-  size = (compact ? 60 : 100);
+const ThriveArticle = ({article = {}, compact, navigate}) => {
+  size = compact ? 60 : 100;
   return (
     <View style={styles.wrapper}>
-      {article.avatar_url && article.avatar_url != '' ? (
-        <ImageWithBorder src={article.avatar_url} height={size} width={size} />
+      {article.file && article.file.path != '' ? (
+        <ImageWithBorder
+          src={{uri: article.file.path}}
+          height={size}
+          width={size}
+        />
       ) : (
         <ImageWithBorder src={image15} height={size} width={size} />
       )}
       <View style={textWrapperStyles(size)}>
-        <Text style={styles.title}>Suspendisse Lectus at</Text>
-        <Text style={styles.text_content}>
-        {compact ?
-          "Lorem dolor sit amet, consecteturt Lorem dolor sit amet consecteturt sit amet consecteturt ..."
-          :
-          "Lorem dolor sit amet, consecteturt Lorem dolor sit amet consecteturt sit amet consecteturt porem dolor sit amet, consecteturt Lorem dolor sit amet consecteturt sit amet consecteturt ..."
-      }
-          <Text
-            onPress={() => {
-              navigation.navigate('MyPhotos');
-            }}
-            style={styles.link}>
-            More
-          </Text>
+        <Text
+          style={styles.title}
+          numberOfLines={2}
+          onPress={() => {
+            navigate('Thrivedetails', {article});
+          }}>
+          {article.title}
+        </Text>
+        <Text
+          style={styles.text_content}
+          numberOfLines={compact ? 4 : 7}
+          onPress={() => {
+            navigate('Thrivedetails', {article});
+          }}>
+          {article.content}
         </Text>
         {!compact ? (
           <View style={{justifyContent: 'flex-start'}}>
@@ -38,10 +43,8 @@ const ThriveArticle = ({article = {}, compact}) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <ResponsiveImage
+              {/* <ResponsiveImage
                 style={{
-                  fontSize: 10,
-                  color: 'gray',
                   marginTop: 5,
                 }}
                 source={profile}
@@ -57,15 +60,13 @@ const ThriveArticle = ({article = {}, compact}) => {
                   fontFamily: 'FuturaPT-Medium',
                 }}>
                 By: joe Smith
-              </Text>
+              </Text> */}
               <ResponsiveImage
                 style={{
-                  fontSize: 10,
-                  color: 'gray',
                   marginTop: 5,
                   marginLeft: 5,
                 }}
-                source={calaender}
+                source={calendar}
                 initHeight="8"
                 initWidth="8"
               />
@@ -76,40 +77,38 @@ const ThriveArticle = ({article = {}, compact}) => {
                   marginTop: 5,
                   marginLeft: 5,
                 }}>
-                09/04/2020
+                {article.created_at}
               </Text>
             </View>
           </View>
         ) : (
-          <Text style={{display: 'none'}}></Text>
+          <></>
         )}
       </View>
     </View>
   );
-
 };
 
-
-const textWrapperStyles = function(size){
-    return {
-      backgroundColor: '#FBF8FF',
-      fontSize: 12,
-      color: 'gray',
-      borderRadius: 5,
-      marginLeft: (size - 60)/2 + 20,
-      marginTop: - ((size - 60) + 70),
-      zIndex: -10,
-      paddingLeft: (size - 60)/2 + 50,
-      paddingTop: 7,
-      paddingRight: 5,
-      paddingBottom: 5,
-      fontFamily: 'FuturaPT-Medium',
-      borderWidth: 2,
-      borderColor: '#E1E1E1',
-      borderTopWidth: 0,
-      borderLeftWidth: 0,
-    };
-}
+const textWrapperStyles = function (size) {
+  return {
+    backgroundColor: '#FBF8FF',
+    fontSize: 12,
+    color: 'gray',
+    borderRadius: 5,
+    marginLeft: (size - 60) / 2 + 20,
+    marginTop: -(size - 60 + 70),
+    zIndex: -10,
+    paddingLeft: (size - 60) / 2 + 50,
+    paddingTop: 7,
+    paddingRight: 5,
+    paddingBottom: 5,
+    fontFamily: 'FuturaPT-Medium',
+    borderWidth: 2,
+    borderColor: '#E1E1E1',
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+  };
+};
 const styles = StyleSheet.create({
   link: {
     textDecorationLine: 'underline',

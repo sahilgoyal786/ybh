@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Text,
   SafeAreaView,
@@ -22,29 +22,78 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 import {
-  welcomepagebackground,
-  menu,
   uploadicon,
-  headerView,
-  botomView,
-  image1,
-  image2,
-  image3,
-  image5,
   backsec,
-  btnmnewimg,
   iconchecked,
   unchecked,
   photoworld,
   bottomCurve,
+  tickicon,
+  sync,
 } from '../../common/images';
 import {CheckBox} from 'react-native-elements';
 import Header from '../../components/header';
+import ImagePicker from 'react-native-image-picker';
+import network from '../../components/apis/network';
+import EndPoints from '../../components/apis/endPoints';
+import userDetailContext from '../../common/userDetailContext';
+import {Toast} from 'native-base';
 
 const ShareImage = () => {
   const navigation = useNavigation();
   const [checked, setChecked] = useState(false);
+  const [photo, setPhoto] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [uploaded, setUploaded] = useState(null);
   const screenHeight = Dimensions.get('window').height;
+  const userDetail = useContext(userDetailContext);
+
+  const handleChoosePhoto = () => {
+    if (!checked) {
+      Toast.show({
+        text: 'Please give your consent to the terms and conditions first.',
+      });
+    }
+    const options = {
+      noData: true,
+    };
+    ImagePicker.launchImageLibrary(options, (response) => {
+      if (response.uri) {
+        if (response.fileSize < 20000000) {
+          setPhoto(response);
+          uploadPhoto(response);
+        } else {
+          Toast.show({text: 'Please choose an image under 20MB.'});
+        }
+      }
+    });
+  };
+
+  const uploadPhoto = (photoResource) => {
+    setIsLoading(true);
+    setUploaded(null);
+    network.getResponse(
+      EndPoints.uploadImage,
+      'POST',
+      {},
+      userDetail.token,
+      (response) => {
+        // console.log(response);
+        Toast.show({text: response.message});
+        setUploaded(true);
+        setIsLoading(false);
+      },
+      (response) => {
+        console.log(response);
+        setUploaded(false);
+        if (response.message) Toast.show({text: response.message});
+        setIsLoading(false);
+      },
+      photoResource,
+      'images',
+    );
+  };
+
   return (
     <View style={{flex: 1}}>
       <Image
@@ -97,7 +146,7 @@ const ShareImage = () => {
         <View style={{alignItems: 'center'}}>
           <Button
             onPress={() => {
-              // navigation.navigate('PhotoDetail');
+              handleChoosePhoto();
             }}
             style={{
               marginTop: -heightPercentageToDP(2),
@@ -105,20 +154,68 @@ const ShareImage = () => {
               marginBottom: heightPercentageToDP(5),
             }}
             name={'Upload'}
+            isLoading={isLoading}
             linear
           />
-          <ImageeView>
-            <ImagesView source={uploadicon} initHeight="20" initWidth="20" />
-          </ImageeView>
+          {photo && (
+            <TouchableOpacity
+              onPress={() => {
+                if (uploaded === false) {
+                  uploadPhoto(photo);
+                }
+              }}>
+              <View>
+                <Image
+                  source={{uri: photo.uri}}
+                  style={{width: 100, height: 100}}
+                  resizeMode="cover"
+                />
+                {uploaded && (
+                  <Image
+                    source={tickicon}
+                    style={{
+                      height: 50,
+                      width: 50,
+                      position: 'absolute',
+                      left: 25,
+                      top: 25,
+                    }}
+                  />
+                )}
+                {uploaded === false && (
+                  <View
+                    style={{
+                      position: 'absolute',
+                      left: 0,
+                      top: 0,
+                      height: 100,
+                      width: 100,
+                      alignItems: 'center',
+                      padding: 10,
+                      borderRadius: 2,
+                      backgroundColor: 'rgba(0,0,0,0.3)',
+                    }}>
+                    <Image
+                      source={sync}
+                      style={{
+                        height: 50,
+                        width: 50,
+                      }}
+                    />
+                    <Text style={{color: 'white', fontWeight: 'bold'}}>
+                      Retry
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </TouchableOpacity>
+          )}
+          {!isLoading && (
+            <ImageeView>
+              <ImagesView source={uploadicon} initHeight="20" initWidth="20" />
+            </ImageeView>
+          )}
         </View>
-
-        {/* <UploadView>
-          <ImagesView source={image1} initHeight="70" initWidth="70" />
-          <ImagesView source={image2} initHeight="70" initWidth="70" />
-          <ImagesView source={image2} initHeight="70" initWidth="70" />
-          <ImagesView source={image3} initHeight="70" initWidth="70" />
-          <ImagesView source={image5} initHeight="70" initWidth="70" />
-        </UploadView> */}
 
         <LastImage>
           <View>

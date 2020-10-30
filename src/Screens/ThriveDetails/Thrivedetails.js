@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   welcomepagebackground,
   menu,
@@ -10,9 +10,9 @@ import {
   twiter,
   insta,
   linkedin,
-
   blogimg,
-  calaender,
+  calendar,
+  bottomCurve,
 } from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
@@ -23,19 +23,22 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 
-import { useNavigation, DrawerActions } from '@react-navigation/native';
+import {useNavigation, DrawerActions} from '@react-navigation/native';
 
 import {
   StyleSheet,
   TouchableOpacity,
-  Text, ScrollView,
+  Text,
+  ScrollView,
   View,
-  ImageBackground, Image, Platform, Dimensions
-} from 'react-native'
+  ImageBackground,
+  Image,
+  Platform,
+  Dimensions,
+} from 'react-native';
 //import { Image } from 'native-base';
 import Button from '../../components/button';
-import { Header } from 'react-native/Libraries/NewAppScreen';
-import TopHeader from '../../components/header';
+import Header from '../../components/header';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -44,7 +47,10 @@ const ButtonSUbmit = styled(Button)({
   marginRight: widthPercentageToDP(5),
 });
 const BackgroundImage = styled(ImageBackground)({
-  height: Platform.OS === 'ios' ? heightPercentageToDP(118) : heightPercentageToDP(130),
+  height:
+    Platform.OS === 'ios'
+      ? heightPercentageToDP(118)
+      : heightPercentageToDP(130),
   // width: widthPercentageToDP(100),
 });
 
@@ -62,105 +68,114 @@ const TextThirive = styled(Text)({
   fontFamily: 'FuturaPT-Medium',
 });
 
-class Thrivedetails extends Component {
-
-
-
-  render() {
-    const { navigation } = this.props;
-    return (
-      <View>
-        <TopHeader title="Thrive Details" backButton="true" />
-          <ScrollView >
-            <Image
-              source={topbanner} style={{ height: 60, width: windowWidth - 60, marginLeft: 30, marginTop: 40 }}
-            />
-            <Text style={{ marginTop: 15, padding: 10 }}> Aenean rohoncus justo odio necfend lacus ipsum ornare egestas lorem pulvinar ut.</Text>
-            <View style={{ justifyContent: 'flex-start' }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  padding: 10
-                }}>
-                <ResponsiveImage
-                  style={{
-                    fontSize: 10,
-                    color: 'gray',
-                    marginTop: heightPercentageToDP(1.2),
-                  }}
-                  source={profile}
-                  initHeight="8"
-                  initWidth="8"
-                />
-                <Text
-                  style={{
-                    fontSize: 10,
-                    color: '#848585',
-                    marginTop: heightPercentageToDP(0.9),
-                    marginLeft: widthPercentageToDP(1),
-                    fontFamily: 'FuturaPT-Medium',
-                  }}>
-                  By: joe Smith
-                 </Text>
-                <ResponsiveImage
-                  style={{
-                    fontSize: 10,
-                    color: 'gray',
-                    marginTop: heightPercentageToDP(1.2),
-                    marginLeft: widthPercentageToDP(3),
-                  }}
-                  source={calaender}
-                  initHeight="8"
-                  initWidth="8"
-                />
-                <Text
-                  style={{
-                    fontSize: 10,
-                    color: 'gray',
-                    marginTop: heightPercentageToDP(1),
-                    marginLeft: widthPercentageToDP(1),
-                  }}>
-                  09/04/2020
-                 </Text>
-              </View>
-            </View>
-
-            <Image
-              source={bannerThriveimg} style={{
-                height: 260, width: windowWidth - 20, marginLeft: 10, marginTop: 10, borderBottomColor: 'red',
-                borderBottomWidth: 10, borderRightWidth: 20, borderColor: 'blue'
+const Thrivedetails = ({route, navigation}) => {
+  const {article} = route.params;
+  return (
+    <View style={{flex: 1, backgroundColor: 'white'}}>
+      <Image
+        source={bottomCurve}
+        style={{
+          width: widthPercentageToDP(100),
+          height: 200,
+          position: 'absolute',
+          bottom: -100,
+        }}
+        resizeMode="contain"></Image>
+      <Header title="Thrive" backButton="true" />
+      <ScrollView
+        alwaysBounceHorizontal={false}
+        alwaysBounceVertical={false}
+        bounces={false}
+        style={{paddingTop: 20}}
+        contentContainerStyle={{paddingBottom: 40}}>
+        <View style={{backgroundColor: 'white'}}>
+          <Image
+            source={topbanner}
+            style={{
+              width: widthPercentageToDP(100) - 60,
+              marginLeft: 30,
+              height: 40,
+            }}
+            resizeMode="contain"
+          />
+          <Text style={{marginTop: 15, padding: 10, fontSize: 20}}>
+            {article.title}
+          </Text>
+          <View style={{justifyContent: 'flex-start'}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                padding: 10,
+              }}>
+              {/* <ResponsiveImage
+              style={{
+                marginTop: heightPercentageToDP(1.2),
               }}
+              source={profile}
+              initHeight="8"
+              initWidth="8"
             />
-            <Text style={{ marginTop: 15, padding: 10 }}> Aenean rohoncus justo odio necfend lacus ipsum ornare egestas
-            lorem pulvinar ut Aenean rohoncus justo odio necfend lacus ipsum ornare egestas
-            lorem pulvinar utAenean rohoncus justo odio necfend lacus ipsum ornare egestas
-            lorem pulvinar utAenean rohoncus justo odio necfend lacus ipsum ornare egestas lorem pulvinar ut.
-                     </Text>
-
-            <Text style={{ padding: 10 }}> Aenean rohoncus justo odio necfend lacus ipsum ornare egestas
-            lorem pulvinar ut Aenean rohoncus justo odio necfend .
-                     </Text>
-
-            <Text style={{ padding: 10 }}> Aenean rohoncus justo odio necfend lacus ipsum ornare egestas
-            lorem pulvinar ut Aenean rohoncus justo odio necfend lacus ipsum ornare egestas
-            lorem pulvinar utAenean rohoncus justo odio necfend lacus ipsum ornare egestas
-            lorem pulvinar utAenean rohoncus justo odio necfend lacus ipsum ornare egestas lorem pulvinar ut.
-                     </Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-
-              <ButtonSUbmit
-                // onPress={() => setDialog(true)}
-                name={'Previous'}
-                linear
+            <Text
+              style={{
+                fontSize: 10,
+                color: '#848585',
+                marginTop: heightPercentageToDP(0.9),
+                marginLeft: widthPercentageToDP(1),
+                fontFamily: 'FuturaPT-Medium',
+              }}>
+              By: joe Smith
+            </Text> */}
+              <ResponsiveImage
+                style={{
+                  marginTop: heightPercentageToDP(1.2),
+                }}
+                source={calendar}
+                initHeight="8"
+                initWidth="8"
               />
-              <ButtonSUbmit
-                // onPress={() => setDialog(true)}
-                name={'Next'}
-                linear
-              />
-
+              <Text
+                style={{
+                  fontSize: 10,
+                  color: 'gray',
+                  marginTop: heightPercentageToDP(1),
+                  marginLeft: widthPercentageToDP(1),
+                }}>
+                {article.created_at}
+              </Text>
             </View>
-            <View style={{
+          </View>
+
+          <Image
+            source={{uri: article.file.path}}
+            style={{
+              height: widthPercentageToDP(100) - 20,
+              width: widthPercentageToDP(100) - 20,
+              marginLeft: 10,
+              marginTop: 10,
+              borderBottomColor: 'red',
+              borderBottomWidth: 10,
+              borderRightWidth: 20,
+              borderColor: 'blue',
+            }}
+            resizeMode="cover"
+          />
+          <Text style={{marginTop: 15, padding: 10, marginBottom: 20}}>
+            {article.content}
+          </Text>
+          {/* <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+          <ButtonSUbmit
+            // onPress={() => setDialog(true)}
+            name={'Previous'}
+            linear
+          />
+          <ButtonSUbmit
+            // onPress={() => setDialog(true)}
+            name={'Next'}
+            linear
+          />
+        </View> */}
+          <View
+            style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
@@ -168,27 +183,32 @@ class Thrivedetails extends Component {
               width: windowWidth - 80,
               marginLeft: 40,
               paddingHorizontal: wp(20),
-              height: 30
-
+              height: 30,
             }}>
-
-              <Text>Share: </Text>
-              <Image source={facebook} style={{ height: 20, width: 20 }} />
-              <Image source={twiter} style={{ height: 20, width: 20 }} />
-              <Image source={insta} style={{ height: 20, width: 20 }} />
-              <Image source={linkedin} style={{ height: 20, width: 20 }} />
-            </View>
-            <Image
-              source={addbtmimg} style={{
-                height: 60, width: windowWidth - 20, marginLeft: 10, marginTop: 10, borderBottomColor: 'red',
-                borderBottomWidth: 10, borderRightWidth: 20, borderColor: 'blue'
-              }}
-            />
-          </ScrollView>
+            <Text>Share: </Text>
+            <Image source={facebook} style={{height: 20, width: 20}} />
+            <Image source={twiter} style={{height: 20, width: 20}} />
+            <Image source={insta} style={{height: 20, width: 20}} />
+            <Image source={linkedin} style={{height: 20, width: 20}} />
+          </View>
+          <Image
+            source={addbtmimg}
+            style={{
+              height: 60,
+              width: windowWidth - 20,
+              marginLeft: 10,
+              marginTop: 10,
+              borderBottomColor: 'red',
+              borderBottomWidth: 10,
+              borderRightWidth: 20,
+              borderColor: 'blue',
+            }}
+          />
         </View>
-    )
-  }
-}
+      </ScrollView>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -200,12 +220,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#DDDDDD',
     padding: 10,
-    marginBottom: 10
+    marginBottom: 10,
   },
   image: {
     flex: 1,
-    height: 110
+    height: 110,
   },
-})
+});
 
 export default Thrivedetails;

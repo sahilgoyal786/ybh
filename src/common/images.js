@@ -59,7 +59,7 @@ export const genral = require('../assets/icons/general.png');
 export const material = require('../assets/icons/marital.png');
 export const enterprene = require('../assets/icons/entrepreneurs.png');
 export const profile = require('../assets/icons/user.png');
-export const calaender = require('../assets/icons/calendar.png');
+export const calendar = require('../assets/icons/calendar.png');
 export const vtngpage = require('../assets/icons/NewProject.png');
 export const vtngpage2 = require('../assets/icons/new3.png');
 export const bannerThriveimg = require('../assets/icons/bannerThriveimg.png');
@@ -98,3 +98,4 @@ export const dryclnradio = require('../assets/icons/dry-clean.png');
 export const radioon = require('../assets/icons/radio-on-button.png');
 
 export const selectedTabCurve = require('../assets/icons/bottomtab-selected.png');
+export const placeholderProfilePhoto = require('../assets/icons/blank_portrait.png');

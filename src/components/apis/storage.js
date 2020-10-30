@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 const storage = {
-
   getData: function (key) {
     try {
       return AsyncStorage.getItem(key);
@@ -30,7 +29,6 @@ const storage = {
       console.log(e);
     }
   },
-
 };
 
 export default storage;

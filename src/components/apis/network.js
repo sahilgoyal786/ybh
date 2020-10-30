@@ -13,31 +13,63 @@ const network = {
     access_token,
     success_callback,
     error_callback,
+    file = false,
+    file_name = 'images',
   ) {
-      let headers = {};
-      if (access_token) {
-        headers['Authorization'] = 'Bearer ' + access_token;
-      }
-      axios({
-        method: type,
-        url: api_host + endpoint,
-        headers: headers,
-        data: data,
-      })
-        .then((response) => {
-          console.log(response, 'axios response');
-          if (response.data) success_callback(response.data);
-          else success_callback(response);
-        })
-        .catch((error) => {
-          console.log(error.response, 'axios response');
+    let headers = {};
 
-          error_callback(error.response.data);
-          //   throw error;
+    let formData = new FormData();
+    if (file) {
+      formData = new FormData();
+      for (var key in data) {
+        formData.append(key, data[key]);
+      }
+      if (file) {
+        headers['Content-Type'] = 'multipart/form-data';
+        formData.append(file_name, {
+          name: file.fileName,
+          type: file.type,
+          uri:
+            Platform.OS === 'android'
+              ? file.uri
+              : file.uri.replace('file://', ''),
         });
-    
+      }
+    } else {
+      formData = data;
+    }
+    console.log(formData);
+
+    if (access_token) {
+      headers['Authorization'] = 'Bearer ' + access_token;
+    }
+
+    axios({
+      method: type,
+      url: api_host + endpoint,
+      headers: headers,
+      data: formData,
+    })
+      .then((response) => {
+        // console.log(response, 'axios response');
+        if (response.data) success_callback(response.data);
+        else success_callback(response);
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.status &&
+          error.response.status == 401
+        ) {
+        }
+        console.log(error, 'axios response');
+
+        error_callback(error);
+        //   throw error;
+      });
+
     // storage.getData('access_token').then((res) => {
-      
+
     // });
   },
 };

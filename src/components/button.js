@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+  Image,
+} from 'react-native';
 import styled from 'styled-components/native';
 import {Yellow, White, LightPink, Purple} from '../common/colors';
 import {
@@ -8,7 +15,14 @@ import {
 } from 'react-native-responsive-screen';
 import LinearGradient from 'react-native-linear-gradient';
 
-const Button = ({name, linear, onPress, ...props}) => {
+const Button = ({
+  name,
+  linear,
+  onPress,
+  isLoading = false,
+  icon = false,
+  ...props
+}) => {
   return (
     <>
       {linear ? (
@@ -18,12 +32,36 @@ const Button = ({name, linear, onPress, ...props}) => {
             start={{x: 0.1, y: 0.5}}
             end={{x: 0.5, y: 0.1}}
             locations={[0.1, 0.9]}>
-            <TextSignup>{name}</TextSignup>
+            {isLoading ? (
+              <ActivityIndicator color="#FFF" />
+            ) : (
+              <TextSignup>
+                {icon ? (
+                  <>
+                    <Image
+                      source={icon}
+                      style={{
+                        height: 20,
+                        width: 20,
+                      }}
+                    />
+                    <Text> </Text>
+                  </>
+                ) : (
+                  <></>
+                )}
+                <Text>{name}</Text>
+              </TextSignup>
+            )}
           </LinearGradientColor>
         </LinearButton>
       ) : (
         <TouchableOpacityButton onPress={onPress}>
-          <TextLogin>{name}</TextLogin>
+          {isLoading ? (
+            <ActivityIndicator color="#FFF" />
+          ) : (
+            <TextLogin>{name}</TextLogin>
+          )}
         </TouchableOpacityButton>
       )}
     </>

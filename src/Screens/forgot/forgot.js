@@ -36,12 +36,12 @@ import {useNavigation} from '@react-navigation/native';
 import {menu, image8, backicon, editprofile} from '../../common/images';
 import network from '../../components/apis/network';
 import endpoints from '../../components/apis/endPoints';
-import userDetailContest from '../../common/userDetailContext';
+import userDetailContext from '../../common/userDetailContext';
 import {Toast} from 'native-base';
 
 const Forgot = () => {
   const navigation = useNavigation();
-  const userDetail = React.useContext(userDetailContest);
+  const userDetail = React.useContext(userDetailContext);
   const [checked, setChecked] = useState(false);
   return (
     <KeyboardAwareScrollView
@@ -70,7 +70,12 @@ const Forgot = () => {
         <Formik
           initialValues={{email: 'sahilgoyal1@gmail.com'}}
           onSubmit={(values) => {
-            network.getResponse(endpoints.forgotPassword,'POST',values,userDetail.access_token||'',(response)=>{
+            network.getResponse(
+              endpoints.forgotPassword,
+              'POST',
+              values,
+              '',
+              (response) => {
                 if (response.message) {
                   Toast.show({text: response.message, duration: 3000});
                   navigation.navigate('SetPassword', {email: response.email});

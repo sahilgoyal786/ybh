@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
 import {Text, StyleSheet, View, ImageBackground} from 'react-native';
-import {menuubackground, image8, addimage} from '../../common/images';
+import {
+  menuubackground,
+  image8,
+  addimage,
+  placeholderProfilePhoto,
+} from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
@@ -11,13 +16,12 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import storage from '../../components/apis/storage';
 import {AuthContext} from '../../common/AuthContext';
-import userDetailContest from '../../common/userDetailContext';
+import userDetailContext from '../../common/userDetailContext';
 
 const Drawer = () => {
   const navigation = useNavigation();
   const {signOut} = React.useContext(AuthContext);
-  const userDetail = React.useContext(userDetailContest);
-
+  const userDetail = React.useContext(userDetailContext);
   return (
     <View style={{backgroundColor: 'blue', flex: 1}}>
       <BackgroundImage source={menuubackground}>
@@ -25,7 +29,11 @@ const Drawer = () => {
           <View>
             <FirstView>
               <ImagesView
-                source={userDetail&& userDetail.user.avtar||image8}
+                source={
+                  userDetail && userDetail.user.avatar
+                    ? {uri: userDetail.user.avatar}
+                    : placeholderProfilePhoto
+                }
                 initHeight="70"
                 initWidth="70"
                 borderRadius={50}
@@ -33,13 +41,15 @@ const Drawer = () => {
             </FirstView>
           </View>
           <ThirdView>
-            <UserNameText>{userDetail && userDetail.user.username}</UserNameText>
+            <UserNameText>
+              {userDetail && userDetail.user.username}
+            </UserNameText>
           </ThirdView>
         </MainView>
         <MainThirdView>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('GetAdvice');
+              navigation.navigate('Home');
             }}>
             <Text
               style={{
@@ -50,6 +60,12 @@ const Drawer = () => {
               }}>
               Home
             </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Thrive');
+            }}>
+            <PageText>Thrive</PageText>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {

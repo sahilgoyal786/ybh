@@ -31,6 +31,7 @@ import globalstyles from '../../common/styles';
 const Login = (props) => {
   const navigation = useNavigation();
   const {signIn} = React.useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <KeyboardAwareScrollView

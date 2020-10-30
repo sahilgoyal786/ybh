@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   ImageBackground,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import RNSpeedometer from '../../components/speedometer/index';
 import {
@@ -15,6 +16,7 @@ import {
   headerView,
   botomView,
   bottomCurve,
+  relationmeter,
 } from '../../common/images';
 import {
   widthPercentageToDP,
@@ -28,10 +30,139 @@ import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
 import {ScrollView} from 'react-native-gesture-handler';
 import Header from '../../components/header';
+import EndPoints from '../../components/apis/endPoints';
+import storage from '../../components/apis/storage';
+import network from '../../components/apis/network';
+import userDetailContext from '../../common/userDetailContext';
+import ContentLoader from 'react-native-easy-content-loader';
 
-const RelationMeter = () => {
-  const navigation = useNavigation();
+const RelationMeter = (navigation) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [relationshipMeterScore, setRelationshipMeterScore] = useState(100);
+  const [currentQuestionID, setCurrentQuestionID] = useState();
+  const [question, setQuestion] = useState(null);
+  const [questions, setQuestions] = useState(null);
+  const [answeredQuestions, setAnsweredQuestions] = useState([]);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [page, setPage] = useState(1);
+  const userDetail = React.useContext(userDetailContext);
 
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
+
+  const submitAnswer = (answer) => {
+    setIsLoading(true);
+    if (answer == 'SKIP') {
+      setSelectedAnswer(0);
+    } else {
+      question.answers.map((value, index) => {
+        if (value.ans == answer) {
+          setSelectedAnswer(value.id);
+        }
+      });
+    }
+    network.getResponse(
+      EndPoints.postRelationshipMeterAnswers,
+      'POST',
+      {ques_id: currentQuestionID, ans_id: selectedAnswer},
+      userDetail.token,
+      (response) => {
+        if (response.message) {
+          setIsLoading(false);
+          //console.log('AnsweredRelationshipMeterQuestions', answeredQuestions);
+          let tempArray = answeredQuestions;
+          tempArray.push(currentQuestionID);
+          setAnsweredQuestions(tempArray);
+          // console.log('AnsweredRelationshipMeterQuestions', answeredQuestions);
+          storage.setData(
+            'AnsweredRelationshipMeterQuestions',
+            JSON.stringify(answeredQuestions),
+          );
+          presentQuestion();
+          if (answer == 'YES')
+            setRelationshipMeterScore(relationshipMeterScore + getRandomInt(2));
+          else
+            setRelationshipMeterScore(relationshipMeterScore - getRandomInt(2));
+        }
+      },
+      (response) => {
+        setIsLoading(false);
+        // console.log(response);
+      },
+    );
+  };
+
+  const presentQuestion = (
+    allQuestionsTemp = null,
+    answeredQuestionsTemp = null,
+  ) => {
+    let allQuestions = [];
+    let allAnsweredQuestions = [];
+    if (allQuestionsTemp !== null) {
+      allQuestions = allQuestionsTemp;
+      allAnsweredQuestions = answeredQuestionsTemp;
+    } else {
+      allAnsweredQuestions = answeredQuestions;
+      allQuestions = questions;
+    }
+    let question = null;
+    let index = 0;
+    do {
+      question = allQuestions.pop();
+      index++;
+    } while (question.id && allAnsweredQuestions.indexOf(question.id) > -1);
+    setQuestion(question);
+    setCurrentQuestionID(question.id);
+    // console.log(question);
+  };
+  const LoadQuestions = () => {
+    const bootstrapAsync = async () => {
+      try {
+        let questionsTemp = await storage.getData('RelationshipMeterQuestions');
+        let answeredQuestionsTemp = await storage.getData(
+          'AnsweredRelationshipMeterQuestions',
+        );
+        if (answeredQuestionsTemp && answeredQuestionsTemp !== null) {
+          answeredQuestionsTemp = JSON.parse(answeredQuestionsTemp);
+        } else {
+          answeredQuestionsTemp = [];
+        }
+        if (questionsTemp) {
+          console.log('Loading questions from storage');
+          setQuestions(JSON.parse(questionsTemp));
+          presentQuestion(JSON.parse(questionsTemp), answeredQuestionsTemp);
+          // console.log(JSON.parse(questions).pop());
+        } else {
+          console.log('Loading questions from server');
+          network.getResponse(
+            EndPoints.getRelationshipMeterQuestions + '?page=' + page,
+            'GET',
+            {},
+            userDetail.token,
+            (response) => {
+              storage.setData(
+                'RelationshipMeterQuestions',
+                JSON.stringify(response.data),
+              );
+              setQuestions(response.data);
+              presentQuestion(response.data, answeredQuestionsTemp);
+            },
+            (error) => {
+              console.log('error', error);
+            },
+          );
+        }
+      } catch (exception) {
+        console.log('exception', exception);
+      }
+    };
+    bootstrapAsync();
+  };
+
+  React.useEffect(() => {
+    LoadQuestions();
+  }, []);
   return (
     <View style={{flex: 1}}>
       <Image
@@ -51,33 +182,64 @@ const RelationMeter = () => {
         style={{paddingTop: 20}}
         contentContainerStyle={{paddingBottom: 60}}>
         <View>
-          <RNSpeedometer needleImage={stick} value={100} size={400} />
+          <RNSpeedometer
+            needleImage={stick}
+            value={relationshipMeterScore}
+            size={400}
+          />
         </View>
-        <ViewSec
-          style={{
-            marginTop: heightPercentageToDP(1),
-          }}>
-          <ViewNumber>
-            <OneText>1</OneText>
-          </ViewNumber>
-
-          <TextLong>
-            Morbi vel urn et risus efficitururn et risus, Morbi vel urn et risus
-            efficitururn et risus, Morbi vel urn et risus efficitururn et risus,
-            Morbi vel urn et risus efficitururn et risus Morbi vel urn et.
-          </TextLong>
-        </ViewSec>
-        <ContainerView>
-          <YesView>
-            <AgreeText>Yes</AgreeText>
-          </YesView>
-          <SkipView>
-            <AgreeText style={{color: '#000'}}>Skip</AgreeText>
-          </SkipView>
-          <NoView>
-            <AgreeText>No</AgreeText>
-          </NoView>
-        </ContainerView>
+        {questions && questions.length && question && question.id ? (
+          <>
+            <ViewSec
+              style={{
+                marginTop: heightPercentageToDP(1),
+              }}>
+              <TextLong>{question.ques}</TextLong>
+            </ViewSec>
+            <ContainerView>
+              <TouchableOpacity
+                onPress={() => (isLoading ? '' : submitAnswer('YES'))}>
+                <YesView>
+                  <AgreeText>
+                    {isLoading ? (
+                      <ActivityIndicator color="white" />
+                    ) : (
+                      <Text>Yes</Text>
+                    )}
+                  </AgreeText>
+                </YesView>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => (isLoading ? '' : submitAnswer('SKIP'))}>
+                <SkipView>
+                  <AgreeText style={{color: '#000'}}>
+                    {isLoading ? (
+                      <ActivityIndicator color="white" />
+                    ) : (
+                      <Text>Skip</Text>
+                    )}
+                  </AgreeText>
+                </SkipView>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => (isLoading ? '' : submitAnswer('NO'))}>
+                <NoView>
+                  <AgreeText>
+                    {isLoading ? (
+                      <ActivityIndicator color="white" />
+                    ) : (
+                      <Text>No</Text>
+                    )}
+                  </AgreeText>
+                </NoView>
+              </TouchableOpacity>
+            </ContainerView>
+          </>
+        ) : (
+          <ContainerView style={{padding: 20}}>
+            <ContentLoader />
+          </ContainerView>
+        )}
       </ScrollView>
     </View>
   );

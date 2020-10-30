@@ -196,9 +196,7 @@ const ImagesView = styled(ResponsiveImage)({
   resizeMode: 'cover',
   justifyContent: 'center',
 });
-const BackIcon = styled(ResponsiveImage)({
-  fontSize: 12,
-});
+const BackIcon = styled(ResponsiveImage)({});
 
 const MenuIcon = styled(ResponsiveImage)({
   alignSelf: 'flex-end',

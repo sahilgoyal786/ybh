@@ -32,7 +32,6 @@ import storage from '../../components/apis/storage';
 import {SignupValidationSchema} from '../../common/validations';
 import userDetailContest from '../../common/userDetailContext';
 
-
 const Signup = () => {
   const [Tab, setTab] = useState(0);
   const navigation = useNavigation();
@@ -57,8 +56,6 @@ const Signup = () => {
   const _renderDots = (activeIndex) => {
     const userDetail = React.useContext(userDetailContest);
 
-
-    
     return (
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <FlatList
@@ -133,11 +130,11 @@ const Signup = () => {
               layout={'default'}
               layoutCardOffset={10}
             />
-            <Pagination
+            {/* <Pagination
               dotsLength={data.length}
               activeDotIndex={Tab}
               renderDots={_renderDots}
-            />
+            /> */}
           </TopSec>
         </HeaaderBackgroundImage>
       </View>

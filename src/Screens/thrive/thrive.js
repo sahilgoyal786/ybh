@@ -1,14 +1,6 @@
 import React, {Component} from 'react';
 //import {Text, StyleSheet, View, ImageBackground, Image} from 'react-native';
-import {
-  bottomCurve,
-  image10,
-  image11,
-  image12,
-  image13,
-  image14,
-  image15,
-} from '../../common/images';
+import {bottomCurve} from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
 import {
@@ -29,125 +21,142 @@ import {
   ImageBackground,
   FlatList,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import {ListItem, Avatar} from 'react-native-elements';
 import Header from '../../components/header';
 import ThriveArticle from '../../components/thriveArticle';
+import network from '../../components/apis/network';
+import EndPoints from '../../components/apis/endPoints';
+import userDetailContext from '../../common/userDetailContext';
 //import { Image } from 'native-base';
 
-const list = [
-  {
-    name: 'Suspendisse Letctus at',
-    avatar_url: image10,
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Aenean rhoncus justo odio nec..',
-    avatar_url: image12,
-    subtitle: 'Vice Chairman',
-  },
-  {
-    name: 'Suspendisse Letctus at',
-    avatar_url: image13,
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Aenean rhoncus justo odio nec..',
-    avatar_url: image14,
-    subtitle: 'Vice Chairman',
-  },
-  {
-    name: 'Suspendisse Letctus at',
-    avatar_url: image15,
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Aenean rhoncus justo odio nec..',
-    avatar_url: image12,
-    subtitle: 'Vice Chairman',
-  },
-  {
-    name: 'Suspendisse Letctus at',
-    avatar_url: image11,
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Aenean rhoncus justo odio nec..',
-    avatar_url: image10,
-    subtitle: 'Vice Chairman',
-  },
-  {
-    name: 'Suspendisse Letctus at',
-    avatar_url: image14,
-    subtitle: 'Vice President',
-  },
-  {
-    name: 'Aenean rhoncus justo odio nec..',
-    avatar_url: image12,
-    subtitle: 'Vice Chairman',
-  },
-];
-
-class Thrive extends Component {
-  state = {
-    count: 0,
-  };
-
-  onPress = () => {
-    this.setState({
-      count: this.state.count + 1,
-    });
-  };
-
-  keyExtractor = (item, index) => index.toString();
-
-  renderItem = ({item}) => (
-    <ListItem containerStyle={{padding: 0, marginRight: 20, marginLeft: 5, marginBottom: 20, backgroundColor: 'transparent'}}>
-      <ThriveArticle article={item} compact={false} />
+const Thrive = ({route, navigation}) => {
+  const [loadingMore, setLoadingMore] = React.useState(false);
+  const [blogs, setBlogs] = React.useState([]);
+  const [totalPages, setTotalPages] = React.useState();
+  const [page, setPage] = React.useState(1);
+  const userDetail = React.useContext(userDetailContext);
+  const renderItem = ({item, index}) => (
+    <ListItem
+      key={index + ''}
+      containerStyle={{
+        padding: 0,
+        marginRight: 20,
+        marginLeft: 5,
+        marginBottom: 20,
+        backgroundColor: 'transparent',
+      }}>
+      <ThriveArticle
+        article={item}
+        compact={false}
+        navigate={navigation.navigate}
+      />
     </ListItem>
   );
-  render() {
-    const {navigation} = this.props;
-    return (
-      <View style={{flex: 1}}>
-        <Image
-          source={bottomCurve}
-          style={{
-            width: widthPercentageToDP(100),
-            height: 200,
-            position: 'absolute',
-            bottom: -100,
-          }}
-          resizeMode="contain"></Image>
-        <Header title="Thrive" backButton="true" />
-        <ScrollView
-          alwaysBounceHorizontal={false}
-          alwaysBounceVertical={false}
-          bounces={false}
-          style={{paddingTop: 20}}
-          contentContainerStyle={{paddingBottom: 40}}>
-          <View>
-            <Text
-              style={{
-                paddingLeft: 30,
-                fontSize: 22,
-                color: '#000',
-                fontFamily: 'FuturaPT-Medium',
-                marginBottom: 10,
-              }}>
-              View List of Blogs
-            </Text>
 
-            <FlatList
-              keyExtractor={this.keyExtractor}
-              data={list}
-              renderItem={this.renderItem}
+  const LoadBlogs = () => {
+    const tempBlogsArray = [];
+    setLoadingMore(true);
+    try {
+      network.getResponse(
+        EndPoints.blogs + '?page=' + page,
+        'GET',
+        {},
+        userDetail.token,
+        (response) => {
+          for (let i = 0; i < response.data.length; i++) {
+            response.data[i].url = response.data[i].path;
+            tempBlogsArray.push(response.data[i]);
+          }
+          if (page == 1) {
+            setTotalPages(response.last_page);
+          }
+          setBlogs(blogs.concat(tempBlogsArray));
+          setPage(page + 1);
+          setLoadingMore(false);
+        },
+        (error) => {
+          console.log('error', error);
+          setLoadingMore(false);
+        },
+      );
+    } catch (exception) {
+      console.log('exception', exception);
+    }
+  };
+  React.useEffect(() => {
+    LoadBlogs();
+  }, []);
+
+  return (
+    <FlatList
+      onEndReached={() => {
+        if (blogs.length && totalPages && page <= totalPages) {
+          LoadBlogs();
+        }
+      }}
+      onEndReachedThreshold={blogs.length ? 0.5 : 0}
+      contentContainerStyle={
+        (blogs.length
+          ? {}
+          : {
+              flex: 1,
+            },
+        {
+          minHeight: heightPercentageToDP(100) - 70,
+        })
+      }
+      data={blogs}
+      renderItem={renderItem}
+      stickyHeaderIndices={[0]}
+      ListEmptyComponent={
+        <View
+          style={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" color="purple" />
+        </View>
+      }
+      ListHeaderComponent={
+        <View style={{backgroundColor: 'white'}}>
+          <Header title="Thrive" backButton="true" />
+        </View>
+      }
+      ListFooterComponentStyle={{
+        zIndex: -1,
+        paddingBottom: 40,
+        flex: 1,
+        justifyContent: 'flex-end',
+      }}
+      ListFooterComponent={
+        <View
+          style={{
+            height: 230,
+            position: 'absolute',
+            bottom: -130,
+            zIndex: -10,
+          }}>
+          {loadingMore && (
+            <ActivityIndicator
+              color="purple"
+              style={{
+                marginTop: 100,
+                position: 'absolute',
+                alignSelf: 'center',
+              }}
             />
-          </View>
-        </ScrollView>
-      </View>
-    );
-  }
-}
+          )}
+          <Image
+            source={bottomCurve}
+            style={{
+              width: widthPercentageToDP(100),
+              height: 200,
+            }}
+            resizeMode="contain"
+          />
+        </View>
+      }
+    />
+  );
+};
 
 export default Thrive;

@@ -53,6 +53,7 @@ const BottomTab = ({state, descriptors, navigation}) => {
         };
         return (
           <TouchableOpacity
+            key={index}
             accessibilityRole="button"
             testID={options.tabBarTestID}
             onLongPress={onLongPress}
@@ -88,7 +89,7 @@ const BottomTab = ({state, descriptors, navigation}) => {
                       height: 20,
                       width: widthPercentageToDP(20) + 10,
                       top: -16,
-                      left: -5,
+                      left: 0,
                     }}>
                     <Image
                       source={selectedTabCurve}

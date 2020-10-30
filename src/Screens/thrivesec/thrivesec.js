@@ -13,7 +13,7 @@ import {
   topbanner,
   profile,
   bnrimg,
-  calaender,
+  calendar,
   facebook,
   twiter,
   linkedin,
@@ -93,7 +93,7 @@ const ThriveSec = () => {
                 marginTop: heightPercentageToDP(1.2),
                 marginLeft: widthPercentageToDP(3),
               }}
-              source={calaender}
+              source={calendar}
               initHeight="8"
               initWidth="8"
             />

@@ -6,10 +6,44 @@ import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {FlatList} from 'react-native-gesture-handler';
+import {FlatList, ScrollView} from 'react-native-gesture-handler';
 
 const LeaderBoard = () => {
   const navigation = useNavigation();
+  const data = [
+    {key: 'Abigail Akon '},
+    {key: 'Carla Houston'},
+    {key: 'Bob Smith'},
+    {key: 'Mike Smith'},
+    {key: 'Juan CarLos'},
+    {key: 'Jane Smith'},
+    {key: 'Sally Selcen'},
+    {key: 'David Smith'},
+    {key: 'Joe Smith'},
+    {key: 'James Smith'},
+    {key: 'Kaitlyn Kristy'},
+    {key: 'Sally Selcen'},
+    {key: 'Abigail Akon'},
+    {key: 'Sally Selcen'},
+    {key: 'Mike Smith'},
+    {key: 'Abigail Akon'},
+    {key: 'Sally Selcen'},
+    {key: 'Mike Smith'},
+    {key: 'Bob Smith'},
+    {key: 'Abigail Akon'},
+    {key: 'Sally Selcen'},
+    {key: 'Mike Smith'},
+  ];
+  let leaderBoardStandings = [];
+  for (let i = 0; i < data.length; i++) {
+    leaderBoardStandings.push(
+      <ViewFlatList key={i}>
+        <Text style={styles.item}>
+          {i + 1}. {data[i]['key']}
+        </Text>
+      </ViewFlatList>,
+    );
+  }
   return (
     <BoxView>
       <ViewBox>
@@ -19,39 +53,7 @@ const LeaderBoard = () => {
         Leader Board
       </TitleRank>
       <View style={{height: 334}}>
-        <SafeAreaView style={{flex: 1}}>
-          <FlatList
-            data={[
-              {key: '1. Abigail Akon '},
-              {key: '2. Carla Houston'},
-              {key: '3. Bob Smith'},
-              {key: '4. Mike Smith'},
-              {key: '5. Juan CarLos'},
-              {key: '6. Jane Smith'},
-              {key: '7. Sally Selcen'},
-              {key: '8. David Smith'},
-              {key: '9. Joe Smith'},
-              {key: '10. James Smith'},
-              {key: '11. Kaitlyn Kristy'},
-              {key: '12. Sally Selcen'},
-              {key: '13. Abigail Akon'},
-              {key: '14. Sally Selcen'},
-              {key: '15. Mike Smith'},
-              {key: '16. Abigail Akon'},
-              {key: '17. Sally Selcen'},
-              {key: '18. Mike Smith'},
-              {key: '19. Bob Smith'},
-              {key: '20. Abigail Akon'},
-              {key: '21. Sally Selcen'},
-              {key: '22. Mike Smith'},
-            ]}
-            renderItem={({item}) => (
-              <ViewFlatList>
-                <Text style={styles.item}>{item.key}</Text>
-              </ViewFlatList>
-            )}
-          />
-        </SafeAreaView>
+        <ScrollView style={{flex: 1}}>{leaderBoardStandings}</ScrollView>
       </View>
     </BoxView>
   );
