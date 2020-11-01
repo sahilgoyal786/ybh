@@ -39,24 +39,11 @@ const Trivia = () => {
   const [currentQuestionID, setCurrentQuestionID] = useState();
   const [question, setQuestion] = useState(null);
   const [questions, setQuestions] = useState(null);
-  const [answeredQuestions, setAnsweredQuestions] = useState([]);
+  const [answeredQuestions, setAnsweredQuestions] = useState(null);
   const [savedResponses, setSavedResponses] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [page, setPage] = useState(1);
   const userDetail = React.useContext(userDetailContext);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      return () => {
-        // alert('Screen was unfocused');
-        storage.setData(
-          'AnsweredTriviaQuestions',
-          JSON.stringify(answeredQuestions),
-        );
-        storage.setData('SavedTriviaResponses', JSON.stringify(savedResponses));
-      };
-    }, []),
-  );
 
   const submitAnswer = () => {
     if (selectedAnswer === null) {
@@ -65,16 +52,19 @@ const Trivia = () => {
     }
 
     setSavedResponses(
-      savedResponses !== null? savedResponses.concat({
-        ques_id: currentQuestionID,
-        ans_id: selectedAnswer,
-      }) : [{
-        ques_id: currentQuestionID,
-        ans_id: selectedAnswer,
-      }]
+      savedResponses !== null
+        ? savedResponses.concat({
+            ques_id: question.id,
+            ans_id: selectedAnswer,
+          })
+        : [
+            {
+              ques_id: question.id,
+              ans_id: selectedAnswer,
+            },
+          ],
     );
-    setAnsweredQuestions(answeredQuestions.concat(currentQuestionID));
-    presentQuestion();
+    setAnsweredQuestions(answeredQuestions.concat(question.id));
   };
 
   const sendResponsesToServer = () => {
@@ -98,7 +88,6 @@ const Trivia = () => {
           if (response.message) {
             setIsLoading(false);
             setSavedResponses([]);
-            presentQuestion();
           }
         },
         (response) => {
@@ -108,26 +97,20 @@ const Trivia = () => {
       );
     }
   };
-  const presentQuestion = (
-    allQuestionsTemp = null,
-    answeredQuestionsTemp = null,
-  ) => {
-    let allQuestions = [];
-    let allAnsweredQuestions = [];
-    if (allQuestionsTemp !== null) {
-      allQuestions = allQuestionsTemp;
-      allAnsweredQuestions = answeredQuestionsTemp;
-    } else {
-      allAnsweredQuestions = answeredQuestions;
-      allQuestions = questions;
-    }
-    let question = null;
-    let index = 0;
+  const presentQuestion = () => {
+    let allAnsweredQuestions = answeredQuestions;
+    let allQuestions = questions;
+    let questionTemp = null;
     do {
-      question = allQuestions.pop();
-      index++;
-    } while (question.id && allAnsweredQuestions.indexOf(question.id) > -1);
-    setQuestion(question);
+      questionTemp = allQuestions.pop();
+      if (question) {
+        console.log(questionTemp.id, question.id);
+      }
+    } while (
+      questionTemp.id &&
+      allAnsweredQuestions.indexOf(questionTemp.id) > -1
+    );
+    setQuestion(questionTemp);
     setSelectedAnswer(null);
   };
 
@@ -143,22 +126,21 @@ const Trivia = () => {
         } else {
           answeredQuestionsTemp = [];
         }
+        setAnsweredQuestions(answeredQuestionsTemp);
         if (questionsTemp) {
           console.log('Loading questions from storage');
           setQuestions(JSON.parse(questionsTemp));
-          presentQuestion(JSON.parse(questionsTemp), answeredQuestionsTemp);
           // console.log(JSON.parse(questions).pop());
         } else {
           console.log('Loading questions from server');
           network.getResponse(
-            EndPoints.getTriviaQuestions + '?page=' + page,
+            EndPoints.getTriviaQuestions,
             'GET',
             {},
             userDetail.token,
             (response) => {
               storage.setData('TriviaQuestions', JSON.stringify(response.data));
               setQuestions(response.data);
-              presentQuestion(response.data, answeredQuestionsTemp);
             },
             (error) => {
               console.log('error', error);
@@ -169,7 +151,7 @@ const Trivia = () => {
         let SavedTriviaResponses = await storage.getData(
           'SavedTriviaResponses',
         );
-        if(SavedTriviaResponses !== null){
+        if (SavedTriviaResponses !== null) {
           setSavedResponses(JSON.parse(SavedTriviaResponses));
         }
       } catch (exception) {
@@ -182,6 +164,29 @@ const Trivia = () => {
   React.useEffect(() => {
     LoadQuestions();
   }, []);
+
+  React.useEffect(() => {
+    if (questions && answeredQuestions) {
+      presentQuestion();
+    }
+  }, [questions]);
+  React.useEffect(() => {
+    if (questions && answeredQuestions) {
+      presentQuestion();
+      const storeAsync = async () => {
+        console.log('sett in storage answeredQuestions', answeredQuestions);
+        await storage.setData(
+          'AnsweredTriviaQuestions',
+          JSON.stringify(answeredQuestions),
+        );
+        await storage.setData(
+          'SavedTriviaResponses',
+          JSON.stringify(savedResponses),
+        );
+      };
+      storeAsync();
+    }
+  }, [answeredQuestions]);
 
   return (
     <View style={{flex: 1}}>
@@ -223,7 +228,6 @@ const Trivia = () => {
                         <CheckBox
                           checked={answer.id == selectedAnswer}
                           onPress={() => {
-                            setCurrentQuestionID(question.id);
                             setSelectedAnswer(answer.id);
                           }}
                           key={answer.id}
@@ -231,7 +235,6 @@ const Trivia = () => {
                         />
                         <TouchableOpacity
                           onPress={() => {
-                            setCurrentQuestionID(question.id);
                             setSelectedAnswer(answer.id);
                           }}>
                           <Body style={{padding: 10, paddingRight: 20}}>
@@ -262,24 +265,7 @@ const Trivia = () => {
               )}
             </View>
             <View style={{flex: 1}}>
-              <View style={{marginRight: widthPercentageToDP(3)}}>
-                <Button
-                  onPress={() => {
-                    sendResponsesToServer();
-                    Toast.show({
-                      text:
-                        'Refreshing database in background, please check back soon.',
-                      duration: 2000,
-                    });
-                  }}
-                  style={{
-                    width: widthPercentageToDP(100 / 3) - 17,
-                  }}
-                  icon={sync}
-                  isLoading={isLoading}
-                  name={'Sync'}
-                  linear
-                />
+              <View style={{marginRight: 12}}>
                 <LeaderBoard />
               </View>
             </View>

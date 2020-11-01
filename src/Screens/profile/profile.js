@@ -26,16 +26,7 @@ import {Item, Label, Toast} from 'native-base';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 
-import {
-  menu,
-  image8,
-  backicon,
-  editprofile,
-  botomView,
-  headerView,
-  bottomCurve,
-  placeholderProfilePhoto,
-} from '../../common/images';
+import {bottomCurve, placeholderProfilePhoto} from '../../common/images';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Header from '../../components/header';
 import userDetailContext from '../../common/userDetailContext';
@@ -45,23 +36,33 @@ import globalstyles from '../../common/styles';
 import {AuthContext} from '../../common/AuthContext';
 import ImagePicker from 'react-native-image-picker';
 import EndPoints from '../../components/apis/endPoints';
+import storage from '../../components/apis/storage';
+import {
+  UpdateProfileValidationSchema,
+  UpdatePasswordValidationSchema,
+} from '../../common/validations';
+import FastImage from 'react-native-fast-image';
 
 const Profile = () => {
   const userDetail = React.useContext(userDetailContext);
   const {updateUserDetail} = React.useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [uploaded, setUploaded] = useState(false);
   const handleChoosePhoto = () => {
     const options = {
       noData: true,
+      quality: 0.5,
+      maxWidth: 256,
+      maxHeight: 256,
     };
     ImagePicker.launchImageLibrary(options, (response) => {
       if (response.uri) {
-        if (response.fileSize < 20000000) {
+        if (response.fileSize < 5000000) {
           uploadPhoto(response);
         } else {
-          Toast.show({text: 'Please choose an image under 20MB.'});
+          Toast.show({text: 'Please choose a lighter/smaller image.'});
         }
       }
     });
@@ -77,14 +78,15 @@ const Profile = () => {
       userDetail.token,
       (response) => {
         // console.log(response);
-        Toast.show({text: response.message});
+        updateUserDetail(userDetail, {user: response.user});
+        console.log('response ------------', response);
+        if (response.message)
+          Toast.show({text: 'Profile photo uploaded successfully.'});
         setUploaded(true);
         setIsLoading(false);
       },
       (response) => {
-        console.log(response);
         setUploaded(false);
-        if (response.message) Toast.show({text: 'Profile photo uploaded successfully.'});
         setIsLoading(false);
       },
       photoResource,
@@ -133,37 +135,34 @@ const Profile = () => {
                     ? {uri: userDetail.user.avatar}
                     : placeholderProfilePhoto
                 }
-                initHeight="130"
-                initWidth="130"
-                borderRadius={100}></ImagesView>
+              />
             </TouchableOpacity>
           </FirstView>
         </View>
 
         <Formik
+          validationSchema={UpdateProfileValidationSchema}
           initialValues={{
             username: (userDetail && userDetail.user.username) || '',
             email: (userDetail && userDetail.user.email) || '',
           }}
           onSubmit={(values) => {
-            console.log(values, 'valuess');
+            setIsSaving(true);
             network.getResponse(
               endpoint.profileUpdate,
               'POST',
               values,
               userDetail.token || '',
               (response) => {
-                if (response.access_token) {
-                  updateUserDetail(response);
-                  // storage.setData('access_token', response.access_token);
-                  storage.setData('user', JSON.stringify(response.user));
-                  // dispatch({type: 'SIGN_IN', token:response.access_token,userDetail:response.user});
-                } else {
-                  // console.log('console.log(error),',error)
-                }
+                updateUserDetail(userDetail, {user: response.user});
+                if (response.message)
+                  Toast.show({text: 'Profile updated successfully.'});
+                storage.setData('user', JSON.stringify(response.user));
+                setIsSaving(false);
               },
               (error) => {
-                console.log(error);
+                console.log(error.response.data);
+                setIsSaving(false);
               },
             );
           }}>
@@ -177,7 +176,6 @@ const Profile = () => {
           }) => (
             <View style={{width: '80%', alignSelf: 'center', marginTop: 20}}>
               <Input
-                style={{fontFamily: 'FuturaPT-Light'}}
                 placeholder="User Name"
                 label="Name"
                 name="username"
@@ -213,55 +211,119 @@ const Profile = () => {
                 }}
                 onPress={handleSubmit}
                 name={'Save Profile'}
+                isLoading={isSaving}
                 linear
               />
             </View>
           )}
         </Formik>
 
-        <View style={{width: '80%', alignSelf: 'center', marginTop: 20}}>
-          <Input
-            style={{fontFamily: 'FuturaPT-Light'}}
-            placeholder="**********"
-            label="Password"
-          />
-        </View>
-
-        <View style={{width: '80%', alignSelf: 'center', marginTop: 20}}>
-          <Input
-            style={{fontFamily: 'FuturaPT-Light'}}
-            placeholder="**********"
-            label="Confirm Password"
-          />
-        </View>
-        <Button
-          style={{
-            width: widthPercentageToDP(78),
-            marginTop: heightPercentageToDP(4),
-            alignSelf: 'center',
+        <Formik
+          validationSchema={UpdatePasswordValidationSchema}
+          initialValues={{
+            current_password: '',
+            password: '',
+            password_confirmation: '',
           }}
-          name={'Update Password'}
-          linear
-        />
+          onSubmit={(values) => {
+            setIsSaving(true);
+            network.getResponse(
+              endpoint.passwordUpdate,
+              'POST',
+              values,
+              userDetail.token || '',
+              (response) => {
+                if (response.message)
+                  Toast.show({text: response.message, duration: 5000});
+                setIsSaving(false);
+              },
+              (error) => {
+                if (
+                  error.response &&
+                  error.response.data &&
+                  error.response.data.message
+                ) {
+                  Toast.show({
+                    text: error.response.data.message,
+                    duration: 5000,
+                  });
+                }
+                setIsSaving(false);
+              },
+            );
+          }}>
+          {({
+            values,
+            handleSubmit,
+            handleChange,
+            errors,
+            touched,
+            handleBlur,
+          }) => (
+            <>
+              <View style={{width: '80%', alignSelf: 'center', marginTop: 20}}>
+                <Input
+                  secureTextEntry={true}
+                  placeholder="**********"
+                  label="Current Password"
+                  name="current_password"
+                  onChangeText={handleChange('current_password')}
+                  onBlur={handleBlur('current_password')}
+                />
+                {touched && errors.current_password && (
+                  <Text style={styles.error_message}>
+                    {errors.current_password}
+                  </Text>
+                )}
+              </View>
+              <View style={{width: '80%', alignSelf: 'center', marginTop: 20}}>
+                <Input
+                  secureTextEntry={true}
+                  placeholder="**********"
+                  label="Password"
+                  name="password"
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                />
+                {touched && errors.password && (
+                  <Text style={styles.error_message}>{errors.password}</Text>
+                )}
+              </View>
+
+              <View style={{width: '80%', alignSelf: 'center', marginTop: 20}}>
+                <Input
+                  placeholder="**********"
+                  label="Confirm Password"
+                  secureTextEntry={true}
+                  name="password_confirmation"
+                  onChangeText={handleChange('password_confirmation')}
+                  onBlur={handleBlur('password_confirmation')}
+                />
+                {touched && errors.password_confirmation && (
+                  <Text style={styles.error_message}>
+                    {errors.password_confirmation}
+                  </Text>
+                )}
+              </View>
+              <Button
+                style={{
+                  width: widthPercentageToDP(78),
+                  marginTop: heightPercentageToDP(4),
+                  alignSelf: 'center',
+                }}
+                onPress={handleSubmit}
+                isLoading={isSaving}
+                name={'Update Password'}
+                linear
+              />
+            </>
+          )}
+        </Formik>
       </ScrollView>
     </View>
   );
 };
-const TextInputtView = styled(Item)({
-  width: widthPercentageToDP(78),
-  alignSelf: 'center',
-  // borderWidth: 2,
-  // borderColor: '#000',
-  //marginTop: heightPercentageToDP(8),
-});
-const TextInputView = styled(Item)({
-  width: widthPercentageToDP(78),
-  alignSelf: 'center',
-  // borderWidth: 2,
-  // borderColor: '#000',
-  marginTop: heightPercentageToDP(1.8),
-});
-const ImagesView = styled(ResponsiveImage)({
+const ImagesView = styled(FastImage)({
   borderWidth: 2,
   borderColor: '#FFFFFF',
   shadowColor: '#FFFFFF',
@@ -269,40 +331,20 @@ const ImagesView = styled(ResponsiveImage)({
     width: 0,
     height: 0.9,
   },
+  height: 130,
+  width: 130,
   shadowRadius: 1,
+  borderRadius: 100,
 });
 const FirstView = styled(View)({
   flexDirection: 'row',
 });
-const MenuIcon = styled(ResponsiveImage)({
-  alignSelf: 'flex-end',
-  marginRight: widthPercentageToDP(4),
-});
-const WelcomeText = styled(Text)({
-  fontSize: 24,
-  color: '#ffffff',
-  fontWeight: '500',
-  fontFamily: 'FuturaPT-Medium',
-  marginLeft: -widthPercentageToDP(60),
-  marginTop: -heightPercentageToDP(0.1),
-});
-const BackgroundImage = styled(ImageBackground)({
-  height: Platform.OS === 'ios' ? '89%' : '100%',
-  bottom: 0,
-  marginTop: 50,
-});
-const WelcomeView = styled(View)({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginTop: '-14%',
-  marginLeft: 12,
-});
-const BackIcon = styled(ResponsiveImage)({});
 const styles = StyleSheet.create({
   error_message: {
     ...globalstyles.error_message,
-    // width: wp(78),
+    paddingLeft: 10,
+    marginBottom: 25,
+    marginTop: -10,
   },
 });
 export default Profile;

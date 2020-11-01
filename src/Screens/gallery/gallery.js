@@ -22,6 +22,7 @@ import userDetailContext from '../../common/userDetailContext';
 import EndPoints from '../../components/apis/endPoints';
 import network from '../../components/apis/network';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import FastImage from 'react-native-fast-image';
 
 const Gallery = ({route, navigation}) => {
   const latestPhotosURLS = route.params.latestPhotosURLS;
@@ -39,6 +40,7 @@ const Gallery = ({route, navigation}) => {
   const [page, setPage] = React.useState(1);
 
   const renderItem = (item, index) => {
+    // console.log(item.url);
     return (
       <View key={item.id}>
         <TouchableOpacity
@@ -46,12 +48,7 @@ const Gallery = ({route, navigation}) => {
             setShowModal(true);
             setcurrentImageIndex(index);
           }}>
-          <ImagesView
-            source={{uri: item.url}}
-            initHeight={widthPercentageToDP(25) - 7}
-            initWidth={widthPercentageToDP(25) - 7}
-            borderRadius={3}
-          />
+          <ImagesView source={{uri: item.url}} key={Math.random().toString()} />
         </TouchableOpacity>
       </View>
     );
@@ -62,11 +59,12 @@ const Gallery = ({route, navigation}) => {
     setLoadingMore(true);
     try {
       network.getResponse(
-        EndPoints.latestPhotos + '?page=' + page,
-        'POST',
-        {},
+        EndPoints.latestPhotos,
+        'GET',
+        {page: page},
         userDetail.token,
         (response) => {
+          // console.log('response.data', response.data);
           for (let i = 0; i < response.data.length; i++) {
             response.data[i].url = response.data[i].url;
             tempImagesArray.push(response.data[i]);
@@ -103,11 +101,8 @@ const Gallery = ({route, navigation}) => {
       onEndReachedThreshold={photos.length ? 0.5 : 0}
       contentContainerStyle={
         (photos.length
-          ? {
-              backgroundColor: 'white',
-            }
+          ? {}
           : {
-              backgroundColor: 'white',
               flex: 1,
             },
         {
@@ -121,11 +116,15 @@ const Gallery = ({route, navigation}) => {
       ListEmptyComponent={
         <View
           style={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>You haven't uploaded any photos yet.</Text>
+          {loadingMore ? (
+            <ActivityIndicator color="purple" size="large" />
+          ) : (
+            <Text>You haven't uploaded any photos yet.</Text>
+          )}
         </View>
       }
       ListHeaderComponent={
-        <View style={{backgroundColor: 'white'}}>
+        <View>
           <Header title="Photos" backButton="true" />
         </View>
       }
@@ -175,13 +174,12 @@ const Gallery = ({route, navigation}) => {
     />
   );
 };
-const ImagesVieww = styled(ResponsiveImage)({
-  alignSelf: 'center',
-});
-const ImagesView = styled(ResponsiveImage)({
+const ImagesView = styled(FastImage)({
   marginLeft: -widthPercentageToDP(10),
   marginLeft: 5,
   marginTop: heightPercentageToDP(0.5),
+  height: widthPercentageToDP(25) - 7,
+  width: widthPercentageToDP(25) - 7,
   borderRadius: 0,
   zIndex: 1,
 });

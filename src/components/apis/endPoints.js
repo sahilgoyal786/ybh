@@ -4,6 +4,7 @@ const EndPoints = {
   verifyOTP: 'verify-otp',
   setPassword: 'password-reset',
   profileUpdate: 'user/profile/update',
+  passwordUpdate: 'update-password',
 
   votingImages: 'voting-images',
   castVote: 'voting-images',

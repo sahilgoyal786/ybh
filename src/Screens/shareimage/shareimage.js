@@ -57,14 +57,17 @@ const ShareImage = () => {
     }
     const options = {
       noData: true,
+      quality: 0.5,
+      maxWidth: 1000,
+      maxHeight: 1000,
     };
     ImagePicker.launchImageLibrary(options, (response) => {
       if (response.uri) {
-        if (response.fileSize < 20000000) {
+        if (response.fileSize < 5000000) {
           setPhoto(response);
           uploadPhoto(response);
         } else {
-          Toast.show({text: 'Please choose an image under 20MB.'});
+          Toast.show({text: 'Please choose a lighter/smaller image.'});
         }
       }
     });

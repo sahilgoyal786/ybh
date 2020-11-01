@@ -28,6 +28,7 @@ import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import {Modal} from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import FastImage from 'react-native-fast-image';
 // import {Header} from 'react-native/Libraries/NewAppScreen';
 
 const MyPhotos = () => {
@@ -47,12 +48,7 @@ const MyPhotos = () => {
           setcurrentImageIndex(index);
         }}>
         <View key={item.id} style={{margin: widthPercentageToDP(1.25)}}>
-          <ImagesView
-            source={{uri: item.url}}
-            initHeight={widthPercentageToDP(50) - 10}
-            initWidth={widthPercentageToDP(50) - 10}
-            borderRadius={3}
-          />
+          <ImagesView source={{uri: item.url}} borderRadius={3} />
           <View
             style={{
               backgroundColor: index % 2 ? '#0EC776' : '#F25C5D',
@@ -81,9 +77,9 @@ const MyPhotos = () => {
     setLoadingMore(true);
     try {
       network.getResponse(
-        EndPoints.myPhotos + '?page=' + page,
+        EndPoints.myPhotos,
         'GET',
-        {},
+        {page: page},
         userDetail.token,
         (response) => {
           for (let i = 0; i < response.data.length; i++) {
@@ -201,9 +197,11 @@ const MyPhotos = () => {
     />
   );
 };
-const ImagesView = styled(ResponsiveImage)({
+const ImagesView = styled(FastImage)({
   marginTop: heightPercentageToDP(0.5),
   backgroundColor: '#DADADA',
+  height: widthPercentageToDP(50) - 10,
+  width: widthPercentageToDP(50) - 10,
 });
 
 export default MyPhotos;

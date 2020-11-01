@@ -35,15 +35,15 @@ import storage from '../../components/apis/storage';
 import network from '../../components/apis/network';
 import userDetailContext from '../../common/userDetailContext';
 import ContentLoader from 'react-native-easy-content-loader';
+import {Toast} from 'native-base';
 
 const RelationMeter = (navigation) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [relationshipMeterScore, setRelationshipMeterScore] = useState(100);
-  const [currentQuestionID, setCurrentQuestionID] = useState();
+  const [relationshipMeterScore, setRelationshipMeterScore] = useState(50);
   const [question, setQuestion] = useState(null);
   const [questions, setQuestions] = useState(null);
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [savedResponses, setSavedResponses] = useState([]);
   const [page, setPage] = useState(1);
   const userDetail = React.useContext(userDetailContext);
 
@@ -52,70 +52,49 @@ const RelationMeter = (navigation) => {
   }
 
   const submitAnswer = (answer) => {
-    setIsLoading(true);
-    if (answer == 'SKIP') {
-      setSelectedAnswer(0);
-    } else {
+    let ans_id = 0;
+    if (answer !== 'SKIP') {
       question.answers.map((value, index) => {
         if (value.ans == answer) {
-          setSelectedAnswer(value.id);
+          ans_id = value.id;
         }
       });
     }
-    network.getResponse(
-      EndPoints.postRelationshipMeterAnswers,
-      'POST',
-      {ques_id: currentQuestionID, ans_id: selectedAnswer},
-      userDetail.token,
-      (response) => {
-        console.log(response);
-        if (response.message) {
-          setIsLoading(false);
-          //console.log('AnsweredRelationshipMeterQuestions', answeredQuestions);
-          let tempArray = answeredQuestions;
-          tempArray.push(currentQuestionID);
-          setAnsweredQuestions(tempArray);
-          // console.log('AnsweredRelationshipMeterQuestions', answeredQuestions);
-          storage.setData(
-            'AnsweredRelationshipMeterQuestions',
-            JSON.stringify(answeredQuestions),
-          );
-          presentQuestion();
-          if (answer == 'YES')
-            setRelationshipMeterScore(relationshipMeterScore + getRandomInt(2));
-          else
-            setRelationshipMeterScore(relationshipMeterScore - getRandomInt(2));
-        }
-      },
-      (response) => {
-        setIsLoading(false);
-        // console.log(response);
-      },
+
+    setSavedResponses(
+      savedResponses !== null
+        ? savedResponses.concat({
+            ques_id: question.id,
+            ans_id: ans_id,
+          })
+        : [
+            {
+              ques_id: question.id,
+              ans_id: ans_id,
+            },
+          ],
     );
+    setAnsweredQuestions(answeredQuestions.concat(question.id));
   };
 
-  const presentQuestion = (
-    allQuestionsTemp = null,
-    answeredQuestionsTemp = null,
-  ) => {
-    let allQuestions = [];
-    let allAnsweredQuestions = [];
-    if (allQuestionsTemp !== null) {
-      allQuestions = allQuestionsTemp;
-      allAnsweredQuestions = answeredQuestionsTemp;
-    } else {
-      allAnsweredQuestions = answeredQuestions;
-      allQuestions = questions;
-    }
-    let question = null;
-    let index = 0;
+  const presentQuestion = () => {
+    let allAnsweredQuestions = answeredQuestions;
+    let allQuestions = questions;
+    console.log('allAnsweredQuestions==', allAnsweredQuestions);
+    let questionTemp = null;
     do {
-      question = allQuestions.pop();
-      index++;
-    } while (question.id && allAnsweredQuestions.indexOf(question.id) > -1);
-    setQuestion(question);
-    setCurrentQuestionID(question.id);
-    // console.log(question);
+      questionTemp = allQuestions.pop();
+    } while (
+      questionTemp.id &&
+      allAnsweredQuestions.indexOf(questionTemp.id) > -1
+    );
+    console.log(
+      allAnsweredQuestions,
+      questionTemp.id,
+      allAnsweredQuestions.indexOf(questionTemp.id),
+    );
+    setQuestion(questionTemp);
+    console.log(questionTemp);
   };
   const LoadQuestions = () => {
     const bootstrapAsync = async () => {
@@ -124,20 +103,25 @@ const RelationMeter = (navigation) => {
         let answeredQuestionsTemp = await storage.getData(
           'AnsweredRelationshipMeterQuestions',
         );
-        if (answeredQuestionsTemp && answeredQuestionsTemp !== null) {
+        if (
+          answeredQuestionsTemp &&
+          answeredQuestionsTemp !== null &&
+          answeredQuestionsTemp !== 'null'
+        ) {
           answeredQuestionsTemp = JSON.parse(answeredQuestionsTemp);
         } else {
           answeredQuestionsTemp = [];
         }
+        // console.log('-----answeredQuestionsTemp', answeredQuestionsTemp);
+        setAnsweredQuestions(answeredQuestionsTemp);
         if (questionsTemp) {
-          console.log('Loading questions from storage');
+          // console.log('Loading questions from storage');
           setQuestions(JSON.parse(questionsTemp));
-          presentQuestion(JSON.parse(questionsTemp), answeredQuestionsTemp);
           // console.log(JSON.parse(questions).pop());
         } else {
-          console.log('Loading questions from server');
+          // console.log('Loading questions from server');
           network.getResponse(
-            EndPoints.getRelationshipMeterQuestions + '?page=' + page,
+            EndPoints.getRelationshipMeterQuestions,
             'GET',
             {},
             userDetail.token,
@@ -147,7 +131,6 @@ const RelationMeter = (navigation) => {
                 JSON.stringify(response.data),
               );
               setQuestions(response.data);
-              presentQuestion(response.data, answeredQuestionsTemp);
             },
             (error) => {
               console.log('error', error);
@@ -164,6 +147,30 @@ const RelationMeter = (navigation) => {
   React.useEffect(() => {
     LoadQuestions();
   }, []);
+
+  React.useEffect(() => {
+    if (questions && answeredQuestions) {
+      presentQuestion();
+    }
+  }, [questions]);
+  React.useEffect(() => {
+    if (questions && answeredQuestions) {
+      presentQuestion();
+      const storeAsync = async () => {
+        console.log('sett in storage answeredQuestions', answeredQuestions);
+        await storage.setData(
+          'AnsweredRelationshipMeterQuestions',
+          JSON.stringify(answeredQuestions),
+        );
+        await storage.setData(
+          'SavedRelationShipMeterResponses',
+          JSON.stringify(savedResponses),
+        );
+      };
+      storeAsync();
+    }
+  }, [answeredQuestions]);
+
   return (
     <View style={{flex: 1}}>
       <Image
@@ -194,8 +201,9 @@ const RelationMeter = (navigation) => {
             <ViewSec
               style={{
                 marginTop: heightPercentageToDP(1),
+                minHeight: 152,
               }}>
-              <TextLong>{question.ques}</TextLong>
+              <TextLong numberOfLines={5}>{question.ques}</TextLong>
             </ViewSec>
             <ContainerView>
               <TouchableOpacity

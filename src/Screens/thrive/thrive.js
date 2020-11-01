@@ -60,9 +60,9 @@ const Thrive = ({route, navigation}) => {
     setLoadingMore(true);
     try {
       network.getResponse(
-        EndPoints.blogs + '?page=' + page,
+        EndPoints.blogs,
         'GET',
-        {},
+        {page: page},
         userDetail.token,
         (response) => {
           for (let i = 0; i < response.data.length; i++) {
@@ -91,7 +91,7 @@ const Thrive = ({route, navigation}) => {
 
   return (
     <FlatList
-    bounces={false}
+      bounces={false}
       onEndReached={() => {
         if (blogs.length && totalPages && page <= totalPages) {
           LoadBlogs();

@@ -47,10 +47,10 @@ const Login = (props) => {
       <View style={{flex: 1, flexGrow: 1, minHeight: hp(30)}}>
         <Formik
           initialValues={{
-            // email: 'sahilgoyal1@gmail.com',
-            // password: '0987654321',
-            email: '',
-            password: '',
+            email: 'sahilgoyal1@gmail.com',
+            password: '123456789',
+            // email: '',
+            // password: '',
           }}
           validationSchema={LoginValidationSchema}
           onSubmit={(values) => {
@@ -167,6 +167,8 @@ const Discrip = styled(Text)({
 const SigninButton = styled.View({
   alignItems: 'center',
   justifyContent: 'flex-end',
+  width: wp(78),
+  alignSelf: 'center',
 });
 const MainView = styled.View({
   flexDirection: 'row',
@@ -187,14 +189,14 @@ export const styles = StyleSheet.create({
   userName: {
     borderBottomWidth: 1,
     paddingVertical: hp(1),
-    width: wp(78),
+    width: '100%',
     fontSize: 17,
     marginTop: hp(1.9),
   },
   PassTyle: {
     borderBottomWidth: 1,
     paddingVertical: hp(0.8),
-    width: wp(78),
+    width: '100%',
     fontSize: 17,
     marginTop: hp(3),
   },

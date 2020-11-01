@@ -30,6 +30,7 @@ import {
   Image,
   Platform,
   Dimensions,
+  Modal,
 } from 'react-native';
 //import { Image } from 'native-base';
 import {DraggableGrid} from 'react-native-draggable-grid';
@@ -42,6 +43,12 @@ import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+import MaskedView from '@react-native-community/masked-view';
+import FastImage from 'react-native-fast-image';
+import {vtngpage} from '../../common/images';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import {bottomCurve} from '../../common/images';
+import {White} from '../../common/colors';
 
 // interface VotingPageProps {
 
@@ -50,215 +57,208 @@ const windowHeight = Dimensions.get('window').height;
 // interface VotingPageState {
 //   data: { key: string, name: string }[];
 // }
-class VotingPage extends React.Component {
-  static contextType = userDetailContext;
-  constructor(props) {
-    super(props);
+const VotingPage = ({route, navigation}) => {
+  const [showModal, setShowModal] = React.useState(false);
+  const userDetail = React.useContext(userDetailContext);
+  const [currentImageIndex, setcurrentImageIndex] = React.useState(0);
+  const [selectedImageIndex, setselectedImageIndex] = React.useState(-1);
 
-    this.state = {
-      userDetail: null,
-      data: [
-        {name: image1, key: '0', hideView: true},
-        {
-          name: '',
-          key: '19',
-          disabledDrag: true,
-          disabledReSorted: true,
-          hideView: false,
-        },
-        {
-          name: '',
-          key: '18',
-          disabledDrag: true,
-          disabledReSorted: true,
-          hideView: false,
-        },
-        {
-          name: '',
-          key: '17',
-          disabledDrag: true,
-          disabledReSorted: true,
-          hideView: false,
-        },
+  let itemHeight = ((widthPercentageToDP(26) - 5) * 400) / 348;
+  let itemWidth = widthPercentageToDP(26) - 5;
 
-        {name: image2, key: '1', hideView: true},
-        {name: image3, key: '2', hideView: true},
-        {
-          name: '',
-          key: '16',
-          disabledDrag: true,
-          disabledReSorted: true,
-          hideView: false,
-        },
-        {
-          name: '',
-          key: '15',
-          disabledDrag: true,
-          disabledReSorted: true,
-          hideView: false,
-        },
+  const renderGrid = (votingImagesURLS) => {
+    let content = [];
+    let halfway = widthPercentageToDP(50);
+    let skewedItemHeight = (3 * itemHeight) / 4;
 
-        {
-          name: '',
-          key: '14',
-          disabledDrag: true,
-          disabledReSorted: true,
-          hideView: false,
-        },
-        {name: image4, key: '3', hideView: true},
-        {name: image5, key: '4', hideView: true},
-        {
-          name: '',
-          key: '13',
-          disabledDrag: true,
-          disabledReSorted: true,
-          hideView: false,
-        },
+    let positions = [
+      {left: halfway - itemWidth / 2, top: 0},
+      {left: halfway - itemWidth, top: skewedItemHeight},
+      {left: halfway - (itemWidth * 3) / 2, top: skewedItemHeight * 2},
+      {left: halfway - itemWidth / 2, top: skewedItemHeight * 2},
+      {left: halfway + itemWidth / 2, top: skewedItemHeight * 2},
+      {left: halfway, top: skewedItemHeight * 3},
+      {left: halfway - itemWidth / 2, top: skewedItemHeight * 4},
+      {left: halfway, top: skewedItemHeight * 5},
+    ];
 
-        {
-          name: '',
-          key: '12',
-          disabledDrag: true,
-          disabledReSorted: true,
-          hideView: false,
-        },
-        {
-          name: '',
-          key: '11',
-          disabledDrag: true,
-          disabledReSorted: true,
-          hideView: false,
-        },
-        {name: image6, key: '5', hideView: true},
-        {name: image7, key: '6', hideView: true},
+    let index = 0;
 
-        {
-          name: '',
-          key: '10',
-          disabledDrag: true,
-          disabledReSorted: true,
-          hideView: false,
-        },
-        {
-          name: '',
-          key: '9',
-          disabledDrag: true,
-          disabledReSorted: true,
-          hideView: false,
-        },
-        {
-          name: '',
-          key: '8',
-          disabledDrag: true,
-          disabledReSorted: true,
-          hideView: false,
-        },
-        {name: image8, key: '7', hideView: true},
-      ],
-    };
-  }
-  componentDidMount() {
-    this.setState({userDetail: this.context});
-  }
+    votingImagesURLS.forEach(function (element) {
+      content.push(
+        <MaskedView
+          key={Math.random().toString()}
+          style={{
+            height: itemHeight,
+            width: itemWidth,
+            position: 'absolute',
+            ...positions[index],
+          }}
+          maskElement={
+            <View
+              style={{
+                // Transparent background because mask is based off alpha channel.
+                backgroundColor: 'transparent',
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={vtngpage}
+                style={{
+                  height: itemHeight,
+                  width: itemWidth,
+                }}
+              />
+            </View>
+          }>
+          <TouchableOpacity
+            onPress={() => {
+              setcurrentImageIndex(votingImagesURLS.indexOf(element));
+              setShowModal(true);
+            }}
+            onLongPress={() => {
+              setselectedImageIndex(votingImagesURLS.indexOf(element));
+            }}>
+            <FastImage
+              key={Math.random}
+              source={{uri: element}}
+              style={{
+                height: itemHeight,
+                width: itemWidth,
+                justifyContent: 'center',
+                resizeMode: 'contain',
+                alignItems: 'center',
+              }}>
+              {selectedImageIndex == index && (
+                <View
+                  style={{
+                    backgroundColor: 'purple',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    opacity: 0.7,
+                  }}
+                />
+              )}
+            </FastImage>
+          </TouchableOpacity>
+        </MaskedView>,
+      );
+      index++;
+    });
+    return content;
+  };
 
-  render_item(item, votingImagesURLS) {
-    return item.hideView === false ? (
-      <View
-        key={Math.random}
-        style={{
-          height: widthPercentageToDP(25) - 5,
-          width: widthPercentageToDP(25) - 5,
-          justifyContent: 'center',
-          backgroundColor: 'transparent',
-          alignItems: 'center',
-        }}
-      />
-    ) : (
+  const {votingImagesURLS} = route.params;
+  let galleryMapped = [];
+  votingImagesURLS.forEach(function (url) {
+    galleryMapped.push({url});
+  });
+  return (
+    <View style={{flex: 1}}>
       <Image
-        key={Math.random}
-        source={{uri: votingImagesURLS[item.key]}}
+        source={bottomCurve}
         style={{
-          height: widthPercentageToDP(25) - 5,
-          width: widthPercentageToDP(25) - 5,
-          justifyContent: 'center',
-          resizeMode: 'contain',
-          alignItems: 'center',
+          width: widthPercentageToDP(100),
+          height: 200,
+          position: 'absolute',
+          bottom: -100,
         }}
-      />
-    );
-  }
-  render() {
-    const {navigation} = this.props;
-    const {votingImagesURLS} = this.props.route.params;
-    return (
-      <View>
-        <Header title="Voting Page" backButton="true" />
+        resizeMode="contain"></Image>
+      <Header title="Voting Page" backButton="true" />
+      <ScrollView
+        alwaysBounceHorizontal={false}
+        alwaysBounceVertical={false}
+        bounces={false}
+        style={{paddingTop: 0}}
+        contentContainerStyle={{paddingBottom: 60}}>
         <View
           style={{
             marginTop: 10,
-            height: heightPercentageToDP(100) - 330,
+            minHeight: itemHeight * 5 + 50,
             paddingLeft: 10,
             paddingRight: 10,
           }}>
-          <DraggableGrid
-            numColumns={4}
-            renderItem={(item) => {
-              return this.render_item(item, votingImagesURLS);
-            }}
-            onDragStart={this.onDragStart}
-            data={this.state.data}
-            onDragRelease={(data) => {
-              this.setState({data}); // need reset the props data sort after drag release
-            }}
-          />
+          {renderGrid(votingImagesURLS)}
         </View>
 
         <TouchableOpacity
           style={{
             paddingLeft: 40,
-            position: 'relative',
-            marginLeft: -widthPercentageToDP(8),
-            marginTop: -heightPercentageToDP(2),
+            position: 'absolute',
+            bottom: 40,
           }}
           onPress={() => {
-            let order = this.state.data;
-            let paths = [];
-            let scores = [];
-            let index = 0;
-            order.forEach((photo) => {
-              if (votingImagesURLS[photo.key]) {
-                paths.push(votingImagesURLS[photo.key]);
-                scores.push(votingImagesURLS.length - index);
-                index++;
-              }
-            });
-            // console.log(votes);
-            network.getResponse(
-              EndPoints.castVote,
-              'POST',
-              {paths, scores},
-              this.state.userDetail.token,
-              (response) => {
-                // console.log(response);
-                Toast.show({text: response.message, duration: 5000});
-                this.props.navigation.navigate('Home');
-              },
-              (error) => {
-                // console.log('error', error.response);
-              },
-            );
+            if (selectedImageIndex < 0) {
+              Toast.show({
+                text:
+                  'Please choose your favourite photo, by long pressing it.',
+                duration: 4000,
+              });
+              return;
+            }
+            // network.getResponse(
+            //   EndPoints.castVote,
+            //   'POST',
+            //   {path: votingImagesURLS[selectedImageIndex]},
+            //   userDetail.token,
+            //   (response) => {
+            // console.log(response);
+            Toast.show({text: 'Thank you for voting.', duration: 5000});
+            setTimeout(() => {
+              navigation.navigate('Home');
+            }, 2000);
+            // },
+            // (error) => {
+            //   // console.log('error', error.response);
+            // },
+            // );
           }}>
           <ImagesView
             source={vtngbtn}
             initHeight="135"
             initWidth="140"
             borderRadius={5}
+            style={selectedImageIndex < 0 ? {opacity: 0.2} : {opacity: 1}}
           />
         </TouchableOpacity>
-      </View>
-    );
-  }
-}
+
+        <Modal visible={showModal}>
+          <Text
+            style={{
+              position: 'absolute',
+              left: 20,
+              top: 20,
+              height: 25,
+              width: 25,
+              color: 'black',
+              zIndex: 100,
+              backgroundColor: 'white',
+              textAlign: 'center',
+              borderRadius: 20,
+              textAlignVertical: 'center',
+              fontWeight: '900',
+              fontFamily: 'Arial',
+            }}
+            onPress={() => setShowModal(false)}>
+            X
+          </Text>
+          <ImageViewer
+            imageUrls={galleryMapped}
+            enableSwipeDown={true}
+            onCancel={() => setShowModal(false)}
+            index={currentImageIndex}
+            renderIndicator={() => {}}
+            renderImage={(props) => <FastImage {...props} />}
+          />
+        </Modal>
+      </ScrollView>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   button: {

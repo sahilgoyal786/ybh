@@ -32,3 +32,19 @@ export const SetPasswordValidationSchema = yup.object({
     .string()
     .oneOf([yup.ref('password'), null], 'Passwords must match'),
 });
+
+export const UpdatePasswordValidationSchema = yup.object({
+  current_password: yup.string().required('Password is required'),
+  password: yup
+    .string()
+    .min(8, ({min}) => `Password must be at least ${min} characters`)
+    .required('Password is required'),
+  password_confirmation: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match'),
+});
+
+export const UpdateProfileValidationSchema = yup.object({
+  username: yup.string().required('Name is required'),
+  email: yup.string().required('Email is required'),
+});

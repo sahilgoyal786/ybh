@@ -30,6 +30,7 @@ import {Picker} from '@react-native-community/picker';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Header from '../../components/header';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import FastImage from 'react-native-fast-image';
 // import { Form } from 'formik';
 const LatestPhotos = ({route, navigation}) => {
   const latestPhotosURLS = route.params.latestPhotosURLS;
@@ -217,7 +218,7 @@ const TextViewWeek = styled(Text)({
   color: '#484848',
   fontFamily: 'FuturaPT-Book',
 });
-const ImagesView = styled(Image)({
+const ImagesView = styled(FastImage)({
   width: widthPercentageToDP(22) - 8,
   height: widthPercentageToDP(22) - 8,
   margin: 2,

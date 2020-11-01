@@ -9,6 +9,7 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import {backicon} from '../common/images';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const Header = ({title, backButton = ''}) => {
   const navigation = useNavigation();
@@ -34,12 +35,17 @@ const Header = ({title, backButton = ''}) => {
                 <BackIcon source={backicon} initHeight="16" initWidth="16" />
               </View>
             ) : (
-              <View></View>
+              <></>
             )}
           </TouchableOpacity>
-          <WelcomeText style={{marginTop: 4, marginLeft: 2}}>
-            {title}
-          </WelcomeText>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              backButton && backButton == 'true' && navigation.goBack();
+            }}>
+            <WelcomeText style={{marginTop: 4, marginLeft: 2}}>
+              {title}
+            </WelcomeText>
+          </TouchableWithoutFeedback>
         </View>
         <TouchableOpacity
           onPress={() => {

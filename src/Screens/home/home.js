@@ -19,6 +19,7 @@ import {useNavigation, DrawerActions} from '@react-navigation/native';
 import Header from '../../components/header';
 import ThriveArticle from '../../components/thriveArticle';
 import userDetailContext from '../../common/userDetailContext';
+import FastImage from 'react-native-fast-image';
 
 import ContentLoader, {
   FacebookLoader,
@@ -107,7 +108,7 @@ const Home = () => {
               <VotingImage
                 key={i}
                 source={{uri: response[i]['url']}}
-                style={{}}
+                resizeMode={FastImage.resizeMode.cover}
               />,
             );
           }
@@ -119,7 +120,7 @@ const Home = () => {
       );
       network.getResponse(
         EndPoints.latestPhotos,
-        'POST',
+        'GET',
         {},
         userDetail.token || '',
         (response) => {
@@ -129,10 +130,7 @@ const Home = () => {
             tempLatestPhotosArray.push(
               <LatestPhoto
                 key={i}
-                style={{
-                  height: widthPercentageToDP(66.67 / 3) - 13,
-                  width: widthPercentageToDP(66.67 / 3) - 13,
-                }}
+                resizeMode={FastImage.resizeMode.cover}
                 source={{uri: response[i]['url']}}>
                 {i == 5 && (
                   <ViewMore>
@@ -293,7 +291,7 @@ const LastImage = styled(View)({
   marginLeft: 10,
   marginRight: 10,
 });
-const VotingImage = styled(ImageBackground)({
+const VotingImage = styled(FastImage)({
   borderRadius: 6,
   overflow: 'hidden',
   height: widthPercentageToDP(66.67 / 4) - 10,
@@ -301,11 +299,13 @@ const VotingImage = styled(ImageBackground)({
   marginBottom: 5,
   backgroundColor: '#DADADA',
 });
-const LatestPhoto = styled(ImageBackground)({
+const LatestPhoto = styled(FastImage)({
   borderRadius: 6,
   overflow: 'hidden',
   marginBottom: 8,
   backgroundColor: '#DADADA',
+  height: widthPercentageToDP(66.67 / 3) - 13,
+  width: widthPercentageToDP(66.67 / 3) - 13,
 });
 const ViewMore = styled(View)({
   backgroundColor: '#F5C84B',

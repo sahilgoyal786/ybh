@@ -152,10 +152,6 @@ const Thrivedetails = ({route, navigation}) => {
               width: widthPercentageToDP(100) - 20,
               marginLeft: 10,
               marginTop: 10,
-              borderBottomColor: 'red',
-              borderBottomWidth: 10,
-              borderRightWidth: 20,
-              borderColor: 'blue',
             }}
             resizeMode="cover"
           />

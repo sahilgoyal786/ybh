@@ -18,35 +18,40 @@ const network = {
   ) {
     let headers = {};
     let formData = {};
-      formData = new FormData();
-      for (var key in data) {
-        if(typeof data[key] == 'object' && data[key]){
-          data[key].forEach((item) => {
-            formData.append(key+'[]', item);
+    formData = new FormData();
+    for (var key in data) {
+      if (typeof data[key] == 'object' && data[key]) {
+        data[key].forEach((item) => {
+          formData.append(key + '[]', item);
         });
-        }else{
-          console.log('NOT AN OBJECT');
-          formData.append(key, data[key]);
-        }
+      } else {
+        // console.log('NOT AN OBJECT');
+        formData.append(key, data[key]);
       }
-      if (file) {
-        formData.append(file_name, {
-          name: Math.random().toString(),
-          type: file.type,
-          uri:
-            Platform.OS === 'android'
-              ? file.uri
-              : file.uri.replace('file://', ''),
-        });
-      }
-      console.log(formData);
-      console.log(file);
+    }
+    if (file) {
+      formData.append(file_name, {
+        name: Math.random().toString(),
+        type: file.type,
+        uri:
+          Platform.OS === 'android'
+            ? file.uri
+            : file.uri.replace('file://', ''),
+      });
+    }
+    // console.log(formData);
+    // console.log(file);
 
-    headers['Content-Type'] = `multipart/form-data boundary=${formData._boundary}`;
+    headers[
+      'Content-Type'
+    ] = `multipart/form-data boundary=${formData._boundary}`;
     if (access_token) {
       headers['Authorization'] = 'Bearer ' + access_token;
     }
-    console.log(api_host + endpoint);
+    // else {
+    // console.log('no access_token');
+    // }
+    // console.log(api_host + endpoint);
     axios({
       method: type,
       url: api_host + endpoint,
@@ -65,7 +70,7 @@ const network = {
           error.response.status == 401
         ) {
         }
-        console.log(error.response.data, 'axios response');
+        console.log(error, 'axios response');
 
         error_callback(error);
         //   throw error;

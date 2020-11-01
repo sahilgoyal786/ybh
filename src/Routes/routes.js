@@ -48,6 +48,7 @@ import {AuthContext} from '../common/AuthContext';
 import userDetailContext from '../common/userDetailContext';
 import Loading from '../Screens/loading/loading';
 import EndPoints from '../components/apis/endPoints';
+import NetInfo from '@react-native-community/netinfo';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -138,7 +139,6 @@ function Routes() {
     (prevState, action) => {
       switch (action.type) {
         case 'RESTORE_TOKEN':
-          userDetail;
           changeUserDetail(action);
           return {
             ...prevState,
@@ -182,6 +182,20 @@ function Routes() {
     const bootstrapAsync = async () => {
       let userToken;
       // console.log('userToken', userDetail?.access_token);
+
+      // Subscribe
+      const unsubscribe = NetInfo.addEventListener((state) => {
+        // console.log('Connection type', state.type);
+        // console.log('Is connected?', state.isConnected);
+        let userDetailTemp = userDetail;
+        if (userDetail !== null) {
+          userDetailTemp.is_connected = state.isConnected;
+          changeUserDetail(userDetailTemp);
+        }
+      });
+
+      // Unsubscribe
+      unsubscribe();
 
       try {
         const token = await storage.getData('access_token');
@@ -230,9 +244,16 @@ function Routes() {
         storage.clear();
         dispatch({type: 'SIGN_OUT'});
       },
-      updateUserDetail: (response) => {
-        changeUserDetail(response);
-        dispatch({type: 'USER_UPDATE', user: response.user});
+      updateUserDetail: (userDetail, response) => {
+        console.log(response, userDetail);
+        for (var key in response) {
+          if (response.hasOwnProperty(key)) {
+            console.log(response, userDetail, key);
+            userDetail[key] = response[key];
+          }
+        }
+        changeUserDetail(userDetail);
+        dispatch({type: 'USER_UPDATE', user: userDetail.user});
       },
       signUp: async (data) => {
         // In a production app, we need to send user data to server and get a token
