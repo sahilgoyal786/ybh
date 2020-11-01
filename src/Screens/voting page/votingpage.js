@@ -227,25 +227,31 @@ const VotingPage = ({route, navigation}) => {
         </TouchableOpacity>
 
         <Modal visible={showModal}>
-          <Text
+          <View
             style={{
               position: 'absolute',
               left: 20,
-              top: 20,
+              top: 40,
               height: 25,
-              width: 25,
-              color: 'black',
-              zIndex: 100,
               backgroundColor: 'white',
-              textAlign: 'center',
-              borderRadius: 20,
-              textAlignVertical: 'center',
-              fontWeight: '900',
-              fontFamily: 'Arial',
-            }}
-            onPress={() => setShowModal(false)}>
-            X
-          </Text>
+              width: 25,
+              borderRadius: 40,
+              zIndex: 100,
+            }}>
+            <Text
+              style={{
+                color: 'black',
+                textAlign: 'center',
+                height: 25,
+                width: 25,
+                textAlignVertical: 'center',
+                fontWeight: '900',
+                lineHeight: 25,
+              }}
+              onPress={() => setShowModal(false)}>
+              X
+            </Text>
+          </View>
           <ImageViewer
             imageUrls={galleryMapped}
             enableSwipeDown={true}
