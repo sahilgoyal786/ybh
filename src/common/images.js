@@ -51,6 +51,7 @@ export const photoworld = require('../assets/icons/add-image.png');
 export const backfirst = require('../assets/icons/midd-pink-img.png');
 export const backsec = require('../assets/icons/top-img.png');
 export const downarrow = require('../assets/icons/down-arrow.png');
+export const white_downarrow = require('../assets/icons/downarrow.png');
 export const getadvive2background = require('../assets/icons/bg.png');
 export const single = require('../assets/icons/single.png');
 export const sexual = require('../assets/icons/sexual.png');

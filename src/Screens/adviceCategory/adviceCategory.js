@@ -22,11 +22,13 @@ import userDetailContext from '../../common/userDetailContext';
 import Button from '../../components/button';
 import {Dialog} from 'react-native-simple-dialogs';
 import {Textarea, Toast} from 'native-base';
+import RNPickerSelect, {defaultStyles} from 'react-native-picker-select';
 
-const AdviceFinance = ({route, navigation}) => {
+const AdviceCategory = ({route, navigation}) => {
   const [questions, setQuestions] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
+  const [sortCriteria, setSortCriteria] = useState('latest');
   const [dialog, setDialog] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -88,13 +90,26 @@ const AdviceFinance = ({route, navigation}) => {
     // const tempImagesArray = [];
     setLoadingMore(true);
     try {
+      let data = {
+        filter_category: Category.toLowerCase(),
+        page,
+        sort_by: sortCriteria,
+      };
+      if (route.params.type) {
+        if (route.params.type == 'my_questions') {
+          data['author'] = 'me';
+        } else if (route.params.type == 'my_responses') {
+          data['responder'] = 'me';
+        }
+      }
+      console.log(data);
       network.getResponse(
         EndPoints.getAllAdviceQuestions,
         'POST',
-        {filter_category: Category.toLowerCase()},
+        data,
         userDetail.token,
         (response) => {
-          // console.log(response);
+          response = response['advice-questions'];
           if (response.data.length) {
             setQuestions(response.data);
           }
@@ -118,6 +133,12 @@ const AdviceFinance = ({route, navigation}) => {
     LoadQuestions();
   }, []);
 
+  React.useEffect(() => {
+    setPage(1);
+    setQuestions([]);
+    LoadQuestions();
+  }, [sortCriteria]);
+
   return (
     <FlatList
       bounces={false}
@@ -136,7 +157,7 @@ const AdviceFinance = ({route, navigation}) => {
               flex: 1,
             },
         {
-          minHeight: heightPercentageToDP(100) - 70,
+          minHeight: heightPercentageToDP(100) - 30,
         })
       }
       data={questions}
@@ -152,19 +173,58 @@ const AdviceFinance = ({route, navigation}) => {
       }
       ListHeaderComponent={
         <View style={{backgroundColor: 'transparent'}}>
-          <Header title={Category} backButton="true" />
-
-          <ButtonView>
-            <TouchableOpacity onPress={() => setDialog(true)}>
-              <Button
-                style={{
-                  marginBottom: 10,
-                }}
-                name={'Ask A Question'}
-                linear
-              />
-            </TouchableOpacity>
-          </ButtonView>
+          <Header
+            title={Category !== '' ? Category : route.params.title}
+            backButton="true"
+          />
+          {Category !== '' && (
+            <ButtonView>
+              <TouchableOpacity onPress={() => setDialog(true)}>
+                <Button
+                  style={{
+                    marginBottom: 10,
+                  }}
+                  name={'Ask A Question'}
+                  linear
+                />
+              </TouchableOpacity>
+            </ButtonView>
+          )}
+          <RNPickerSelect
+            placeholder={'Order By: Latest'}
+            items={[
+              {
+                label: 'Football',
+                value: 'football',
+              },
+              {
+                label: 'Baseball',
+                value: 'baseball',
+              },
+              {
+                label: 'Hockey',
+                value: 'hockey',
+              },
+            ]}
+            onValueChange={(value) => {
+              console.log(value);
+            }}
+            style={{
+              inputAndroid: {
+                backgroundColor: 'transparent',
+              },
+              iconContainer: {
+                top: 5,
+                right: 15,
+              },
+            }}
+            value={''}
+            useNativeAndroidPickerStyle={false}
+            textInputProps={{underlineColorAndroid: 'cyan'}}
+            Icon={() => {
+              // return <Chevron size={1.5} color="gray" />;
+            }}
+          />
         </View>
       }
       ListFooterComponentStyle={{
@@ -262,7 +322,7 @@ const AdviceFinance = ({route, navigation}) => {
               />
               <Button
                 onPress={() => {
-                  navigation.navigate('Welcomeuser');
+                  // navigation.navigate('Welcomeuser');
                   setDialog(false);
                 }}
                 style={{
@@ -277,142 +337,6 @@ const AdviceFinance = ({route, navigation}) => {
         </View>
       }
     />
-    // <View style={{flex: 1}}>
-    //   <Image
-    //     source={bottomCurve}
-    //     style={{
-    //       width: widthPercentageToDP(100),
-    //       height: 200,
-    //       position: 'absolute',
-    //       bottom: -100,
-    //     }}
-    //     resizeMode="contain"></Image>
-    //   <Header title="Advice Finance" backButton="true" />
-    //   <ScrollView
-    //     alwaysBounceHorizontal={false}
-    //     alwaysBounceVertical={false}
-    //     bounces={false}
-    //     style={{paddingTop: 0}}
-    //     contentContainerStyle={{paddingBottom: 60}}>
-    //     <MainView>
-    //       <FirstViewText>
-    //         <TextMonth>Questions</TextMonth>
-    //       </FirstViewText>
-
-    //       <Picker
-    //         mode="dropdown"
-    //         placeholder="Select One"
-    //         textStyle={{
-    //           fontSize: 19,
-    //           fontWeight: '400',
-    //           color: '#484848',
-    //           fontFamily: 'FuturaPT-Book',
-    //           // marginRight: widthPercentageToDP(10),
-    //         }}
-    //         note={false}
-    //         iosIcon={
-    //           <ResponsiveImage
-    //             style={{
-    //               tintColor: '#000',
-    //               marginRight: widthPercentageToDP(4.5),
-    //               marginTop: heightPercentageToDP(0.5),
-    //               fontSize: 19,
-    //               fontWeight: '400',
-    //               color: '#484848',
-    //               fontFamily: 'FuturaPT-Book',
-    //             }}
-    //             source={downarrow}
-    //             initHeight="10"
-    //             initWidth="10"
-    //           />
-    //         }
-    //         selectedValue={Value}
-    //         onValueChange={(val) => setValue(val)}>
-    //         <Picker.Item label="January" value="key0" />
-    //         <Picker.Item label="February" value="key1" />
-    //         <Picker.Item label="March" value="key2" />
-    //         <Picker.Item label="April" value="key3" />
-    //         <Picker.Item label="May" value="key4" />
-    //         <Picker.Item label="June" value="key5" />
-    //         <Picker.Item label="July" value="key6" />
-    //         <Picker.Item label="August" value="key7" />
-    //         <Picker.Item label="September " value="key8" />
-    //         <Picker.Item label="October" value="key9" />
-    //         <Picker.Item label="November " value="key10" />
-    //         <Picker.Item label="Filter " value="key11" />
-    //       </Picker>
-    //     </MainView>
-    //     <View
-    //       style={{
-    //         borderWidth: 1,
-    //         borderRadius: 4,
-    //         borderColor: '#FAF9FF',
-    //         margin: 15,
-    //         padding: 10,
-    //         // backgroundColor: '#FAF9FF',
-    //         paddingVertical: heightPercentageToDP(1.5),
-    //         paddingHorizontal: widthPercentageToDP(4.5),
-    //         shadowColor: 'rgba(0,0,0,.1)',
-    //         shadowOffset: {
-    //           width: 0,
-    //           height: 0.1,
-    //         },
-    //         shadowOpacity: 0.8,
-    //         shadowRadius: 1,
-
-    //         elevation: 3,
-    //       }}>
-    //       <SecView
-    //         style={{
-    //           borderBottomWidth: 0.7,
-    //           borderBottomColor: 'rgba(0,0,0,.1)',
-    //           marginBottom: 10,
-    //         }}>
-    //         <View style={{flexDirection: 'row'}}>
-    //           <View
-    //             style={{
-    //               justifyContent: 'center',
-    //               alignItems: 'center',
-    //               marginTop: heightPercentageToDP(0.1),
-    //               marginLeft: widthPercentageToDP(1),
-    //               borderRadius: 50,
-    //               borderWidth: 1,
-    //               height: 40,
-    //               width: 40,
-    //             }}>
-    //             <Text
-    //               style={{
-    //                 fontSize: 16,
-    //                 textAlign: 'center',
-    //                 fontFamily: 'FuturaPT-Bold',
-    //               }}>
-    //               1
-    //             </Text>
-    //           </View>
-    //           <TouchableOpacity
-    //             onPress={() => {
-    //               navigation.navigate('MyResponse');
-    //             }}>
-    //             <Text
-    //               style={{
-    //                 // backgroundColor: 'pink',
-    //                 width: widthPercentageToDP(72),
-    //                 fontSize: 16,
-    //                 paddingLeft: 10,
-    //                 paddingBottom: 10,
-    //                 color: '#000',
-    //                 fontFamily: 'FuturaPT-Light',
-    //                 // marginTop: heightPercentageToDP(2),
-    //               }}>
-    //               Morbi vel urn et risus efficitur vehicla su. Donec egestas
-    //               erat.?
-    //             </Text>
-    //           </TouchableOpacity>
-    //         </View>
-    //       </SecView>
-    //     </View>
-    //   </ScrollView>
-    // </View>
   );
 };
 const SecView = styled(View)({
@@ -476,4 +400,4 @@ const WelcomeText = styled(Text)({
   marginTop: -heightPercentageToDP(0.1),
 });
 
-export default AdviceFinance;
+export default AdviceCategory;

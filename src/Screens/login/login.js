@@ -51,10 +51,10 @@ const Login = (props) => {
       <View style={{flex: 1, flexGrow: 1, minHeight: hp(30)}}>
         <Formik
           initialValues={{
-            email: 'sahilgoyal1@gmail.com',
-            password: '123456789',
-            // email: '',
-            // password: '',
+            // email: 'sahilgoyal1@gmail.com',
+            // password: '123456789',
+            email: '',
+            password: '',
           }}
           validationSchema={LoginValidationSchema}
           onSubmit={(values) => {

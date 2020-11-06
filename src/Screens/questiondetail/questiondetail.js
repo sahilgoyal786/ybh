@@ -165,7 +165,7 @@ const QuestionDetail = ({navigation, route}) => {
           bottom: -100,
         }}
         resizeMode="contain"></Image>
-      <Header title="Question Detail" backButton={true} />
+      <Header title="Question Detail" backButton="true" />
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}

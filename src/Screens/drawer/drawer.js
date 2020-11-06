@@ -21,6 +21,7 @@ import {SyncContent} from '../../common/helpers';
 import {todaysDate} from '../../common/helpers';
 import userDetailContext from '../../common/userDetailContext';
 import FastImage from 'react-native-fast-image';
+import {white_downarrow} from '../../common/images';
 
 const Drawer = () => {
   const navigation = useNavigation();
@@ -29,6 +30,7 @@ const Drawer = () => {
   const userDetail = React.useContext(userDetailContext);
   let d = new Date();
   const [lastSyncDate, setLastSyncDate] = React.useState(null);
+  const [showAdviceSubmenu, setShowAdviceSubmenu] = React.useState(false);
 
   const refreshDate = () => async () => {
     // console.log('useEffect');
@@ -89,39 +91,97 @@ const Drawer = () => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
+            setShowAdviceSubmenu(!showAdviceSubmenu);
+          }}>
+          <PageText>My Advice</PageText>
+          <Image
+            source={white_downarrow}
+            style={{
+              height: 16,
+              width: 16,
+              position: 'absolute',
+              right: 10,
+              bottom: 0,
+              transform: [{rotateX: showAdviceSubmenu ? '180deg' : '0deg'}],
+            }}
+          />
+        </TouchableOpacity>
+        {showAdviceSubmenu && (
+          <>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('MyQuestions', {
+                  Category: '',
+                  title: 'My Questions',
+                  type: 'my_questions',
+                });
+              }}>
+              <PageText>My Questions</PageText>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('MyResponses', {
+                  Category: '',
+                  title: 'My Reponses',
+                  type: 'my_responses',
+                });
+              }}>
+              <PageText>My Responses</PageText>
+            </TouchableOpacity>
+          </>
+        )}
+        <TouchableOpacity
+          onPress={() => {
             navigation.navigate('MyPhotos');
           }}>
           <PageText>My Photos</PageText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Privacy');
+          }}>
+          <PageText>Privacy Policy</PageText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('TnC');
+          }}>
+          <PageText>Terms & Conditions</PageText>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => signOut()}>
           <PageText>Logout</PageText>
         </TouchableOpacity>
       </MainThirdView>
       <SyncView>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 18.5,
-            padding: 10,
-            borderColor: 'white',
-            borderWidth: 2,
-            alignSelf: 'flex-start',
-            justifyContent: 'flex-start',
-            marginBottom: 10,
-            borderRadius: 5,
-          }}
+        <TouchableOpacity
           onPress={() => SyncContent(userDetail, updateUserDetail)}>
-          <Image
-            source={sync}
-            style={{width: 16, marginRight: 10, height: 16}}
-            resizeMode="contain"
-          />
-          <> </>
-          Sync
-        </Text>
-        <Text style={{color: 'white', fontSize: 12, paddingLeft: 4}}>
+          <View
+            style={{
+              padding: 10,
+              borderColor: 'white',
+              borderWidth: 2,
+              alignSelf: 'flex-start',
+              // justifyContent: 'flex-start',
+              marginBottom: 10,
+              borderRadius: 5,
+              flexDirection: 'row',
+            }}>
+            <Image
+              source={sync}
+              style={{
+                width: 16,
+                marginRight: 10,
+                height: 16,
+              }}
+              resizeMode="contain"
+            />
+            <Text style={{color: 'white'}}>Sync</Text>
+          </View>
+        </TouchableOpacity>
+        {/* <Text style={{color: 'white', fontSize: 12, paddingLeft: 4}}>
           (Last Sync: {lastSyncDate})
-        </Text>
+        </Text> */}
       </SyncView>
     </View>
   );
@@ -153,7 +213,7 @@ const UserNameText = styled(Text)({
 });
 const FirstView = styled(View)({
   flexDirection: 'row',
-  marginTop: heightPercentageToDP(4),
+  marginTop: heightPercentageToDP(6),
   marginLeft: widthPercentageToDP(8),
   // alignItems: 'center',
 });

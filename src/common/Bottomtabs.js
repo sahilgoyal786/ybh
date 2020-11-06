@@ -86,12 +86,12 @@ const BottomTab = ({state, descriptors, navigation}) => {
                 <LinearGradient
                   colors={
                     isFocused
-                      ? ['transparent', '#7F54A5']
-                      : ['transparent', 'transparent']
+                      ? ['#9F74C5', '#8F64B5', '#7F54A5']
+                      : ['#9F74C5', '#9F74C5']
                   }
                   style={{
                     bottom: 0,
-                    height: 50,
+                    height: 60,
                     width: widthPercentageToDP(20),
                     position: 'absolute',
                   }}

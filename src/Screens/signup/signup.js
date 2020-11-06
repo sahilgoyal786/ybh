@@ -142,15 +142,15 @@ const Signup = () => {
       </View>
       <Formik
         initialValues={{
-          name: 'Sahil',
-          email:
-            'sahil' + Math.floor(Math.random() * 1000) + '@32bitsolutions.com',
-          password: '123456789',
-          password_confirmation: '123456789',
-          // name: '',
-          // email: '',
-          // password: '',
-          // password_confirmation: '',
+          // name: 'Sahil',
+          // email:
+          //   'sahil' + Math.floor(Math.random() * 1000) + '@32bitsolutions.com',
+          // password: '123456789',
+          // password_confirmation: '123456789',
+          name: '',
+          email: '',
+          password: '',
+          password_confirmation: '',
         }}
         onSubmit={(values) => {
           setIsLoading(true);

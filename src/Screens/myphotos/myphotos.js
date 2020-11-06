@@ -75,11 +75,12 @@ const MyPhotos = () => {
   const LoadImages = () => {
     const tempImagesArray = [];
     setLoadingMore(true);
+    console.log(EndPoints.myPhotos.url);
     try {
       network.getResponse(
         EndPoints.myPhotos,
         'GET',
-        {page: page},
+        {},
         userDetail.token,
         (response) => {
           for (let i = 0; i < response.data.length; i++) {
@@ -128,7 +129,7 @@ const MyPhotos = () => {
               flex: 1,
             },
         {
-          minHeight: heightPercentageToDP(100) - 70,
+          minHeight: heightPercentageToDP(100) - 30,
         })
       }
       data={myPhotos}

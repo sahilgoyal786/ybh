@@ -34,7 +34,8 @@ import Profile from '../Screens/profile/profile';
 import PhotoDetail from '../Screens/photodetail/photodetail';
 import MyResponse from '../Screens/myresponse/myresponce';
 import QuestionDetail from '../Screens/questiondetail/questiondetail';
-import TriviaSec from '../Screens/triviasec/triviasec';
+import TnC from '../Screens/TnC/TnC';
+import Privacy from '../Screens/Privacy/Privacy';
 import {
   getadvice,
   relationmeter,
@@ -61,7 +62,6 @@ function HomeComponent() {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="LatestPhotos" component={LatestPhotos} />
       <Stack.Screen name="Gallery" component={Gallery} />
-      <Stack.Screen name="MyPhotos" component={MyPhotos} />
       <Stack.Screen name="Thrivedetails" component={Thrivedetails} />
       <Stack.Screen name="VotingPage" component={VotingPage} />
       <Stack.Screen name="PhotoViewing" component={PhotoViewing} />
@@ -128,6 +128,11 @@ function HomeDrawer() {
       drawerContent={(props) => <DrawerScreen {...props} />}>
       <Drawer.Screen name="Home" component={HomeTabs} />
       <Drawer.Screen name="Thrive" component={Thrive} />
+      <Drawer.Screen name="MyQuestions" component={AdviceCategory} />
+      <Drawer.Screen name="MyPhotos" component={MyPhotos} />
+      <Drawer.Screen name="MyResponses" component={AdviceCategory} />
+      <Drawer.Screen name="TnC" component={TnC} />
+      <Drawer.Screen name="Privacy" component={Privacy} />
       <Drawer.Screen name="Profile" component={Profile} />
     </Drawer.Navigator>
   );
