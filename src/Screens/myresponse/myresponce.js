@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {Text, StyleSheet, View, ImageBackground,Image,ScrollView} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  ImageBackground,
+  Image,
+  ScrollView,
+} from 'react-native';
 import styled from 'styled-components/native';
 
 import ResponsiveImage from 'react-native-responsive-image';
@@ -14,8 +21,13 @@ import {Textarea, Form} from 'native-base';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {welcomepagebackground, menu, addbtmimg,  headerView,
-  botomView} from '../../common/images';
+import {
+  welcomepagebackground,
+  menu,
+  addbtmimg,
+  headerView,
+  botomView,
+} from '../../common/images';
 // import {CheckBox} from 'react-native-elements';
 import Header from '../../components/header';
 
@@ -23,54 +35,62 @@ const MyResponse = () => {
   const navigation = useNavigation();
   const [checked, setChecked] = useState(false);
   return (
-    <View >
+    <View>
       <Header title="My Response" backButton="true" />
       <BackgroundImage source={botomView}>
-        <View  style={{ flex:Platform.OS === 'ios' ? 1 : .69}}>
-            <ScrollView >
-      <MainView style={{marginTop: heightPercentageToDP(10),borderRadius: 4,
-  borderWidth: 1,
-  borderColor: '#F4F5F6',
-  shadowColor: '#000',
-  shadowOffset: {
-    width: 0,
-    height: 0.1,
-  },
-  backgroundColor:'white',
-  shadowOpacity: 0.2,
-  shadowRadius: 9,
-  elevation: 3,}}>
-        <FirstText>
-          Morbi vel urn et risus efficitururn et risus, Morbi vel urn et risus
-          vel urn et
-        </FirstText>
-      </MainView>
-      <ViewTextarea >
-        <Form>
-          <Textarea rowSpan={10} placeholder="My Response" />
-        </Form>
-      </ViewTextarea>
-      <View style={{alignSelf: 'center'}}>
-        <Button
-          onPress={() => {
-            navigation.navigate('Welcomeuser');
-          }}
-          style={{
-            marginTop: heightPercentageToDP(3),
-            width: widthPercentageToDP(94),
-          }}
-          name={'Submit Your Question'}
-          linear
-        />
-      </View>
+        <View style={{flex: Platform.OS === 'ios' ? 1 : 0.69}}>
+          <ScrollView>
+            <MainView
+              style={{
+                marginTop: heightPercentageToDP(10),
+                borderRadius: 4,
+                borderWidth: 1,
+                borderColor: '#F4F5F6',
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 0.1,
+                },
+                backgroundColor: 'white',
+                shadowOpacity: 0.2,
+                shadowRadius: 9,
+                elevation: 3,
+              }}>
+              <FirstText>
+                Morbi vel urn et risus efficitururn et risus, Morbi vel urn et
+                risus vel urn et
+              </FirstText>
+            </MainView>
+            <ViewTextarea>
+              <Form>
+                <Textarea rowSpan={10} placeholder="My Response" />
+              </Form>
+            </ViewTextarea>
+            <View style={{alignSelf: 'center'}}>
+              <Button
+                onPress={() => {
+                  navigation.navigate('Welcomeuser');
+                }}
+                style={{
+                  marginTop: heightPercentageToDP(3),
+                  width: widthPercentageToDP(94),
+                }}
+                name={'Submit Your Question'}
+                linear
+              />
+            </View>
 
-      <View style={{alignItems: 'center', marginTop: heightPercentageToDP(2)}}>
-        <ImagesView source={addbtmimg} initHeight="50" initWidth="388" />
-      </View>
-      </ScrollView>
+            <View
+              style={{
+                alignItems: 'center',
+                marginTop: heightPercentageToDP(2),
+              }}>
+              <ImagesView source={addbtmimg} initHeight="50" initWidth="388" />
+            </View>
+          </ScrollView>
         </View>
-       </BackgroundImage>
-      </View>
+      </BackgroundImage>
+    </View>
   );
 };
 const ImagesView = styled(ResponsiveImage)({
@@ -92,7 +112,7 @@ const ViewTextarea = styled(View)({
   shadowOpacity: 0.2,
   shadowRadius: 9,
   elevation: 3,
-  backgroundColor:'white'
+  backgroundColor: 'white',
   // marginTop: heightPercentageToDP(10),
 });
 const FirstText = styled(Text)({
@@ -132,12 +152,12 @@ const WelcomeView = styled(View)({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginTop: "-14%",
-  marginLeft:8
+  marginTop: '-14%',
+  marginLeft: 8,
 });
 const BackgroundImage = styled(ImageBackground)({
-  height:Platform.OS === 'ios' ? '89%' : '100%' ,
-  bottom:0,
-  marginTop:50,
+  height: Platform.OS === 'ios' ? '89%' : '100%',
+  bottom: 0,
+  marginTop: 50,
 });
 export default MyResponse;

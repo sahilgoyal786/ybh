@@ -88,7 +88,7 @@ const Forgot = () => {
                 }
               },
             );
-            console.log(values);
+            // console.log(values);
           }}>
           {({handleChange, handleBlur, handleSubmit, values}) => (
             <SigninButton>

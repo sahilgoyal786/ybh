@@ -1,24 +1,37 @@
 const EndPoints = {
-  login: 'login',
-  forgotPassword: 'forgot-password',
-  verifyOTP: 'verify-otp',
-  setPassword: 'password-reset',
-  profileUpdate: 'user/profile/update',
-  passwordUpdate: 'update-password',
+  register: {url: 'register'},
+  login: {url: 'login'},
+  forgotPassword: {url: 'forgot-password'},
+  verifyOTP: {url: 'verify-otp'},
+  verifyEmail: {url: 'verify-email'},
+  resendVerifyEmailOTP: {url: 'resend-verify-email-otp'},
+  setPassword: {url: 'password-reset'},
+  profileUpdate: {url: 'user/profile/update'},
+  passwordUpdate: {url: 'update-password'},
 
-  votingImages: 'voting-images',
-  castVote: 'voting-images',
+  votingImages: {url: 'voting-images', cache_age: 4},
+  castVote: {url: 'voting-images'},
+  leaderBoard: {url: 'leader-board'},
 
-  latestPhotos: 'recent-images',
-  uploadImage: 'images-upload',
-  myPhotos: 'user/photos',
-  blogs: 'blogs',
+  latestPhotos: {url: 'recent-images'},
+  uploadImage: {url: 'images-upload'},
+  myPhotos: {url: 'user/photos'},
+  blogs: {url: 'blogs', cache_age: 48},
 
-  getTriviaQuestions: 'questions/trivia',
-  getRelationshipMeterQuestions: 'questions/relationship_meter',
+  getTriviaQuestions: {url: 'questions/trivia', dont_cache: true},
+  getRelationshipMeterQuestions: {
+    url: 'questions/relationship_meter',
+    dont_cache: true,
+  },
 
-  postTriviaAnswers: 'questions/trivia/answers',
-  postRelationshipMeterAnswers: 'questions/relationship_meter/answers',
+  postTriviaAnswers: {url: 'questions/trivia/answers'},
+  postRelationshipMeterAnswers: {url: 'questions/relationship_meter/answers'},
+
+  getAllAdviceQuestions: {url: 'advice/all'},
+  postAdviceQuestion: {url: 'advice/store'},
+  postAdviceResponse: {url: 'advice/response/store'},
+
+  voteOnResponse: {url: 'user/responses/vote'},
 };
 
 export default EndPoints;

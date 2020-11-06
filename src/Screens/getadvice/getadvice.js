@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
-import {Textarea, Form} from 'native-base';
+import {Textarea, Form, Toast} from 'native-base';
 import {
   getadvive2background,
   menu,
@@ -34,10 +34,16 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
 import Header from '../../components/header';
+import network from '../../components/apis/network';
+import EndPoints from '../../components/apis/endPoints';
+import userDetailContext from '../../common/userDetailContext';
 
 const GetAdvice2 = () => {
   const navigation = useNavigation();
   const [dialog, setDialog] = useState(false);
+  const [text, setText] = useState('Describe your situation...');
+  const userDetail = React.useContext(userDetailContext);
+  const [isLoading, setisLoading] = useState(false);
 
   return (
     <View style={{flex: 1}}>
@@ -55,120 +61,65 @@ const GetAdvice2 = () => {
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
         bounces={false}
-        style={{paddingTop: 20}}
-        contentContainerStyle={{paddingBottom: 40}}>
-        <SitutionView>
-          <SitutionText>
-            Sending Your Sitution Anonymously for Advice
-          </SitutionText>
-          <ButtonSUbmit
-            onPress={() => setDialog(true)}
-            name={'Submit'}
-            linear
-          />
-        </SitutionView>
+        style={{paddingTop: 0}}
+        contentContainerStyle={{paddingBottom: 60}}>
+        <ImagesWelcome>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('AdviceCategory', {Category: 'Finance'});
+            }}>
+            <ImagesView source={finance} initHeight="130" initWidth="130" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('AdviceCategory', {Category: 'Sexual'});
+            }}>
+            <ImagesView source={sexual} initHeight="130" initWidth="130" />
+          </TouchableOpacity>
+        </ImagesWelcome>
+        <NameView>
+          <Text style={styles.categoryHeading}>Finance</Text>
 
-        <View style={{flex: 1}}>
-          <ScrollView>
-            <ImagesWelcome>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('AdviceFinance');
-                }}>
-                <ImagesView source={finance} initHeight="130" initWidth="130" />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('AdviceFinance');
-                }}>
-                <ImagesView source={sexual} initHeight="130" initWidth="130" />
-              </TouchableOpacity>
-            </ImagesWelcome>
-            <NameView>
-              <Text style={styles.categoryHeading}>Finance</Text>
-
-              <Text style={styles.categoryHeading}>Sexual</Text>
-            </NameView>
-            <ImagesWelcome>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('AdviceFinance');
-                }}>
-                <ImagesView
-                  source={material}
-                  initHeight="130"
-                  initWidth="130"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('AdviceFinance');
-                }}>
-                <ImagesView
-                  source={enterprene}
-                  initHeight="130"
-                  initWidth="130"
-                />
-              </TouchableOpacity>
-            </ImagesWelcome>
-            <NameView>
-              <Text style={styles.categoryHeading}>Marital</Text>
-              <Text style={styles.categoryHeading}>Entrepreneurs</Text>
-            </NameView>
-            <ImagesWelcome>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('AdviceFinance');
-                }}>
-                <ImagesView source={single} initHeight="130" initWidth="130" />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('AdviceFinance');
-                }}>
-                <ImagesView source={genral} initHeight="130" initWidth="130" />
-              </TouchableOpacity>
-            </ImagesWelcome>
-            <NameView>
-              <Text style={styles.categoryHeading}>Single</Text>
-              <Text style={styles.categoryHeading}>General</Text>
-            </NameView>
-            <Dialog visible={dialog} onTouchoutside={() => setDialog(false)}>
-              <View>
-                <Form>
-                  <Textarea rowSpan={10} placeholder="100 Characters" />
-                </Form>
-              </View>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Button
-                  onPress={() => {
-                    setDialog(false);
-                    navigation.navigate('Welcomeuser');
-                  }}
-                  style={{
-                    marginTop: heightPercentageToDP(3),
-                    width: widthPercentageToDP(35),
-                  }}
-                  name={'Submit'}
-                  linear
-                />
-                <Button
-                  onPress={() => {
-                    navigation.navigate('Welcomeuser');
-                    setDialog(false);
-                  }}
-                  style={{
-                    marginTop: heightPercentageToDP(3),
-                    width: widthPercentageToDP(35),
-                  }}
-                  name={'Cancel'}
-                  linear
-                />
-              </View>
-            </Dialog>
-          </ScrollView>
-        </View>
+          <Text style={styles.categoryHeading}>Sexual</Text>
+        </NameView>
+        <ImagesWelcome>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('AdviceCategory', {Category: 'Marital'});
+            }}>
+            <ImagesView source={material} initHeight="130" initWidth="130" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('AdviceCategory', {
+                Category: 'Entrepreneurs',
+              });
+            }}>
+            <ImagesView source={enterprene} initHeight="130" initWidth="130" />
+          </TouchableOpacity>
+        </ImagesWelcome>
+        <NameView>
+          <Text style={styles.categoryHeading}>Marital</Text>
+          <Text style={styles.categoryHeading}>Entrepreneurs</Text>
+        </NameView>
+        <ImagesWelcome>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('AdviceCategory', {Category: 'Single'});
+            }}>
+            <ImagesView source={single} initHeight="130" initWidth="130" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('AdviceCategory', {Category: 'General'});
+            }}>
+            <ImagesView source={genral} initHeight="130" initWidth="130" />
+          </TouchableOpacity>
+        </ImagesWelcome>
+        <NameView>
+          <Text style={styles.categoryHeading}>Single</Text>
+          <Text style={styles.categoryHeading}>General</Text>
+        </NameView>
       </ScrollView>
     </View>
   );

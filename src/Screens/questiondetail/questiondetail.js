@@ -1,14 +1,16 @@
-import React, {Component} from 'react';
+import React, {Component, useContext} from 'react';
 import {
   Text,
   StyleSheet,
   View,
   ImageBackground,
   ScrollView,
+  Image,
+  ActivityIndicator,
 } from 'react-native';
 import Button from '../../components/button';
 
-import {Textarea, Form} from 'native-base';
+import {Textarea, Form, Toast} from 'native-base';
 
 import {
   welcomepagebackground,
@@ -16,7 +18,8 @@ import {
   thumpup,
   thumpdown,
   headerView,
-  botomView
+  botomView,
+  bottomCurve,
 } from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
@@ -26,143 +29,220 @@ import {
 } from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
+import Header from '../../components/header';
+import network from '../../components/apis/network';
+import EndPoints from '../../components/apis/endPoints';
+import userDetailContext from '../../common/userDetailContext';
 
-const QuestionDetail = () => {
-  const navigation = useNavigation();
+const QuestionDetail = ({navigation, route}) => {
+  const {question} = route.params;
+
+  const userDetail = useContext(userDetailContext);
+  console.log(question);
+
+  const [yourResponse, setYourResponse] = React.useState('');
+  const [responses, setResponses] = React.useState(question.answers);
+  const [isLoading, setisLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    renderResponses();
+  }, [responses]);
+
+  const castVote = (score, id) => {
+    // console.log(EndPoints.voteOnResponse);
+    setisLoading(true);
+    network.getResponse(
+      EndPoints.voteOnResponse,
+      'POST',
+      {
+        vote: score,
+        response_id: id,
+      },
+      userDetail.token,
+      (response) => {
+        setisLoading(false);
+        // console.log(response);
+        if (response.message) {
+          Toast.show({text: response.message});
+          let updated_response = response.response;
+          // console.log(response.response);
+          let responsesTemp = responses;
+          for (let index = 0; index < responsesTemp.length; index++) {
+            // console.log(responsesTemp[index]['id'], updated_response.id);
+            if (
+              responsesTemp[index]['id'].toString() ==
+              updated_response.id.toString()
+            ) {
+              responsesTemp[index] = updated_response;
+              break;
+            }
+          }
+          setResponses(responsesTemp);
+        }
+      },
+      (error) => {
+        setisLoading(false);
+        // console.log(response);
+        if (error.response.data && error.response.data.message) {
+          Toast.show({text: error.response.data.message});
+        }
+      },
+    );
+  };
+  const renderResponses = () => {
+    let responsesView = [];
+    if (responses.length == 0) {
+      return (
+        <Text style={{marginLeft: 5, marginBottom: 20, marginTop: 5}}>
+          No one has responded yet, be the first one
+        </Text>
+      );
+    }
+    responses.forEach((element) => {
+      responsesView.push(
+        <Card
+          style={{marginTop: heightPercentageToDP(1)}}
+          key={Math.random().toString()}>
+          <BasicText>{element.ans}</BasicText>
+
+          <Score>
+            <User>
+              - {element.user.username}{' '}
+              <TimingText>({element.published_at})</TimingText>
+            </User>
+            <TouchableOpacity onPress={() => castVote(1, element.id)}>
+              <ResponsiveImage
+                style={{
+                  fontSize: 13,
+                  color: '#484848',
+                  marginTop: heightPercentageToDP(1.3),
+                  marginLeft: widthPercentageToDP(53),
+                }}
+                source={thumpup}
+                initHeight="15"
+                initWidth="15"
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 13,
+                color: '#484848',
+                marginTop: heightPercentageToDP(1.3),
+              }}>
+              {isLoading ? (
+                <ActivityIndicator color="purple" />
+              ) : (
+                element.up_votes_count - element.down_votes_count
+              )}
+            </Text>
+            <TouchableOpacity onPress={() => castVote(0, element.id)}>
+              <ResponsiveImage
+                style={{
+                  color: '#484848',
+                  marginTop: heightPercentageToDP(1.3),
+                  marginLeft: widthPercentageToDP(0.5),
+                }}
+                source={thumpdown}
+                initHeight="15"
+                initWidth="15"
+              />
+            </TouchableOpacity>
+          </Score>
+        </Card>,
+      );
+    });
+    return responsesView;
+  };
 
   return (
-    <View >
-        
-    <Image source={headerView}/>
-        <WelcomeView>
-          <WelcomeText>Question Detail</WelcomeText>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.dispatch(DrawerActions.openDrawer());
-            }}>
-            <MenuIcon source={menu} initHeight="30" initWidth="30" />
-          </TouchableOpacity>
-        </WelcomeView>
-        <BackgroundImage source={botomView}>
-        <View  style={{ flex:Platform.OS === 'ios' ? 1 : .69}}>
-            <ScrollView >
-          <WelcomeTextThrive>View List of Blogs</WelcomeTextThrive>
-          <MainView style={{marginTop: heightPercentageToDP(1)}}>
-            <FirstText>
-              Morbi vel urn et risus efficitururn et risus, Morbi vel urn et
-              risus vel urn et
-            </FirstText>
-          </MainView>
-          <WelcomeTextComments>Comments</WelcomeTextComments>
-          <MainView style={{marginTop: heightPercentageToDP(1)}}>
-            <FirstText>
-              Morbi vel urn et risus efficitururn et risus, Morbi vel urn et
-              risus vel urn et Morbi vel urn et risus efficitururn et risus,
-              Morbi vel urn et risus
-            </FirstText>
-
-            <ViewComent>
-              <TextComments>-Jacob Neil</TextComments>
-              <ResponsiveImage
-                style={{
-                  fontSize: 13,
-                  color: '#484848',
-                  marginTop: heightPercentageToDP(1.2),
-                  marginLeft: widthPercentageToDP(53),
-                }}
-                source={thumpup}
-                initHeight="15"
-                initWidth="15"
-              />
-              <Text
-                style={{
-                  fontSize: 13,
-                  color: '#484848',
-                  marginTop: heightPercentageToDP(1.3),
-                }}>
-                4
-              </Text>
-              <ResponsiveImage
-                style={{
-                  color: '#484848',
-                  marginTop: heightPercentageToDP(1.2),
-                  marginLeft: widthPercentageToDP(0.5),
-                }}
-                source={thumpdown}
-                initHeight="15"
-                initWidth="15"
-              />
-            </ViewComent>
-            <TimingText>30 Mins Ago</TimingText>
-          </MainView>
-          <MainView style={{marginTop: heightPercentageToDP(0.1)}}>
-            <FirstText>
-              Morbi vel urn et risus efficitururn et risus, Morbi vel urn et
-              risus vel urn et Morbi vel urn et risus efficitururn et risus,
-              Morbi vel urn et risus
-            </FirstText>
-
-            <ViewComent>
-              <TextComments>-Deborah Neil</TextComments>
-              <ResponsiveImage
-                style={{
-                  fontSize: 13,
-                  color: '#484848',
-                  marginTop: heightPercentageToDP(1.2),
-                  marginLeft: widthPercentageToDP(53),
-                }}
-                source={thumpup}
-                initHeight="15"
-                initWidth="15"
-              />
-              <Text
-                style={{
-                  fontSize: 13,
-                  color: '#484848',
-                  marginTop: heightPercentageToDP(1.3),
-                }}>
-                0
-              </Text>
-              <ResponsiveImage
-                style={{
-                  color: '#484848',
-                  marginTop: heightPercentageToDP(1.2),
-                  marginLeft: widthPercentageToDP(0.5),
-                }}
-                source={thumpdown}
-                initHeight="15"
-                initWidth="15"
-              />
-            </ViewComent>
-            <TimingText>6 Hours Ago</TimingText>
-          </MainView>
-          <ViewTextarea>
-            <Form>
-              <Textarea rowSpan={10} placeholder="100 Characters" />
-            </Form>
-          </ViewTextarea>
-          <View style={{alignSelf: 'center'}}>
-            <Button
-              onPress={() => {
-                navigation.navigate('Welcomeuser');
-              }}
-              style={{
-                marginTop: heightPercentageToDP(3),
-                width: widthPercentageToDP(94),
-              }}
-              name={'Submit Your Response'}
-              linear
+    <View style={{flex: 1}}>
+      <Image
+        source={bottomCurve}
+        style={{
+          width: widthPercentageToDP(100),
+          height: 200,
+          position: 'absolute',
+          bottom: -100,
+        }}
+        resizeMode="contain"></Image>
+      <Header title="Question Detail" backButton={true} />
+      <ScrollView
+        alwaysBounceHorizontal={false}
+        alwaysBounceVertical={false}
+        bounces={false}
+        contentContainerStyle={{padding: 10, paddingBottom: 40}}>
+        <Heading>Question</Heading>
+        <Card style={{marginTop: heightPercentageToDP(1)}}>
+          <BasicText>{question.ques}</BasicText>
+          <Score>
+            <User>
+              - {question.user.username}{' '}
+              <TimingText>({question.published_at})</TimingText>
+            </User>
+          </Score>
+        </Card>
+        <Heading style={{marginTop: 15}}>Responses</Heading>
+        {renderResponses()}
+        <ViewTextarea>
+          <Form>
+            <Textarea
+              rowSpan={10}
+              placeholder="Share your wisdom..."
+              value={yourResponse}
+              onChangeText={(text) => setYourResponse(text)}
             />
-          </View>
-          </ScrollView>
+          </Form>
+        </ViewTextarea>
+        <View style={{alignSelf: 'center'}}>
+          <Button
+            isLoading={isLoading}
+            onPress={() => {
+              if (yourResponse.length > 10) {
+                setisLoading(true);
+                network.getResponse(
+                  EndPoints.postAdviceResponse,
+                  'POST',
+                  {
+                    question_id: question.id,
+                    response: yourResponse,
+                  },
+                  userDetail.token,
+                  (response) => {
+                    setisLoading(false);
+                    console.log(response);
+                    setYourResponse('');
+                    if (response.message) {
+                      Toast.show({text: response.message});
+                      setResponses(responses.concat(response.answer));
+                    }
+                  },
+                  (error) => {
+                    setisLoading(false);
+                    if (error.response.data && error.response.data.message) {
+                      Toast.show({text: error.response.data.message});
+                    }
+                  },
+                );
+              } else {
+                Toast.show({
+                  text: 'Please enter a valid response before sending.',
+                });
+              }
+            }}
+            style={{
+              marginTop: heightPercentageToDP(3),
+              width: widthPercentageToDP(94),
+            }}
+            name={'Submit Your Response'}
+            linear
+          />
         </View>
-       </BackgroundImage>
-      </View>
+      </ScrollView>
+    </View>
   );
 };
 const ViewTextarea = styled(View)({
   padding: 10,
-  margin: 10,
   borderRadius: 4,
   borderWidth: 1.5,
   borderColor: '#F4F5F6',
@@ -174,18 +254,20 @@ const ViewTextarea = styled(View)({
   shadowOpacity: 0.2,
   shadowRadius: 9,
   elevation: 3,
+  background: 'white',
 });
-const ViewComent = styled(View)({
+const Score = styled(View)({
   marginLeft: widthPercentageToDP(3),
   flexDirection: 'row',
   justifyContent: 'space-between',
 });
-const TextComments = styled(Text)({
+const User = styled(Text)({
   fontSize: 13,
   color: '#484848',
   marginTop: heightPercentageToDP(0.9),
   marginLeft: -widthPercentageToDP(3),
   fontFamily: 'FuturaPT-Book',
+  fontStyle: 'italic',
 });
 const TimingText = styled(Text)({
   fontFamily: 'FuturaPT-Book',
@@ -193,14 +275,18 @@ const TimingText = styled(Text)({
   color: '#484848',
   marginLeft: widthPercentageToDP(4),
 });
-const FirstText = styled(Text)({
+const BasicText = styled(Text)({
   // padding: 15,
   fontFamily: 'FuturaPT-Light',
   fontSize: 16,
 });
-const MainView = styled(View)({
+const Question = styled(Text)({
+  // padding: 15,
+  fontFamily: 'FuturaPT-Light',
+  fontSize: 16,
+});
+const Card = styled(View)({
   borderRadius: 4,
-  margin: 10,
   padding: 10,
   borderWidth: 1,
   borderColor: '#F4F5F6',
@@ -211,47 +297,15 @@ const MainView = styled(View)({
   },
   shadowOpacity: 0.9,
   shadowRadius: 7,
-
   elevation: 3,
+  background: 'white',
+  marginBottom: 10,
 });
-const WelcomeTextComments = styled(Text)({
+const Heading = styled(Text)({
   fontSize: 16,
   color: '#484848',
   fontWeight: '500',
   fontFamily: 'FuturaPT-Medium',
-  // marginTop: heightPercentageToDP(7),
-  marginLeft: widthPercentageToDP(7),
+  marginLeft: 5,
 });
-const WelcomeTextThrive = styled(Text)({
-  fontSize: 16,
-  color: '#484848',
-  fontWeight: '500',
-  fontFamily: 'FuturaPT-Medium',
-  marginTop: heightPercentageToDP(8),
-  marginLeft: widthPercentageToDP(7),
-});
-const MenuIcon = styled(ResponsiveImage)({
-  alignSelf: 'flex-end',
-  // marginTop: heightPercentageToDP(4),
-  marginRight: widthPercentageToDP(4),
-});
-const WelcomeText = styled(Text)({
-  fontSize: 25,
-  color: '#ffffff',
-  fontWeight: '500',
-  fontFamily: 'FuturaPT-Medium',
-});
-const BackgroundImage = styled(ImageBackground)({
-  height:Platform.OS === 'ios' ? '87%' : '100%' ,
-  bottom:0,
-  marginTop:50,
-});
-const WelcomeView = styled(View)({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginTop: "-14%",
-  marginLeft:8
-});
-
 export default QuestionDetail;

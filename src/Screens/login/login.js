@@ -27,6 +27,10 @@ import {useNavigation} from '@react-navigation/native';
 import {LoginValidationSchema} from '../../common/validations';
 import {AuthContext} from '../../common/AuthContext';
 import globalstyles from '../../common/styles';
+import network from '../../components/apis/network';
+import EndPoints from '../../components/apis/endPoints';
+import storage from '../../components/apis/storage';
+import {Toast} from 'native-base';
 
 const Login = (props) => {
   const navigation = useNavigation();
@@ -54,7 +58,37 @@ const Login = (props) => {
           }}
           validationSchema={LoginValidationSchema}
           onSubmit={(values) => {
-            signIn(values);
+            setIsLoading(true);
+            network.getResponse(
+              EndPoints.login,
+              'POST',
+              values,
+              '',
+              (response) => {
+                setIsLoading(false);
+                if (response.access_token) {
+                  response.token = response.access_token;
+                  storage.setData('access_token', response.access_token);
+                  storage.setData('user', JSON.stringify(response.user));
+                  signIn(response);
+                } else {
+                  // console.log('console.log(error),',error)
+                }
+              },
+              (error) => {
+                setIsLoading(false);
+                if (
+                  error.response &&
+                  error.response.data &&
+                  error.response.data.message
+                ) {
+                  Toast.show({text: error.response.data.message});
+                }
+                if (error.response.data.email_verification === false) {
+                  navigation.navigate('VerifyEmail', {email: values.email});
+                }
+              },
+            );
           }}>
           {({
             handleChange,

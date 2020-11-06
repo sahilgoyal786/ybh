@@ -31,6 +31,7 @@ import network from '../../components/apis/network';
 import storage from '../../components/apis/storage';
 import {SignupValidationSchema} from '../../common/validations';
 import userDetailContest from '../../common/userDetailContext';
+import EndPoints from '../../components/apis/endPoints';
 
 const Signup = () => {
   const [Tab, setTab] = useState(0);
@@ -141,41 +142,44 @@ const Signup = () => {
       </View>
       <Formik
         initialValues={{
-          // name: 'Sahil',
-          // email: 'sahil@32bitsolutions.com',
-          // password: '123456789',
-          // password_confirmation: '123456789',
-          name: '',
-          email: '',
-          password: '',
-          password_confirmation: '',
+          name: 'Sahil',
+          email:
+            'sahil' + Math.floor(Math.random() * 1000) + '@32bitsolutions.com',
+          password: '123456789',
+          password_confirmation: '123456789',
+          // name: '',
+          // email: '',
+          // password: '',
+          // password_confirmation: '',
         }}
         onSubmit={(values) => {
           setIsLoading(true);
           network.getResponse(
-            'register',
+            EndPoints.register,
             'POST',
             values,
             '',
             (response) => {
               setIsLoading(false);
-              Toast.show({
-                text: "Awesome, you're all set.",
-                duration: 5000,
-              });
-              navigation.navigate('Login');
+              if (response.message)
+                Toast.show({
+                  text: response.message,
+                  duration: 5000,
+                });
+              // console.log(response);
+              navigation.navigate('VerifyEmail', {email: response.user.email});
             },
             (response) => {
               setIsLoading(false);
-              console.log(response, typeof response, 'api response');
+              // console.log(response, typeof response, 'api response');
               if (response.errors) {
-                console.log('error in');
+                // console.log('error in');
                 const errors = response.errors;
-                console.log(errors, 'error object');
+                // console.log(errors, 'error object');
                 for (const key in errors) {
-                  console.log(key, errors.hasOwnProperty(key));
+                  // console.log(key, errors.hasOwnProperty(key));
                   if (errors.hasOwnProperty(key)) {
-                    console.log('innn loop', errors[key]);
+                    // console.log('innn loop', errors[key]);
                     const element = errors[key];
                     Toast.show({text: element[0]});
                   }

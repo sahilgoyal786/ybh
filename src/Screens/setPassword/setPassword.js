@@ -44,7 +44,7 @@ import globalstyles from '../../common/styles';
 const SetPassword = ({route, navigation}) => {
   const [verified, setVerified] = useState(false);
   const [otp, setOTP] = useState();
-  console.log(route.params);
+  // console.log(route.params);
   return (
     <KeyboardAwareScrollView
       contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
@@ -94,7 +94,7 @@ const SetPassword = ({route, navigation}) => {
                 navigation.navigate('Login');
               },
             );
-            console.log(values);
+            // console.log(values);
           }}>
           {({
             handleChange,
@@ -134,8 +134,8 @@ const SetPassword = ({route, navigation}) => {
                       {otp: text, email: route.params.email},
                       (response) => {
                         setVerified(true);
-                        console.log('verified', verified);
-                        console.log(response, 'succcess');
+                        // console.log('verified', verified);
+                        // console.log(response, 'succcess');
                         // if (response.message) {
                         //   Toast.show({text: response.message});
                         // }

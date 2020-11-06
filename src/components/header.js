@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useContext} from 'react';
 import {Text, StyleSheet, View, TouchableOpacity, Image} from 'react-native';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 import styled from 'styled-components/native';
@@ -10,9 +10,11 @@ import {
 } from 'react-native-responsive-screen';
 import {backicon} from '../common/images';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import userDetailContext from '../common/userDetailContext';
 
 const Header = ({title, backButton = ''}) => {
   const navigation = useNavigation();
+  const userDetail = useContext(userDetailContext);
   return (
     <View style={{width: widthPercentageToDP(100), height: 114}}>
       <Image
@@ -51,6 +53,7 @@ const Header = ({title, backButton = ''}) => {
           onPress={() => {
             navigation.dispatch(DrawerActions.toggleDrawer());
           }}>
+          {/* {userDetail.is_connected ? <Text>Y</Text> : <Text>N</Text>} */}
           <MenuIcon source={menu} initHeight="30" initWidth="30" />
         </TouchableOpacity>
       </WelcomeView>

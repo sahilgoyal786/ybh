@@ -39,7 +39,7 @@ import {Toast} from 'native-base';
 
 const RelationMeter = (navigation) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [relationshipMeterScore, setRelationshipMeterScore] = useState(50);
+  const [relationshipMeterScore, setRelationshipMeterScore] = useState(null);
   const [question, setQuestion] = useState(null);
   const [questions, setQuestions] = useState(null);
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
@@ -59,6 +59,15 @@ const RelationMeter = (navigation) => {
           ans_id = value.id;
         }
       });
+      if (question.ans_id == ans_id) {
+        setRelationshipMeterScore(relationshipMeterScore + question.score);
+      } else if (ans_id == 0) {
+        setRelationshipMeterScore(relationshipMeterScore - 1);
+      } else {
+        setRelationshipMeterScore(relationshipMeterScore - question.score);
+      }
+      // console.log(relationshipMeterScore);
+      // updateUserDetail(userDetail, {user: response.user});
     }
 
     setSavedResponses(
@@ -80,7 +89,6 @@ const RelationMeter = (navigation) => {
   const presentQuestion = () => {
     let allAnsweredQuestions = answeredQuestions;
     let allQuestions = questions;
-    console.log('allAnsweredQuestions==', allAnsweredQuestions);
     let questionTemp = null;
     do {
       questionTemp = allQuestions.pop();
@@ -88,18 +96,27 @@ const RelationMeter = (navigation) => {
       questionTemp.id &&
       allAnsweredQuestions.indexOf(questionTemp.id) > -1
     );
-    console.log(
-      allAnsweredQuestions,
-      questionTemp.id,
-      allAnsweredQuestions.indexOf(questionTemp.id),
-    );
+    // console.log(
+    //   allAnsweredQuestions,
+    //   questionTemp.id,
+    //   allAnsweredQuestions.indexOf(questionTemp.id),
+    // );
     setQuestion(questionTemp);
-    console.log(questionTemp);
+    // console.log(questionTemp);
   };
   const LoadQuestions = () => {
     const bootstrapAsync = async () => {
       try {
         let questionsTemp = await storage.getData('RelationshipMeterQuestions');
+        // console.log('questionsTemp', questionsTemp);
+        let relationshipMeterScoreTemp = await storage.getData(
+          'relationshipMeterScore',
+        );
+        if (relationshipMeterScoreTemp !== null && relationshipMeterScoreTemp) {
+          setRelationshipMeterScore(parseInt(relationshipMeterScoreTemp));
+        } else {
+          setRelationshipMeterScore(50);
+        }
         let answeredQuestionsTemp = await storage.getData(
           'AnsweredRelationshipMeterQuestions',
         );
@@ -112,30 +129,11 @@ const RelationMeter = (navigation) => {
         } else {
           answeredQuestionsTemp = [];
         }
-        // console.log('-----answeredQuestionsTemp', answeredQuestionsTemp);
         setAnsweredQuestions(answeredQuestionsTemp);
         if (questionsTemp) {
-          // console.log('Loading questions from storage');
           setQuestions(JSON.parse(questionsTemp));
-          // console.log(JSON.parse(questions).pop());
         } else {
-          // console.log('Loading questions from server');
-          network.getResponse(
-            EndPoints.getRelationshipMeterQuestions,
-            'GET',
-            {},
-            userDetail.token,
-            (response) => {
-              storage.setData(
-                'RelationshipMeterQuestions',
-                JSON.stringify(response.data),
-              );
-              setQuestions(response.data);
-            },
-            (error) => {
-              console.log('error', error);
-            },
-          );
+          Toast.show({text: 'Please press sync to sync with the server'});
         }
       } catch (exception) {
         console.log('exception', exception);
@@ -153,11 +151,27 @@ const RelationMeter = (navigation) => {
       presentQuestion();
     }
   }, [questions]);
+
+  React.useEffect(() => {
+    const storeAsync = async () => {
+      if (relationshipMeterScore !== null) {
+        // console.log(
+        //   'sett in storage relationshipMeterScore',
+        //   relationshipMeterScore,
+        // );
+        await storage.setData(
+          'relationshipMeterScore',
+          relationshipMeterScore.toString(),
+        );
+      }
+    };
+    storeAsync();
+  }, [relationshipMeterScore]);
   React.useEffect(() => {
     if (questions && answeredQuestions) {
       presentQuestion();
       const storeAsync = async () => {
-        console.log('sett in storage answeredQuestions', answeredQuestions);
+        // console.log('sett in storage answeredQuestions', answeredQuestions);
         await storage.setData(
           'AnsweredRelationshipMeterQuestions',
           JSON.stringify(answeredQuestions),
@@ -192,7 +206,7 @@ const RelationMeter = (navigation) => {
         <View>
           <RNSpeedometer
             needleImage={stick}
-            value={relationshipMeterScore}
+            value={relationshipMeterScore == null ? 50 : relationshipMeterScore}
             size={400}
           />
         </View>
@@ -244,6 +258,11 @@ const RelationMeter = (navigation) => {
               </TouchableOpacity>
             </ContainerView>
           </>
+        ) : questions && questions.length ? (
+          <Text>
+            That's all folks. Come back for more questions later, or try using
+            the sync button to sync with server.
+          </Text>
         ) : (
           <ContainerView style={{padding: 20}}>
             <ContentLoader />

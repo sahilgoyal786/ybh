@@ -67,36 +67,6 @@ const Trivia = () => {
     setAnsweredQuestions(answeredQuestions.concat(question.id));
   };
 
-  const sendResponsesToServer = () => {
-    console.log('Sending reponses to server', savedResponses);
-    if (savedResponses.length) {
-      setIsLoading(true);
-      let ques_id_values = [];
-      let ans_id_values = [];
-      for (let index = 0; index < savedResponses.length; index++) {
-        const {ques_id, ans_id} = savedResponses[index];
-        ques_id_values.push(ques_id);
-        ans_id_values.push(ans_id);
-      }
-      network.getResponse(
-        EndPoints.postTriviaAnswers,
-        'POST',
-        {ques_id: ques_id_values, ans_id: ans_id_values},
-        userDetail.token,
-        (response) => {
-          console.log(response);
-          if (response.message) {
-            setIsLoading(false);
-            setSavedResponses([]);
-          }
-        },
-        (response) => {
-          setIsLoading(false);
-          console.log(response);
-        },
-      );
-    }
-  };
   const presentQuestion = () => {
     let allAnsweredQuestions = answeredQuestions;
     let allQuestions = questions;
@@ -128,24 +98,12 @@ const Trivia = () => {
         }
         setAnsweredQuestions(answeredQuestionsTemp);
         if (questionsTemp) {
-          console.log('Loading questions from storage');
+          // console.log('Loading questions from storage');
           setQuestions(JSON.parse(questionsTemp));
           // console.log(JSON.parse(questions).pop());
         } else {
-          console.log('Loading questions from server');
-          network.getResponse(
-            EndPoints.getTriviaQuestions,
-            'GET',
-            {},
-            userDetail.token,
-            (response) => {
-              storage.setData('TriviaQuestions', JSON.stringify(response.data));
-              setQuestions(response.data);
-            },
-            (error) => {
-              console.log('error', error);
-            },
-          );
+          // console.log('Loading questions from server');
+          Toast.show({text: 'Please press sync to sync with the server'});
         }
 
         let SavedTriviaResponses = await storage.getData(
@@ -174,7 +132,7 @@ const Trivia = () => {
     if (questions && answeredQuestions) {
       presentQuestion();
       const storeAsync = async () => {
-        console.log('sett in storage answeredQuestions', answeredQuestions);
+        // console.log('sett in storage answeredQuestions', answeredQuestions);
         await storage.setData(
           'AnsweredTriviaQuestions',
           JSON.stringify(answeredQuestions),

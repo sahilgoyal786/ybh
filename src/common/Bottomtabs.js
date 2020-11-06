@@ -12,6 +12,7 @@ import {selectedTabCurve} from '../common/images';
 // import {camera} from '../../utils/Images';
 import ResponsiveImage from 'react-native-responsive-image';
 import Trivia from '../Screens/trivia/trivia';
+import LinearGradient from 'react-native-linear-gradient';
 
 const BottomTab = ({state, descriptors, navigation}) => {
   // const focusedOptions = descriptors[state.routes[state.index].key].options;
@@ -65,13 +66,13 @@ const BottomTab = ({state, descriptors, navigation}) => {
                 style={
                   isFocused
                     ? {
-                        // backgroundColor: 'white',
+                        backgroundColor: '#9F74C5',
                         height: 70,
                         width: widthPercentageToDP(20),
                         marginTop: 20,
-                        backgroundColor: '#9F74C5',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        zIndex: 1,
                       }
                     : {
                         height: 70,
@@ -82,6 +83,20 @@ const BottomTab = ({state, descriptors, navigation}) => {
                         justifyContent: 'center',
                       }
                 }>
+                <LinearGradient
+                  colors={
+                    isFocused
+                      ? ['transparent', '#7F54A5']
+                      : ['transparent', 'transparent']
+                  }
+                  style={{
+                    bottom: 0,
+                    height: 50,
+                    width: widthPercentageToDP(20),
+                    position: 'absolute',
+                  }}
+                  start={{x: 0.5, y: 0.4}}
+                  end={{x: 0.5, y: 1}}></LinearGradient>
                 {isFocused && (
                   <View
                     style={{

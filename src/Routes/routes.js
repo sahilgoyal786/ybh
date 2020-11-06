@@ -21,12 +21,13 @@ import GetAdvice from '../Screens/getadvice/getadvice';
 import Thrive from '../Screens/thrive/thrive';
 import Thrivedetails from '../Screens/ThriveDetails/Thrivedetails';
 import VotingPage from '../Screens/voting page/votingpage';
-import AdviceFinance from '../Screens/advicefinance/advicefinance';
+import AdviceCategory from '../Screens/adviceCategory/adviceCategory';
 import MyQuestionAdvice from '../Screens/myquestionadvice/myquestionadvice';
 import PhotoViewing from '../Screens/photoviewing/photoviewing';
 import ThriveSec from '../Screens/thrivesec/thrivesec';
 import Voting2 from '../Screens/voting2/voting2';
 import SetPassword from '../Screens/setPassword/setPassword';
+import VerifyEmail from '../Screens/verifyEmail/verifyEmail';
 import Gallery from '../Screens/gallery/gallery';
 import MyPhotos from '../Screens/myphotos/myphotos';
 import Profile from '../Screens/profile/profile';
@@ -60,15 +61,22 @@ function HomeComponent() {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="LatestPhotos" component={LatestPhotos} />
       <Stack.Screen name="Gallery" component={Gallery} />
-      <Stack.Screen name="Thrive" component={Thrive} />
       <Stack.Screen name="MyPhotos" component={MyPhotos} />
       <Stack.Screen name="Thrivedetails" component={Thrivedetails} />
       <Stack.Screen name="VotingPage" component={VotingPage} />
-      <Stack.Screen name="AdviceFinance" component={AdviceFinance} />
-      <Stack.Screen name="MyQuestionAdvice" component={MyQuestionAdvice} />
       <Stack.Screen name="PhotoViewing" component={PhotoViewing} />
       <Stack.Screen name="ThriveSec" component={ThriveSec} />
-      <Stack.Screen name="Voting2" component={Voting2} />
+    </Stack.Navigator>
+  );
+}
+function AdviceComponent() {
+  return (
+    <Stack.Navigator headerMode="none">
+      <Stack.Screen name="GetAdvice" component={GetAdvice} />
+      <Stack.Screen name="AdviceCategory" component={AdviceCategory} />
+      <Stack.Screen name="MyResponse" component={MyResponse} />
+      <Stack.Screen name="MyQuestionAdvice" component={MyQuestionAdvice} />
+      <Stack.Screen name="QuestionDetail" component={QuestionDetail} />
     </Stack.Navigator>
   );
 }
@@ -80,9 +88,6 @@ function ShareImageComponent() {
       <Stack.Screen name="MyPhotos" component={MyPhotos} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="PhotoDetail" component={PhotoDetail} />
-      <Stack.Screen name="MyResponse" component={MyResponse} />
-      <Stack.Screen name="QuestionDetail" component={QuestionDetail} />
-      <Stack.Screen name="TriviaSec" component={TriviaSec} />
     </Stack.Navigator>
   );
 }
@@ -102,7 +107,7 @@ function HomeTabs() {
       />
       <Tab.Screen
         name="GetAdvice"
-        component={GetAdvice}
+        component={AdviceComponent}
         options={{icon: getadvice}}
       />
       <Tab.Screen
@@ -122,10 +127,6 @@ function HomeDrawer() {
       drawerStyle={{width: widthPercentageToDP(70)}}
       drawerContent={(props) => <DrawerScreen {...props} />}>
       <Drawer.Screen name="Home" component={HomeTabs} />
-      <Drawer.Screen name="ShareImage" component={ShareImage} />
-      <Drawer.Screen name="GetAdvice" component={GetAdvice} />
-      <Drawer.Screen name="RelationMeter" component={RelationMeter} />
-      <Drawer.Screen name="TriviaSec" component={TriviaSec} />
       <Drawer.Screen name="Thrive" component={Thrive} />
       <Drawer.Screen name="Profile" component={Profile} />
     </Drawer.Navigator>
@@ -184,18 +185,20 @@ function Routes() {
       // console.log('userToken', userDetail?.access_token);
 
       // Subscribe
-      const unsubscribe = NetInfo.addEventListener((state) => {
-        // console.log('Connection type', state.type);
-        // console.log('Is connected?', state.isConnected);
+      const subscribe = NetInfo.addEventListener((state) => {
+        console.log('Connection type', state.type);
+        console.log('Is connected?', state.isConnected);
         let userDetailTemp = userDetail;
         if (userDetail !== null) {
           userDetailTemp.is_connected = state.isConnected;
           changeUserDetail(userDetailTemp);
+          dispatch({type: 'USER_UPDATE', user: userDetail.user});
         }
+        // console.log(userDetail);
       });
 
       // Unsubscribe
-      unsubscribe();
+      subscribe();
 
       try {
         const token = await storage.getData('access_token');
@@ -215,45 +218,31 @@ function Routes() {
   }, []);
   const authContext = React.useMemo(
     () => ({
-      signIn: async (values) => {
-        network.getResponse(
-          EndPoints.login,
-          'POST',
-          values,
-          '',
-          (response) => {
-            if (response.access_token) {
-              response.token = response.access_token;
-              storage.setData('access_token', response.access_token);
-              storage.setData('user', JSON.stringify(response.user));
-              changeUserDetail(response);
-              dispatch({
-                type: 'SIGN_IN',
-                token: response.access_token,
-                userDetail: response.user,
-              });
-            } else {
-              // console.log('console.log(error),',error)
-            }
-          },
-          (error) => Toast.show({text: 'Incorrect password.'}),
-        );
+      signIn: (response) => {
+        changeUserDetail(response);
+        dispatch({
+          type: 'SIGN_IN',
+          token: response.access_token,
+          userDetail: response.user,
+        });
       },
       signOut: () => {
         changeUserDetail(null);
         storage.clear();
         dispatch({type: 'SIGN_OUT'});
       },
-      updateUserDetail: (userDetail, response) => {
-        console.log(response, userDetail);
+      updateUserDetail: (userDetailTemp, response) => {
+        console.log('updateUserDetail', response);
+        console.log(userDetailTemp);
         for (var key in response) {
           if (response.hasOwnProperty(key)) {
-            console.log(response, userDetail, key);
-            userDetail[key] = response[key];
+            // console.log(response, userDetail, key);
+            userDetailTemp[key] = response[key];
           }
         }
-        changeUserDetail(userDetail);
-        dispatch({type: 'USER_UPDATE', user: userDetail.user});
+        changeUserDetail(userDetailTemp);
+        console.log(userDetailTemp);
+        // dispatch({type: 'USER_UPDATE', user: userDetailTemp.user});
       },
       signUp: async (data) => {
         // In a production app, we need to send user data to server and get a token
@@ -282,6 +271,7 @@ function Routes() {
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="Signup" component={Signup} />
                 <Stack.Screen name="Forgot" component={Forgot} />
+                <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
                 <Stack.Screen name="SetPassword" component={SetPassword} />
               </Stack.Navigator>
             ) : (

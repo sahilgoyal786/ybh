@@ -113,8 +113,7 @@ const MyPhotos = () => {
       alwaysBounceVertical={false}
       onEndReached={() => {
         if (myPhotos.length && totalPages && page <= totalPages) {
-          console.log(page, totalPages);
-          console.log(page, totalPages);
+          // console.log(page, totalPages);
           LoadImages();
         }
       }}
@@ -180,6 +179,31 @@ const MyPhotos = () => {
             resizeMode="contain"
           />
           <Modal visible={showModal && myPhotosLoaded}>
+            <View
+              style={{
+                position: 'absolute',
+                left: 20,
+                top: 40,
+                height: 25,
+                backgroundColor: 'white',
+                width: 25,
+                borderRadius: 40,
+                zIndex: 100,
+              }}>
+              <Text
+                style={{
+                  color: 'black',
+                  textAlign: 'center',
+                  height: 25,
+                  width: 25,
+                  textAlignVertical: 'center',
+                  fontWeight: '900',
+                  lineHeight: 25,
+                }}
+                onPress={() => setShowModal(false)}>
+                X
+              </Text>
+            </View>
             <ImageViewer
               imageUrls={myPhotos}
               enableSwipeDown={true}
@@ -187,6 +211,7 @@ const MyPhotos = () => {
               index={currentImageIndex}
               renderIndicator={() => {}}
               enablePreload={true}
+              renderImage={(props) => <FastImage {...props} />}
               loadingRender={() => {
                 return <ActivityIndicator color="white" />;
               }}

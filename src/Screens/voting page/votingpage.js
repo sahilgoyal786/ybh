@@ -63,8 +63,8 @@ const VotingPage = ({route, navigation}) => {
   const [currentImageIndex, setcurrentImageIndex] = React.useState(0);
   const [selectedImageIndex, setselectedImageIndex] = React.useState(-1);
 
-  let itemHeight = ((widthPercentageToDP(26) - 5) * 400) / 348;
-  let itemWidth = widthPercentageToDP(26) - 5;
+  let itemHeight = ((widthPercentageToDP(28) - 5) * 400) / 348;
+  let itemWidth = widthPercentageToDP(28) - 5;
 
   const renderGrid = (votingImagesURLS) => {
     let content = [];
@@ -189,7 +189,7 @@ const VotingPage = ({route, navigation}) => {
           style={{
             paddingLeft: 40,
             position: 'absolute',
-            bottom: 40,
+            bottom: 90,
           }}
           onPress={() => {
             if (selectedImageIndex < 0) {
@@ -200,22 +200,33 @@ const VotingPage = ({route, navigation}) => {
               });
               return;
             }
-            // network.getResponse(
-            //   EndPoints.castVote,
-            //   'POST',
-            //   {path: votingImagesURLS[selectedImageIndex]},
-            //   userDetail.token,
-            //   (response) => {
-            // console.log(response);
-            Toast.show({text: 'Thank you for voting.', duration: 5000});
-            setTimeout(() => {
-              navigation.navigate('Home');
-            }, 2000);
-            // },
-            // (error) => {
-            //   // console.log('error', error.response);
-            // },
-            // );
+            network.getResponse(
+              EndPoints.castVote,
+              'POST',
+              {url: votingImagesURLS[selectedImageIndex]},
+              userDetail.token,
+              (response) => {
+                // console.log(response['message']);
+                Toast.show({text: response['message'], duration: 5000});
+                setTimeout(() => {
+                  navigation.navigate('Home');
+                }, 2000);
+              },
+              (error) => {
+                if (
+                  error.response &&
+                  error.response.data &&
+                  error.response.data.message
+                )
+                  Toast.show({
+                    text: error.response.data.message,
+                    duration: 5000,
+                  });
+                setTimeout(() => {
+                  navigation.navigate('Home');
+                }, 2000);
+              },
+            );
           }}>
           <ImagesView
             source={vtngbtn}

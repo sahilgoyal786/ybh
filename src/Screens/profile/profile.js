@@ -79,9 +79,10 @@ const Profile = () => {
       (response) => {
         // console.log(response);
         updateUserDetail(userDetail, {user: response.user});
-        console.log('response ------------', response);
-        if (response.message)
+        // console.log('response ------------', response);
+        if (response.message) {
           Toast.show({text: 'Profile photo uploaded successfully.'});
+        }
         setUploaded(true);
         setIsLoading(false);
       },
@@ -161,7 +162,7 @@ const Profile = () => {
                 setIsSaving(false);
               },
               (error) => {
-                console.log(error.response.data);
+                // console.log(error.response.data);
                 setIsSaving(false);
               },
             );
@@ -327,10 +328,6 @@ const ImagesView = styled(FastImage)({
   borderWidth: 2,
   borderColor: '#FFFFFF',
   shadowColor: '#FFFFFF',
-  shadowOffset: {
-    width: 0,
-    height: 0.9,
-  },
   height: 130,
   width: 130,
   shadowRadius: 1,

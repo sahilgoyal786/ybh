@@ -185,11 +185,37 @@ const LatestPhotos = ({route, navigation}) => {
       </ScrollView>
 
       <Modal visible={showModal}>
+        <View
+          style={{
+            position: 'absolute',
+            left: 20,
+            top: 40,
+            height: 25,
+            backgroundColor: 'white',
+            width: 25,
+            borderRadius: 40,
+            zIndex: 100,
+          }}>
+          <Text
+            style={{
+              color: 'black',
+              textAlign: 'center',
+              height: 25,
+              width: 25,
+              textAlignVertical: 'center',
+              fontWeight: '900',
+              lineHeight: 25,
+            }}
+            onPress={() => setShowModal(false)}>
+            X
+          </Text>
+        </View>
         <ImageViewer
           imageUrls={modalPhotos}
           enableSwipeDown={true}
           onCancel={() => setShowModal(false)}
           index={currentImageIndex}
+          renderImage={(props) => <FastImage {...props} />}
           renderIndicator={() => {}}
         />
       </Modal>

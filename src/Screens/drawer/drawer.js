@@ -25,12 +25,13 @@ import FastImage from 'react-native-fast-image';
 const Drawer = () => {
   const navigation = useNavigation();
   const {signOut} = React.useContext(AuthContext);
+  const {updateUserDetail} = React.useContext(AuthContext);
   const userDetail = React.useContext(userDetailContext);
   let d = new Date();
   const [lastSyncDate, setLastSyncDate] = React.useState(null);
 
   const refreshDate = () => async () => {
-    console.log('useEffect');
+    // console.log('useEffect');
     setLastSyncDate(await storage.getData('lastSyncDate'));
   };
 
@@ -109,7 +110,7 @@ const Drawer = () => {
             marginBottom: 10,
             borderRadius: 5,
           }}
-          onPress={() => SyncContent(userDetail)}>
+          onPress={() => SyncContent(userDetail, updateUserDetail)}>
           <Image
             source={sync}
             style={{width: 16, marginRight: 10, height: 16}}

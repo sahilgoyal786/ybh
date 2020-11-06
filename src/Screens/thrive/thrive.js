@@ -91,6 +91,7 @@ const Thrive = ({route, navigation}) => {
 
   return (
     <FlatList
+      keyExtractor={() => Math.random().toString()}
       bounces={false}
       onEndReached={() => {
         if (blogs.length && totalPages && page <= totalPages) {

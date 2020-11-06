@@ -88,7 +88,7 @@ const ShareImage = () => {
         setIsLoading(false);
       },
       (response) => {
-        console.log(response);
+        // console.log(response);
         setUploaded(false);
         if (response.message) Toast.show({text: response.message});
         setIsLoading(false);

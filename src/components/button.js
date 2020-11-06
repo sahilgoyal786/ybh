@@ -21,6 +21,7 @@ const Button = ({
   onPress,
   isLoading = false,
   icon = false,
+  secondary = false,
   ...props
 }) => {
   return (
@@ -51,6 +52,36 @@ const Button = ({
                   <></>
                 )}
                 <Text>{name}</Text>
+              </TextSignup>
+            )}
+          </LinearGradientColor>
+        </LinearButton>
+      ) : secondary ? (
+        <LinearButton {...props} onPress={onPress}>
+          <LinearGradientColor
+            colors={['transparent', 'transparent']}
+            start={{x: 0.1, y: 0.5}}
+            end={{x: 0.5, y: 0.1}}
+            locations={[0.1, 0.9]}>
+            {isLoading ? (
+              <ActivityIndicator color="#FFF" />
+            ) : (
+              <TextSignup>
+                {icon ? (
+                  <>
+                    <Image
+                      source={icon}
+                      style={{
+                        height: 20,
+                        width: 20,
+                      }}
+                    />
+                    <Text> </Text>
+                  </>
+                ) : (
+                  <></>
+                )}
+                <Text style={{color: 'purple'}}>{name}</Text>
               </TextSignup>
             )}
           </LinearGradientColor>

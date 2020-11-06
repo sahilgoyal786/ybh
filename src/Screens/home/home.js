@@ -21,28 +21,21 @@ import ThriveArticle from '../../components/thriveArticle';
 import userDetailContext from '../../common/userDetailContext';
 import FastImage from 'react-native-fast-image';
 
-import ContentLoader, {
-  FacebookLoader,
-  InstagramLoader,
-  Bullets,
-} from 'react-native-easy-content-loader';
+import ContentLoader from 'react-native-easy-content-loader';
 
-import {
-  addimage,
-  image10,
-  image11,
-  image12,
-  image13,
-  image15,
-  bottomadd,
-  bottomCurve,
-} from '../../common/images';
+import {addimage, bottomadd, bottomCurve} from '../../common/images';
 import LeaderBoard from '../../components/leaderBoard';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
+import {AuthContext} from '../../common/AuthContext';
+import LinearGradient from 'react-native-linear-gradient';
+import {fetchLeaderBoard} from '../../common/helpers';
 
 const Home = () => {
+  const {updateUserDetail} = React.useContext(AuthContext);
   const [votingImages, setVotingImages] = React.useState([]);
+  const [votingEnabled, setVotingEnabled] = React.useState(true);
+  const [imageOfTheWeek, setImageOfTheWeek] = React.useState(null);
   const [votingImagesLoaded, setVotingImagesLoaded] = React.useState(false);
   const [votingImagesURLS, setVotingImagesURLS] = React.useState([]);
   const [latestPhotos, setLatestPhotos] = React.useState([]);
@@ -102,19 +95,28 @@ const Home = () => {
         {},
         userDetail.token || '',
         (response) => {
-          for (let i = 0; i < 8; i++) {
-            votingImagesURLS.push(response[i]['url']);
-            tempVotingImagesArray.push(
-              <VotingImage
-                key={i}
-                source={{uri: response[i]['url']}}
-                resizeMode={FastImage.resizeMode.cover}
-              />,
-            );
+          // console.log(response);
+          if (response.photos) {
+            response = response.photos;
+            for (let i = 0; i < 8; i++) {
+              votingImagesURLS.push(response[i]['url']);
+              tempVotingImagesArray.push(
+                <VotingImage
+                  key={i}
+                  source={{uri: response[i]['url']}}
+                  resizeMode={FastImage.resizeMode.cover}
+                />,
+              );
+            }
+            setVotingImagesURLS(votingImagesURLS);
+            setVotingImages(tempVotingImagesArray);
+          } else if (response.image_of_the_week) {
+            setVotingEnabled(false);
+            setImageOfTheWeek(response.image_of_the_week);
+          } else {
+            setVotingEnabled(false);
           }
-          setVotingImagesURLS(votingImagesURLS);
           setVotingImagesLoaded(true);
-          setVotingImages(tempVotingImagesArray);
         },
         (error) => console.log('error', error),
       );
@@ -136,7 +138,7 @@ const Home = () => {
                   <ViewMore>
                     <TextMore
                       onPress={() => {
-                        console.log(latestPhotosURLS);
+                        // console.log(latestPhotosURLS);
                         navigation.navigate('LatestPhotos', {latestPhotosURLS});
                       }}>
                       More
@@ -163,6 +165,7 @@ const Home = () => {
         },
         (error) => console.log('error', error),
       );
+      fetchLeaderBoard(userDetail, updateUserDetail);
     } catch (exception) {
       console.log('exception', exception);
     }
@@ -208,26 +211,66 @@ const Home = () => {
                   justifyContent: 'space-between',
                   flexWrap: 'wrap',
                 }}>
-                {votingImagesLoaded ? votingImages : votingImagesPlaceholder}
+                {!votingEnabled && imageOfTheWeek ? (
+                  <ImageOfTheWeek source={{uri: imageOfTheWeek}}>
+                    <View
+                      style={{
+                        padding: 2,
+                        paddingBottom: 10,
+                        bottom: -2,
+                        marginTop: 127,
+                        height: 40,
+                        right: -2,
+                      }}>
+                      <LinearGradient
+                        colors={[
+                          'transparent',
+                          '#F8BA17',
+                          '#F8BA17',
+                          '#F8BA17',
+                        ]}
+                        style={styles.linearGradient}
+                        start={{x: 0, y: 0.5}}
+                        end={{x: 1, y: 0.5}}>
+                        <Text
+                          style={{
+                            textAlign: 'right',
+                            // padding: 5,
+                            color: 'white',
+                            height: 30,
+                            lineHeight: 30,
+                          }}>
+                          Image of the Week{'   '}
+                        </Text>
+                      </LinearGradient>
+                    </View>
+                  </ImageOfTheWeek>
+                ) : votingImagesLoaded ? (
+                  votingImages
+                ) : (
+                  votingImagesPlaceholder
+                )}
               </RowimageFirst>
 
-              <ClickVote>
-                <Text
-                  onPress={() => {
-                    if (votingImagesLoaded)
-                      navigation.navigate('VotingPage', {
-                        votingImagesURLS: votingImagesURLS,
-                      });
-                  }}
-                  style={{
-                    fontFamily: 'FuturaPT-Medium',
-                    color: '#000',
-                    paddingVertical: heightPercentageToDP(1),
-                    paddingHorizontal: widthPercentageToDP(6.8),
-                  }}>
-                  Click To Vote
-                </Text>
-              </ClickVote>
+              {votingEnabled && votingImagesLoaded && (
+                <ClickVote>
+                  <Text
+                    onPress={() => {
+                      if (votingImagesLoaded)
+                        navigation.navigate('VotingPage', {
+                          votingImagesURLS: votingImagesURLS,
+                        });
+                    }}
+                    style={{
+                      fontFamily: 'FuturaPT-Medium',
+                      color: '#000',
+                      paddingVertical: heightPercentageToDP(1),
+                      paddingHorizontal: widthPercentageToDP(6.8),
+                    }}>
+                    Click To Vote
+                  </Text>
+                </ClickVote>
+              )}
               <MainLatestView>
                 <Text style={styles.sectionHeading}>Latest Photos</Text>
                 <View style={{position: 'relative'}}>
@@ -329,10 +372,15 @@ const ClickVote = styled(View)({
   borderRadius: 5,
 });
 const MainLatestView = styled(View)({});
+const ImageOfTheWeek = styled(FastImage)({
+  width: widthPercentageToDP(200 / 3) - 22,
+  height: 160,
+  position: 'relative',
+  borderRadius: 6,
+});
 const RowimageFirst = styled(View)({
   flexDirection: 'row',
   marginLeft: 10,
-  marginTop: 10,
 });
 const styles = StyleSheet.create({
   item: {
