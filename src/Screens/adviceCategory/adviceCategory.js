@@ -14,7 +14,7 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
-import {bottomCurve} from '../../common/images';
+import {bottomCurve, downarrow} from '../../common/images';
 import Header from '../../components/header';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
@@ -116,7 +116,9 @@ const AdviceCategory = ({route, navigation}) => {
           if (page == 1) {
             setTotalPages(response.last_page);
           }
-          setPage(page + 1);
+          if (page < response.last_page) {
+            setPage(page + 1);
+          }
           setLoadingMore(false);
         },
         (error) => {
@@ -168,7 +170,11 @@ const AdviceCategory = ({route, navigation}) => {
       ListEmptyComponent={
         <View
           style={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>No questions have been asked yet, be the first one.</Text>
+          {isLoading || loadingMore ? (
+            <ActivityIndicator color="purple" size="large" />
+          ) : (
+            <Text>No questions have been asked yet, be the first one.</Text>
+          )}
         </View>
       }
       ListHeaderComponent={
@@ -191,19 +197,18 @@ const AdviceCategory = ({route, navigation}) => {
             </ButtonView>
           )}
           <RNPickerSelect
-            placeholder={'Order By: Latest'}
+            placeholder={{
+              label: 'Order By:',
+              key: Math.random().toString(),
+            }}
             items={[
               {
-                label: 'Football',
-                value: 'football',
+                label: 'Popular First',
+                value: 'popular',
               },
               {
-                label: 'Baseball',
-                value: 'baseball',
-              },
-              {
-                label: 'Hockey',
-                value: 'hockey',
+                label: 'Latest First',
+                value: 'latest',
               },
             ]}
             onValueChange={(value) => {
@@ -212,17 +217,30 @@ const AdviceCategory = ({route, navigation}) => {
             style={{
               inputAndroid: {
                 backgroundColor: 'transparent',
+                width: 140,
+                alignSelf: 'flex-end',
+                color: 'black',
+              },
+              inputIOS: {
+                backgroundColor: 'transparent',
+                width: 140,
+                alignSelf: 'flex-end',
+                color: 'black',
               },
               iconContainer: {
-                top: 5,
+                top: 16,
                 right: 15,
               },
             }}
-            value={''}
+            value={sortCriteria}
+            onValueChange={(value) => {
+              setSortCriteria(value);
+            }}
             useNativeAndroidPickerStyle={false}
-            textInputProps={{underlineColorAndroid: 'cyan'}}
             Icon={() => {
-              // return <Chevron size={1.5} color="gray" />;
+              return (
+                <Image source={downarrow} style={{width: 12, height: 12}} />
+              );
             }}
           />
         </View>
