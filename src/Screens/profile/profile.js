@@ -44,8 +44,7 @@ import {
 import FastImage from 'react-native-fast-image';
 
 const Profile = () => {
-  const userDetail = React.useContext(userDetailContext);
-  const {updateUserDetail} = React.useContext(AuthContext);
+  const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -78,7 +77,9 @@ const Profile = () => {
       userDetail.token,
       (response) => {
         // console.log(response);
-        updateUserDetail(userDetail, {user: response.user});
+        let userDetailTemp = userDetail;
+        userDetailTemp.user = response.user;
+        changeUserDetail(userDetailTemp);
         // console.log('response ------------', response);
         if (response.message) {
           Toast.show({text: 'Profile photo uploaded successfully.'});
@@ -155,7 +156,9 @@ const Profile = () => {
               values,
               userDetail.token || '',
               (response) => {
-                updateUserDetail(userDetail, {user: response.user});
+                let userDetailTemp = userDetail;
+                userDetailTemp.user = response.user;
+                changeUserDetail(userDetailTemp);
                 if (response.message)
                   Toast.show({text: 'Profile updated successfully.'});
                 storage.setData('user', JSON.stringify(response.user));

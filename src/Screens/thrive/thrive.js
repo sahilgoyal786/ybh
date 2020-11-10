@@ -36,7 +36,7 @@ const Thrive = ({route, navigation}) => {
   const [blogs, setBlogs] = React.useState([]);
   const [totalPages, setTotalPages] = React.useState();
   const [page, setPage] = React.useState(1);
-  const userDetail = React.useContext(userDetailContext);
+  const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const renderItem = ({item, index}) => (
     <ListItem
       key={index + ''}

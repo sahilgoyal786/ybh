@@ -8,9 +8,10 @@ import {
 } from 'react-native-responsive-screen';
 import {FlatList, ScrollView} from 'react-native-gesture-handler';
 import userDetailContext from '../common/userDetailContext';
+import {ActivityIndicator} from 'react-native';
 
 const LeaderBoard = () => {
-  const userDetail = useContext(userDetailContext);
+  const [userDetail, changeUserDetail] = useContext(userDetailContext);
   const data = userDetail
     ? userDetail.leaderBoard
       ? userDetail.leaderBoard.users
@@ -26,25 +27,31 @@ const LeaderBoard = () => {
       </ViewFlatList>,
     );
   }
-  if (userDetail)
+  if (userDetail) {
     return (
       <BoxView>
         <ViewBox>
-          {userDetail.leaderBoard && userDetail.leaderBoard.authUser && (
+          {userDetail.leaderBoard && userDetail.leaderBoard.authUser ? (
             <TextRank>
               Your Rank: {userDetail.leaderBoard.authUser.rank}
             </TextRank>
+          ) : (
+            <ActivityIndicator color="white" />
           )}
         </ViewBox>
         <TitleRank style={{fontFamily: 'FuturaPT-Medium'}}>
           Leader Board
         </TitleRank>
         <View style={{height: 384}}>
-          <ScrollView style={{flex: 1}}>{leaderBoardStandings}</ScrollView>
+          {leaderBoardStandings.length ? (
+            <ScrollView style={{flex: 1}}>{leaderBoardStandings}</ScrollView>
+          ) : (
+            <ActivityIndicator color="white" size="large" />
+          )}
         </View>
       </BoxView>
     );
-  else return <></>;
+  } else return <></>;
 };
 
 const BoxView = styled(View)({

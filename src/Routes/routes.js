@@ -1,7 +1,7 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Welcome from '../Screens/welcome/welcome';
 import Login from '../Screens/login/login';
@@ -25,7 +25,6 @@ import AdviceCategory from '../Screens/adviceCategory/adviceCategory';
 import MyQuestionAdvice from '../Screens/myquestionadvice/myquestionadvice';
 import PhotoViewing from '../Screens/photoviewing/photoviewing';
 import ThriveSec from '../Screens/thrivesec/thrivesec';
-import Voting2 from '../Screens/voting2/voting2';
 import SetPassword from '../Screens/setPassword/setPassword';
 import VerifyEmail from '../Screens/verifyEmail/verifyEmail';
 import Gallery from '../Screens/gallery/gallery';
@@ -237,35 +236,33 @@ function Routes() {
         dispatch({type: 'SIGN_OUT'});
       },
       updateUserDetail: (userDetailTemp, response) => {
-        console.log('updateUserDetail', response);
-        console.log(userDetailTemp);
         for (var key in response) {
           if (response.hasOwnProperty(key)) {
-            // console.log(response, userDetail, key);
             userDetailTemp[key] = response[key];
           }
         }
         changeUserDetail(userDetailTemp);
-        console.log(userDetailTemp);
-        // dispatch({type: 'USER_UPDATE', user: userDetailTemp.user});
       },
       signUp: async (data) => {
-        // In a production app, we need to send user data to server and get a token
-        // We will also need to handle errors if sign up failed
-        // After getting token, we need to persist the token using `AsyncStorage`
-        // In the example, we'll use a dummy token
-
         dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
       },
     }),
     [],
   );
 
+  React.useEffect(() => console.log('userDetail from routes', userDetail), [
+    userDetail,
+  ]);
+
   return (
     <Root>
       <AuthContext.Provider value={authContext}>
-        <userDetailContext.Provider value={userDetail}>
-          <NavigationContainer>
+        <userDetailContext.Provider value={[userDetail, changeUserDetail]}>
+          <NavigationContainer
+            theme={{
+              ...DefaultTheme,
+              colors: {...DefaultTheme.colors, background: 'white'},
+            }}>
             {state.isLoading ? (
               <Stack.Navigator headerMode="none">
                 <Stack.Screen name="Loading" component={Loading} />

@@ -42,7 +42,7 @@ const GetAdvice2 = () => {
   const navigation = useNavigation();
   const [dialog, setDialog] = useState(false);
   const [text, setText] = useState('Describe your situation...');
-  const userDetail = React.useContext(userDetailContext);
+  const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const [isLoading, setisLoading] = useState(false);
 
   return (

@@ -2,13 +2,10 @@ import React, {Component} from 'react';
 import {Text, StyleSheet, View, ImageBackground, Image} from 'react-native';
 import {
   menuubackground,
-  image8,
-  addimage,
   placeholderProfilePhoto,
   sync,
 } from '../../common/images';
 import styled from 'styled-components/native';
-import ResponsiveImage from 'react-native-responsive-image';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {
   heightPercentageToDP,
@@ -26,8 +23,7 @@ import {white_downarrow} from '../../common/images';
 const Drawer = () => {
   const navigation = useNavigation();
   const {signOut} = React.useContext(AuthContext);
-  const {updateUserDetail} = React.useContext(AuthContext);
-  const userDetail = React.useContext(userDetailContext);
+  const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   let d = new Date();
   const [lastSyncDate, setLastSyncDate] = React.useState(null);
   const [showAdviceSubmenu, setShowAdviceSubmenu] = React.useState(false);
@@ -155,7 +151,7 @@ const Drawer = () => {
       </MainThirdView>
       <SyncView>
         <TouchableOpacity
-          onPress={() => SyncContent(userDetail, updateUserDetail)}>
+          onPress={() => SyncContent(userDetail, changeUserDetail)}>
           <View
             style={{
               padding: 10,

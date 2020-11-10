@@ -37,7 +37,7 @@ import userDetailContext from '../../common/userDetailContext';
 const QuestionDetail = ({navigation, route}) => {
   const {question} = route.params;
 
-  const userDetail = useContext(userDetailContext);
+  const [userDetail, changeUserDetail] = useContext(userDetailContext);
   console.log(question);
 
   const [yourResponse, setYourResponse] = React.useState('');

@@ -21,11 +21,6 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {
-  useNavigation,
-  DrawerActions,
-  useFocusEffect,
-} from '@react-navigation/native';
 import Header from '../../components/header';
 import LeaderBoard from '../../components/leaderBoard';
 import network from '../../components/apis/network';
@@ -34,16 +29,12 @@ import userDetailContext from '../../common/userDetailContext';
 import storage from '../../components/apis/storage';
 import ContentLoader from 'react-native-easy-content-loader';
 
-const Trivia = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentQuestionID, setCurrentQuestionID] = useState();
+const Trivia = ({navigation}) => {
   const [question, setQuestion] = useState(null);
   const [questions, setQuestions] = useState(null);
   const [answeredQuestions, setAnsweredQuestions] = useState(null);
   const [savedResponses, setSavedResponses] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [page, setPage] = useState(1);
-  const userDetail = React.useContext(userDetailContext);
 
   const submitAnswer = () => {
     if (selectedAnswer === null) {
@@ -74,7 +65,7 @@ const Trivia = () => {
     do {
       questionTemp = allQuestions.pop();
       if (question) {
-        console.log(questionTemp.id, question.id);
+        // console.log(questionTemp.id, question.id);
       }
     } while (
       questionTemp.id &&
@@ -122,6 +113,16 @@ const Trivia = () => {
   React.useEffect(() => {
     LoadQuestions();
   }, []);
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (questions == null) {
+        LoadQuestions();
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   React.useEffect(() => {
     if (questions && answeredQuestions) {

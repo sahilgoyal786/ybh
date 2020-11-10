@@ -1,26 +1,11 @@
-import React, {useState, useRef} from 'react';
-import {
-  Text,
-  StyleSheet,
-  View,
-  ImageBackground,
-  ScrollView,
-  Image,
-  ActivityIndicator,
-} from 'react-native';
-import {
-  welcomepagebackground,
-  image2,
-  bottomCurve,
-  photoos,
-} from '../../common/images';
+import React from 'react';
+import {Text, View, Image, ActivityIndicator} from 'react-native';
+import {bottomCurve} from '../../common/images';
 import styled from 'styled-components/native';
-import ResponsiveImage from 'react-native-responsive-image';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 import Header from '../../components/header';
 import network from '../../components/apis/network';
@@ -29,53 +14,99 @@ import userDetailContext from '../../common/userDetailContext';
 import {Modal} from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import FastImage from 'react-native-fast-image';
-// import {Header} from 'react-native/Libraries/NewAppScreen';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {ConfirmDialog} from 'react-native-simple-dialogs';
+import {Toast} from 'native-base';
 
 const MyPhotos = () => {
+  const [currentImageId, setcurrentImageId] = React.useState(0);
   const [currentImageIndex, setcurrentImageIndex] = React.useState(0);
   const [showModal, setShowModal] = React.useState(false);
   const [myPhotos, setMyPhotos] = React.useState([]);
   const [totalPages, setTotalPages] = React.useState();
   const [page, setPage] = React.useState(1);
   const [loadingMore, setLoadingMore] = React.useState(true);
+  const [isDeleting, setIsDeleting] = React.useState(false);
   const [myPhotosLoaded, setMyPhotosLoaded] = React.useState(false);
-  const userDetail = React.useContext(userDetailContext);
+  const [showConfirmBox, setShowConfirmBox] = React.useState(false);
+  const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
+
   const renderItem = (item, index) => {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          setShowModal(true);
-          setcurrentImageIndex(index);
-        }}>
-        <View key={item.id} style={{margin: widthPercentageToDP(1.25)}}>
+      <View key={item.id} style={{margin: widthPercentageToDP(1.25)}}>
+        <TouchableOpacity
+          onPress={() => {
+            setShowModal(true);
+            setcurrentImageIndex(index);
+          }}>
           <ImagesView source={{uri: item.url}} borderRadius={3} />
-          <View
+        </TouchableOpacity>
+        <View
+          style={{
+            backgroundColor: index % 2 ? '#0EC776' : '#F25C5D',
+            padding: 7,
+            borderBottomLeftRadius: 3,
+            borderBottomRightRadius: 3,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <Text
             style={{
-              backgroundColor: index % 2 ? '#0EC776' : '#F25C5D',
-              padding: 7,
-              borderBottomLeftRadius: 3,
-              borderBottomRightRadius: 3,
-            }}>
-            <Text
-              style={{
-                alignSelf: 'center',
-                color: '#ffffff',
-                fontFamily: 'FuturaPt-Medium',
+              color: '#ffffff',
+              fontFamily: 'FuturaPt-Medium',
 
-                fontSize: 15,
-              }}>
-              {item.created_at_formatted}
-            </Text>
-          </View>
+              fontSize: 15,
+            }}>
+            {item.created_at_formatted}
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => {
+              setcurrentImageId(item.id);
+              setcurrentImageIndex(index);
+              setShowConfirmBox(true);
+            }}>
+            <View style={{padding: 2}}>
+              {!isDeleting ? (
+                <FontAwesome5
+                  name={'trash'}
+                  style={{fontSize: 20, color: 'white'}}
+                />
+              ) : (
+                <ActivityIndicator color="white" />
+              )}
+            </View>
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
 
+  const deletePhoto = async () => {
+    // alert(currentImageId);
+    network.getResponse(
+      EndPoints.deletePhoto,
+      'POST',
+      {photo_id: currentImageId},
+      userDetail.token,
+      (response) => {
+        if (response.message) {
+          Toast.show({text: response.message});
+        }
+        let myPhotosTemp = myPhotos;
+        myPhotosTemp.splice(currentImageIndex, 1);
+        setMyPhotos(myPhotosTemp);
+        setIsDeleting(false);
+      },
+      (error) => {
+        setIsDeleting(false);
+        console.log('error', error);
+      },
+    );
+  };
   const LoadImages = () => {
     const tempImagesArray = [];
     setLoadingMore(true);
-    console.log(EndPoints.myPhotos.url);
     try {
       network.getResponse(
         EndPoints.myPhotos,
@@ -91,7 +122,11 @@ const MyPhotos = () => {
             setTotalPages(response.last_page);
           }
           setMyPhotosLoaded(true);
-          setMyPhotos(myPhotos.concat(tempImagesArray));
+          if (page == 1) {
+            setMyPhotos(tempImagesArray);
+          } else {
+            setMyPhotos(myPhotos.concat(tempImagesArray));
+          }
           setPage(page + 1);
           setLoadingMore(false);
         },
@@ -202,7 +237,7 @@ const MyPhotos = () => {
                   lineHeight: 25,
                 }}
                 onPress={() => setShowModal(false)}>
-                X
+                <FontAwesome5 name={'times'} />
               </Text>
             </View>
             <ImageViewer
@@ -218,6 +253,27 @@ const MyPhotos = () => {
               }}
             />
           </Modal>
+
+          <ConfirmDialog
+            title="Delete Photo?"
+            message="Are you sure about that?"
+            visible={showConfirmBox}
+            onTouchOutside={() => setShowConfirmBox(false)}
+            positiveButton={{
+              title: 'YES',
+              onPress: () => {
+                setIsDeleting(true);
+                setShowConfirmBox(false);
+                deletePhoto();
+              },
+            }}
+            negativeButton={{
+              title: 'NO',
+              onPress: () => {
+                setShowConfirmBox(false);
+              },
+            }}
+          />
         </View>
       }
     />

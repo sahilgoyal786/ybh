@@ -27,26 +27,9 @@ import {
   dots,
   photoworld,
   righticon1,
-  image1,
-  image2,
   righticon,
   lefticon2,
   womanimg,
-  image3,
-  image4,
-  image5,
-  image6,
-  image7,
-  image8,
-  addimage,
-  image9,
-  image10,
-  image11,
-  image12,
-  image13,
-  image14,
-  image15,
-  bottomadd,
   backicon,
 } from '../../common/images';
 import {Right} from 'native-base';
@@ -98,28 +81,7 @@ const PhotoViewing = () => {
       <ThirdView>
         <ImagesView source={lefticon} initHeight="20" initWidth="20" />
         <FlatList
-          data={[
-            {
-              key: 0,
-              image: image9,
-            },
-            {
-              key: 1,
-              image: image10,
-            },
-            {
-              key: 2,
-              image: image11,
-            },
-            {
-              key: 3,
-              image: image12,
-            },
-            {
-              key: 4,
-              image: image13,
-            },
-          ]}
+          data={[]}
           horizontal
           renderItem={({item}) => {
             return (

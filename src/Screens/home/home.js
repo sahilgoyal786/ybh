@@ -32,7 +32,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import {fetchLeaderBoard} from '../../common/helpers';
 
 const Home = () => {
-  const {updateUserDetail} = React.useContext(AuthContext);
   const [votingImages, setVotingImages] = React.useState([]);
   const [votingEnabled, setVotingEnabled] = React.useState(true);
   const [imageOfTheWeek, setImageOfTheWeek] = React.useState(null);
@@ -41,12 +40,14 @@ const Home = () => {
   const [latestPhotos, setLatestPhotos] = React.useState([]);
   const [latestPhotosLoaded, setLatestPhotosLoaded] = React.useState(false);
   const [latestPhotosURLS, setLatestPhotosURLS] = React.useState([]);
+  const [leaderBoard, setLeaderBoard] = React.useState(<></>);
   const [latestArticle, setLatestArticle] = React.useState(null);
   const navigation = useNavigation();
-  const userDetail = React.useContext(userDetailContext);
+  const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
 
   var votingImagesPlaceholder = [];
   var latestPhotosPlaceholder = [];
+
   votingImagesPlaceholder.push(
     <ContentLoader
       key={Math.random}
@@ -165,10 +166,14 @@ const Home = () => {
         },
         (error) => console.log('error', error),
       );
-      fetchLeaderBoard(userDetail, updateUserDetail);
+      fetchLeaderBoard(userDetail, changeUserDetail);
     } catch (exception) {
       console.log('exception', exception);
     }
+    setLeaderBoard(<LeaderBoard />);
+    setTimeout(() => {
+      setLeaderBoard(<LeaderBoard />);
+    }, 1000);
   }, []);
 
   return (
@@ -313,7 +318,7 @@ const Home = () => {
                 padding: 0,
                 marginBottom: 10,
               }}></Image>
-            <LeaderBoard />
+            {leaderBoard}
           </View>
         </View>
         <LastImage>

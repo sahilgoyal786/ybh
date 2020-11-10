@@ -3,14 +3,14 @@ import storage from '../components/apis/storage';
 import network from '../components/apis/network';
 import EndPoints from '../components/apis/endPoints';
 
-export const SyncContent = async (userDetail, updateUserDetail) => {
+export const SyncContent = async (userDetail, changeUserDetail) => {
   Toast.show({text: 'Syncing...'});
 
   await storage.setData('lastSyncDate', todaysDate());
   getRelationshipMeterQuestionsFromServer(userDetail);
   getTriviaQuestionsFromServer(userDetail);
-  sendResponsesToServer(userDetail, updateUserDetail);
-  fetchLeaderBoard(userDetail, updateUserDetail);
+  sendResponsesToServer(userDetail, changeUserDetail);
+  fetchLeaderBoard(userDetail, changeUserDetail);
 };
 
 const getRelationshipMeterQuestionsFromServer = async (userDetail) => {
@@ -44,7 +44,7 @@ const getTriviaQuestionsFromServer = async (userDetail) => {
   );
 };
 
-const sendResponsesToServer = async (userDetail, updateUserDetail) => {
+const sendResponsesToServer = async (userDetail, changeUserDetail) => {
   let savedResponses = await storage.getData('SavedTriviaResponses');
   if (savedResponses !== null) {
     savedResponses = JSON.parse(savedResponses);
@@ -66,14 +66,11 @@ const sendResponsesToServer = async (userDetail, updateUserDetail) => {
           console.log(response);
           if (response.message) {
             let userDetailTemp = userDetail;
-            updateUserDetail(
-              userDetail,
-              userDetailTemp.user['rank'],
-              response.rank,
-            );
+            userDetailTemp.user['rank'] = response.rank;
+            changeUserDetail(userDetailTemp);
             storage.setData('SavedTriviaResponses', JSON.stringify([]));
             storage.removeData(EndPoints.leaderBoard.url);
-            fetchLeaderBoard(userDetail, updateUserDetail);
+            fetchLeaderBoard(userDetail, changeUserDetail);
           }
         },
         (response) => {
@@ -111,7 +108,7 @@ export const todaysDate = () => {
   );
 };
 
-export const fetchLeaderBoard = (userDetail, updateUserDetail) => {
+export const fetchLeaderBoard = (userDetail, changeUserDetail) => {
   console.log('fetchLeaderBoard');
   network.getResponse(
     EndPoints.leaderBoard,
@@ -119,7 +116,10 @@ export const fetchLeaderBoard = (userDetail, updateUserDetail) => {
     {},
     userDetail.token || '',
     (response) => {
-      updateUserDetail(userDetail, {leaderBoard: response});
+      let userDetailTemp = userDetail;
+      userDetailTemp.leaderBoard = response;
+      changeUserDetail(userDetailTemp);
+      console.log('changeUserDetail for LeaderBoard');
     },
     (error) => console.log('error', error),
   );

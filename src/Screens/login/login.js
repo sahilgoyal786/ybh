@@ -7,7 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 
 import {loginHeader, loginFooter} from '../../common/images';
 

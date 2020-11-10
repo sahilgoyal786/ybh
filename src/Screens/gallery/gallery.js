@@ -33,7 +33,7 @@ const Gallery = ({route, navigation}) => {
   const [modalPhotos, setModalPhotos] = React.useState([]);
 
   const [photos, setPhotos] = useState([]);
-  const userDetail = React.useContext(userDetailContext);
+  const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const [loadingMore, setLoadingMore] = React.useState(true);
   const [photosLoaded, setPhotosLoaded] = React.useState(true);
   const [totalPages, setTotalPages] = React.useState();

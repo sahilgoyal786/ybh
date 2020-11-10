@@ -10,42 +10,26 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import RNSpeedometer from '../../components/speedometer/index';
-import {
-  stick,
-  menu,
-  headerView,
-  botomView,
-  bottomCurve,
-  relationmeter,
-} from '../../common/images';
+import {stick, bottomCurve} from '../../common/images';
 import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
-// import React, {Component} from 'react';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
-
-import {welcomepagebackground} from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
 import {ScrollView} from 'react-native-gesture-handler';
 import Header from '../../components/header';
-import EndPoints from '../../components/apis/endPoints';
 import storage from '../../components/apis/storage';
-import network from '../../components/apis/network';
-import userDetailContext from '../../common/userDetailContext';
 import ContentLoader from 'react-native-easy-content-loader';
 import {Toast} from 'native-base';
 
-const RelationMeter = (navigation) => {
+const RelationMeter = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [relationshipMeterScore, setRelationshipMeterScore] = useState(null);
   const [question, setQuestion] = useState(null);
   const [questions, setQuestions] = useState(null);
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [savedResponses, setSavedResponses] = useState([]);
-  const [page, setPage] = useState(1);
-  const userDetail = React.useContext(userDetailContext);
 
   function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
@@ -66,8 +50,6 @@ const RelationMeter = (navigation) => {
       } else {
         setRelationshipMeterScore(relationshipMeterScore - question.score);
       }
-      // console.log(relationshipMeterScore);
-      // updateUserDetail(userDetail, {user: response.user});
     }
 
     setSavedResponses(
@@ -167,6 +149,17 @@ const RelationMeter = (navigation) => {
     };
     storeAsync();
   }, [relationshipMeterScore]);
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (questions == null) {
+        LoadQuestions();
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   React.useEffect(() => {
     if (questions && answeredQuestions) {
       presentQuestion();

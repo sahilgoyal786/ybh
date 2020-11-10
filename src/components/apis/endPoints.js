@@ -16,6 +16,8 @@ const EndPoints = {
   latestPhotos: {url: 'recent-images'},
   uploadImage: {url: 'images-upload'},
   myPhotos: {url: 'user/photos', dont_cache: true},
+  deletePhoto: {url: 'user/photos/delete'},
+
   blogs: {url: 'blogs', cache_age: 48},
 
   getTriviaQuestions: {url: 'questions/trivia', dont_cache: true},

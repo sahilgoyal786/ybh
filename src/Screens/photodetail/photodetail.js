@@ -24,7 +24,6 @@ import {useNavigation, DrawerActions} from '@react-navigation/native';
 
 import {
   menu,
-  image8,
   backicon,
   editprofile,
   tickicon,
@@ -51,7 +50,7 @@ const PhotoDetail = () => {
       </WelcomeView>
       <View style={{alignSelf: 'center', marginTop: heightPercentageToDP(4)}}>
         <FirstView>
-          <ImagesView source={image8} initHeight="150" initWidth="180" />
+          <ImagesView source={{}} initHeight="150" initWidth="180" />
 
           <ImageeDltView source={dlticon} initHeight="40" initWidth="40" />
         </FirstView>

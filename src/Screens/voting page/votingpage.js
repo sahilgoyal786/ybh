@@ -1,18 +1,5 @@
 import React, {Component, useContext} from 'react';
-import {
-  headerView,
-  menu,
-  vtngpage4,
-  vtngbtn,
-  image1,
-  image2,
-  image3,
-  image4,
-  image5,
-  image6,
-  image7,
-  image8,
-} from '../../common/images';
+import {vtngbtn} from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
 import {
@@ -26,29 +13,20 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  ImageBackground,
   Image,
-  Platform,
   Dimensions,
   Modal,
 } from 'react-native';
-//import { Image } from 'native-base';
-import {DraggableGrid} from 'react-native-draggable-grid';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
-import Button from '../../components/button';
 import Header from '../../components/header';
 import {Toast} from 'native-base';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 import MaskedView from '@react-native-community/masked-view';
 import FastImage from 'react-native-fast-image';
 import {vtngpage} from '../../common/images';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import {bottomCurve} from '../../common/images';
-import {White} from '../../common/colors';
 
 // interface VotingPageProps {
 
@@ -59,7 +37,7 @@ import {White} from '../../common/colors';
 // }
 const VotingPage = ({route, navigation}) => {
   const [showModal, setShowModal] = React.useState(false);
-  const userDetail = React.useContext(userDetailContext);
+  const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const [currentImageIndex, setcurrentImageIndex] = React.useState(0);
   const [selectedImageIndex, setselectedImageIndex] = React.useState(-1);
 

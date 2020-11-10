@@ -14,7 +14,7 @@ import userDetailContext from '../common/userDetailContext';
 
 const Header = ({title, backButton = ''}) => {
   const navigation = useNavigation();
-  const userDetail = useContext(userDetailContext);
+  const [userDetail, changeUserDetail] = useContext(userDetailContext);
   return (
     <View style={{width: widthPercentageToDP(100), height: 114}}>
       <Image

@@ -16,24 +16,18 @@ import {
   loginHeader,
   signupsec,
 } from '../../common/images';
-import {iconchecked} from '../../common/images';
-
-import {unchecked} from '../../common/images';
 
 import styled from 'styled-components/native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {White} from '../../common/colors';
 import Button from '../../components/button';
 import {Formik} from 'formik';
-import {CheckBox} from 'react-native-elements';
 import ResponsiveImage from 'react-native-responsive-image';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation} from '@react-navigation/native';
-import {menu, image8, backicon, editprofile} from '../../common/images';
+import {backicon} from '../../common/images';
 import network from '../../components/apis/network';
 import endpoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
@@ -41,7 +35,7 @@ import {Toast} from 'native-base';
 
 const Forgot = () => {
   const navigation = useNavigation();
-  const userDetail = React.useContext(userDetailContext);
+  const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const [checked, setChecked] = useState(false);
   return (
     <KeyboardAwareScrollView

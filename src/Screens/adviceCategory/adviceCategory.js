@@ -1,11 +1,5 @@
 import React, {useState} from 'react';
-import {
-  Text,
-  View,
-  ImageBackground,
-  Image,
-  ActivityIndicator,
-} from 'react-native';
+import {Text, View, Image, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 
 import ResponsiveImage from 'react-native-responsive-image';
@@ -22,19 +16,18 @@ import userDetailContext from '../../common/userDetailContext';
 import Button from '../../components/button';
 import {Dialog} from 'react-native-simple-dialogs';
 import {Textarea, Toast} from 'native-base';
-import RNPickerSelect, {defaultStyles} from 'react-native-picker-select';
+import RNPickerSelect from 'react-native-picker-select';
 
 const AdviceCategory = ({route, navigation}) => {
   const [questions, setQuestions] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(null);
   const [sortCriteria, setSortCriteria] = useState('latest');
   const [dialog, setDialog] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [text, setText] = useState('');
-  const userDetail = React.useContext(userDetailContext);
-  const [Value, setValue] = useState('key11');
+  const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
 
   const {Category} = route.params;
 
@@ -87,12 +80,19 @@ const AdviceCategory = ({route, navigation}) => {
   };
 
   const LoadQuestions = () => {
+    console.log('LoadQuestions');
     // const tempImagesArray = [];
+    if (totalPages && page == totalPages) {
+      console.log('return');
+      return;
+    }
+    let current_page = page + 1;
+    setPage(current_page);
     setLoadingMore(true);
     try {
       let data = {
         filter_category: Category.toLowerCase(),
-        page,
+        page: current_page,
         sort_by: sortCriteria,
       };
       if (route.params.type) {
@@ -111,14 +111,13 @@ const AdviceCategory = ({route, navigation}) => {
         (response) => {
           response = response['advice-questions'];
           if (response.data.length) {
-            setQuestions(response.data);
+            if (current_page !== 1) {
+              setQuestions(questions.concat(response.data));
+            } else {
+              setQuestions(response.data);
+            }
           }
-          if (page == 1) {
-            setTotalPages(response.last_page);
-          }
-          if (page < response.last_page) {
-            setPage(page + 1);
-          }
+          setTotalPages(response.last_page);
           setLoadingMore(false);
         },
         (error) => {
@@ -136,10 +135,14 @@ const AdviceCategory = ({route, navigation}) => {
   }, []);
 
   React.useEffect(() => {
-    setPage(1);
+    setPage(0);
     setQuestions([]);
-    LoadQuestions();
   }, [sortCriteria]);
+  React.useEffect(() => {
+    if (page == 0) {
+      LoadQuestions();
+    }
+  }, [page]);
 
   return (
     <FlatList
@@ -147,7 +150,6 @@ const AdviceCategory = ({route, navigation}) => {
       alwaysBounceVertical={false}
       onEndReached={() => {
         if (questions.length && totalPages && page <= totalPages) {
-          // console.log(page, totalPages);
           LoadQuestions();
         }
       }}
@@ -178,7 +180,7 @@ const AdviceCategory = ({route, navigation}) => {
         </View>
       }
       ListHeaderComponent={
-        <View style={{backgroundColor: 'transparent'}}>
+        <View style={{backgroundColor: 'white'}}>
           <Header
             title={Category !== '' ? Category : route.params.title}
             backButton="true"
@@ -370,52 +372,4 @@ const ButtonView = styled(View)({
   justifyContent: 'center',
   alignItems: 'center',
 });
-const TextMonth = styled(Text)({
-  fontSize: 19,
-  fontWeight: '400',
-  color: '#484848',
-  fontFamily: 'FuturaPT-Book',
-});
-const FirstViewText = styled(View)({
-  width: widthPercentageToDP(70),
-  marginTop: heightPercentageToDP(1),
-  marginLeft: widthPercentageToDP(4.5),
-
-  fontSize: 19,
-  fontWeight: '600',
-  color: '#484848',
-  fontFamily: 'FuturaPT-Book',
-});
-const MainView = styled(View)({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  // backgroundColor:"red"
-});
-const MenuIcon = styled(ResponsiveImage)({
-  alignSelf: 'flex-end',
-  marginRight: widthPercentageToDP(4),
-});
-const BackgroundImage = styled(ImageBackground)({
-  height: Platform.OS === 'ios' ? '89%' : '100%',
-  bottom: 0,
-  marginTop: 50,
-});
-const WelcomeView = styled(View)({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginTop: '-14%',
-  marginLeft: 12,
-});
-
-const WelcomeText = styled(Text)({
-  fontSize: 24,
-  color: '#ffffff',
-  fontWeight: '500',
-  fontFamily: 'FuturaPT-Medium',
-  // justifyContent: 'center',
-  marginLeft: widthPercentageToDP(0.1),
-  marginTop: -heightPercentageToDP(0.1),
-});
-
 export default AdviceCategory;

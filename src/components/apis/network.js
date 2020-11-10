@@ -44,12 +44,12 @@ const network = {
             file_name,
           );
         } else {
-          console.log('Loaded from cache', endpoint.url);
+          // console.log('Loaded from cache', endpoint.url);
           success_callback(JSON.parse(value));
         }
       });
     } else {
-      console.log('getResponseFromServer', endpoint);
+      // console.log('getResponseFromServer', endpoint);
       this.getResponseFromServer(
         endpoint,
         type,

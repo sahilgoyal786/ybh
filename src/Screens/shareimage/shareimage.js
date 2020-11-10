@@ -46,7 +46,7 @@ const ShareImage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploaded, setUploaded] = useState(null);
   const screenHeight = Dimensions.get('window').height;
-  const userDetail = useContext(userDetailContext);
+  const [userDetail, changeUserDetail] = useContext(userDetailContext);
 
   const handleChoosePhoto = () => {
     if (!checked) {
