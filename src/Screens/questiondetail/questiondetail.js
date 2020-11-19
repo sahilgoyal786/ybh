@@ -11,28 +11,20 @@ import {
 import Button from '../../components/button';
 
 import {Textarea, Form, Toast} from 'native-base';
+import Numeral from 'numeral';
 
-import {
-  welcomepagebackground,
-  menu,
-  thumpup,
-  thumpdown,
-  headerView,
-  botomView,
-  bottomCurve,
-} from '../../common/images';
+import {bottomCurve} from '../../common/images';
 import styled from 'styled-components/native';
-import ResponsiveImage from 'react-native-responsive-image';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
 import Header from '../../components/header';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 const QuestionDetail = ({navigation, route}) => {
   const {question} = route.params;
@@ -60,7 +52,6 @@ const QuestionDetail = ({navigation, route}) => {
       },
       userDetail.token,
       (response) => {
-        setisLoading(false);
         // console.log(response);
         if (response.message) {
           Toast.show({text: response.message});
@@ -79,6 +70,7 @@ const QuestionDetail = ({navigation, route}) => {
           }
           setResponses(responsesTemp);
         }
+        setisLoading(false);
       },
       (error) => {
         setisLoading(false);
@@ -110,43 +102,52 @@ const QuestionDetail = ({navigation, route}) => {
               - {element.user.username}{' '}
               <TimingText>({element.published_at})</TimingText>
             </User>
-            <TouchableOpacity onPress={() => castVote(1, element.id)}>
-              <ResponsiveImage
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text
                 style={{
                   fontSize: 13,
                   color: '#484848',
-                  marginTop: heightPercentageToDP(1.3),
-                  marginLeft: widthPercentageToDP(53),
-                }}
-                source={thumpup}
-                initHeight="15"
-                initWidth="15"
-              />
-            </TouchableOpacity>
-            <Text
-              style={{
-                fontSize: 13,
-                color: '#484848',
-                marginTop: heightPercentageToDP(1.3),
-              }}>
-              {isLoading ? (
-                <ActivityIndicator color="purple" />
-              ) : (
-                element.up_votes_count - element.down_votes_count
-              )}
-            </Text>
-            <TouchableOpacity onPress={() => castVote(0, element.id)}>
-              <ResponsiveImage
+                  height: 20,
+                }}>
+                {isLoading ? (
+                  <Text>...</Text>
+                ) : element.up_votes_count > 1000 ? (
+                  Numeral(element.up_votes_count).format('0a')
+                ) : (
+                  element.up_votes_count
+                )}
+              </Text>
+              <TouchableOpacity onPress={() => castVote(1, element.id)}>
+                <FontAwesome5Icon
+                  name="thumbs-up"
+                  style={{fontSize: 15, color: 'grey', marginLeft: 5}}
+                />
+              </TouchableOpacity>
+              <Text
                 style={{
+                  fontSize: 13,
                   color: '#484848',
-                  marginTop: heightPercentageToDP(1.3),
-                  marginLeft: widthPercentageToDP(0.5),
-                }}
-                source={thumpdown}
-                initHeight="15"
-                initWidth="15"
-              />
-            </TouchableOpacity>
+                  marginLeft: 15,
+                }}>
+                {isLoading ? (
+                  <Text>...</Text>
+                ) : element.down_votes_count > 1000 ? (
+                  Numeral(element.down_votes_count).format('0a')
+                ) : (
+                  element.down_votes_count
+                )}
+              </Text>
+              <TouchableOpacity onPress={() => castVote(0, element.id)}>
+                <FontAwesome5Icon
+                  name="thumbs-down"
+                  style={{fontSize: 15, color: 'grey', marginLeft: 5}}
+                />
+              </TouchableOpacity>
+            </View>
           </Score>
         </Card>,
       );
@@ -176,7 +177,6 @@ const QuestionDetail = ({navigation, route}) => {
           <BasicText>{question.ques}</BasicText>
           <Score>
             <User>
-              - {question.user.username}{' '}
               <TimingText>({question.published_at})</TimingText>
             </User>
           </Score>
@@ -213,7 +213,7 @@ const QuestionDetail = ({navigation, route}) => {
                     setYourResponse('');
                     if (response.message) {
                       Toast.show({text: response.message});
-                      setResponses(responses.concat(response.answer));
+                      // setResponses(responses.concat(response.answer));
                     }
                   },
                   (error) => {
@@ -257,14 +257,14 @@ const ViewTextarea = styled(View)({
   background: 'white',
 });
 const Score = styled(View)({
-  marginLeft: widthPercentageToDP(3),
+  marginLeft: 20,
+  marginTop: 10,
   flexDirection: 'row',
   justifyContent: 'space-between',
 });
 const User = styled(Text)({
   fontSize: 13,
   color: '#484848',
-  marginTop: heightPercentageToDP(0.9),
   marginLeft: -widthPercentageToDP(3),
   fontFamily: 'FuturaPT-Book',
   fontStyle: 'italic',

@@ -94,7 +94,6 @@ const Forgot = () => {
                 <Text
                   style={{
                     fontSize: 18,
-
                     color: '#484848',
                     fontWeight: '200',
                     fontFamily: 'FuturaPT-Medium',
@@ -159,7 +158,6 @@ const Discrip = styled(Text)({
 const SigninButton = styled.View({
   alignItems: 'center',
   justifyContent: 'center',
-  flex: 0.62,
 });
 const MainView = styled.View({
   flexDirection: 'row',
@@ -188,7 +186,7 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingVertical: hp(1),
     width: wp(78),
-    fontSize: 20,
+    fontSize: 17,
     marginTop: hp(6),
   },
   Forgotstyle: {

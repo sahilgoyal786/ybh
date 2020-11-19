@@ -100,10 +100,10 @@ const SetPassword = ({route, navigation}) => {
                 <Text
                   style={{
                     fontSize: 18,
-
                     color: '#484848',
                     fontWeight: '200',
                     fontFamily: 'FuturaPT-Medium',
+                    marginBottom: 20,
                   }}>
                   Please enter the verification code sent to your email
                 </Text>
@@ -140,8 +140,8 @@ const SetPassword = ({route, navigation}) => {
                 onBlur={handleBlur('otp')}
                 value={values.otp}
                 placeholder="Verification Code"
-                placeholderTextColor="#484848"
-                style={{textAlign: 'center', width: '100%', ...styles.PassTyle}}
+                placeholderTextColor="#AAAAAA"
+                style={styles.PassTyle}
               />
               {verified && (
                 <Text style={{color: 'green', marginTop: 10}}>
@@ -155,7 +155,7 @@ const SetPassword = ({route, navigation}) => {
                 value={values.password}
                 editable={verified}
                 placeholder="Password"
-                placeholderTextColor="#484848"
+                placeholderTextColor="#AAAAAA"
                 style={styles.PassTyle}
                 secureTextEntry
               />
@@ -169,7 +169,7 @@ const SetPassword = ({route, navigation}) => {
                 editable={verified}
                 value={values.password_confirmation}
                 placeholder="Confirm Password"
-                placeholderTextColor="#484848"
+                placeholderTextColor="#AAAAAA"
                 style={styles.PassTyle}
                 secureTextEntry
               />
@@ -227,7 +227,6 @@ const Discrip = styled(Text)({
 const SigninButton = styled.View({
   alignItems: 'center',
   justifyContent: 'center',
-  flex: 0.62,
 });
 const MainView = styled.View({
   flexDirection: 'row',
@@ -248,16 +247,16 @@ export const styles = StyleSheet.create({
   userName: {
     borderBottomWidth: 1,
     paddingVertical: hp(1),
-    width: wp(80),
-    fontSize: 20,
-    marginTop: hp(1),
+    width: wp(78),
+    fontSize: 17,
+    marginTop: 8,
   },
   PassTyle: {
     borderBottomWidth: 1,
     paddingVertical: hp(1),
     width: wp(78),
-    fontSize: 20,
-    marginTop: 10,
+    fontSize: 17,
+    marginTop: 8,
   },
   Forgotstyle: {
     fontSize: 12,

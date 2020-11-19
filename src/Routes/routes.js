@@ -24,7 +24,6 @@ import VotingPage from '../Screens/voting page/votingpage';
 import AdviceCategory from '../Screens/adviceCategory/adviceCategory';
 import MyQuestionAdvice from '../Screens/myquestionadvice/myquestionadvice';
 import PhotoViewing from '../Screens/photoviewing/photoviewing';
-import ThriveSec from '../Screens/thrivesec/thrivesec';
 import SetPassword from '../Screens/setPassword/setPassword';
 import VerifyEmail from '../Screens/verifyEmail/verifyEmail';
 import Gallery from '../Screens/gallery/gallery';
@@ -51,6 +50,8 @@ import Loading from '../Screens/loading/loading';
 import EndPoints from '../components/apis/endPoints';
 import NetInfo from '@react-native-community/netinfo';
 
+import PushNotificationManager from '../common/PushNotificationsManager';
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -64,7 +65,6 @@ function HomeComponent() {
       <Stack.Screen name="Thrivedetails" component={Thrivedetails} />
       <Stack.Screen name="VotingPage" component={VotingPage} />
       <Stack.Screen name="PhotoViewing" component={PhotoViewing} />
-      <Stack.Screen name="ThriveSec" component={ThriveSec} />
     </Stack.Navigator>
   );
 }
@@ -231,8 +231,11 @@ function Routes() {
         });
       },
       signOut: () => {
+        let userDetailTemp = userDetail;
+        delete userDetailTemp['token'];
+        storage.setData('user', JSON.stringify(userDetailTemp));
+        storage.removeData('access_token');
         changeUserDetail(null);
-        storage.clear();
         dispatch({type: 'SIGN_OUT'});
       },
       updateUserDetail: (userDetailTemp, response) => {
@@ -258,30 +261,32 @@ function Routes() {
     <Root>
       <AuthContext.Provider value={authContext}>
         <userDetailContext.Provider value={[userDetail, changeUserDetail]}>
-          <NavigationContainer
-            theme={{
-              ...DefaultTheme,
-              colors: {...DefaultTheme.colors, background: 'white'},
-            }}>
-            {state.isLoading ? (
-              <Stack.Navigator headerMode="none">
-                <Stack.Screen name="Loading" component={Loading} />
-              </Stack.Navigator>
-            ) : state.userToken == null ? (
-              <Stack.Navigator headerMode="none">
-                <Stack.Screen name="Welcome" component={Welcome} />
-                <Stack.Screen name="Login" component={Login} />
-                <Stack.Screen name="Signup" component={Signup} />
-                <Stack.Screen name="Forgot" component={Forgot} />
-                <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
-                <Stack.Screen name="SetPassword" component={SetPassword} />
-              </Stack.Navigator>
-            ) : (
-              <Stack.Navigator headerMode="none">
-                <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
-              </Stack.Navigator>
-            )}
-          </NavigationContainer>
+          <PushNotificationManager>
+            <NavigationContainer
+              theme={{
+                ...DefaultTheme,
+                colors: {...DefaultTheme.colors, background: 'white'},
+              }}>
+              {state.isLoading ? (
+                <Stack.Navigator headerMode="none">
+                  <Stack.Screen name="Loading" component={Loading} />
+                </Stack.Navigator>
+              ) : state.userToken == null ? (
+                <Stack.Navigator headerMode="none">
+                  <Stack.Screen name="Welcome" component={Welcome} />
+                  <Stack.Screen name="Login" component={Login} />
+                  <Stack.Screen name="Signup" component={Signup} />
+                  <Stack.Screen name="Forgot" component={Forgot} />
+                  <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
+                  <Stack.Screen name="SetPassword" component={SetPassword} />
+                </Stack.Navigator>
+              ) : (
+                <Stack.Navigator headerMode="none">
+                  <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
+                </Stack.Navigator>
+              )}
+            </NavigationContainer>
+          </PushNotificationManager>
         </userDetailContext.Provider>
       </AuthContext.Provider>
     </Root>

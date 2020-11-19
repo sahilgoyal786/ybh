@@ -39,7 +39,7 @@ const Home = () => {
   const [votingImagesURLS, setVotingImagesURLS] = React.useState([]);
   const [latestPhotos, setLatestPhotos] = React.useState([]);
   const [latestPhotosLoaded, setLatestPhotosLoaded] = React.useState(false);
-  const [latestPhotosURLS, setLatestPhotosURLS] = React.useState([]);
+  const [latestPhotosArray, setLatestPhotosArray] = React.useState([]);
   const [leaderBoard, setLeaderBoard] = React.useState(<></>);
   const [latestArticle, setLatestArticle] = React.useState(null);
   const navigation = useNavigation();
@@ -129,7 +129,7 @@ const Home = () => {
         (response) => {
           response = response.data;
           for (let i = 0; i < 6; i++) {
-            latestPhotosURLS.push({url: response[i]['url']});
+            latestPhotosArray.push(response[i]);
             tempLatestPhotosArray.push(
               <LatestPhoto
                 key={i}
@@ -139,8 +139,10 @@ const Home = () => {
                   <ViewMore>
                     <TextMore
                       onPress={() => {
-                        // console.log(latestPhotosURLS);
-                        navigation.navigate('LatestPhotos', {latestPhotosURLS});
+                        // console.log(latestPhotosArray);
+                        navigation.navigate('LatestPhotos', {
+                          latestPhotosArray,
+                        });
                       }}>
                       More
                     </TextMore>
@@ -149,7 +151,7 @@ const Home = () => {
               </LatestPhoto>,
             );
           }
-          setLatestPhotosURLS(latestPhotosURLS);
+          setLatestPhotosArray(latestPhotosArray);
           setLatestPhotosLoaded(true);
           setLatestPhotos(tempLatestPhotosArray);
         },

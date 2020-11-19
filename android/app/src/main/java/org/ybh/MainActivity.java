@@ -1,4 +1,4 @@
-package com.ybh;
+package org.ybh;
 
 import com.facebook.react.ReactActivity;
 

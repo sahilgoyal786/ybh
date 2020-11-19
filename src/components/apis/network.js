@@ -29,8 +29,13 @@ const network = {
     error_callback,
     file = false,
     file_name = 'images',
+    no_cache = false,
   ) {
-    if (type.toLowerCase() == 'get' && endpoint.dont_cache == undefined) {
+    if (
+      type.toLowerCase() == 'get' &&
+      endpoint.dont_cache == undefined &&
+      !no_cache
+    ) {
       storage.getData(endpoint.url).then((value) => {
         if (value == null || this.cacheExpired(endpoint, JSON.parse(value))) {
           this.getResponseFromServer(
@@ -44,12 +49,12 @@ const network = {
             file_name,
           );
         } else {
-          // console.log('Loaded from cache', endpoint.url);
+          console.log('Loaded from cache', endpoint.url);
           success_callback(JSON.parse(value));
         }
       });
     } else {
-      // console.log('getResponseFromServer', endpoint);
+      console.log('getResponseFromServer', endpoint, no_cache);
       this.getResponseFromServer(
         endpoint,
         type,

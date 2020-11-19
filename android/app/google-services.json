@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "255115058494",
+    "firebase_url": "https://ybhtest-aa862.firebaseio.com",
+    "project_id": "ybhtest-aa862",
+    "storage_bucket": "ybhtest-aa862.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255115058494:android:7c9c13ec5deccdfa64206f",
+        "android_client_info": {
+          "package_name": "org.ybh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255115058494-i7k7egbv2ugd9ok7k0r1cvs1t21ahe90.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1QYgJ7rtaimEr9RzX9SeQfRCS_Lkrezo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255115058494-i7k7egbv2ugd9ok7k0r1cvs1t21ahe90.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

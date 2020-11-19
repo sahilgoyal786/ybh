@@ -5,6 +5,7 @@ import {
   FlatList,
   ActivityIndicator,
   Image,
+  StyleSheet,
   Modal,
 } from 'react-native';
 import {bottomCurve} from '../../common/images';
@@ -23,6 +24,7 @@ import EndPoints from '../../components/apis/endPoints';
 import network from '../../components/apis/network';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import FastImage from 'react-native-fast-image';
+import {Toast} from 'native-base';
 
 const Gallery = ({route, navigation}) => {
   const latestPhotosURLS = route.params.latestPhotosURLS;
@@ -30,8 +32,9 @@ const Gallery = ({route, navigation}) => {
   const [Value, setValue] = useState(d.getMonth() + '');
   const [currentImageIndex, setcurrentImageIndex] = React.useState(0);
   const [showModal, setShowModal] = React.useState(false);
-  const [modalPhotos, setModalPhotos] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
 
+  const [like, setLike] = React.useState(0);
   const [photos, setPhotos] = useState([]);
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const [loadingMore, setLoadingMore] = React.useState(true);
@@ -54,6 +57,33 @@ const Gallery = ({route, navigation}) => {
     );
   };
 
+  const storeLike = (url, like, index) => {
+    setIsLoading(true);
+    network.getResponse(
+      EndPoints.storeLikes,
+      'POST',
+      {url, like},
+      userDetail.token,
+      (response) => {
+        console.log(response);
+        if (response && response.message) {
+          Toast.show({text: response.message});
+        }
+        if (response && response.file) {
+          let photosTemp = photos;
+          photosTemp[index] = response.file;
+          setPhotos(photos);
+        }
+        setLike(0);
+        setIsLoading(false);
+      },
+      (response) => {
+        console.log(response);
+        setIsLoading(false);
+      },
+    );
+  };
+
   const LoadImages = () => {
     const tempImagesArray = [];
     setLoadingMore(true);
@@ -71,9 +101,11 @@ const Gallery = ({route, navigation}) => {
           }
           if (page == 1) {
             setTotalPages(response.last_page);
+            setPhotos(tempImagesArray);
+          } else {
+            setPhotos(photos.concat(tempImagesArray));
           }
           setPhotosLoaded(true);
-          setPhotos(photos.concat(tempImagesArray));
           setPage(page + 1);
           setLoadingMore(false);
         },
@@ -193,6 +225,63 @@ const Gallery = ({route, navigation}) => {
               index={currentImageIndex}
               renderImage={(props) => <FastImage {...props} />}
               renderIndicator={() => {}}
+              renderFooter={(index) => {
+                let likes = photos[index]['likes'].split('-');
+                console.log(photos[index]);
+                let total = parseInt(likes[0]) + parseInt(likes[1]);
+                return (
+                  <Voting>
+                    {isLoading ? (
+                      <ActivityIndicator color="purple" />
+                    ) : (
+                      <>
+                        {total > 0 && (
+                          <Text
+                            style={[
+                              styles.votePercentage,
+                              {width: 60, textAlign: 'right'},
+                            ]}>
+                            {(likes[1] / total) * 100}%
+                          </Text>
+                        )}
+                        <Text
+                          onPress={() => {
+                            setLike(1);
+                            storeLike(photos[index]['url'], 0, index);
+                          }}
+                          style={[
+                            styles.voteButton,
+                            styles.left,
+                            like == 1 ? styles.active : [],
+                          ]}>
+                          Nice
+                        </Text>
+                        <Text
+                          onPress={() => {
+                            setLike(2);
+                            storeLike(photos[index]['url'], 1, index);
+                          }}
+                          style={[
+                            styles.voteButton,
+                            styles.right,
+                            like == 2 ? styles.active : [],
+                          ]}>
+                          Supernice
+                        </Text>
+                        {total > 0 && (
+                          <Text
+                            style={[
+                              styles.votePercentage,
+                              {width: 60, textAlign: 'left'},
+                            ]}>
+                            {(likes[0] / total) * 100}%
+                          </Text>
+                        )}
+                      </>
+                    )}
+                  </Voting>
+                );
+              }}
             />
           </Modal>
         </View>
@@ -210,4 +299,39 @@ const ImagesView = styled(FastImage)({
   zIndex: 1,
 });
 
+const Voting = styled(View)({
+  flexDirection: 'row',
+  justifyContent: 'center',
+  background: 'white',
+  padding: 10,
+  width: widthPercentageToDP(100),
+});
+
+const styles = StyleSheet.create({
+  voteButton: {
+    textTransform: 'uppercase',
+    paddingVertical: 10,
+    width: widthPercentageToDP(33),
+    textAlign: 'center',
+    borderWidth: 1,
+    color: 'black',
+  },
+  active: {
+    backgroundColor: 'purple',
+    color: 'white',
+  },
+  left: {
+    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 4,
+  },
+  right: {
+    borderTopRightRadius: 4,
+    borderLeftWidth: 0,
+    borderBottomRightRadius: 4,
+  },
+  votePercentage: {
+    padding: 10,
+    fontWeight: 'bold',
+  },
+});
 export default Gallery;

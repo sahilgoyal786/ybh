@@ -12,9 +12,8 @@ import {backicon} from '../common/images';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import userDetailContext from '../common/userDetailContext';
 
-const Header = ({title, backButton = ''}) => {
+const Header = ({title, backButton = false}) => {
   const navigation = useNavigation();
-  const [userDetail, changeUserDetail] = useContext(userDetailContext);
   return (
     <View style={{width: widthPercentageToDP(100), height: 114}}>
       <Image
@@ -29,10 +28,13 @@ const Header = ({title, backButton = ''}) => {
         <View style={{flex: 1, flexDirection: 'row'}}>
           <TouchableOpacity
             onPress={() => {
-              backButton && backButton == 'true' && navigation.goBack();
+              if (backButton !== false)
+                backButton !== false && backButton == 'true'
+                  ? navigation.goBack()
+                  : navigation.navigate(backButton);
             }}
             style={{width: 20}}>
-            {backButton && backButton == 'true' ? (
+            {backButton !== false ? (
               <View>
                 <BackIcon source={backicon} initHeight="16" initWidth="16" />
               </View>
@@ -42,7 +44,10 @@ const Header = ({title, backButton = ''}) => {
           </TouchableOpacity>
           <TouchableWithoutFeedback
             onPress={() => {
-              backButton && backButton == 'true' && navigation.goBack();
+              if (backButton !== false)
+                backButton !== false && backButton == 'true'
+                  ? navigation.goBack()
+                  : navigation.navigate(backButton);
             }}>
             <WelcomeText style={{marginTop: 4, marginLeft: 2}}>
               {title}

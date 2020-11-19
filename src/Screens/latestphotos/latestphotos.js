@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Text,
   StyleSheet,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
   Modal,
+  ActivityIndicator,
 } from 'react-native';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
@@ -25,18 +26,25 @@ import {
   backsec,
   bottomCurve,
 } from '../../common/images';
-import {Form, Content, Container, Icon} from 'native-base';
+import {Form, Content, Container, Icon, Toast} from 'native-base';
 import {Picker} from '@react-native-community/picker';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Header from '../../components/header';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import FastImage from 'react-native-fast-image';
+import network from '../../components/apis/network';
+import EndPoints from '../../components/apis/endPoints';
+import userDetailContext from '../../common/userDetailContext';
+
 // import { Form } from 'formik';
 const LatestPhotos = ({route, navigation}) => {
-  const latestPhotosURLS = route.params.latestPhotosURLS;
+  const [userDetail, changeUserDetail] = useContext(userDetailContext);
+  const latestPhotosArray = route.params.latestPhotosArray;
   const [currentImageIndex, setcurrentImageIndex] = React.useState(0);
   const [showModal, setShowModal] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [modalPhotos, setModalPhotos] = React.useState([]);
+  const [like, setLike] = React.useState(0);
   const d = new Date();
   const [Value, setValue] = useState(d.getMonth() + '');
 
@@ -44,19 +52,47 @@ const LatestPhotos = ({route, navigation}) => {
   const [weeksPhotos, setWeeksPhotos] = useState([]);
   const [monthsPhotos, setMonthsPhotos] = useState([]);
 
-  latestPhotosURLS.forEach((element, index) => {
+  latestPhotosArray.forEach((element, index) => {
+    // console.log(element);
     todaysPhotos.push(
       <TouchableOpacity
         key={Math.random()}
         onPress={() => {
           setShowModal(true);
-          setModalPhotos(latestPhotosURLS);
+          setModalPhotos(latestPhotosArray);
           setcurrentImageIndex(index);
         }}>
         <ImagesView source={{uri: element.url}} />
       </TouchableOpacity>,
     );
   });
+
+  const storeLike = (url, like, index) => {
+    setIsLoading(true);
+    network.getResponse(
+      EndPoints.storeLikes,
+      'POST',
+      {url, like},
+      userDetail.token,
+      (response) => {
+        console.log(response);
+        if (response && response.message) {
+          Toast.show({text: response.message});
+        }
+        if (response && response.file) {
+          let photosTemp = modalPhotos;
+          photosTemp[index] = response.file;
+          setModalPhotos(modalPhotos);
+        }
+        setLike(0);
+        setIsLoading(false);
+      },
+      (response) => {
+        console.log(response);
+        setIsLoading(false);
+      },
+    );
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -84,7 +120,7 @@ const LatestPhotos = ({route, navigation}) => {
           <TextView>Today</TextView>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('Gallery', {latestPhotosURLS});
+              navigation.navigate('Gallery', {latestPhotosArray});
             }}>
             <ViewMoreLink>View More</ViewMoreLink>
           </TouchableOpacity>
@@ -113,7 +149,7 @@ const LatestPhotos = ({route, navigation}) => {
                 width: 100,
               }}
               onPress={() => {
-                navigation.navigate('Gallery', {latestPhotosURLS});
+                navigation.navigate('Gallery', {latestPhotosArray});
               }}>
               {/* <ViewMoreLink>View More</ViewMoreLink> */}
             </TouchableOpacity>
@@ -217,6 +253,63 @@ const LatestPhotos = ({route, navigation}) => {
           index={currentImageIndex}
           renderImage={(props) => <FastImage {...props} />}
           renderIndicator={() => {}}
+          renderFooter={(index) => {
+            let likes = modalPhotos[index]['likes'].split('-');
+            console.log(modalPhotos[index]);
+            let total = parseInt(likes[0]) + parseInt(likes[1]);
+            return (
+              <Voting>
+                {isLoading ? (
+                  <ActivityIndicator color="purple" />
+                ) : (
+                  <>
+                    {total > 0 && (
+                      <Text
+                        style={[
+                          styles.votePercentage,
+                          {width: 60, textAlign: 'right'},
+                        ]}>
+                        {(likes[1] / total) * 100}%
+                      </Text>
+                    )}
+                    <Text
+                      onPress={() => {
+                        setLike(1);
+                        storeLike(modalPhotos[index]['url'], 0, index);
+                      }}
+                      style={[
+                        styles.voteButton,
+                        styles.left,
+                        like == 1 ? styles.active : [],
+                      ]}>
+                      Nice
+                    </Text>
+                    <Text
+                      onPress={() => {
+                        setLike(2);
+                        storeLike(modalPhotos[index]['url'], 1, index);
+                      }}
+                      style={[
+                        styles.voteButton,
+                        styles.right,
+                        like == 2 ? styles.active : [],
+                      ]}>
+                      Supernice
+                    </Text>
+                    {total > 0 && (
+                      <Text
+                        style={[
+                          styles.votePercentage,
+                          {width: 60, textAlign: 'left'},
+                        ]}>
+                        {(likes[0] / total) * 100}%
+                      </Text>
+                    )}
+                  </>
+                )}
+              </Voting>
+            );
+          }}
         />
       </Modal>
     </View>
@@ -226,23 +319,6 @@ const LastaddImage = styled(ResponsiveImage)({});
 const LastImage = styled(View)({
   marginTop: 40,
   padding: 1,
-});
-const ThirdView = styled(View)({
-  flexDirection: 'row',
-  marginLeft: -widthPercentageToDP(0.2),
-});
-const MainView = styled(View)({
-  flexDirection: 'row',
-  alignItems: 'baseline',
-});
-const TextViewWeek = styled(Text)({
-  marginTop: heightPercentageToDP(2),
-  marginLeft: widthPercentageToDP(4),
-  marginVertical: heightPercentageToDP(2),
-  fontSize: 19,
-  fontWeight: '600',
-  color: '#484848',
-  fontFamily: 'FuturaPT-Book',
 });
 const ImagesView = styled(FastImage)({
   width: widthPercentageToDP(22) - 8,
@@ -268,12 +344,47 @@ const SectionHeading = styled(View)({
   justifyContent: 'space-between',
   alignItems: 'baseline',
 });
+const Voting = styled(View)({
+  flexDirection: 'row',
+  justifyContent: 'center',
+  background: 'white',
+  padding: 10,
+  width: widthPercentageToDP(100),
+});
 const FirstView = styled(View)({
   flexDirection: 'row',
   marginLeft: -2,
   marginRight: -2,
   marginBottom: 20,
   overflow: 'scroll',
+});
+
+const styles = StyleSheet.create({
+  voteButton: {
+    textTransform: 'uppercase',
+    paddingVertical: 10,
+    width: widthPercentageToDP(33),
+    textAlign: 'center',
+    borderWidth: 1,
+    color: 'black',
+  },
+  active: {
+    backgroundColor: 'purple',
+    color: 'white',
+  },
+  left: {
+    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 4,
+  },
+  right: {
+    borderTopRightRadius: 4,
+    borderLeftWidth: 0,
+    borderBottomRightRadius: 4,
+  },
+  votePercentage: {
+    padding: 10,
+    fontWeight: 'bold',
+  },
 });
 
 export default LatestPhotos;

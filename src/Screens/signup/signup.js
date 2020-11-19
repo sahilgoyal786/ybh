@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingVertical: hp(1),
     width: wp(78),
-    fontSize: 20,
+    fontSize: 17,
     marginTop: 8,
   },
 });

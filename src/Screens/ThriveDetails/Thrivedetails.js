@@ -81,7 +81,7 @@ const Thrivedetails = ({route, navigation}) => {
           bottom: -100,
         }}
         resizeMode="contain"></Image>
-      <Header title="Thrive" backButton="true" />
+      <Header title="Thrive" backButton="Thrive" />
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}

@@ -7,13 +7,33 @@ export const SyncContent = async (userDetail, changeUserDetail) => {
   Toast.show({text: 'Syncing...'});
 
   await storage.setData('lastSyncDate', todaysDate());
-  getRelationshipMeterQuestionsFromServer(userDetail);
-  getTriviaQuestionsFromServer(userDetail);
+
+  let userDetailTemp = userDetail;
+  userDetailTemp['syncTotal'] = 0;
+  userDetailTemp['synced'] = 0;
+  changeUserDetail(userDetailTemp);
+
+  getRelationshipMeterQuestionsFromServer(userDetail, changeUserDetail);
+  getTriviaQuestionsFromServer(userDetail, changeUserDetail);
   sendResponsesToServer(userDetail, changeUserDetail);
   fetchLeaderBoard(userDetail, changeUserDetail);
 };
 
-const getRelationshipMeterQuestionsFromServer = async (userDetail) => {
+const updateSync = (userDetail, changeUserDetail, completed = false) => {
+  let userDetailTemp = userDetail;
+  if (!completed) {
+    userDetailTemp['syncTotal'] += 10;
+    changeUserDetail(userDetailTemp);
+  } else {
+    userDetailTemp['synced'] += 10;
+    changeUserDetail(userDetailTemp);
+  }
+};
+const getRelationshipMeterQuestionsFromServer = async (
+  userDetail,
+  changeUserDetail,
+) => {
+  updateSync(userDetail, changeUserDetail);
   network.getResponse(
     EndPoints.getRelationshipMeterQuestions,
     'GET',
@@ -21,14 +41,17 @@ const getRelationshipMeterQuestionsFromServer = async (userDetail) => {
     userDetail.token,
     (response) => {
       storage.setData('RelationshipMeterQuestions', JSON.stringify(response));
+      updateSync(userDetail, changeUserDetail, true);
     },
     (error) => {
       console.log('error', error);
+      updateSync(userDetail, changeUserDetail, true);
     },
   );
 };
 
-const getTriviaQuestionsFromServer = async (userDetail) => {
+const getTriviaQuestionsFromServer = async (userDetail, changeUserDetail) => {
+  updateSync(userDetail, changeUserDetail);
   network.getResponse(
     EndPoints.getTriviaQuestions,
     'GET',
@@ -37,14 +60,17 @@ const getTriviaQuestionsFromServer = async (userDetail) => {
     (response) => {
       // console.log(response);
       storage.setData('TriviaQuestions', JSON.stringify(response));
+      updateSync(userDetail, changeUserDetail, true);
     },
     (error) => {
       console.log('error', error);
+      updateSync(userDetail, changeUserDetail, true);
     },
   );
 };
 
 const sendResponsesToServer = async (userDetail, changeUserDetail) => {
+  updateSync(userDetail, changeUserDetail);
   let savedResponses = await storage.getData('SavedTriviaResponses');
   if (savedResponses !== null) {
     savedResponses = JSON.parse(savedResponses);
@@ -70,11 +96,13 @@ const sendResponsesToServer = async (userDetail, changeUserDetail) => {
             changeUserDetail(userDetailTemp);
             storage.setData('SavedTriviaResponses', JSON.stringify([]));
             storage.removeData(EndPoints.leaderBoard.url);
+            updateSync(userDetail, changeUserDetail, true);
             fetchLeaderBoard(userDetail, changeUserDetail);
           }
         },
         (response) => {
           console.log(response);
+          updateSync(userDetail, changeUserDetail, true);
         },
       );
     }
@@ -110,6 +138,7 @@ export const todaysDate = () => {
 
 export const fetchLeaderBoard = (userDetail, changeUserDetail) => {
   console.log('fetchLeaderBoard');
+  updateSync(userDetail, changeUserDetail);
   network.getResponse(
     EndPoints.leaderBoard,
     'GET',
@@ -120,7 +149,14 @@ export const fetchLeaderBoard = (userDetail, changeUserDetail) => {
       userDetailTemp.leaderBoard = response;
       changeUserDetail(userDetailTemp);
       console.log('changeUserDetail for LeaderBoard');
+      updateSync(userDetail, changeUserDetail, true);
     },
-    (error) => console.log('error', error),
+    (error) => {
+      console.log('error', error);
+      updateSync(userDetail, changeUserDetail, true);
+    },
+    false,
+    '',
+    true,
   );
 };

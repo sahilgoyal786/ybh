@@ -17,6 +17,7 @@ import Button from '../../components/button';
 import {Dialog} from 'react-native-simple-dialogs';
 import {Textarea, Toast} from 'native-base';
 import RNPickerSelect from 'react-native-picker-select';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 const AdviceCategory = ({route, navigation}) => {
   const [questions, setQuestions] = useState([]);
@@ -41,19 +42,13 @@ const AdviceCategory = ({route, navigation}) => {
               alignItems: 'center',
               marginTop: heightPercentageToDP(0.1),
               marginLeft: widthPercentageToDP(1),
-              borderRadius: 50,
-              borderWidth: 1,
               height: 40,
               width: 40,
             }}>
-            <Text
-              style={{
-                fontSize: 16,
-                textAlign: 'center',
-                fontFamily: 'FuturaPT-Bold',
-              }}>
-              {index + 1}
-            </Text>
+            <FontAwesome5Icon
+              name="info-circle"
+              style={{fontSize: 40, color: 'purple'}}
+            />
           </View>
           <TouchableOpacity
             onPress={() => {
@@ -61,8 +56,7 @@ const AdviceCategory = ({route, navigation}) => {
             }}>
             <Text
               style={{
-                // backgroundColor: 'pink',
-                width: widthPercentageToDP(72),
+                width: widthPercentageToDP(100) - 70,
                 fontSize: 16,
                 paddingLeft: 10,
                 paddingBottom: 10,
@@ -315,7 +309,7 @@ const AdviceCategory = ({route, navigation}) => {
                       (response) => {
                         setIsLoading(false);
                         if (response.message) {
-                          setQuestions(questions.concat(response.question));
+                          // setQuestions(questions.concat(response.question));
                           Toast.show({text: response.message});
                         }
                         setDialog(false);

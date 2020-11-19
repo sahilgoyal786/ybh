@@ -23,9 +23,7 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Header from '../../components/header';
 import LeaderBoard from '../../components/leaderBoard';
-import network from '../../components/apis/network';
-import EndPoints from '../../components/apis/endPoints';
-import userDetailContext from '../../common/userDetailContext';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import storage from '../../components/apis/storage';
 import ContentLoader from 'react-native-easy-content-loader';
 
@@ -35,6 +33,7 @@ const Trivia = ({navigation}) => {
   const [answeredQuestions, setAnsweredQuestions] = useState(null);
   const [savedResponses, setSavedResponses] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [result, setResult] = useState(0);
 
   const submitAnswer = () => {
     if (selectedAnswer === null) {
@@ -55,6 +54,11 @@ const Trivia = ({navigation}) => {
             },
           ],
     );
+    if (selectedAnswer == question.ans_id) {
+      setResult(1);
+    } else {
+      setResult(-1);
+    }
     setAnsweredQuestions(answeredQuestions.concat(question.id));
   };
 
@@ -73,6 +77,7 @@ const Trivia = ({navigation}) => {
     );
     setQuestion(questionTemp);
     setSelectedAnswer(null);
+    setResult(0);
   };
 
   const LoadQuestions = () => {
@@ -131,7 +136,6 @@ const Trivia = ({navigation}) => {
   }, [questions]);
   React.useEffect(() => {
     if (questions && answeredQuestions) {
-      presentQuestion();
       const storeAsync = async () => {
         // console.log('sett in storage answeredQuestions', answeredQuestions);
         await storage.setData(
@@ -207,19 +211,48 @@ const Trivia = ({navigation}) => {
                   })}
                   <ContainerView>
                     <MainLatestView>
+                      {result == 0 && (
+                        <Button
+                          onPress={() => {
+                            submitAnswer();
+                          }}
+                          style={{
+                            width: widthPercentageToDP(40),
+                            marginTop: heightPercentageToDP(2),
+                          }}
+                          name={'Submit'}
+                          linear
+                        />
+                      )}
+                    </MainLatestView>
+                  </ContainerView>
+                  <View style={{marginTop: 20, marginLeft: 15}}>
+                    {result == 1 && (
+                      <Text style={{color: 'green'}}>
+                        <FontAwesome5 name={'check'} />
+                        <Text> Yay! Correct</Text>
+                      </Text>
+                    )}
+                    {result == -1 && (
+                      <Text style={{color: 'red'}}>
+                        <FontAwesome5 name={'times'} />{' '}
+                        <Text> Oops! Wrong</Text>
+                      </Text>
+                    )}
+                    {result !== 0 && (
                       <Button
                         onPress={() => {
-                          submitAnswer();
+                          presentQuestion();
                         }}
                         style={{
                           width: widthPercentageToDP(40),
                           marginTop: heightPercentageToDP(2),
                         }}
-                        name={'Submit'}
+                        name={'Next Question'}
                         linear
                       />
-                    </MainLatestView>
-                  </ContainerView>
+                    )}
+                  </View>
                 </View>
               )}
             </View>

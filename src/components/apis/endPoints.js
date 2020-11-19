@@ -13,7 +13,8 @@ const EndPoints = {
   castVote: {url: 'voting-images'},
   leaderBoard: {url: 'leader-board'},
 
-  latestPhotos: {url: 'recent-images'},
+  latestPhotos: {url: 'recent-images', dont_cache: true},
+  storeLikes: {url: 'voting-images'},
   uploadImage: {url: 'images-upload'},
   myPhotos: {url: 'user/photos', dont_cache: true},
   deletePhoto: {url: 'user/photos/delete'},

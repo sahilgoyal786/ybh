@@ -1,12 +1,8 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import {Text, StyleSheet, View, ImageBackground, Image} from 'react-native';
-import {
-  menuubackground,
-  placeholderProfilePhoto,
-  sync,
-} from '../../common/images';
+import {menuubackground, placeholderProfilePhoto} from '../../common/images';
 import styled from 'styled-components/native';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -15,23 +11,28 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import storage from '../../components/apis/storage';
 import {AuthContext} from '../../common/AuthContext';
 import {SyncContent} from '../../common/helpers';
-import {todaysDate} from '../../common/helpers';
 import userDetailContext from '../../common/userDetailContext';
 import FastImage from 'react-native-fast-image';
 import {white_downarrow} from '../../common/images';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import ProgressBar from 'react-native-progress/Bar';
+import {DrawerActions} from '@react-navigation/native';
 
 const Drawer = () => {
   const navigation = useNavigation();
   const {signOut} = React.useContext(AuthContext);
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   let d = new Date();
+  const [isSyncing, setIsSyncing] = React.useState(true);
   const [lastSyncDate, setLastSyncDate] = React.useState(null);
   const [showAdviceSubmenu, setShowAdviceSubmenu] = React.useState(false);
 
-  const refreshDate = () => async () => {
-    // console.log('useEffect');
-    setLastSyncDate(await storage.getData('lastSyncDate'));
-  };
+  useEffect(() => {
+    setTimeout(() => {
+      console.log(userDetail);
+      // setLastSyncDate(storage.getData('lastSyncDate'));
+    }, 2000);
+  }, []);
 
   return (
     <View style={{backgroundColor: '#603186', flex: 1}}>
@@ -59,9 +60,59 @@ const Drawer = () => {
         </MainView>
       </ImageBackground>
       <MainThirdView>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'baseline',
+            justifyContent: 'space-between',
+            marginBottom: isSyncing ? 10 : 20,
+          }}>
+          <TouchableOpacity
+            onPress={() => SyncContent(userDetail, changeUserDetail)}>
+            <View
+              style={{
+                padding: 10,
+                borderColor: 'white',
+                borderWidth: 2,
+                alignSelf: 'flex-start',
+                // justifyContent: 'flex-start',
+                borderRadius: 5,
+                flexDirection: 'row',
+              }}>
+              <FontAwesome5Icon
+                name="sync"
+                style={{
+                  color: 'white',
+                  fontSize: 12,
+                  marginRight: 8,
+                  textAlignVertical: 'center',
+                }}
+              />
+              <Text style={{color: 'white'}}>Sync</Text>
+            </View>
+          </TouchableOpacity>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 12,
+              paddingLeft: 4,
+            }}>
+            (Last Sync: {lastSyncDate})
+          </Text>
+        </View>
+        {typeof userDetail['syncTotal'] !== 'undefined' &&
+          userDetail['syncTotal'] !== 0 && (
+            <ProgressBar
+              // progress={userDetail['synced'] / userDetail['syncTotal']}
+              progress={0.3}
+              width={200}
+              color="white"
+              style={{marginBottom: 20}}
+            />
+          )}
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('Home');
+            navigation.dispatch(DrawerActions.jumpTo('Home'));
           }}>
           <Text
             style={{
@@ -75,13 +126,13 @@ const Drawer = () => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('Thrive');
+            navigation.dispatch(DrawerActions.jumpTo('Thrive'));
           }}>
           <PageText>Thrive</PageText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('Profile');
+            navigation.dispatch(DrawerActions.jumpTo('Profile'));
           }}>
           <PageText>My Profile</PageText>
         </TouchableOpacity>
@@ -106,22 +157,26 @@ const Drawer = () => {
           <>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('MyQuestions', {
-                  Category: '',
-                  title: 'My Questions',
-                  type: 'my_questions',
-                });
+                navigation.dispatch(
+                  DrawerActions.jumpTo('MyQuestions', {
+                    Category: '',
+                    title: 'My Questions',
+                    type: 'my_questions',
+                  }),
+                );
               }}>
               <PageText>My Questions</PageText>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('MyResponses', {
-                  Category: '',
-                  title: 'My Reponses',
-                  type: 'my_responses',
-                });
+                navigation.dispatch(
+                  DrawerActions.jumpTo('MyResponses', {
+                    Category: '',
+                    title: 'My Reponses',
+                    type: 'my_responses',
+                  }),
+                );
               }}>
               <PageText>My Responses</PageText>
             </TouchableOpacity>
@@ -129,56 +184,26 @@ const Drawer = () => {
         )}
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('MyPhotos');
+            navigation.dispatch(DrawerActions.jumpTo('MyPhotos'));
           }}>
           <PageText>My Photos</PageText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('Privacy');
+            navigation.dispatch(DrawerActions.jumpTo('Privacy'));
           }}>
           <PageText>Privacy Policy</PageText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('TnC');
+            navigation.dispatch(DrawerActions.jumpTo('TnC'));
           }}>
           <PageText>Terms & Conditions</PageText>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => signOut()}>
+        <TouchableOpacity onPress={() => signOut(userDetail)}>
           <PageText>Logout</PageText>
         </TouchableOpacity>
       </MainThirdView>
-      <SyncView>
-        <TouchableOpacity
-          onPress={() => SyncContent(userDetail, changeUserDetail)}>
-          <View
-            style={{
-              padding: 10,
-              borderColor: 'white',
-              borderWidth: 2,
-              alignSelf: 'flex-start',
-              // justifyContent: 'flex-start',
-              marginBottom: 10,
-              borderRadius: 5,
-              flexDirection: 'row',
-            }}>
-            <Image
-              source={sync}
-              style={{
-                width: 16,
-                marginRight: 10,
-                height: 16,
-              }}
-              resizeMode="contain"
-            />
-            <Text style={{color: 'white'}}>Sync</Text>
-          </View>
-        </TouchableOpacity>
-        {/* <Text style={{color: 'white', fontSize: 12, paddingLeft: 4}}>
-          (Last Sync: {lastSyncDate})
-        </Text> */}
-      </SyncView>
     </View>
   );
 };
@@ -196,10 +221,7 @@ const MainThirdView = styled(View)({
 
   // color: '#FFFFFF',
 });
-const SyncView = styled(View)({
-  marginLeft: widthPercentageToDP(10),
-  marginBottom: 20,
-});
+const SyncView = styled(View)({});
 const UserNameText = styled(Text)({
   color: '#FFFFFF',
   fontWeight: 400,
