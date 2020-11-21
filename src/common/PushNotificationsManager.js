@@ -1,8 +1,12 @@
 import React from 'react';
 import {Platform, View} from 'react-native';
 import {Notifications} from 'react-native-notifications';
+import storage from '../components/apis/storage';
+import userDetailContext from './userDetailContext';
 
 export default class PushNotificationManager extends React.Component {
+  static contextType = userDetailContext;
+
   componentDidMount() {
     this.registerDevice();
     this.registerNotificationEvents();
@@ -12,6 +16,13 @@ export default class PushNotificationManager extends React.Component {
     Notifications.events().registerRemoteNotificationsRegistered((event) => {
       // TODO: Send the token to my server so it could send back push notifications...
       console.log('Device Token Received', event.deviceToken);
+      const [userDetail, changeUserDetail] = this.context;
+      if (userDetail) {
+        let userDetailTemp = userDetail;
+        userDetailTemp['device_token'] = event.deviceToken;
+        changeUserDetail(userDetailTemp);
+      }
+      storage.setData('device_token', event.deviceToken);
     });
     Notifications.events().registerRemoteNotificationsRegistrationFailed(
       (event) => {

@@ -36,6 +36,17 @@ const Login = (props) => {
   const navigation = useNavigation();
   const {signIn} = React.useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [deviceToken, setDeviceToken] = useState(null);
+
+  React.useEffect(() => {
+    const bootstrapAsync = async () => {
+      let token = await storage.getData('device_token');
+      if (token) {
+        setDeviceToken(token);
+      }
+    };
+    bootstrapAsync();
+  }, []);
 
   return (
     <KeyboardAwareScrollView
@@ -59,6 +70,9 @@ const Login = (props) => {
           validationSchema={LoginValidationSchema}
           onSubmit={(values) => {
             setIsLoading(true);
+            if (deviceToken) {
+              values['device_token'] = deviceToken;
+            }
             network.getResponse(
               EndPoints.login,
               'POST',

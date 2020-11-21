@@ -8,7 +8,7 @@ const ImageWithBorder = ({src, height, width}) => {
       <FastImage
         source={src}
         style={{height: parseInt(height), width: parseInt(width)}}
-        resizeMode={FastImage.resizeMode.center}
+        resizeMode={FastImage.resizeMode.cover}
         borderRadius={5}
       />
       <View
