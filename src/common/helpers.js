@@ -13,10 +13,10 @@ export const SyncContent = async (userDetail, changeUserDetail) => {
   userDetailTemp['synced'] = 0;
   changeUserDetail(userDetailTemp);
 
-  getRelationshipMeterQuestionsFromServer(userDetail, changeUserDetail);
-  getTriviaQuestionsFromServer(userDetail, changeUserDetail);
-  sendResponsesToServer(userDetail, changeUserDetail);
-  fetchLeaderBoard(userDetail, changeUserDetail);
+  await getRelationshipMeterQuestionsFromServer(userDetail, changeUserDetail);
+  await getTriviaQuestionsFromServer(userDetail, changeUserDetail);
+  await sendResponsesToServer(userDetail, changeUserDetail);
+  await fetchLeaderBoard(userDetail, changeUserDetail);
 };
 
 const updateSync = (userDetail, changeUserDetail, completed = false) => {
@@ -28,6 +28,7 @@ const updateSync = (userDetail, changeUserDetail, completed = false) => {
     userDetailTemp['synced'] += 10;
     changeUserDetail(userDetailTemp);
   }
+  console.log(userDetailTemp['synced'] + '/' + userDetailTemp['syncTotal']);
 };
 const getRelationshipMeterQuestionsFromServer = async (
   userDetail,
@@ -70,11 +71,11 @@ const getTriviaQuestionsFromServer = async (userDetail, changeUserDetail) => {
 };
 
 const sendResponsesToServer = async (userDetail, changeUserDetail) => {
-  updateSync(userDetail, changeUserDetail);
   let savedResponses = await storage.getData('SavedTriviaResponses');
   if (savedResponses !== null) {
     savedResponses = JSON.parse(savedResponses);
     if (savedResponses.length) {
+      updateSync(userDetail, changeUserDetail);
       let ques_id_values = [];
       let ans_id_values = [];
       for (let index = 0; index < savedResponses.length; index++) {

@@ -19,6 +19,8 @@ const EndPoints = {
   myPhotos: {url: 'user/photos', dont_cache: true},
   deletePhoto: {url: 'user/photos/delete'},
 
+  tokenUpdate: {url: 'user/device-token/update'},
+
   blogs: {url: 'blogs', cache_age: 48},
 
   getTriviaQuestions: {url: 'questions/trivia', dont_cache: true},

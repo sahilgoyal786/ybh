@@ -18,12 +18,11 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import ProgressBar from 'react-native-progress/Bar';
 import {DrawerActions} from '@react-navigation/native';
 
-const Drawer = () => {
-  const navigation = useNavigation();
+const Drawer = ({navigation}) => {
   const {signOut} = React.useContext(AuthContext);
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   let d = new Date();
-  const [isSyncing, setIsSyncing] = React.useState(true);
+  const [isSyncing, setIsSyncing] = React.useState(false);
   const [lastSyncDate, setLastSyncDate] = React.useState(null);
   const [showAdviceSubmenu, setShowAdviceSubmenu] = React.useState(false);
 
@@ -40,24 +39,29 @@ const Drawer = () => {
         source={menuubackground}
         style={{width: '100%'}}
         resizeMode="cover">
-        <MainView>
-          <View>
-            <FirstView>
-              <ImagesView
-                source={
-                  userDetail && userDetail.user.avatar
-                    ? {uri: userDetail.user.avatar}
-                    : placeholderProfilePhoto
-                }
-              />
-            </FirstView>
-          </View>
-          <ThirdView>
-            <UserNameText>
-              {userDetail && userDetail.user.username}
-            </UserNameText>
-          </ThirdView>
-        </MainView>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.dispatch(DrawerActions.jumpTo('Profile'));
+          }}>
+          <MainView>
+            <View>
+              <FirstView>
+                <ImagesView
+                  source={
+                    userDetail && userDetail.user.avatar
+                      ? {uri: userDetail.user.avatar}
+                      : placeholderProfilePhoto
+                  }
+                />
+              </FirstView>
+            </View>
+            <ThirdView>
+              <UserNameText>
+                {userDetail && userDetail.user.username}
+              </UserNameText>
+            </ThirdView>
+          </MainView>
+        </TouchableOpacity>
       </ImageBackground>
       <MainThirdView>
         <View
@@ -65,10 +69,13 @@ const Drawer = () => {
             flexDirection: 'row',
             alignItems: 'baseline',
             justifyContent: 'space-between',
-            marginBottom: isSyncing ? 10 : 20,
+            marginBottom: 30,
           }}>
           <TouchableOpacity
-            onPress={() => SyncContent(userDetail, changeUserDetail)}>
+            onPress={() => {
+              setIsSyncing(true);
+              SyncContent(userDetail, changeUserDetail);
+            }}>
             <View
               style={{
                 padding: 10,
@@ -91,25 +98,24 @@ const Drawer = () => {
               <Text style={{color: 'white'}}>Sync</Text>
             </View>
           </TouchableOpacity>
-          <Text
+          {/* <Text
             style={{
               color: 'white',
               fontSize: 12,
               paddingLeft: 4,
             }}>
             (Last Sync: {lastSyncDate})
-          </Text>
+          </Text> */}
         </View>
-        {typeof userDetail['syncTotal'] !== 'undefined' &&
-          userDetail['syncTotal'] !== 0 && (
-            <ProgressBar
-              // progress={userDetail['synced'] / userDetail['syncTotal']}
-              progress={0.3}
-              width={200}
-              color="white"
-              style={{marginBottom: 20}}
-            />
-          )}
+        {false && isSyncing && (
+          <ProgressBar
+            // progress={userDetail['synced'] / userDetail['syncTotal']}
+            progress={0.3}
+            width={200}
+            color="white"
+            style={{marginBottom: 20}}
+          />
+        )}
         <TouchableOpacity
           onPress={() => {
             navigation.dispatch(DrawerActions.jumpTo('Home'));

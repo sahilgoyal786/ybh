@@ -1,6 +1,8 @@
 import React from 'react';
 import {Platform, View} from 'react-native';
 import {Notifications} from 'react-native-notifications';
+import EndPoints from '../components/apis/endPoints';
+import network from '../components/apis/network';
 import storage from '../components/apis/storage';
 import userDetailContext from './userDetailContext';
 
@@ -21,6 +23,18 @@ export default class PushNotificationManager extends React.Component {
         let userDetailTemp = userDetail;
         userDetailTemp['device_token'] = event.deviceToken;
         changeUserDetail(userDetailTemp);
+        network.getResponse(
+          EndPoints.tokenUpdate,
+          'POST',
+          {device_token: event.deviceToken},
+          userDetail.token,
+          (response) => {
+            console.log(response);
+          },
+          (response) => {
+            console.log(response);
+          },
+        );
       }
       storage.setData('device_token', event.deviceToken);
     });
