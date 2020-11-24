@@ -1,4 +1,5 @@
 import React, {Component, useEffect} from 'react';
+import {Toast} from 'native-base';
 import {Text, StyleSheet, View, ImageBackground, Image} from 'react-native';
 import {menuubackground, placeholderProfilePhoto} from '../../common/images';
 import styled from 'styled-components/native';
@@ -10,7 +11,13 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import storage from '../../components/apis/storage';
 import {AuthContext} from '../../common/AuthContext';
-import {SyncContent} from '../../common/helpers';
+import {
+  todaysDate,
+  SyncContent,
+  getRelationshipMeterQuestionsFromServer,
+  getTriviaQuestionsFromServer,
+  sendResponsesToServer,
+} from '../../common/helpers';
 import userDetailContext from '../../common/userDetailContext';
 import FastImage from 'react-native-fast-image';
 import {white_downarrow} from '../../common/images';
@@ -20,6 +27,8 @@ import {DrawerActions} from '@react-navigation/native';
 
 const Drawer = ({navigation}) => {
   const {signOut} = React.useContext(AuthContext);
+  const [syncTotal, setSyncTotal] = React.useState(0);
+  const [synced, setSynced] = React.useState(0);
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   let d = new Date();
   const [isSyncing, setIsSyncing] = React.useState(false);
@@ -27,12 +36,58 @@ const Drawer = ({navigation}) => {
   const [showAdviceSubmenu, setShowAdviceSubmenu] = React.useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      console.log(userDetail);
-      // setLastSyncDate(storage.getData('lastSyncDate'));
-    }, 2000);
-  }, []);
+    console.log('test--');
+  }, [userDetail]);
+  const ontest = () => {
+    console.log('userDetail--', userDetail);
+  };
+  const updateSync = (userDetailBuffer, completed = false) => {
+    let userDetailTemp = userDetailBuffer;
+    if (!completed) {
+      changeUserDetail(userDetailTemp);
+    } else {
+      userDetailTemp['synced'] += 10;
+      setSynced(userDetailTemp['synced']);
+      changeUserDetail(userDetailTemp);
+    }
+    console.log(userDetailTemp['synced'] + '/' + userDetailTemp['syncTotal']);
+  };
+  const onSynce = async () => {
+    let userDetailTemp = userDetail;
+    userDetailTemp['syncTotal'] = 30;
+    userDetailTemp['synced'] = 0;
+    changeUserDetail(userDetailTemp);
 
+    Toast.show({text: 'Syncing...'});
+    setIsSyncing(true);
+
+    await storage.setData('lastSyncDate', todaysDate());
+
+    updateSync(userDetail, false);
+    await getRelationshipMeterQuestionsFromServer(userDetail, changeUserDetail)
+      .then((status) => {
+        updateSync(userDetail, true);
+      })
+      .catch((err) => {
+        updateSync(userDetail, true);
+      });
+    updateSync(userDetail, false);
+    await getTriviaQuestionsFromServer(userDetail, changeUserDetail)
+      .then((status) => {
+        updateSync(userDetail, true);
+      })
+      .catch((err) => {
+        updateSync(userDetail, true);
+      });
+    updateSync(userDetail, false);
+    await sendResponsesToServer(userDetail, changeUserDetail)
+      .then((status) => {
+        updateSync(userDetail, true);
+      })
+      .catch((err) => {
+        updateSync(userDetail, true);
+      });
+  };
   return (
     <View style={{backgroundColor: '#603186', flex: 1}}>
       <ImageBackground
@@ -72,9 +127,10 @@ const Drawer = ({navigation}) => {
             marginBottom: 30,
           }}>
           <TouchableOpacity
-            onPress={() => {
-              setIsSyncing(true);
-              SyncContent(userDetail, changeUserDetail);
+            onPress={async () => {
+              await onSynce();
+              Toast.show({text: 'Sync completed'});
+              setTimeout(() => setIsSyncing(false), 1000);
             }}>
             <View
               style={{
@@ -107,10 +163,15 @@ const Drawer = ({navigation}) => {
             (Last Sync: {lastSyncDate})
           </Text> */}
         </View>
-        {false && isSyncing && (
+        {isSyncing && (
           <ProgressBar
-            // progress={userDetail['synced'] / userDetail['syncTotal']}
-            progress={0.3}
+            progress={
+              isNaN(userDetail['synced']) ||
+              isNaN(userDetail['syncTotal']) ||
+              userDetail['syncTotal'] == 0
+                ? 0
+                : userDetail['synced'] / userDetail['syncTotal']
+            }
             width={200}
             color="white"
             style={{marginBottom: 20}}

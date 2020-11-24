@@ -90,7 +90,7 @@ const Gallery = ({route, navigation}) => {
     try {
       network.getResponse(
         EndPoints.latestPhotos,
-        'GET',
+        'POST',
         {page: page},
         userDetail.token,
         (response) => {
@@ -241,7 +241,7 @@ const Gallery = ({route, navigation}) => {
                               styles.votePercentage,
                               {width: 60, textAlign: 'right'},
                             ]}>
-                            {(likes[1] / total) * 100}%
+                            {Math.floor((likes[1] / total) * 100)}%
                           </Text>
                         )}
                         <Text
@@ -274,7 +274,7 @@ const Gallery = ({route, navigation}) => {
                               styles.votePercentage,
                               {width: 60, textAlign: 'left'},
                             ]}>
-                            {(likes[0] / total) * 100}%
+                            {Math.floor((likes[0] / total) * 100)}%
                           </Text>
                         )}
                       </>
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
   voteButton: {
     textTransform: 'uppercase',
     paddingVertical: 10,
-    width: widthPercentageToDP(33),
+    width: widthPercentageToDP(30),
     textAlign: 'center',
     borderWidth: 1,
     color: 'black',
