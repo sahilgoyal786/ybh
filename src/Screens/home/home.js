@@ -246,8 +246,9 @@ const Home = () => {
                             color: 'white',
                             height: 30,
                             lineHeight: 30,
+                            paddingRight: 10,
                           }}>
-                          Image of the Week{'   '}
+                          Image of the Week
                         </Text>
                       </LinearGradient>
                     </View>
