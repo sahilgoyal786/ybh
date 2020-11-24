@@ -173,9 +173,9 @@ const Home = () => {
       console.log('exception', exception);
     }
     setLeaderBoard(<LeaderBoard />);
-    setTimeout(() => {
-      setLeaderBoard(<LeaderBoard />);
-    }, 1000);
+    // setTimeout(() => {
+    //   setLeaderBoard(<LeaderBoard />);
+    // }, 1000);
   }, []);
 
   return (
@@ -320,7 +320,7 @@ const Home = () => {
                 padding: 0,
                 marginBottom: 10,
               }}></Image>
-            {leaderBoard}
+            <LeaderBoard/>
           </View>
         </View>
         <LastImage>

@@ -1,25 +1,34 @@
-import React, {Component, useEffect} from 'react';
-import {Text, StyleSheet, View, ImageBackground, Image} from 'react-native';
-import {menuubackground, placeholderProfilePhoto} from '../../common/images';
+import React, { Component, useEffect } from 'react';
+import { Toast } from 'native-base';
+import { Text, StyleSheet, View, ImageBackground, Image } from 'react-native';
+import { menuubackground, placeholderProfilePhoto } from '../../common/images';
 import styled from 'styled-components/native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import storage from '../../components/apis/storage';
-import {AuthContext} from '../../common/AuthContext';
-import {SyncContent} from '../../common/helpers';
+import { AuthContext } from '../../common/AuthContext';
+import {
+  todaysDate,
+  SyncContent,
+  getRelationshipMeterQuestionsFromServer,
+  getTriviaQuestionsFromServer,
+  sendResponsesToServer
+} from '../../common/helpers';
 import userDetailContext from '../../common/userDetailContext';
 import FastImage from 'react-native-fast-image';
-import {white_downarrow} from '../../common/images';
+import { white_downarrow } from '../../common/images';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import ProgressBar from 'react-native-progress/Bar';
-import {DrawerActions} from '@react-navigation/native';
+import { DrawerActions } from '@react-navigation/native';
 
-const Drawer = ({navigation}) => {
-  const {signOut} = React.useContext(AuthContext);
+const Drawer = ({ navigation }) => {
+  const { signOut } = React.useContext(AuthContext);
+  const [syncTotal, setSyncTotal] = React.useState(0);
+  const [synced, setSynced] = React.useState(0);
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   let d = new Date();
   const [isSyncing, setIsSyncing] = React.useState(false);
@@ -27,17 +36,61 @@ const Drawer = ({navigation}) => {
   const [showAdviceSubmenu, setShowAdviceSubmenu] = React.useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      console.log(userDetail);
-      // setLastSyncDate(storage.getData('lastSyncDate'));
-    }, 2000);
-  }, []);
+    console.log('test--')
+  }, [userDetail]);
+  const ontest = () => {
+    console.log("userDetail--", userDetail);
+  }
+  const updateSync = (userDetailBuffer, completed = false) => {
+    let userDetailTemp = userDetailBuffer;
+    if (!completed) {
+      changeUserDetail(userDetailTemp);
+    } else {
+      userDetailTemp['synced'] += 10;
+      setSynced(userDetailTemp['synced']);
+      changeUserDetail(userDetailTemp);
+    }
+    console.log(userDetailTemp['synced'] + '/' + userDetailTemp['syncTotal']);
+  };
+  const onSynce = async () => {
+    Toast.show({ text: 'Syncing...' });
 
+    await storage.setData('lastSyncDate', todaysDate());
+
+    let userDetailTemp = userDetail;
+    userDetailTemp['syncTotal'] = 30;
+    userDetailTemp['synced'] = 0;
+    changeUserDetail(userDetailTemp);
+    updateSync(userDetail, false);
+    await getRelationshipMeterQuestionsFromServer(userDetail, changeUserDetail)
+      .then((status) => {
+        updateSync(userDetail, true);
+      })
+      .catch((err) => {
+        updateSync(userDetail, true);
+      })
+    updateSync(userDetail, false);
+    await getTriviaQuestionsFromServer(userDetail, changeUserDetail)
+      .then((status) => {
+        updateSync(userDetail, true);
+      })
+      .catch((err) => {
+        updateSync(userDetail, true);
+      })
+    updateSync(userDetail, false);
+    await sendResponsesToServer(userDetail, changeUserDetail)
+      .then((status) => {
+        updateSync(userDetail, true);
+      })
+      .catch((err) => {
+        updateSync(userDetail, true);
+      })
+ }
   return (
-    <View style={{backgroundColor: '#603186', flex: 1}}>
+    <View style={{ backgroundColor: '#603186', flex: 1 }}>
       <ImageBackground
         source={menuubackground}
-        style={{width: '100%'}}
+        style={{ width: '100%' }}
         resizeMode="cover">
         <TouchableOpacity
           onPress={() => {
@@ -49,7 +102,7 @@ const Drawer = ({navigation}) => {
                 <ImagesView
                   source={
                     userDetail && userDetail.user.avatar
-                      ? {uri: userDetail.user.avatar}
+                      ? { uri: userDetail.user.avatar }
                       : placeholderProfilePhoto
                   }
                 />
@@ -72,9 +125,9 @@ const Drawer = ({navigation}) => {
             marginBottom: 30,
           }}>
           <TouchableOpacity
-            onPress={() => {
+            onPress={async () => {
               setIsSyncing(true);
-              SyncContent(userDetail, changeUserDetail);
+              await onSynce();
             }}>
             <View
               style={{
@@ -95,7 +148,7 @@ const Drawer = ({navigation}) => {
                   textAlignVertical: 'center',
                 }}
               />
-              <Text style={{color: 'white'}}>Sync</Text>
+              <Text style={{ color: 'white' }}>Sync</Text>
             </View>
           </TouchableOpacity>
           {/* <Text
@@ -107,13 +160,13 @@ const Drawer = ({navigation}) => {
             (Last Sync: {lastSyncDate})
           </Text> */}
         </View>
-        {false && isSyncing && (
+        {isSyncing && (
           <ProgressBar
-            // progress={userDetail['synced'] / userDetail['syncTotal']}
-            progress={0.3}
+            progress={isNaN(userDetail['synced']) || isNaN(userDetail['syncTotal']) || userDetail['syncTotal'] == 0 ? 0 : userDetail['synced'] / userDetail['syncTotal']}
+            // progress={0.3}
             width={200}
             color="white"
-            style={{marginBottom: 20}}
+            style={{ marginBottom: 20 }}
           />
         )}
         <TouchableOpacity
@@ -155,7 +208,7 @@ const Drawer = ({navigation}) => {
               position: 'absolute',
               right: 10,
               bottom: 0,
-              transform: [{rotateX: showAdviceSubmenu ? '180deg' : '0deg'}],
+              transform: [{ rotateX: showAdviceSubmenu ? '180deg' : '0deg' }],
             }}
           />
         </TouchableOpacity>
