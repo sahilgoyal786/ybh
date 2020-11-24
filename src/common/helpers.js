@@ -147,26 +147,27 @@ export const fetchLeaderBoard = (userDetail, changeUserDetail) => {
   console.log('fetchLeaderBoard');
   updateSync(userDetail, changeUserDetail);
   return new Promise((resolve, reject) => {
-  network.getResponse(
-    EndPoints.leaderBoard,
-    'GET',
-    {},
-    userDetail.token || '',
-    (response) => {
-      let userDetailTemp = userDetail;
-      userDetailTemp.leaderBoard = response;
-      changeUserDetail(userDetailTemp);
-      console.log('changeUserDetail for LeaderBoard');
-      updateSync(userDetail, changeUserDetail, true);
-      resolve(true);
-    },
-    (error) => {
-      console.log('error', error);
-      updateSync(userDetail, changeUserDetail, true);
-      resolve(false);
-    },
-    false,
-    '',
-    true,
-  );})
+    network.getResponse(
+      EndPoints.leaderBoard,
+      'GET',
+      {},
+      userDetail.token || '',
+      (response) => {
+        let userDetailTemp = userDetail;
+        userDetailTemp.leaderBoard = response;
+        changeUserDetail(userDetailTemp);
+        console.log('changeUserDetail for LeaderBoard');
+        updateSync(userDetail, changeUserDetail, true);
+        resolve(true);
+      },
+      (error) => {
+        console.log('error', error);
+        updateSync(userDetail, changeUserDetail, true);
+        resolve(false);
+      },
+      false,
+      '',
+      true,
+    );
+  });
 };
