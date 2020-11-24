@@ -40,6 +40,7 @@ const Home = () => {
   const [latestPhotos, setLatestPhotos] = React.useState([]);
   const [latestPhotosLoaded, setLatestPhotosLoaded] = React.useState(false);
   const [latestPhotosArray, setLatestPhotosArray] = React.useState([]);
+  const [leaderBoardLoading, setLeaderBoardLoading] = React.useState(false);
   const [latestArticle, setLatestArticle] = React.useState(null);
   const navigation = useNavigation();
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
@@ -167,7 +168,13 @@ const Home = () => {
         },
         (error) => console.log('error', error),
       );
-      fetchLeaderBoard(userDetail, changeUserDetail);
+      fetchLeaderBoard(userDetail, changeUserDetail)
+        .then((status) => {
+          setLeaderBoardLoading(true);
+        })
+        .catch((err) => {
+          setLeaderBoardLoading(false);
+        });
     } catch (exception) {
       console.log('exception', exception);
     }
@@ -315,7 +322,7 @@ const Home = () => {
                 padding: 0,
                 marginBottom: 10,
               }}></Image>
-            <LeaderBoard userDetailTemp={userDetail} />
+            {leaderBoardLoading && <LeaderBoard userDetailTemp={userDetail} />}
           </View>
         </View>
         <LastImage>
