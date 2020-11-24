@@ -1,10 +1,10 @@
-import { Toast } from 'native-base';
+import {Toast} from 'native-base';
 import storage from '../components/apis/storage';
 import network from '../components/apis/network';
 import EndPoints from '../components/apis/endPoints';
 
 export const SyncContent = async (userDetail, changeUserDetail) => {
-  Toast.show({ text: 'Syncing...' });
+  Toast.show({text: 'Syncing...'});
 
   await storage.setData('lastSyncDate', todaysDate());
 
@@ -49,11 +49,13 @@ export const getRelationshipMeterQuestionsFromServer = async (
         updateSync(true);
       },
     );
-  })
-
+  });
 };
 
-export const getTriviaQuestionsFromServer = async (userDetail, changeUserDetail) => {
+export const getTriviaQuestionsFromServer = async (
+  userDetail,
+  changeUserDetail,
+) => {
   return new Promise((resolve, reject) => {
     network.getResponse(
       EndPoints.getTriviaQuestions,
@@ -70,7 +72,7 @@ export const getTriviaQuestionsFromServer = async (userDetail, changeUserDetail)
         resolve(true);
       },
     );
-  })
+  });
 };
 
 export const sendResponsesToServer = async (userDetail, changeUserDetail) => {
@@ -81,16 +83,16 @@ export const sendResponsesToServer = async (userDetail, changeUserDetail) => {
       let ques_id_values = [];
       let ans_id_values = [];
       for (let index = 0; index < savedResponses.length; index++) {
-        const { ques_id, ans_id } = savedResponses[index];
+        const {ques_id, ans_id} = savedResponses[index];
         ques_id_values.push(ques_id);
         ans_id_values.push(ans_id);
       }
-      console.log({ ques_id: ques_id_values, ans_id: ans_id_values });
+      console.log({ques_id: ques_id_values, ans_id: ans_id_values});
       return new Promise((resolve, reject) => {
         network.getResponse(
           EndPoints.postTriviaAnswers,
           'POST',
-          { ques_id: ques_id_values, ans_id: ans_id_values },
+          {ques_id: ques_id_values, ans_id: ans_id_values},
           userDetail.token,
           (response) => {
             console.log(response);
@@ -107,10 +109,9 @@ export const sendResponsesToServer = async (userDetail, changeUserDetail) => {
           (response) => {
             console.log(response);
             resolve(true);
-           
           },
         );
-      })
+      });
     }
   }
 };

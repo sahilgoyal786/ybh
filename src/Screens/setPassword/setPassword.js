@@ -119,6 +119,7 @@ const SetPassword = ({route, navigation}) => {
                       endpoints.verifyOTP,
                       'POST',
                       {otp: text, email: route.params.email},
+                      {},
                       (response) => {
                         setVerified(true);
                         // console.log('verified', verified);
@@ -182,7 +183,7 @@ const SetPassword = ({route, navigation}) => {
 
               <Button
                 style={styles.loginbuttin}
-                name={'Send Email'}
+                name={'Submit'}
                 onPress={handleSubmit}
                 linear
               />

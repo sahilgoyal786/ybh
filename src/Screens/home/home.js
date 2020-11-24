@@ -40,7 +40,6 @@ const Home = () => {
   const [latestPhotos, setLatestPhotos] = React.useState([]);
   const [latestPhotosLoaded, setLatestPhotosLoaded] = React.useState(false);
   const [latestPhotosArray, setLatestPhotosArray] = React.useState([]);
-  const [leaderBoard, setLeaderBoard] = React.useState(<></>);
   const [latestArticle, setLatestArticle] = React.useState(null);
   const navigation = useNavigation();
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
@@ -172,10 +171,6 @@ const Home = () => {
     } catch (exception) {
       console.log('exception', exception);
     }
-    setLeaderBoard(<LeaderBoard />);
-    // setTimeout(() => {
-    //   setLeaderBoard(<LeaderBoard />);
-    // }, 1000);
   }, []);
 
   return (
@@ -320,7 +315,7 @@ const Home = () => {
                 padding: 0,
                 marginBottom: 10,
               }}></Image>
-            <LeaderBoard userDetailTemp = {userDetail}/>
+            <LeaderBoard userDetailTemp={userDetail} />
           </View>
         </View>
         <LastImage>
