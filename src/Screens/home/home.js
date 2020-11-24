@@ -320,7 +320,7 @@ const Home = () => {
                 padding: 0,
                 marginBottom: 10,
               }}></Image>
-            <LeaderBoard/>
+            <LeaderBoard userDetailTemp = {userDetail}/>
           </View>
         </View>
         <LastImage>
