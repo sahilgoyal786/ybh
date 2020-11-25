@@ -17,6 +17,7 @@ import FastImage from 'react-native-fast-image';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {ConfirmDialog} from 'react-native-simple-dialogs';
 import {Toast} from 'native-base';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 const MyPhotos = () => {
   const [currentImageId, setcurrentImageId] = React.useState(0);
@@ -39,6 +40,22 @@ const MyPhotos = () => {
             setShowModal(true);
             setcurrentImageIndex(index);
           }}>
+          {item.is_approved == 0 && (
+            <Text
+              style={{
+                position: 'absolute',
+                right: 0,
+                zIndex: 10,
+                backgroundColor: 'white',
+                padding: 4,
+                marginRight: 4,
+                marginTop: 10,
+                color: '#777777',
+                fontSize: 10,
+              }}>
+              <FontAwesome5Icon name="clock" /> Pending Approval
+            </Text>
+          )}
           <ImagesView source={{uri: item.url}} borderRadius={3} />
         </TouchableOpacity>
         <View
