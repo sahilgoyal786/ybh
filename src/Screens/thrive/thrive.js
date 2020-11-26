@@ -120,7 +120,7 @@ const Thrive = ({route, navigation}) => {
       }
       ListHeaderComponent={
         <View style={{backgroundColor: 'transparent'}}>
-          <Header title="Thrive" />
+          <Header title="Thrive" backButton="true"/>
         </View>
       }
       ListFooterComponentStyle={{

@@ -193,13 +193,13 @@ const Drawer = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.dispatch(DrawerActions.jumpTo('Thrive'));
+            navigation.navigate('Thrive')
           }}>
           <PageText>Thrive</PageText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.dispatch(DrawerActions.jumpTo('Profile'));
+            navigation.navigate('Profile')
           }}>
           <PageText>My Profile</PageText>
         </TouchableOpacity>
@@ -224,26 +224,22 @@ const Drawer = ({ navigation }) => {
           <>
             <TouchableOpacity
               onPress={() => {
-                navigation.dispatch(
-                  DrawerActions.jumpTo('MyQuestions', {
-                    Category: '',
-                    title: 'My Questions',
-                    type: 'my_questions',
-                  }),
-                );
+                navigation.navigate('MyQuestions', {
+                  Category: '',
+                  title: 'My Questions',
+                  type: 'my_questions',
+                })
               }}>
               <PageText>My Questions</PageText>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={() => {
-                navigation.dispatch(
-                  DrawerActions.jumpTo('MyResponses', {
-                    Category: '',
-                    title: 'My Reponses',
-                    type: 'my_responses',
-                  }),
-                );
+                navigation.navigate('MyResponses', {
+                  Category: '',
+                  title: 'My Questions',
+                  type: 'my_questions',
+                })
               }}>
               <PageText>My Responses</PageText>
             </TouchableOpacity>
@@ -251,19 +247,19 @@ const Drawer = ({ navigation }) => {
         )}
         <TouchableOpacity
           onPress={() => {
-            navigation.dispatch(DrawerActions.jumpTo('MyPhotos'));
+            navigation.navigate('MyPhotos')
           }}>
           <PageText>My Photos</PageText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.dispatch(DrawerActions.jumpTo('Privacy'));
+            navigation.navigate('Privacy')
           }}>
           <PageText>Privacy Policy</PageText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.dispatch(DrawerActions.jumpTo('TnC'));
+            navigation.navigate('TnC')
           }}>
           <PageText>Terms & Conditions</PageText>
         </TouchableOpacity>
