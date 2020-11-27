@@ -51,7 +51,8 @@ import EndPoints from '../components/apis/endPoints';
 import NetInfo from '@react-native-community/netinfo';
 
 import PushNotificationManager from '../common/PushNotificationsManager';
-
+import { Provider } from 'react-redux';
+import { getStore } from '../common/reduxStore';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -255,39 +256,41 @@ function Routes() {
   React.useEffect(() => console.log('userDetail from routes', userDetail), [
     userDetail,
   ]);
-
+  const myStore = getStore();
   return (
     <Root>
-      <AuthContext.Provider value={authContext}>
-        <userDetailContext.Provider value={[userDetail, changeUserDetail]}>
-          <PushNotificationManager>
-            <NavigationContainer
-              theme={{
-                ...DefaultTheme,
-                colors: { ...DefaultTheme.colors, background: 'white' },
-              }}>
-              {state.isLoading ? (
-                <Stack.Navigator headerMode="none">
-                  <Stack.Screen name="Loading" component={Loading} />
-                </Stack.Navigator>
-              ) : state.userToken == null ? (
-                <Stack.Navigator headerMode="none">
-                  <Stack.Screen name="Welcome" component={Welcome} />
-                  <Stack.Screen name="Login" component={Login} />
-                  <Stack.Screen name="Signup" component={Signup} />
-                  <Stack.Screen name="Forgot" component={Forgot} />
-                  <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
-                  <Stack.Screen name="SetPassword" component={SetPassword} />
-                </Stack.Navigator>
-              ) : (
-                    <Stack.Navigator headerMode="none">
-                      <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
-                    </Stack.Navigator>
-                  )}
-            </NavigationContainer>
-          </PushNotificationManager>
-        </userDetailContext.Provider>
-      </AuthContext.Provider>
+      <Provider store={myStore}>
+        <AuthContext.Provider value={authContext}>
+          <userDetailContext.Provider value={[userDetail, changeUserDetail]}>
+            <PushNotificationManager>
+              <NavigationContainer
+                theme={{
+                  ...DefaultTheme,
+                  colors: { ...DefaultTheme.colors, background: 'white' },
+                }}>
+                {state.isLoading ? (
+                  <Stack.Navigator headerMode="none">
+                    <Stack.Screen name="Loading" component={Loading} />
+                  </Stack.Navigator>
+                ) : state.userToken == null ? (
+                  <Stack.Navigator headerMode="none">
+                    <Stack.Screen name="Welcome" component={Welcome} />
+                    <Stack.Screen name="Login" component={Login} />
+                    <Stack.Screen name="Signup" component={Signup} />
+                    <Stack.Screen name="Forgot" component={Forgot} />
+                    <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
+                    <Stack.Screen name="SetPassword" component={SetPassword} />
+                  </Stack.Navigator>
+                ) : (
+                      <Stack.Navigator headerMode="none">
+                        <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
+                      </Stack.Navigator>
+                    )}
+              </NavigationContainer>
+            </PushNotificationManager>
+          </userDetailContext.Provider>
+        </AuthContext.Provider>
+      </Provider>
     </Root>
   );
 }
