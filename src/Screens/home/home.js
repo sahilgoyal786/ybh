@@ -139,7 +139,7 @@ const Home = () => {
                   <ViewMore>
                     <TextMore
                       onPress={() => {
-                        // console.log(latestPhotosArray);
+                         //console.log(latestPhotosArray);
                         navigation.navigate('LatestPhotos', {
                           latestPhotosArray,
                         });

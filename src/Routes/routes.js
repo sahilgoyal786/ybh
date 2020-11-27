@@ -67,7 +67,8 @@ function HomeComponent() {
       <Stack.Screen name="TnC" component={TnC} />
       <Stack.Screen name="Privacy" component={Privacy} />
       <Stack.Screen name="Profile" component={Profile} />
-    </Stack.Navigator>
+      <Stack.Screen name="LatestPhotos" component={LatestPhotos} />
+     </Stack.Navigator>
   );
 }
 function AdviceComponent() {
@@ -92,8 +93,7 @@ function ShareImageComponent() {
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="PhotoDetail" component={PhotoDetail} />
       <Stack.Screen name="PhotoViewing" component={PhotoViewing} />
-      <Stack.Screen name="LatestPhotos" component={LatestPhotos} />
-    </Stack.Navigator>
+     </Stack.Navigator>
   );
 }
 
