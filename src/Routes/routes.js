@@ -68,6 +68,7 @@ function HomeComponent() {
       <Stack.Screen name="Privacy" component={Privacy} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="LatestPhotos" component={LatestPhotos} />
+      <Stack.Screen name="Gallery" component={Gallery} />
      </Stack.Navigator>
   );
 }
@@ -88,7 +89,6 @@ function ShareImageComponent() {
   return (
     <Stack.Navigator headerMode="none">
       <Tab.Screen name="ShareImage" component={ShareImage} />
-      <Stack.Screen name="Gallery" component={Gallery} />
       <Stack.Screen name="MyPhotos" component={MyPhotos} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="PhotoDetail" component={PhotoDetail} />

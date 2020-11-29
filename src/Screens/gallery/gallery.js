@@ -28,6 +28,7 @@ import {Toast} from 'native-base';
 
 const Gallery = ({route, navigation}) => {
   const latestPhotosURLS = route.params.latestPhotosURLS;
+  const type = route.params.type;
   const d = new Date();
   const [Value, setValue] = useState(d.getMonth() + '');
   const [currentImageIndex, setcurrentImageIndex] = React.useState(0);
@@ -91,7 +92,7 @@ const Gallery = ({route, navigation}) => {
       network.getResponse(
         EndPoints.latestPhotos,
         'POST',
-        {page: page},
+        {page: page, filter: type},
         userDetail.token,
         (response) => {
           // console.log('response.data', response.data);
@@ -226,7 +227,7 @@ const Gallery = ({route, navigation}) => {
               renderImage={(props) => <FastImage {...props} />}
               renderIndicator={() => {}}
               renderFooter={(index) => {
-                let likes = photos[index]['likes'].split('-');
+                let likes = photos[index].likes.split('-');
                 console.log(photos[index]);
                 let total = parseInt(likes[0]) + parseInt(likes[1]);
                 return (
@@ -247,7 +248,7 @@ const Gallery = ({route, navigation}) => {
                         <Text
                           onPress={() => {
                             setLike(1);
-                            storeLike(photos[index]['url'], 0, index);
+                            storeLike(photos[index].url, 0, index);
                           }}
                           style={[
                             styles.voteButton,
@@ -259,7 +260,7 @@ const Gallery = ({route, navigation}) => {
                         <Text
                           onPress={() => {
                             setLike(2);
-                            storeLike(photos[index]['url'], 1, index);
+                            storeLike(photos[index].url, 1, index);
                           }}
                           style={[
                             styles.voteButton,
