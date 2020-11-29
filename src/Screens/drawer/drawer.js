@@ -88,6 +88,14 @@ const Drawer = ({ navigation }) => {
         updateSync(userDetail, true);
       });
   };
+  const onSignout = () => {
+    let userDetailTemp = userDetail;
+    delete userDetailTemp['token'];
+    storage.setData('user', JSON.stringify(userDetailTemp));
+    storage.removeData('access_token');
+    changeUserDetail(null);
+    signOut();
+  }
   return (
     <View style={{ backgroundColor: '#603186', flex: 1 }}>
       <ImageBackground
@@ -263,7 +271,7 @@ const Drawer = ({ navigation }) => {
           }}>
           <PageText>Terms & Conditions</PageText>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => signOut(userDetail)}>
+        <TouchableOpacity onPress={onSignout}>
           <PageText>Logout</PageText>
         </TouchableOpacity>
       </MainThirdView>

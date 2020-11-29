@@ -231,11 +231,7 @@ function Routes() {
         });
       },
       signOut: () => {
-        let userDetailTemp = userDetail;
-        delete userDetailTemp['token'];
-        storage.setData('user', JSON.stringify(userDetailTemp));
-        storage.removeData('access_token');
-        changeUserDetail(null);
+        
         dispatch({ type: 'SIGN_OUT' });
       },
       updateUserDetail: (userDetailTemp, response) => {
