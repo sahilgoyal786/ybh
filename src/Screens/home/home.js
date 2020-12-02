@@ -22,9 +22,10 @@ import userDetailContext from '../../common/userDetailContext';
 import FastImage from 'react-native-fast-image';
 
 import ContentLoader from 'react-native-easy-content-loader';
-
+import {Dialog} from 'react-native-simple-dialogs';
 import {addimage, bottomadd, bottomCurve} from '../../common/images';
 import LeaderBoard from '../../components/leaderBoard';
+import Button from '../../components/button';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import {AuthContext} from '../../common/AuthContext';
@@ -41,6 +42,7 @@ const Home = () => {
   const [latestPhotosLoaded, setLatestPhotosLoaded] = React.useState(false);
   const [latestPhotosArray, setLatestPhotosArray] = React.useState([]);
   const [leaderBoardLoading, setLeaderBoardLoading] = React.useState(false);
+  const [loadingFailed, setLoadingFailed] = React.useState(false);
   const [latestArticle, setLatestArticle] = React.useState(null);
   const navigation = useNavigation();
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
@@ -139,7 +141,7 @@ const Home = () => {
                   <ViewMore>
                     <TextMore
                       onPress={() => {
-                         //console.log(latestPhotosArray);
+                        //console.log(latestPhotosArray);
                         navigation.navigate('LatestPhotos', {
                           latestPhotosArray,
                         });
@@ -170,16 +172,29 @@ const Home = () => {
       );
       fetchLeaderBoard(userDetail, changeUserDetail)
         .then((status) => {
+          setLoadingFailed(!status);
           setLeaderBoardLoading(true);
         })
         .catch((err) => {
+          setLoadingFailed(true);
           setLeaderBoardLoading(false);
         });
     } catch (exception) {
       console.log('exception', exception);
     }
   }, []);
-
+  const onFetchLeaderBoard = () => {
+    setLoadingFailed(false);
+    fetchLeaderBoard(userDetail, changeUserDetail)
+      .then((status) => {
+        setLoadingFailed(!status);
+        setLeaderBoardLoading(true);
+      })
+      .catch((err) => {
+        setLoadingFailed(true);
+        setLeaderBoardLoading(false);
+      });
+  };
   return (
     <View style={{flex: 1}}>
       <Image
@@ -334,6 +349,45 @@ const Home = () => {
               aspectRatio: 395 / 100,
             }}></Image>
         </LastImage>
+        <Dialog
+          visible={loadingFailed}
+          onTouchoutside={() => setLoadingFailed(false)}>
+          <View>
+            <Text
+              style={{
+                borderWidth: 1,
+                borderColor: '#ccc',
+                borderRadius: 5,
+                padding: 10,
+              }}>
+              {' '}
+              {'Fetching leaderboard failed'}
+            </Text>
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Button
+              isLoading={false}
+              onPress={onFetchLeaderBoard}
+              style={{
+                marginTop: heightPercentageToDP(3),
+                width: widthPercentageToDP(35),
+              }}
+              name={'reload'}
+              linear
+            />
+            <Button
+              onPress={() => {
+                setLoadingFailed(false);
+              }}
+              style={{
+                marginTop: heightPercentageToDP(3),
+                width: widthPercentageToDP(35),
+              }}
+              name={'Cancel'}
+              secondary
+            />
+          </View>
+        </Dialog>
       </ScrollView>
     </View>
   );

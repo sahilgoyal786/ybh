@@ -26,6 +26,7 @@ import LeaderBoard from '../../components/leaderBoard';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import storage from '../../components/apis/storage';
 import ContentLoader from 'react-native-easy-content-loader';
+import userDetailContext from '../../common/userDetailContext';
 
 const Trivia = ({navigation}) => {
   const [question, setQuestion] = useState(null);
@@ -34,6 +35,7 @@ const Trivia = ({navigation}) => {
   const [savedResponses, setSavedResponses] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [result, setResult] = useState(0);
+  const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
 
   const submitAnswer = () => {
     if (selectedAnswer === null) {
@@ -258,7 +260,7 @@ const Trivia = ({navigation}) => {
             </View>
             <View style={{flex: 1}}>
               <View style={{marginRight: 12}}>
-                <LeaderBoard />
+              <LeaderBoard userDetailTemp={userDetail} />
               </View>
             </View>
           </QuesVIew>

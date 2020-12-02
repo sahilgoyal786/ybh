@@ -11,8 +11,7 @@ import userDetailContext from '../common/userDetailContext';
 import {ActivityIndicator} from 'react-native';
 
 const LeaderBoard = ({userDetailTemp = false}) => {
-  const [userDetail, changeUserDetail] = useContext(userDetailContext);
-  let temp = userDetailTemp ? userDetailTemp : userDetail;
+  let temp = userDetailTemp;
   const data = temp ? (temp.leaderBoard ? temp.leaderBoard.users : []) : [];
   let leaderBoardStandings = [];
   for (let i = 0; i < data.length && i < 30; i++) {
