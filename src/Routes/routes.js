@@ -1,15 +1,15 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import Welcome from '../Screens/welcome/welcome';
 import Login from '../Screens/login/login';
 import Signup from '../Screens/signup/signup';
 import Forgot from '../Screens/forgot/forgot';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { widthPercentageToDP } from 'react-native-responsive-screen';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 import DrawerScreen from '../Screens/drawer/drawer';
 import BottomTab from '../common/Bottomtabs';
 import Home from '../Screens/home/home';
@@ -41,18 +41,18 @@ import {
   trivia,
   homeicon,
 } from '../common/images';
-import { Root, Toast } from 'native-base';
+import {Root, Toast} from 'native-base';
 import storage from '../components/apis/storage';
 import network from '../components/apis/network';
-import { AuthContext } from '../common/AuthContext';
+import {AuthContext} from '../common/AuthContext';
 import userDetailContext from '../common/userDetailContext';
 import Loading from '../Screens/loading/loading';
 import EndPoints from '../components/apis/endPoints';
 import NetInfo from '@react-native-community/netinfo';
 
 import PushNotificationManager from '../common/PushNotificationsManager';
-import { Provider } from 'react-redux';
-import { getStore } from '../common/reduxStore';
+import {Provider} from 'react-redux';
+import {getStore} from '../common/reduxStore';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -68,8 +68,12 @@ function HomeComponent() {
       <Stack.Screen name="Privacy" component={Privacy} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="LatestPhotos" component={LatestPhotos} />
+      <Stack.Screen name="MyQuestions" component={AdviceCategory} />
+      <Stack.Screen name="QuestionDetail" component={QuestionDetail} />
+      <Stack.Screen name="MyPhotos" component={MyPhotos} />
+      <Stack.Screen name="MyResponses" component={AdviceCategory} />
       <Stack.Screen name="Gallery" component={Gallery} />
-     </Stack.Navigator>
+    </Stack.Navigator>
   );
 }
 function AdviceComponent() {
@@ -93,7 +97,7 @@ function ShareImageComponent() {
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="PhotoDetail" component={PhotoDetail} />
       <Stack.Screen name="PhotoViewing" component={PhotoViewing} />
-     </Stack.Navigator>
+    </Stack.Navigator>
   );
 }
 
@@ -103,24 +107,24 @@ function HomeTabs() {
       <Tab.Screen
         name="home"
         component={HomeComponent}
-        options={{ icon: homeicon }}
+        options={{icon: homeicon}}
       />
       <Tab.Screen
         name="ShareImage"
         component={ShareImageComponent}
-        options={{ icon: shareimage }}
+        options={{icon: shareimage}}
       />
       <Tab.Screen
         name="GetAdvice"
         component={AdviceComponent}
-        options={{ icon: getadvice }}
+        options={{icon: getadvice}}
       />
       <Tab.Screen
         name="RelationMeter"
         component={RelationMeter}
-        options={{ icon: relationmeter }}
+        options={{icon: relationmeter}}
       />
-      <Tab.Screen name="Trivia" component={Trivia} options={{ icon: trivia }} />
+      <Tab.Screen name="Trivia" component={Trivia} options={{icon: trivia}} />
     </Tab.Navigator>
   );
 }
@@ -129,7 +133,7 @@ function HomeDrawer() {
   return (
     <Drawer.Navigator
       drawerPosition={'right'}
-      drawerStyle={{ width: widthPercentageToDP(70) }}
+      drawerStyle={{width: widthPercentageToDP(70)}}
       drawerContent={(props) => <DrawerScreen {...props} />}>
       <Drawer.Screen name="Home" component={HomeTabs} />
       {/* */}
@@ -196,7 +200,7 @@ function Routes() {
         if (userDetail !== null) {
           userDetailTemp.is_connected = state.isConnected;
           changeUserDetail(userDetailTemp);
-          dispatch({ type: 'USER_UPDATE', user: userDetail.user });
+          dispatch({type: 'USER_UPDATE', user: userDetail.user});
         }
         // console.log(userDetail);
       });
@@ -209,12 +213,12 @@ function Routes() {
         const user = JSON.parse(await storage.getData('user'));
         if (userDetail?.access_token || token) {
           userToken = (userDetail && userDetail.token) || token;
-          dispatch({ type: 'RESTORE_TOKEN', token: userToken, user });
+          dispatch({type: 'RESTORE_TOKEN', token: userToken, user});
         } else {
-          dispatch({ type: 'SIGN_OUT' });
+          dispatch({type: 'SIGN_OUT'});
         }
       } catch (err) {
-        dispatch({ type: 'SIGN_OUT' });
+        dispatch({type: 'SIGN_OUT'});
       }
     };
 
@@ -231,8 +235,7 @@ function Routes() {
         });
       },
       signOut: () => {
-        
-        dispatch({ type: 'SIGN_OUT' });
+        dispatch({type: 'SIGN_OUT'});
       },
       updateUserDetail: (userDetailTemp, response) => {
         for (var key in response) {
@@ -243,7 +246,7 @@ function Routes() {
         changeUserDetail(userDetailTemp);
       },
       signUp: async (data) => {
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
       },
     }),
     [],
@@ -262,7 +265,7 @@ function Routes() {
               <NavigationContainer
                 theme={{
                   ...DefaultTheme,
-                  colors: { ...DefaultTheme.colors, background: 'white' },
+                  colors: {...DefaultTheme.colors, background: 'white'},
                 }}>
                 {state.isLoading ? (
                   <Stack.Navigator headerMode="none">
@@ -278,10 +281,10 @@ function Routes() {
                     <Stack.Screen name="SetPassword" component={SetPassword} />
                   </Stack.Navigator>
                 ) : (
-                      <Stack.Navigator headerMode="none">
-                        <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
-                      </Stack.Navigator>
-                    )}
+                  <Stack.Navigator headerMode="none">
+                    <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
+                  </Stack.Navigator>
+                )}
               </NavigationContainer>
             </PushNotificationManager>
           </userDetailContext.Provider>

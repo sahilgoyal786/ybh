@@ -21,9 +21,11 @@ const EndPoints = {
 
   tokenUpdate: {url: 'user/device-token/update'},
 
-  blogs: {url: 'blogs', cache_age: 48},
+  getLatestBlog: {url: 'blogs?page_size=1', cache_age: 12},
+  blogs: {url: 'blogs', dont_cache: true},
 
   getTriviaQuestions: {url: 'questions/trivia', dont_cache: true},
+  getTipsOfTheDay: {url: 'tips', dont_cache: true},
   getRelationshipMeterQuestions: {
     url: 'questions/relationship_meter',
     dont_cache: true,
@@ -35,6 +37,8 @@ const EndPoints = {
   getAllAdviceQuestions: {url: 'advice/all'},
   postAdviceQuestion: {url: 'advice/store'},
   postAdviceResponse: {url: 'advice/response/store'},
+  updateAdviceResponse: {url: 'advice/response/update'},
+  deleteAdviceResponse: {url: 'advice/response/delete'},
 
   voteOnResponse: {url: 'user/responses/vote'},
 };
