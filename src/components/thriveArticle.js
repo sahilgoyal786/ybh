@@ -4,6 +4,8 @@ import ImageWithBorder from '../components/imageWithBorder';
 import {image15, profile, calendar} from '../common/images';
 import ResponsiveImage from 'react-native-responsive-image';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import styled from 'styled-components';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 let size = 60;
 
@@ -30,6 +32,11 @@ const ThriveArticle = ({article = {}, compact, navigate}) => {
             numberOfLines={2}>
             {article.title}
           </Text>
+          {compact == false && (
+            <View style={{alignSelf: 'flex-start'}}>
+              <Category>{article.category}</Category>
+            </View>
+          )}
           <Text
             style={compact ? styles.text_content : styles.text_content_large}
             numberOfLines={compact ? 4 : 4}>
@@ -60,22 +67,13 @@ const ThriveArticle = ({article = {}, compact, navigate}) => {
                 }}>
                 By: joe Smith
               </Text> */}
-                <ResponsiveImage
-                  style={{
-                    marginTop: 5,
-                    marginLeft: 5,
-                  }}
-                  source={calendar}
-                  initHeight="8"
-                  initWidth="8"
-                />
                 <Text
                   style={{
                     fontSize: 10,
                     color: 'gray',
                     marginTop: 5,
-                    marginLeft: 5,
                   }}>
+                  <FontAwesome5Icon name="calendar-alt" />{' '}
                   {article.created_at_formatted}
                 </Text>
               </View>
@@ -143,4 +141,18 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
 });
+
+const Category = styled(Text)({
+  padding: 4,
+  paddingLeft: 14,
+  paddingRight: 14,
+  backgroundColor: '#FBEA76',
+  fontSize: 12,
+  marginTop: 5,
+  marginBottom: 5,
+  borderRadius: 8,
+  textTransform: 'capitalize',
+  color: 'grey',
+});
+
 export default ThriveArticle;

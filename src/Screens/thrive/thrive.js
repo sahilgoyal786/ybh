@@ -29,13 +29,18 @@ import ThriveArticle from '../../components/thriveArticle';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
+import {TextInput} from 'react-native-gesture-handler';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 //import { Image } from 'native-base';
 
 const Thrive = ({route, navigation}) => {
   const [loadingMore, setLoadingMore] = React.useState(false);
   const [blogs, setBlogs] = React.useState([]);
-  const [totalPages, setTotalPages] = React.useState();
-  const [page, setPage] = React.useState(1);
+  const [categories, setCategories] = React.useState([]);
+  const [selectedCategory, setSelectedCategory] = React.useState(0);
+  const [keyword, setKeyword] = React.useState('');
+  const [totalPages, setTotalPages] = React.useState(0);
+  const [page, setPage] = React.useState(0);
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const renderItem = ({item, index}) => (
     <ListItem
@@ -58,22 +63,47 @@ const Thrive = ({route, navigation}) => {
   const LoadBlogs = () => {
     const tempBlogsArray = [];
     setLoadingMore(true);
+    let params = {page, keyword};
+    console.log(page, totalPages);
+    if (totalPages > -1 && page > totalPages) {
+      return;
+    } else {
+      params['page'] = page + 1;
+      setPage(page + 1);
+    }
+    if (selectedCategory !== 0 && categories[selectedCategory - 1]) {
+      console.log(
+        selectedCategory - 1,
+        categories[selectedCategory - 1].category,
+      );
+      params['category'] = categories[selectedCategory - 1].category;
+    }
+    console.log(params);
     try {
       network.getResponse(
         EndPoints.blogs,
-        'GET',
-        {page: page},
+        'POST',
+        params,
         userDetail.token,
         (response) => {
+          // console.log('(response.categories)', response);
+          if (response.categories) {
+            setCategories(response.categories);
+          }
+          if (response.category) {
+            console.log('category', response.category);
+          }
+          response = response.blogs;
           for (let i = 0; i < response.data.length; i++) {
             response.data[i].url = response.data[i].url;
             tempBlogsArray.push(response.data[i]);
           }
-          if (page == 1) {
+          if (response.current_page == 1) {
             setTotalPages(response.last_page);
+            setBlogs(tempBlogsArray);
+          } else {
+            setBlogs(blogs.concat(tempBlogsArray));
           }
-          setBlogs(blogs.concat(tempBlogsArray));
-          setPage(page + 1);
           setLoadingMore(false);
         },
         (error) => {
@@ -85,20 +115,82 @@ const Thrive = ({route, navigation}) => {
       console.log('exception', exception);
     }
   };
+
   React.useEffect(() => {
     LoadBlogs();
   }, []);
+  React.useEffect(() => {
+    console.log(page, 'page-useEffect');
+    if (page == 0) {
+      setTotalPages(-1);
+      setBlogs([]);
+      LoadBlogs();
+    }
+  }, [page]);
+
+  React.useEffect(() => {
+    console.log(selectedCategory, 'selectedCategory-useEffect');
+  }, [selectedCategory]);
+
+  const renderCategories = () => {
+    if (categories.length) {
+      let categoriesTemp = [{category: 'All'}].concat(categories);
+      return (
+        <ScrollView
+          horizontal={true}
+          style={{
+            flexDirection: 'row',
+            marginLeft: 15,
+            marginRight: 15,
+            backgroundColor: 'white',
+            marginBottom: 5,
+          }}>
+          {categoriesTemp.map((item, index) => {
+            // console.log(index);
+            return (
+              <Category
+                key={index.toString()}
+                style={
+                  index == selectedCategory
+                    ? {
+                        color: 'white',
+                      }
+                    : {
+                        backgroundColor: '#FFFFFFFF',
+                      }
+                }
+                onPress={() => {
+                  setSelectedCategory(index);
+                  setPage(0);
+                }}>
+                {item.category}
+              </Category>
+            );
+          })}
+        </ScrollView>
+      );
+    } else {
+      return <></>;
+    }
+  };
+
+  const performSearch = () => {
+    setPage(0);
+  };
 
   return (
     <FlatList
+      // keyboardShouldPersistTaps="handled"
       keyExtractor={() => Math.random().toString()}
       bounces={false}
       onEndReached={() => {
-        if (blogs.length && totalPages && page <= totalPages) {
+        // console.log(blogs.length, totalPages, page < totalPages);
+        if (blogs.length && totalPages && page < totalPages) {
+          setLoadingMore(true);
           LoadBlogs();
         }
       }}
-      onEndReachedThreshold={blogs.length ? 0.5 : 0}
+      onEndReachedThreshold={0.5}
       contentContainerStyle={
         (blogs.length
           ? {}
@@ -113,14 +205,69 @@ const Thrive = ({route, navigation}) => {
       renderItem={renderItem}
       stickyHeaderIndices={[0]}
       ListEmptyComponent={
-        <View
-          style={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <ActivityIndicator size="large" color="purple" />
-        </View>
+        loadingMore ? (
+          <View
+            style={{
+              flexGrow: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <ActivityIndicator size="large" color="purple" />
+          </View>
+        ) : (
+          <View
+            style={{
+              flexGrow: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text>Nothing to show.</Text>
+          </View>
+        )
       }
       ListHeaderComponent={
-        <View style={{backgroundColor: 'transparent'}}>
-          <Header title="Thrive" backButton="true"/>
+        <View style={{backgroundColor: 'white'}}>
+          <Header title="Thrive" backButton="true" />
+          <View
+            style={{
+              flexDirection: 'row',
+              marginHorizontal: 15,
+              borderWidth: 1,
+              borderColor: '#F4F5F6',
+              shadowColor: '#F4F5F6',
+              shadowOffset: {
+                width: 0,
+                height: 1,
+              },
+              shadowOpacity: 0.2,
+              shadowRadius: 10,
+              elevation: 2,
+              marginBottom: 20,
+            }}>
+            <TextInput
+              style={{
+                height: 60,
+                fontSize: 18,
+                flexGrow: 1,
+                paddingLeft: 15,
+              }}
+              onChangeText={(text) => setKeyword(text)}
+              onSubmitEditing={() => performSearch()}
+            />
+            <FontAwesome5Icon
+              name={loadingMore ? 'spinner' : 'search'}
+              style={{
+                width: 40,
+                fontSize: 17,
+                textAlign: 'center',
+                textAlignVertical: 'center',
+                color: 'grey',
+                fontWeight: '300',
+              }}
+              onPress={() => performSearch()}
+            />
+          </View>
+          {renderCategories()}
         </View>
       }
       ListFooterComponentStyle={{
@@ -137,16 +284,6 @@ const Thrive = ({route, navigation}) => {
             bottom: -130,
             zIndex: -10,
           }}>
-          {loadingMore && (
-            <ActivityIndicator
-              color="purple"
-              style={{
-                marginTop: 100,
-                position: 'absolute',
-                alignSelf: 'center',
-              }}
-            />
-          )}
           <Image
             source={bottomCurve}
             style={{
@@ -155,10 +292,30 @@ const Thrive = ({route, navigation}) => {
             }}
             resizeMode="contain"
           />
+          {loadingMore && (
+            <ActivityIndicator
+              color="purple"
+              style={{
+                top: 70,
+                position: 'absolute',
+                alignSelf: 'center',
+              }}
+            />
+          )}
         </View>
       }
     />
   );
 };
+
+const Category = styled(Text)({
+  padding: 10,
+  backgroundColor: '#F9BC16',
+  marginRight: 20,
+  marginBottom: 10,
+  borderRadius: 8,
+  textTransform: 'capitalize',
+  color: 'grey',
+});
 
 export default Thrive;

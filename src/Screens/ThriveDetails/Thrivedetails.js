@@ -39,6 +39,7 @@ import {
 //import { Image } from 'native-base';
 import Button from '../../components/button';
 import Header from '../../components/header';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -98,50 +99,26 @@ const Thrivedetails = ({route, navigation}) => {
             }}
             resizeMode="contain"
           />
-          <Text style={{marginTop: 15, padding: 10, fontSize: 20}}>
+          <Text style={{marginTop: 15, paddingHorizontal: 10, fontSize: 20}}>
             {article.title}
           </Text>
           <View style={{justifyContent: 'flex-start'}}>
             <View
               style={{
                 flexDirection: 'row',
-                padding: 10,
+                paddingHorizontal: 10,
+                justifyContent: 'space-between',
               }}>
-              {/* <ResponsiveImage
-              style={{
-                marginTop: heightPercentageToDP(1.2),
-              }}
-              source={profile}
-              initHeight="8"
-              initWidth="8"
-            />
-            <Text
-              style={{
-                fontSize: 10,
-                color: '#848585',
-                marginTop: heightPercentageToDP(0.9),
-                marginLeft: widthPercentageToDP(1),
-                fontFamily: 'FuturaPT-Medium',
-              }}>
-              By: joe Smith
-            </Text> */}
-              <ResponsiveImage
-                style={{
-                  marginTop: heightPercentageToDP(1.2),
-                }}
-                source={calendar}
-                initHeight="8"
-                initWidth="8"
-              />
               <Text
                 style={{
                   fontSize: 10,
                   color: 'gray',
                   marginTop: heightPercentageToDP(1),
-                  marginLeft: widthPercentageToDP(1),
                 }}>
-                {article.created_at}
+                <FontAwesome5Icon name="calendar-alt" />{' '}
+                {article.created_at_formatted}
               </Text>
+              <Category>{article.category}</Category>
             </View>
           </View>
 
@@ -218,6 +195,19 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 110,
   },
+});
+
+const Category = styled(Text)({
+  padding: 4,
+  paddingLeft: 14,
+  paddingRight: 14,
+  backgroundColor: '#FBEA76',
+  fontSize: 12,
+  marginTop: 5,
+  marginBottom: 5,
+  borderRadius: 8,
+  textTransform: 'capitalize',
+  color: 'grey',
 });
 
 export default Thrivedetails;

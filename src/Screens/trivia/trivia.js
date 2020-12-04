@@ -13,7 +13,7 @@ import Button from '../../components/button';
 
 import {ListItem, CheckBox, Toast, Body} from 'native-base';
 
-import {bottomCurve, sync} from '../../common/images';
+import {bottomCurve, photoworld, sync} from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
 import {
@@ -172,98 +172,106 @@ const Trivia = ({navigation}) => {
         style={{paddingTop: 20}}
         contentContainerStyle={{paddingBottom: 60}}>
         {questions && questions.length ? (
-          <QuesVIew>
-            <View style={{flex: 2}}>
-              {question && question.id && (
-                <View>
-                  <TitleText>Question:</TitleText>
-                  <View style={{marginBottom: 10}}>
-                    <TitleTextlong>{question.ques}</TitleTextlong>
-                  </View>
-                  {question.answers.map((answer, index) => {
-                    return (
-                      <ListItem
-                        key={answer.id}
-                        noIndent
-                        style={{
-                          borderColor: 'transparent',
-                          paddingLeft: 10,
-                          marginTop: 0,
-                        }}>
-                        <CheckBox
-                          checked={answer.id == selectedAnswer}
-                          onPress={() => {
-                            setSelectedAnswer(answer.id);
-                          }}
+          <>
+            <QuesVIew>
+              <View style={{flex: 2}}>
+                {question && question.id && (
+                  <View>
+                    <TitleText>Question:</TitleText>
+                    <View style={{marginBottom: 10}}>
+                      <TitleTextlong>{question.ques}</TitleTextlong>
+                    </View>
+                    {question.answers.map((answer, index) => {
+                      return (
+                        <ListItem
                           key={answer.id}
-                          color="purple"
-                        />
-                        <TouchableOpacity
-                          onPress={() => {
-                            setSelectedAnswer(answer.id);
+                          noIndent
+                          style={{
+                            borderColor: 'transparent',
+                            paddingLeft: 10,
+                            marginTop: 0,
                           }}>
-                          <Body style={{padding: 10, paddingRight: 20}}>
-                            <Text style={{textTransform: 'capitalize'}}>
-                              {answer.ans}
-                            </Text>
-                          </Body>
-                        </TouchableOpacity>
-                      </ListItem>
-                    );
-                  })}
-                  <ContainerView>
-                    <MainLatestView>
-                      {result == 0 && (
+                          <CheckBox
+                            checked={answer.id == selectedAnswer}
+                            onPress={() => {
+                              setSelectedAnswer(answer.id);
+                            }}
+                            key={answer.id}
+                            color="purple"
+                          />
+                          <TouchableOpacity
+                            onPress={() => {
+                              setSelectedAnswer(answer.id);
+                            }}>
+                            <Body style={{padding: 10, paddingRight: 20}}>
+                              <Text style={{textTransform: 'capitalize'}}>
+                                {answer.ans}
+                              </Text>
+                            </Body>
+                          </TouchableOpacity>
+                        </ListItem>
+                      );
+                    })}
+                    <ContainerView>
+                      <MainLatestView>
+                        {result == 0 && (
+                          <Button
+                            onPress={() => {
+                              submitAnswer();
+                            }}
+                            style={{
+                              width: widthPercentageToDP(40),
+                              marginTop: heightPercentageToDP(2),
+                            }}
+                            name={'Submit'}
+                            linear
+                          />
+                        )}
+                      </MainLatestView>
+                    </ContainerView>
+                    <View style={{marginTop: 20, marginLeft: 15}}>
+                      {result == 1 && (
+                        <Text style={{color: 'green'}}>
+                          <FontAwesome5 name={'check'} />
+                          <Text> Yay! Correct</Text>
+                        </Text>
+                      )}
+                      {result == -1 && (
+                        <Text style={{color: 'red'}}>
+                          <FontAwesome5 name={'times'} />{' '}
+                          <Text> Oops! Wrong</Text>
+                        </Text>
+                      )}
+                      {result !== 0 && (
                         <Button
                           onPress={() => {
-                            submitAnswer();
+                            presentQuestion();
                           }}
                           style={{
                             width: widthPercentageToDP(40),
                             marginTop: heightPercentageToDP(2),
                           }}
-                          name={'Submit'}
+                          name={'Next Question'}
                           linear
                         />
                       )}
-                    </MainLatestView>
-                  </ContainerView>
-                  <View style={{marginTop: 20, marginLeft: 15}}>
-                    {result == 1 && (
-                      <Text style={{color: 'green'}}>
-                        <FontAwesome5 name={'check'} />
-                        <Text> Yay! Correct</Text>
-                      </Text>
-                    )}
-                    {result == -1 && (
-                      <Text style={{color: 'red'}}>
-                        <FontAwesome5 name={'times'} />{' '}
-                        <Text> Oops! Wrong</Text>
-                      </Text>
-                    )}
-                    {result !== 0 && (
-                      <Button
-                        onPress={() => {
-                          presentQuestion();
-                        }}
-                        style={{
-                          width: widthPercentageToDP(40),
-                          marginTop: heightPercentageToDP(2),
-                        }}
-                        name={'Next Question'}
-                        linear
-                      />
-                    )}
+                    </View>
                   </View>
-                </View>
-              )}
-            </View>
-            <View style={{flex: 1}}>
-              <View style={{marginRight: 12}}>
-              <LeaderBoard userDetailTemp={userDetail} />
+                )}
               </View>
-            </View>
-          </QuesVIew>
+              <View style={{flex: 1}}>
+                <View style={{marginRight: 12}}>
+                  <LeaderBoard userDetailTemp={userDetail} />
+                </View>
+              </View>
+            </QuesVIew>
+            <ResponsiveImage
+              style={{marginLeft: 14, marginTop: 20}}
+              source={photoworld}
+              initHeight="150"
+              initWidth="396"
+            />
+          </>
         ) : (
           <ContentLoader />
         )}

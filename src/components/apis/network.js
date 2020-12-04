@@ -147,6 +147,11 @@ const network = {
           error.response.status &&
           error.response.status == 401
         ) {
+          // Thrown out, logged out
+          // Delete the token in storage
+          // take him to login screen
+          // network file is not a component
+          // cannot use context api here
         }
         if (error.response && error.response.data) {
           console.log(error.response.data, 'axios response1');

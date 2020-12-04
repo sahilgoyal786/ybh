@@ -7,7 +7,11 @@ import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 import {bottomCurve, downarrow} from '../../common/images';
 import Header from '../../components/header';
 import network from '../../components/apis/network';
@@ -27,6 +31,8 @@ const AdviceCategory = ({route, navigation}) => {
   const [totalPages, setTotalPages] = useState(null);
   const [sortCriteria, setSortCriteria] = useState('latest');
   const [dialog, setDialog] = useState(false);
+  const [Search, setSearch] = useState(false);
+  const [keyword, setKeyword] = React.useState('');
   const [loadingMore, setLoadingMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [text, setText] = useState('');
@@ -90,6 +96,7 @@ const AdviceCategory = ({route, navigation}) => {
         filter_category: Category.toLowerCase(),
         page: current_page,
         sort_by: sortCriteria,
+        keyword,
       };
       if (route.params.type) {
         if (route.params.type == 'my_questions') {
@@ -120,6 +127,8 @@ const AdviceCategory = ({route, navigation}) => {
               });
               setQuestions(response.data);
             }
+          } else {
+            setQuestions([]);
           }
           setTotalPages(response.last_page);
           setLoadingMore(false);
@@ -140,13 +149,20 @@ const AdviceCategory = ({route, navigation}) => {
 
   React.useEffect(() => {
     setPage(0);
-    setQuestions([]);
   }, [sortCriteria]);
   React.useEffect(() => {
     if (page == 0) {
+      dispatch({
+        type: ActionTypes.GET_QUESTION_LIST_SUCCESS,
+        payload: {data: []},
+      });
       LoadQuestions();
     }
   }, [page]);
+
+  const performSearch = () => {
+    setPage(0);
+  };
 
   return (
     <FlatList
@@ -195,12 +211,76 @@ const AdviceCategory = ({route, navigation}) => {
                 <Button
                   style={{
                     marginBottom: 10,
+                    width: widthPercentageToDP(100) - 100,
                   }}
                   name={'Ask A Question'}
                   linear
                 />
               </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  if (Search && keyword != '') {
+                    setKeyword('');
+                    performSearch();
+                  }
+                  setSearch(!Search);
+                }}>
+                <Button
+                  style={{
+                    marginBottom: 10,
+                    width: 50,
+                  }}
+                  name={
+                    <FontAwesome5Icon
+                      name={Search ? 'times' : 'search'}
+                      style={{fontSize: 20}}
+                    />
+                  }
+                  secondary={true}
+                />
+              </TouchableOpacity>
             </ButtonView>
+          )}
+          {Search && (
+            <View
+              style={{
+                flexDirection: 'row',
+                marginHorizontal: 20,
+                borderWidth: 1,
+                borderColor: '#F4F5F6',
+                shadowColor: '#F4F5F6',
+                shadowOffset: {
+                  width: 0,
+                  height: 1,
+                },
+                shadowOpacity: 0.2,
+                shadowRadius: 10,
+                elevation: 2,
+                marginBottom: 20,
+              }}>
+              <TextInput
+                style={{
+                  height: 60,
+                  fontSize: 18,
+                  flexGrow: 1,
+                  paddingLeft: 15,
+                }}
+                onChangeText={(text) => setKeyword(text)}
+                onSubmitEditing={() => performSearch()}
+              />
+              <FontAwesome5Icon
+                name={loadingMore ? 'spinner' : 'search'}
+                style={{
+                  width: 40,
+                  fontSize: 17,
+                  textAlign: 'center',
+                  textAlignVertical: 'center',
+                  color: 'grey',
+                  fontWeight: '300',
+                }}
+                onPress={() => performSearch()}
+              />
+            </View>
           )}
           <RNPickerSelect
             placeholder={{
@@ -373,7 +453,11 @@ const SecView = styled(View)({
 });
 
 const ButtonView = styled(View)({
-  justifyContent: 'center',
+  justifyContent: 'space-between',
   alignItems: 'center',
+  flexDirection: 'row',
+  width: widthPercentageToDP(100) - 40,
+  marginLeft: 20,
+  marginRight: 20,
 });
 export default AdviceCategory;

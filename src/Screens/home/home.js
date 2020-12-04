@@ -22,7 +22,6 @@ import userDetailContext from '../../common/userDetailContext';
 import FastImage from 'react-native-fast-image';
 
 import ContentLoader from 'react-native-easy-content-loader';
-import {Dialog} from 'react-native-simple-dialogs';
 import {addimage, bottomadd, bottomCurve} from '../../common/images';
 import LeaderBoard from '../../components/leaderBoard';
 import Button from '../../components/button';
@@ -31,6 +30,9 @@ import EndPoints from '../../components/apis/endPoints';
 import {AuthContext} from '../../common/AuthContext';
 import LinearGradient from 'react-native-linear-gradient';
 import {fetchLeaderBoard} from '../../common/helpers';
+import storage from '../../components/apis/storage';
+import {Dialog} from 'react-native-simple-dialogs';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 const Home = () => {
   const [votingImages, setVotingImages] = React.useState([]);
@@ -43,6 +45,7 @@ const Home = () => {
   const [latestPhotosArray, setLatestPhotosArray] = React.useState([]);
   const [leaderBoardLoading, setLeaderBoardLoading] = React.useState(false);
   const [loadingFailed, setLoadingFailed] = React.useState(false);
+  const [tipOfTheDay, setTipOfTheDay] = React.useState(false);
   const [latestArticle, setLatestArticle] = React.useState(null);
   const navigation = useNavigation();
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
@@ -160,12 +163,13 @@ const Home = () => {
         (error) => console.log('error', error),
       );
       network.getResponse(
-        EndPoints.blogs,
+        EndPoints.getLatestBlog,
         'GET',
         {},
         userDetail.token || '',
         (response) => {
-          response = response.data;
+          // console.log(response);
+          response = response.blogs.data;
           setLatestArticle(response.pop());
         },
         (error) => console.log('error', error),
@@ -182,6 +186,26 @@ const Home = () => {
     } catch (exception) {
       console.log('exception', exception);
     }
+
+    const bootstrapAsync = async () => {
+      let tipsOfTheDay = await storage.getData('TipsOfTheDay');
+      if (tipsOfTheDay && tipsOfTheDay.length) {
+        tipsOfTheDay = JSON.parse(tipsOfTheDay);
+
+        var now = new Date();
+        var start = new Date(now.getFullYear(), 0, 0);
+        var diff = now - start;
+        var oneDay = 1000 * 60 * 60 * 24;
+        var today = Math.floor(diff / oneDay);
+        if (tipsOfTheDay[today] !== '') {
+          console.log(tipsOfTheDay[today]);
+          setTipOfTheDay(tipsOfTheDay[today]);
+          tipsOfTheDay[today] = '';
+          await storage.setData('TipsOfTheDay', JSON.stringify(tipsOfTheDay));
+        }
+      }
+    };
+    bootstrapAsync();
   }, []);
   const onFetchLeaderBoard = () => {
     setLoadingFailed(false);
@@ -386,6 +410,53 @@ const Home = () => {
               name={'Cancel'}
               secondary
             />
+          </View>
+        </Dialog>
+
+        <Dialog
+          visible={tipOfTheDay !== false}
+          dialogStyle={{
+            backgroundColor: 'transparent',
+            justifyContent: 'center',
+            padding: 0,
+            borderWidth: 0,
+            shadowOpacity: 0,
+            elevation: 0,
+          }}
+          contentStyle={{padding: 0, shadowOpacity: 0}}
+          onTouchoutside={() => {
+            alert();
+            setTipOfTheDay(false);
+          }}>
+          <View style={{alignItems: 'center'}}>
+            <View
+              style={{
+                backgroundColor: 'white',
+                alignItems: 'center',
+                padding: 20,
+                paddingVertical: 40,
+              }}>
+              <FontAwesome5Icon
+                name="lightbulb"
+                style={{fontSize: 40, color: 'purple'}}
+              />
+              {tipOfTheDay && (
+                <Text
+                  style={{fontSize: 20, marginTop: 15, textAlign: 'center'}}>
+                  {tipOfTheDay}
+                </Text>
+              )}
+            </View>
+            <Text
+              onPress={() => setTipOfTheDay(false)}
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 500,
+                color: 'purple',
+                marginTop: 200,
+              }}>
+              <FontAwesome5Icon name="times-circle" style={{fontSize: 30}} />
+            </Text>
           </View>
         </Dialog>
       </ScrollView>

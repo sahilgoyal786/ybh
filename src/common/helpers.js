@@ -75,6 +75,26 @@ export const getTriviaQuestionsFromServer = async (
   });
 };
 
+export const getTipsOfTheDay = async (userDetail, changeUserDetail) => {
+  return new Promise((resolve, reject) => {
+    network.getResponse(
+      EndPoints.getTipsOfTheDay,
+      'GET',
+      {},
+      userDetail.token,
+      (response) => {
+        // console.log('response', response);
+        storage.setData('TipsOfTheDay', JSON.stringify(response));
+        resolve(true);
+      },
+      (error) => {
+        console.log('error', error);
+        resolve(true);
+      },
+    );
+  });
+};
+
 export const sendResponsesToServer = async (userDetail, changeUserDetail) => {
   let savedResponses = await storage.getData('SavedTriviaResponses');
   if (savedResponses !== null) {
