@@ -27,6 +27,7 @@ import FastImage from 'react-native-fast-image';
 import {vtngpage} from '../../common/images';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import {bottomCurve} from '../../common/images';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 // interface VotingPageProps {
 
@@ -216,31 +217,6 @@ const VotingPage = ({route, navigation}) => {
         </TouchableOpacity>
 
         <Modal visible={showModal}>
-          <View
-            style={{
-              position: 'absolute',
-              left: 20,
-              top: 40,
-              height: 25,
-              backgroundColor: 'white',
-              width: 25,
-              borderRadius: 40,
-              zIndex: 100,
-            }}>
-            <Text
-              style={{
-                color: 'black',
-                textAlign: 'center',
-                height: 25,
-                width: 25,
-                textAlignVertical: 'center',
-                fontWeight: '900',
-                lineHeight: 25,
-              }}
-              onPress={() => setShowModal(false)}>
-              X
-            </Text>
-          </View>
           <ImageViewer
             imageUrls={galleryMapped}
             enableSwipeDown={true}
@@ -248,6 +224,80 @@ const VotingPage = ({route, navigation}) => {
             index={currentImageIndex}
             renderIndicator={() => {}}
             renderImage={(props) => <FastImage {...props} />}
+            renderHeader={(index) => {
+              return (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    width: widthPercentageToDP(100) - 40,
+                    justifyContent: 'space-between',
+                    position: 'absolute',
+                    marginLeft: 20,
+                    zIndex: 100,
+                    marginTop: 50,
+                  }}>
+                  <View>
+                    <View
+                      style={{
+                        color: 'black',
+                        borderRadius: 40,
+                        backgroundColor: 'white',
+                        textAlign: 'center',
+                        height: 25,
+                        width: 25,
+                        textAlignVertical: 'center',
+                        fontWeight: '900',
+                        lineHeight: 25,
+                      }}>
+                      <FontAwesome5Icon
+                        name="times"
+                        style={{
+                          lineHeight: 25,
+                          textAlign: 'center',
+                          fontSize: 16,
+                        }}
+                        onPress={() => setShowModal(false)}
+                      />
+                    </View>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => setselectedImageIndex(index)}>
+                    <View
+                      style={{
+                        backgroundColor:
+                          index == selectedImageIndex ? 'purple' : 'black',
+                        flexDirection: 'row',
+                        borderWidth: 1,
+                        borderColor:
+                          index == selectedImageIndex ? 'purple' : 'white',
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        borderRadius: 6,
+                      }}>
+                      <FontAwesome5Icon
+                        name="check"
+                        style={{
+                          fontSize: 18,
+                          color: 'white',
+                          lineHeight: 25,
+                          fontSize: 20,
+                        }}
+                      />
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          color: 'white',
+                          lineHeight: 25,
+                          fontSize: 20,
+                          marginLeft: 10,
+                        }}>
+                        Select
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              );
+            }}
           />
         </Modal>
       </ScrollView>

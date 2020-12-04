@@ -102,7 +102,7 @@ const Drawer = ({navigation}) => {
     delete userDetailTemp['token'];
     storage.setData('user', JSON.stringify(userDetailTemp));
     storage.removeData('access_token');
-    changeUserDetail(null);
+    // changeUserDetail(null);
     signOut();
   };
   return (
@@ -254,8 +254,8 @@ const Drawer = ({navigation}) => {
               onPress={() => {
                 navigation.navigate('MyResponses', {
                   Category: '',
-                  title: 'My Questions',
-                  type: 'my_questions',
+                  title: 'My Responses',
+                  type: 'my_responses',
                 });
               }}>
               <PageText>My Responses</PageText>

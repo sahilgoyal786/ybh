@@ -36,7 +36,7 @@ import {Toast} from 'native-base';
 const Forgot = () => {
   const navigation = useNavigation();
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
-  const [checked, setChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <KeyboardAwareScrollView
       contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
@@ -62,23 +62,26 @@ const Forgot = () => {
       </View>
       <View style={{flex: 1, flexGrow: 1, minHeight: hp(30)}}>
         <Formik
-          initialValues={{email: 'sahilgoyal1@gmail.com'}}
+          initialValues={{email: ''}}
           onSubmit={(values) => {
+            setIsLoading(true);
             network.getResponse(
               endpoints.forgotPassword,
               'POST',
               values,
               '',
               (response) => {
+                setIsLoading(false);
                 if (response.message) {
                   Toast.show({text: response.message, duration: 3000});
                   navigation.navigate('SetPassword', {email: response.email});
                 }
               },
               (error) => {
+                setIsLoading(false);
                 // console.log(error, 'forgot fail');
                 if (error.message) {
-                  Toast.show({text: error.message});
+                  Toast.show({text: 'No user exists with that email.'});
                 }
               },
             );
@@ -105,8 +108,9 @@ const Forgot = () => {
               <TextInput
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
+                autoCapitalize="none"
                 value={values.email}
-                placeholder="EMAIL"
+                placeholder="Email"
                 placeholderTextColor="#484848"
                 style={styles.PassTyle}
               />
@@ -116,6 +120,7 @@ const Forgot = () => {
                 name={'Send Email'}
                 onPress={handleSubmit}
                 linear
+                isLoading={isLoading}
               />
             </SigninButton>
           )}

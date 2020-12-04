@@ -44,11 +44,14 @@ const RelationMeter = ({navigation}) => {
         }
       });
       if (question.ans_id == ans_id) {
-        setRelationshipMeterScore(relationshipMeterScore + question.score);
+        if (relationshipMeterScore < 100)
+          setRelationshipMeterScore(relationshipMeterScore + question.score);
       } else if (ans_id == 0) {
-        setRelationshipMeterScore(relationshipMeterScore - 1);
+        if (relationshipMeterScore > 0)
+          setRelationshipMeterScore(relationshipMeterScore - 1);
       } else {
-        setRelationshipMeterScore(relationshipMeterScore - question.score);
+        if (relationshipMeterScore > 0)
+          setRelationshipMeterScore(relationshipMeterScore - question.score);
       }
     }
 
@@ -69,22 +72,24 @@ const RelationMeter = ({navigation}) => {
   };
 
   const presentQuestion = () => {
-    let allAnsweredQuestions = answeredQuestions;
-    let allQuestions = questions;
+    let allAnsweredQuestions = Object.assign([], answeredQuestions);
+    let allQuestions = Object.assign([], questions);
     let questionTemp = null;
     do {
-      questionTemp = allQuestions.pop();
+      if (allQuestions.length) {
+        questionTemp = allQuestions.pop();
+      } else {
+        questionTemp = null;
+      }
     } while (
+      questionTemp !== null &&
       questionTemp.id &&
       allAnsweredQuestions.indexOf(questionTemp.id) > -1
     );
-    // console.log(
-    //   allAnsweredQuestions,
-    //   questionTemp.id,
-    //   allAnsweredQuestions.indexOf(questionTemp.id),
-    // );
+    if (questions.length && questionTemp == null) {
+      setAnsweredQuestions([]);
+    }
     setQuestion(questionTemp);
-    // console.log(questionTemp);
   };
   const LoadQuestions = () => {
     const bootstrapAsync = async () => {
@@ -162,7 +167,6 @@ const RelationMeter = ({navigation}) => {
 
   React.useEffect(() => {
     if (questions && answeredQuestions) {
-      presentQuestion();
       const storeAsync = async () => {
         // console.log('sett in storage answeredQuestions', answeredQuestions);
         await storage.setData(
@@ -175,6 +179,7 @@ const RelationMeter = ({navigation}) => {
         );
       };
       storeAsync();
+      presentQuestion();
     }
   }, [answeredQuestions]);
 

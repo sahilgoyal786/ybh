@@ -448,16 +448,20 @@ const Home = () => {
                 </Text>
               )}
             </View>
-            <Text
-              onPress={() => setTipOfTheDay(false)}
+            <View
               style={{
                 backgroundColor: 'white',
                 borderRadius: 500,
                 color: 'purple',
                 marginTop: 200,
+                padding: 2,
               }}>
-              <FontAwesome5Icon name="times-circle" style={{fontSize: 30}} />
-            </Text>
+              <FontAwesome5Icon
+                name="times-circle"
+                style={{fontSize: 30}}
+                onPress={() => setTipOfTheDay(false)}
+              />
+            </View>
           </View>
         </Dialog>
       </ScrollView>

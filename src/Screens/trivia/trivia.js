@@ -65,15 +65,17 @@ const Trivia = ({navigation}) => {
   };
 
   const presentQuestion = () => {
-    let allAnsweredQuestions = answeredQuestions;
-    let allQuestions = questions;
+    let allAnsweredQuestions = Object.assign([], answeredQuestions);
+    let allQuestions = Object.assign([], questions);
     let questionTemp = null;
     do {
-      questionTemp = allQuestions.pop();
-      if (question) {
-        // console.log(questionTemp.id, question.id);
+      if (allQuestions.length) {
+        questionTemp = allQuestions.pop();
+      } else {
+        questionTemp = null;
       }
     } while (
+      questionTemp !== null &&
       questionTemp.id &&
       allAnsweredQuestions.indexOf(questionTemp.id) > -1
     );
@@ -194,14 +196,14 @@ const Trivia = ({navigation}) => {
                           <CheckBox
                             checked={answer.id == selectedAnswer}
                             onPress={() => {
-                              setSelectedAnswer(answer.id);
+                              if (result == 0) setSelectedAnswer(answer.id);
                             }}
                             key={answer.id}
                             color="purple"
                           />
                           <TouchableOpacity
                             onPress={() => {
-                              setSelectedAnswer(answer.id);
+                              if (result == 0) setSelectedAnswer(answer.id);
                             }}>
                             <Body style={{padding: 10, paddingRight: 20}}>
                               <Text style={{textTransform: 'capitalize'}}>

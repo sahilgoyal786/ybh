@@ -104,8 +104,9 @@ const QuestionDetail = ({navigation, route}) => {
           const index = responses.findIndex((advice_response) => {
             return advice_response.id === response_id;
           });
-          let responsesTemp = responses;
+          let responsesTemp = Object.assign([], responses);
           responsesTemp.splice(index, 1);
+          setResponses(responsesTemp);
           dispatch({
             type: ActionTypes.UPDATE_QUESTION_ANSWER,
             payload: {
@@ -113,7 +114,6 @@ const QuestionDetail = ({navigation, route}) => {
               id: question.id,
             },
           });
-          setResponses(responsesTemp);
         }
       },
       (response) => {
@@ -123,17 +123,6 @@ const QuestionDetail = ({navigation, route}) => {
     );
   };
   const renderResponse = (element) => {
-    // console.log('RENDER __ Responses');
-    // let rviews = [];
-    // if (responses.length == 0) {
-    //   rviews.push(
-    //     <Text style={{marginLeft: 5, marginBottom: 20, marginTop: 15}}>
-    //       No one has responded yet, be the first one
-    //     </Text>,
-    //   );
-    // } else {
-    //   responses.forEach((element) => {
-    //     rviews.push(
     return (
       <Card
         style={{marginTop: heightPercentageToDP(1)}}
@@ -234,10 +223,6 @@ const QuestionDetail = ({navigation, route}) => {
         </Score>
       </Card>
     );
-    //     );
-    //   });
-    // }
-    // setResponsesView(rviews);
   };
 
   return (
@@ -386,7 +371,7 @@ const QuestionDetail = ({navigation, route}) => {
                         console.log('response--', response);
                         setYourResponse('');
                         if (response.message) {
-                          let responsesTemp = responses;
+                          let responsesTemp = Object.assign([], responses);
                           const index = responses.findIndex(
                             (advice_response) => {
                               console.log(
@@ -398,6 +383,7 @@ const QuestionDetail = ({navigation, route}) => {
                           );
                           responsesTemp[index] = response.answer;
                           // console.log(response.answer);
+                          setResponses(responsesTemp);
                           dispatch({
                             type: ActionTypes.UPDATE_QUESTION_ANSWER,
                             payload: {
@@ -405,7 +391,6 @@ const QuestionDetail = ({navigation, route}) => {
                               id: question.id,
                             },
                           });
-                          setResponses(responsesTemp);
                           Toast.show({text: response.message});
                           // setResponses(responses.concat(response.answer));
                         }

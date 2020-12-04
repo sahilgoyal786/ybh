@@ -87,7 +87,7 @@ const Thrive = ({route, navigation}) => {
         userDetail.token,
         (response) => {
           // console.log('(response.categories)', response);
-          if (response.categories) {
+          if (response.categories && response.blogs.current_page == 1) {
             setCategories(response.categories);
           }
           if (response.category) {
@@ -260,7 +260,7 @@ const Thrive = ({route, navigation}) => {
                 width: 40,
                 fontSize: 17,
                 textAlign: 'center',
-                textAlignVertical: 'center',
+                lineHeight: 60,
                 color: 'grey',
                 fontWeight: '300',
               }}
@@ -281,7 +281,7 @@ const Thrive = ({route, navigation}) => {
           style={{
             height: 230,
             position: 'absolute',
-            bottom: -130,
+            bottom: -150,
             zIndex: -10,
           }}>
           <Image
@@ -292,7 +292,7 @@ const Thrive = ({route, navigation}) => {
             }}
             resizeMode="contain"
           />
-          {loadingMore && (
+          {blogs.length > 0 && loadingMore && (
             <ActivityIndicator
               color="purple"
               style={{

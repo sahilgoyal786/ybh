@@ -31,6 +31,7 @@ import globalstyles from '../../common/styles';
 const SetPassword = ({route, navigation}) => {
   const [verified, setVerified] = useState(false);
   const [otp, setOTP] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   // console.log(route.params);
   return (
     <KeyboardAwareScrollView
@@ -60,6 +61,7 @@ const SetPassword = ({route, navigation}) => {
           initialValues={{}}
           validationSchema={SetPasswordValidationSchema}
           onSubmit={(values) => {
+            setIsLoading(true);
             values.email = route.params.email;
             values.otp = otp;
             network.getResponse(
@@ -68,12 +70,14 @@ const SetPassword = ({route, navigation}) => {
               values,
               '',
               (response) => {
+                setIsLoading(false);
                 if (response.message) {
                   Toast.show({text: response.message});
                 }
                 navigation.navigate('Login');
               },
               (error) => {
+                setIsLoading(false);
                 // console.log(error, 'forgot fail');
                 if (error.message) {
                   Toast.show({text: error.message, duration: 4000});
@@ -115,24 +119,22 @@ const SetPassword = ({route, navigation}) => {
                 onChangeText={(text) => {
                   setOTP(text);
                   if (text.length == 6) {
+                    setIsLoading(true);
                     network.getResponse(
                       endpoints.verifyOTP,
                       'POST',
                       {otp: text, email: route.params.email},
                       {},
-                      (response) => {
+                      () => {
+                        setIsLoading(false);
                         setVerified(true);
-                        // console.log('verified', verified);
-                        // console.log(response, 'succcess');
-                        // if (response.message) {
-                        //   Toast.show({text: response.message});
-                        // }
                       },
                       (error) => {
+                        setIsLoading(false);
                         console.log(error, 'error');
                         // console.log(error, 'forgot fail');
                         if (error.message) {
-                          Toast.show({text: error.message});
+                          Toast.show({text: 'Please check the code.'});
                         }
                       },
                     );
@@ -142,6 +144,7 @@ const SetPassword = ({route, navigation}) => {
                 value={values.otp}
                 placeholder="Verification Code"
                 placeholderTextColor="#AAAAAA"
+                editable={!verified}
                 style={styles.PassTyle}
               />
               {verified && (
@@ -186,6 +189,7 @@ const SetPassword = ({route, navigation}) => {
                 name={'Submit'}
                 onPress={handleSubmit}
                 linear
+                isLoading={isLoading}
               />
             </SigninButton>
           )}

@@ -274,7 +274,7 @@ const AdviceCategory = ({route, navigation}) => {
                   width: 40,
                   fontSize: 17,
                   textAlign: 'center',
-                  textAlignVertical: 'center',
+                  lineHeight: 60,
                   color: 'grey',
                   fontWeight: '300',
                 }}
@@ -303,18 +303,19 @@ const AdviceCategory = ({route, navigation}) => {
             style={{
               inputAndroid: {
                 backgroundColor: 'transparent',
-                width: 140,
+                width: 130,
                 alignSelf: 'flex-end',
                 color: 'black',
               },
               inputIOS: {
                 backgroundColor: 'transparent',
-                width: 140,
                 alignSelf: 'flex-end',
                 color: 'black',
+                textAlign: 'right',
+                paddingRight: 35,
               },
               iconContainer: {
-                top: 16,
+                top: 0,
                 right: 15,
               },
             }}
@@ -325,7 +326,8 @@ const AdviceCategory = ({route, navigation}) => {
             useNativeAndroidPickerStyle={false}
             Icon={() => {
               return (
-                <Image source={downarrow} style={{width: 12, height: 12}} />
+                // <Image source={downarrow} style={{width: 12, height: 12}} />
+                <FontAwesome5Icon name="caret-down" style={{fontSize: 15}} />
               );
             }}
           />
