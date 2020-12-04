@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Text, View, Image, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
-
+import {useDispatch, useSelector} from 'react-redux';
 import ResponsiveImage from 'react-native-responsive-image';
 import {
   heightPercentageToDP,
@@ -18,8 +18,10 @@ import {Dialog} from 'react-native-simple-dialogs';
 import {Textarea, Toast} from 'native-base';
 import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-
+import {ActionTypes} from '../../redux/ActionTypes';
 const AdviceCategory = ({route, navigation}) => {
+  const dispatch = useDispatch();
+  const ques = useSelector((state) => state.Questions.questionList);
   const [questions, setQuestions] = useState([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(null);
@@ -91,9 +93,9 @@ const AdviceCategory = ({route, navigation}) => {
       };
       if (route.params.type) {
         if (route.params.type == 'my_questions') {
-          data['author'] = 'me';
+          data.author = 'me';
         } else if (route.params.type == 'my_responses') {
-          data['responder'] = 'me';
+          data.responder = 'me';
         }
       }
       console.log(data);
@@ -106,8 +108,16 @@ const AdviceCategory = ({route, navigation}) => {
           response = response['advice-questions'];
           if (response.data.length) {
             if (current_page !== 1) {
+              dispatch({
+                type: ActionTypes.GET_QUESTION_LIST_SUCCESS,
+                payload: {data: questions.concat(response.data)},
+              });
               setQuestions(questions.concat(response.data));
             } else {
+              dispatch({
+                type: ActionTypes.GET_QUESTION_LIST_SUCCESS,
+                payload: {data: response.data},
+              });
               setQuestions(response.data);
             }
           }
@@ -143,13 +153,13 @@ const AdviceCategory = ({route, navigation}) => {
       bounces={false}
       alwaysBounceVertical={false}
       onEndReached={() => {
-        if (questions.length && totalPages && page <= totalPages) {
+        if (ques.length && totalPages && page <= totalPages) {
           LoadQuestions();
         }
       }}
-      onEndReachedThreshold={questions.length ? 0.5 : 0}
+      onEndReachedThreshold={ques.length ? 0.5 : 0}
       contentContainerStyle={
-        (questions.length
+        (ques.length
           ? {}
           : {
               flex: 1,
@@ -158,7 +168,7 @@ const AdviceCategory = ({route, navigation}) => {
           minHeight: heightPercentageToDP(100) - 30,
         })
       }
-      data={questions}
+      data={ques}
       renderItem={({item, index}) => renderItem(item, index)}
       keyExtractor={() => Math.random().toString()}
       numColumns={1}

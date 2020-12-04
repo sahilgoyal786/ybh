@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
   Text,
   StyleSheet,
@@ -8,16 +8,18 @@ import {
   Image,
   Modal,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
+import { useNavigation, DrawerActions } from '@react-navigation/native';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 import {
   downarrow,
@@ -26,9 +28,9 @@ import {
   backsec,
   bottomCurve,
 } from '../../common/images';
-import {Form, Content, Container, Icon, Toast} from 'native-base';
-import {Picker} from '@react-native-community/picker';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { Form, Content, Container, Icon, Toast } from 'native-base';
+import { Picker } from '@react-native-community/picker';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../../components/header';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import FastImage from 'react-native-fast-image';
@@ -37,7 +39,7 @@ import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 
 // import { Form } from 'formik';
-const LatestPhotos = ({route, navigation}) => {
+const LatestPhotos = ({ route, navigation }) => {
   const [userDetail, changeUserDetail] = useContext(userDetailContext);
   const latestPhotosArray = route.params.latestPhotosArray;
   const [currentImageIndex, setcurrentImageIndex] = React.useState(0);
@@ -46,38 +48,85 @@ const LatestPhotos = ({route, navigation}) => {
   const [modalPhotos, setModalPhotos] = React.useState([]);
   const [like, setLike] = React.useState(0);
   const d = new Date();
-  const [Value, setValue] = useState(d.getMonth() + '');
+  const months = [
+    {label: 'January', value: 'January'},
+    {label: 'February', value: 'February'},
+    {label: 'March', value: 'March'},
+    {label: 'April', value: 'April'},
+    {label: 'May', value: 'May'},
+    {label: 'June', value: 'June'},
+    {label: 'July', value: 'July'},
+    {label: 'August', value: 'August'},
+    {label: 'September', value: 'September'},
+    {label: 'October', value: 'October'},
+    {label: 'November', value: 'November'},
+    {label: 'December', value: 'December'},
+];
+const [selectedMonth, setMonth] = useState(months[0].value);
 
   const [todaysPhotos, setTodaysPhotos] = useState([]);
   const [weeksPhotos, setWeeksPhotos] = useState([]);
   const [monthsPhotos, setMonthsPhotos] = useState([]);
 
-  latestPhotosArray.forEach((element, index) => {
-    // console.log(element);
-    todaysPhotos.push(
-      <TouchableOpacity
-        key={Math.random()}
-        onPress={() => {
-          setShowModal(true);
-          setModalPhotos(latestPhotosArray);
-          setcurrentImageIndex(index);
-        }}>
-        <ImagesView source={{uri: element.url}} />
-      </TouchableOpacity>,
+  useEffect(() => {
+    var month = new Date().getMonth();
+    setMonth(months[month].value);
+    console.log('month-', month)
+    loadImage('today');
+    loadImage('week');
+    onChangeMonth(months[month].value);
+  }, []);
+  const loadImage = (type) => {
+    network.getResponse(
+      EndPoints.latestPhotos,
+      'POST',
+      { page: 1, filter: type },
+      userDetail.token,
+      (response) => {
+        switch (type) {
+          case 'today':
+            setTodaysPhotos(response.data);
+            break;
+          case 'week':
+            setWeeksPhotos(response.data);
+            break;
+          default:
+            break;
+        }
+      },
+      (error) => {
+        console.log('error', error);
+      },
     );
-  });
-
+  };
+  const onChangeMonth = (val) => {
+    console.log('val-', val)
+    network.getResponse(
+      EndPoints.latestPhotos,
+      'POST',
+      { page: 1, filter: val },
+      userDetail.token,
+      (response) => {
+        console.log('response--', response.data);
+        setMonthsPhotos(response.data);
+        navigation.navigate('Gallery', { type: val });
+      },
+      (error) => {
+        console.log('error', error);
+      },
+    );
+  };
   const storeLike = (url, like, index) => {
     setIsLoading(true);
     network.getResponse(
       EndPoints.storeLikes,
       'POST',
-      {url, like},
+      { url, like },
       userDetail.token,
       (response) => {
         console.log(response);
         if (response && response.message) {
-          Toast.show({text: response.message});
+          Toast.show({ text: response.message });
         }
         if (response && response.file) {
           let photosTemp = modalPhotos;
@@ -95,7 +144,7 @@ const LatestPhotos = ({route, navigation}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <Image
         source={bottomCurve}
         style={{
@@ -104,13 +153,14 @@ const LatestPhotos = ({route, navigation}) => {
           position: 'absolute',
           bottom: -100,
         }}
-        resizeMode="contain"></Image>
+        resizeMode="contain"
+      />
       <Header title="Latest Photos" backButton="true" />
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
         bounces={false}
-        style={{paddingTop: 20}}
+        style={{ paddingTop: 20 }}
         contentContainerStyle={{
           paddingBottom: 60,
           paddingLeft: 10,
@@ -120,7 +170,7 @@ const LatestPhotos = ({route, navigation}) => {
           <TextView>Today</TextView>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('Gallery', {latestPhotosArray});
+              navigation.navigate('Gallery', { todaysPhotos, type: 'today' });
             }}>
             <ViewMoreLink>View More</ViewMoreLink>
           </TouchableOpacity>
@@ -138,7 +188,26 @@ const LatestPhotos = ({route, navigation}) => {
                   right: widthPercentageToDP(1),
                 }}
               />
-              {todaysPhotos}
+              <FlatList
+                data={todaysPhotos}
+                horizontal={true}
+                removeClippedSubviews={false}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item, index }) => {
+                  return (
+                    <TouchableOpacity
+                      key={Math.random()}
+                      onPress={() => {
+                        setShowModal(true);
+                        setModalPhotos(latestPhotosArray);
+                        setcurrentImageIndex(index);
+                      }}>
+                      <ImagesView source={{ uri: item.url }} />
+                    </TouchableOpacity>
+                  );
+                }}
+              />
             </FirstView>
           </ScrollView>
           <SectionHeading>
@@ -149,33 +218,65 @@ const LatestPhotos = ({route, navigation}) => {
                 width: 100,
               }}
               onPress={() => {
-                navigation.navigate('Gallery', {latestPhotosArray});
+                navigation.navigate('Gallery', { weeksPhotos, type: 'week' });
               }}>
-              {/* <ViewMoreLink>View More</ViewMoreLink> */}
+              <ViewMoreLink>View More</ViewMoreLink>
             </TouchableOpacity>
           </SectionHeading>
           <ScrollView horizontal={true}>
-            <FirstView>{todaysPhotos}</FirstView>
+            <FirstView>
+              <FlatList
+                data={weeksPhotos}
+                horizontal={true}
+                removeClippedSubviews={false}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item, index }) => {
+                  return (
+                    <TouchableOpacity
+                      key={Math.random()}
+                      onPress={() => {
+                        setShowModal(true);
+                        setModalPhotos(latestPhotosArray);
+                        setcurrentImageIndex(index);
+                      }}>
+                      <ImagesView source={{ uri: item.url }} />
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            </FirstView>
           </ScrollView>
 
           <SectionHeading>
             <Image
               source={backfirst}
-              style={{position: 'absolute', left: -20}}
+              style={{ position: 'absolute', left: -20 }}
             />
             <TextView>Month</TextView>
+            <DropDownPicker
+              items={months}
+              defaultValue={selectedMonth}
+              containerStyle={{ height: 40, width:120 }}
+              style={{ backgroundColor: '#fff' }}
+              itemStyle={{
+                justifyContent: 'flex-start'
+              }}
+              dropDownStyle={{ backgroundColor: '#fff' }}
+              onChangeItem={val =>{onChangeMonth(val.value);}}
+            />
             {/* <Picker
               style={{
                 justifyContent: 'flex-end',
                 alignSelf: 'flex-end',
                 height: 30,
-                width: 120,
+                width: 150,
                 flexGrow: 0,
               }}
               mode="dropdown"
               placeholder="Select One"
               textStyle={{
-                fontSize: 19,
+                fontSize: 12,
                 fontWeight: '600',
                 color: '#484848',
                 fontFamily: 'FuturaPT-Book',
@@ -183,30 +284,55 @@ const LatestPhotos = ({route, navigation}) => {
               note={false}
               iosIcon={
                 <ResponsiveImage
-                  style={{tintColor: '#000'}}
+                  style={{ tintColor: '#000' }}
                   source={downarrow}
                   initHeight="16"
-                  initWidth="16"
+                  initWidth="5"
                 />
               }
               selectedValue={Value}
-              onValueChange={(val) => setValue(val)}>
-              <Picker.Item label="January" value="0" />
-              <Picker.Item label="February" value="1" />
-              <Picker.Item label="March" value="2" />
-              <Picker.Item label="April" value="3" />
-              <Picker.Item label="May" value="4" />
-              <Picker.Item label="June" value="5" />
-              <Picker.Item label="July" value="6" />
-              <Picker.Item label="August" value="7" />
-              <Picker.Item label="September" value="8" />
-              <Picker.Item label="October" value="9" />
-              <Picker.Item label="November" value="10" />
-              <Picker.Item label="December" value="11" />
+              onValueChange={(val) => {
+                console.log('val-', val);
+                onChangeMonth(val);
+                setValue(val);
+              }}>
+              <Picker.Item label="January" value="January" />
+              <Picker.Item label="February" value="February" />
+              <Picker.Item label="March" value="March" />
+              <Picker.Item label="April" value="April" />
+              <Picker.Item label="May" value="May" />
+              <Picker.Item label="June" value="June" />
+              <Picker.Item label="July" value="July" />
+              <Picker.Item label="August" value="August" />
+              <Picker.Item label="September" value="September" />
+              <Picker.Item label="October" value="October" />
+              <Picker.Item label="November" value="November" />
+              <Picker.Item label="December" value="December" />
             </Picker> */}
           </SectionHeading>
           <ScrollView horizontal={true}>
-            <FirstView>{todaysPhotos}</FirstView>
+            <FirstView>
+              <FlatList
+                data={monthsPhotos}
+                horizontal={true}
+                removeClippedSubviews={false}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item, index }) => {
+                  return (
+                    <TouchableOpacity
+                      key={Math.random()}
+                      onPress={() => {
+                        setShowModal(true);
+                        setModalPhotos(latestPhotosArray);
+                        setcurrentImageIndex(index);
+                      }}>
+                      <ImagesView source={{ uri: item.url }} />
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            </FirstView>
           </ScrollView>
           <LastImage>
             <LastaddImage
@@ -214,7 +340,7 @@ const LatestPhotos = ({route, navigation}) => {
               initHeight="150"
               initWidth={widthPercentageToDP(100) - 20}
 
-              // borderRadius={3}
+            // borderRadius={3}
             />
           </LastImage>
         </View>
@@ -252,9 +378,9 @@ const LatestPhotos = ({route, navigation}) => {
           onCancel={() => setShowModal(false)}
           index={currentImageIndex}
           renderImage={(props) => <FastImage {...props} />}
-          renderIndicator={() => {}}
+          renderIndicator={() => { }}
           renderFooter={(index) => {
-            let likes = modalPhotos[index]['likes'].split('-');
+            let likes = modalPhotos[index].likes.split('-');
             console.log(modalPhotos[index]);
             let total = parseInt(likes[0]) + parseInt(likes[1]);
             return (
@@ -262,51 +388,51 @@ const LatestPhotos = ({route, navigation}) => {
                 {isLoading ? (
                   <ActivityIndicator color="purple" />
                 ) : (
-                  <>
-                    {total > 0 && (
+                    <>
+                      {total > 0 && (
+                        <Text
+                          style={[
+                            styles.votePercentage,
+                            { width: 60, textAlign: 'right' },
+                          ]}>
+                          {Math.floor((likes[1] / total) * 100)}%
+                        </Text>
+                      )}
                       <Text
+                        onPress={() => {
+                          setLike(1);
+                          storeLike(modalPhotos[index].url, 0, index);
+                        }}
                         style={[
-                          styles.votePercentage,
-                          {width: 60, textAlign: 'right'},
+                          styles.voteButton,
+                          styles.left,
+                          like == 1 ? styles.active : [],
                         ]}>
-                        {Math.floor((likes[1] / total) * 100)}%
-                      </Text>
-                    )}
-                    <Text
-                      onPress={() => {
-                        setLike(1);
-                        storeLike(modalPhotos[index]['url'], 0, index);
-                      }}
-                      style={[
-                        styles.voteButton,
-                        styles.left,
-                        like == 1 ? styles.active : [],
-                      ]}>
-                      Nice
+                        Nice
                     </Text>
-                    <Text
-                      onPress={() => {
-                        setLike(2);
-                        storeLike(modalPhotos[index]['url'], 1, index);
-                      }}
-                      style={[
-                        styles.voteButton,
-                        styles.right,
-                        like == 2 ? styles.active : [],
-                      ]}>
-                      Supernice
-                    </Text>
-                    {total > 0 && (
                       <Text
+                        onPress={() => {
+                          setLike(2);
+                          storeLike(modalPhotos[index].url, 1, index);
+                        }}
                         style={[
-                          styles.votePercentage,
-                          {width: 60, textAlign: 'left'},
+                          styles.voteButton,
+                          styles.right,
+                          like == 2 ? styles.active : [],
                         ]}>
-                        {Math.floor((likes[0] / total) * 100)}%
-                      </Text>
-                    )}
-                  </>
-                )}
+                        Supernice
+                    </Text>
+                      {total > 0 && (
+                        <Text
+                          style={[
+                            styles.votePercentage,
+                            { width: 60, textAlign: 'left' },
+                          ]}>
+                          {Math.floor((likes[0] / total) * 100)}%
+                        </Text>
+                      )}
+                    </>
+                  )}
               </Voting>
             );
           }}
