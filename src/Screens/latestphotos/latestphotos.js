@@ -13,7 +13,7 @@ import {
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
-import DropDownPicker from 'react-native-dropdown-picker';
+// import DropDownPicker from 'react-native-dropdown-picker';
 
 import {photoworld} from '../../common/images';
 import {Toast} from 'native-base';
@@ -24,12 +24,14 @@ import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import ContentLoader from 'react-native-easy-content-loader';
+import {Picker} from '@react-native-community/picker';
 
 // import { Form } from 'formik';
 const LatestPhotos = ({route, navigation}) => {
   const [userDetail, changeUserDetail] = useContext(userDetailContext);
   const latestPhotosArray = route.params.latestPhotosArray;
   const [currentImageIndex, setcurrentImageIndex] = React.useState(0);
+  const [initCompleted, setInitCompleted] = React.useState(false);
   const [showModal, setShowModal] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [modalPhotos, setModalPhotos] = React.useState([]);
@@ -61,7 +63,7 @@ const LatestPhotos = ({route, navigation}) => {
   useEffect(() => {
     var month = new Date().getMonth();
     setMonth(months[month].value);
-    console.log('month-', months[month].value);
+    // console.log('month-', months[month].value);
     loadImage('today');
     loadImage('week');
     loadImageMonth(months[month].value);
@@ -118,7 +120,7 @@ const LatestPhotos = ({route, navigation}) => {
       {url, like},
       userDetail.token,
       (response) => {
-        console.log(response);
+        // console.log(response);
         if (response && response.message) {
           Toast.show({text: response.message});
         }
@@ -310,35 +312,37 @@ const LatestPhotos = ({route, navigation}) => {
             }}
           />
           <View
-            style={[
-              {
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              },
-            ]}>
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
             <TextView>Month</TextView>
-            <View
-              style={{
-                ...(Platform.OS !== 'android' && {
-                  zIndex: 10,
-                }),
-              }}>
-              <DropDownPicker
-                scrollViewProps={{scrollEnabled: true}}
-                items={months}
-                defaultValue={selectedMonth}
-                containerStyle={{height: 40, width: 120, padding: 0}}
-                style={{borderColor: 'transparent', padding: 0, marginRight: 0}}
-                itemStyle={{
-                  justifyContent: 'flex-start',
-                }}
-                dropDownStyle={{}}
-                autoScrollToDefaultValue={true}
-                onChangeItem={(val) => {
-                  onChangeMonth(val.value);
-                }}
-              />
+            <View>
+              <Picker
+                style={{height: 50, width: 150, padding: 0, textAlign: 'right'}}
+                selectedValue={selectedMonth}
+                onValueChange={(itemValue) => {
+                  if (initCompleted) {
+                    onChangeMonth(itemValue);
+                  }
+                  if (itemValue == selectedMonth) {
+                    setInitCompleted(true);
+                  }
+                }}>
+                <Picker.Item label="January" value={'January'} />
+                <Picker.Item label="February" value={'February'} />
+                <Picker.Item label="March" value={'March'} />
+                <Picker.Item label="April" value={'April'} />
+                <Picker.Item label="May" value={'May'} />
+                <Picker.Item label="June" value={'June'} />
+                <Picker.Item label="July" value={'July'} />
+                <Picker.Item label="August" value={'August'} />
+                <Picker.Item label="September" value={'September'} />
+                <Picker.Item label="October" value={'October'} />
+                <Picker.Item label="November" value={'November'} />
+                <Picker.Item label="December" value={'December'} />
+              </Picker>
             </View>
           </View>
           <FlatList
@@ -455,7 +459,7 @@ const LatestPhotos = ({route, navigation}) => {
           renderIndicator={() => {}}
           renderFooter={(index) => {
             let likes = modalPhotos[index].likes.split('-');
-            console.log(modalPhotos[index]);
+            // console.log(modalPhotos[index]);
             let total = parseInt(likes[0]) + parseInt(likes[1]);
             return (
               <Voting>
