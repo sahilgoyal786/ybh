@@ -22,15 +22,11 @@ import Thrive from '../Screens/thrive/thrive';
 import Thrivedetails from '../Screens/ThriveDetails/Thrivedetails';
 import VotingPage from '../Screens/voting page/votingpage';
 import AdviceCategory from '../Screens/adviceCategory/adviceCategory';
-import MyQuestionAdvice from '../Screens/myquestionadvice/myquestionadvice';
-import PhotoViewing from '../Screens/photoviewing/photoviewing';
 import SetPassword from '../Screens/setPassword/setPassword';
 import VerifyEmail from '../Screens/verifyEmail/verifyEmail';
 import Gallery from '../Screens/gallery/gallery';
 import MyPhotos from '../Screens/myphotos/myphotos';
 import Profile from '../Screens/profile/profile';
-import PhotoDetail from '../Screens/photodetail/photodetail';
-import MyResponse from '../Screens/myresponse/myresponce';
 import QuestionDetail from '../Screens/questiondetail/questiondetail';
 import TnC from '../Screens/TnC/TnC';
 import Privacy from '../Screens/Privacy/Privacy';
@@ -81,8 +77,6 @@ function AdviceComponent() {
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="GetAdvice" component={GetAdvice} />
       <Stack.Screen name="AdviceCategory" component={AdviceCategory} />
-      <Stack.Screen name="MyResponse" component={MyResponse} />
-      <Stack.Screen name="MyQuestionAdvice" component={MyQuestionAdvice} />
       <Stack.Screen name="QuestionDetail" component={QuestionDetail} />
       <Stack.Screen name="MyQuestions" component={AdviceCategory} />
       <Stack.Screen name="MyResponses" component={AdviceCategory} />
@@ -95,8 +89,6 @@ function ShareImageComponent() {
       <Tab.Screen name="ShareImage" component={ShareImage} />
       <Stack.Screen name="MyPhotos" component={MyPhotos} />
       <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="PhotoDetail" component={PhotoDetail} />
-      <Stack.Screen name="PhotoViewing" component={PhotoViewing} />
     </Stack.Navigator>
   );
 }

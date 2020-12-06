@@ -33,6 +33,7 @@ import {fetchLeaderBoard} from '../../common/helpers';
 import storage from '../../components/apis/storage';
 import {Dialog} from 'react-native-simple-dialogs';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const Home = () => {
   const [votingImages, setVotingImages] = React.useState([]);
@@ -142,15 +143,23 @@ const Home = () => {
                 source={{uri: response[i]['url']}}>
                 {i == 5 && (
                   <ViewMore>
-                    <TextMore
+                    <TouchableOpacity
                       onPress={() => {
                         //console.log(latestPhotosArray);
                         navigation.navigate('LatestPhotos', {
                           latestPhotosArray,
                         });
                       }}>
-                      More
-                    </TextMore>
+                      <View
+                        style={{
+                          flex: 1,
+                          width: widthPercentageToDP(30),
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <TextMore>More</TextMore>
+                      </View>
+                    </TouchableOpacity>
                   </ViewMore>
                 )}
               </LatestPhoto>,
@@ -375,7 +384,8 @@ const Home = () => {
             }}></Image>
         </LastImage>
         <Dialog
-          visible={loadingFailed}
+          visible={false}
+          // visible={loadingFailed}
           onTouchoutside={() => setLoadingFailed(false)}>
           <View>
             <Text

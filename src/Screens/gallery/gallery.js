@@ -29,6 +29,21 @@ import {Toast} from 'native-base';
 const Gallery = ({route, navigation}) => {
   const latestPhotosURLS = route.params.latestPhotosURLS;
   const type = route.params.type;
+
+  const month = route.params.month ? route.params.month : null;
+  let headerTitle = 'Photos';
+
+  switch (type) {
+    case 'today':
+      headerTitle = 'Photos Uploaded Today';
+      break;
+    case 'week':
+      headerTitle = 'Photos This Week';
+      break;
+    case 'month':
+      headerTitle = 'Photos For ' + month;
+      break;
+  }
   const d = new Date();
   const [Value, setValue] = useState(d.getMonth() + '');
   const [currentImageIndex, setcurrentImageIndex] = React.useState(0);
@@ -87,12 +102,16 @@ const Gallery = ({route, navigation}) => {
 
   const LoadImages = () => {
     const tempImagesArray = [];
+    let params = {page: page, filter: type};
+    if (month !== null) {
+      params['month'] = month;
+    }
     setLoadingMore(true);
     try {
       network.getResponse(
         EndPoints.latestPhotos,
         'POST',
-        {page: page, filter: type},
+        params,
         userDetail.token,
         (response) => {
           // console.log('response.data', response.data);
@@ -158,7 +177,7 @@ const Gallery = ({route, navigation}) => {
       }
       ListHeaderComponent={
         <View>
-          <Header title="Photos" backButton="true" />
+          <Header title={headerTitle} backButton="true" />
         </View>
       }
       ListFooterComponentStyle={{

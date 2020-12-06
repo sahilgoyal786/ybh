@@ -10,16 +10,12 @@ import {
 } from 'react-native';
 import {Textarea, Form, Toast} from 'native-base';
 import {
-  getadvive2background,
-  menu,
   single,
   sexual,
   finance,
   genral,
   material,
   enterprene,
-  headerView,
-  botomView,
   bottomCurve,
 } from '../../common/images';
 import {

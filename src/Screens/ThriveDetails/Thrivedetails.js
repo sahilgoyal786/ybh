@@ -1,19 +1,5 @@
 import React, {Component} from 'react';
-import {
-  welcomepagebackground,
-  menu,
-  addbtmimg,
-  topbanner,
-  bannerThriveimg,
-  profile,
-  facebook,
-  twiter,
-  insta,
-  linkedin,
-  blogimg,
-  calendar,
-  bottomCurve,
-} from '../../common/images';
+import {addbtmimg, topbanner, bottomCurve} from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
 import {
@@ -159,10 +145,10 @@ const Thrivedetails = ({route, navigation}) => {
               height: 30,
             }}>
             <Text>Share: </Text>
-            <Image source={facebook} style={{height: 20, width: 20}} />
+            {/* <Image source={facebook} style={{height: 20, width: 20}} />
             <Image source={twiter} style={{height: 20, width: 20}} />
             <Image source={insta} style={{height: 20, width: 20}} />
-            <Image source={linkedin} style={{height: 20, width: 20}} />
+            <Image source={linkedin} style={{height: 20, width: 20}} /> */}
           </View>
           <Image
             source={addbtmimg}

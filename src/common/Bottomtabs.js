@@ -7,20 +7,11 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {selectedTabCurve} from '../common/images';
-// import {RedColor, whiteColor, purpleColor} from '../../utils/fonts';
-// import {Red12pxFont} from '../../utils/CommonStyles';
-// import {camera} from '../../utils/Images';
 import ResponsiveImage from 'react-native-responsive-image';
 import Trivia from '../Screens/trivia/trivia';
 import LinearGradient from 'react-native-linear-gradient';
 
 const BottomTab = ({state, descriptors, navigation}) => {
-  // const focusedOptions = descriptors[state.routes[state.index].key].options;
-
-  // if (focusedOptions.tabBarVisible === true) {
-  //   return null;
-  // }
-
   return (
     <View style={styles.ButtonContainer}>
       {state.routes.map((route, index) => {
@@ -104,13 +95,9 @@ const BottomTab = ({state, descriptors, navigation}) => {
                       height: 20,
                       width: widthPercentageToDP(20) + 10,
                       top: -16,
-                      left: 0,
+                      left: -5,
                     }}>
-                    <Image
-                      source={selectedTabCurve}
-                      height={1}
-                      resizeMode="contain"
-                    />
+                    <Image source={selectedTabCurve} resizeMode="contain" />
                   </View>
                 )}
                 <ResponsiveImage

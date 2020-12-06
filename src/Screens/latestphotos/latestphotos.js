@@ -1,46 +1,32 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   Text,
   StyleSheet,
   View,
-  ImageBackground,
   ScrollView,
-  Image,
   Modal,
   ActivityIndicator,
   FlatList,
   TouchableOpacity,
-  Platform
+  Platform,
 } from 'react-native';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  heightPercentageToDP,
-  widthPercentageToDP,
-} from 'react-native-responsive-screen';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
-import { useNavigation, DrawerActions } from '@react-navigation/native';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-import {
-  downarrow,
-  photoworld,
-  backfirst,
-  backsec,
-  bottomCurve,
-} from '../../common/images';
-import { Form, Content, Container, Icon, Toast } from 'native-base';
-import { Picker } from '@react-native-community/picker';
+import {photoworld} from '../../common/images';
+import {Toast} from 'native-base';
 import Header from '../../components/header';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import FastImage from 'react-native-fast-image';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
+import ContentLoader from 'react-native-easy-content-loader';
 
 // import { Form } from 'formik';
-const LatestPhotos = ({ route, navigation }) => {
+const LatestPhotos = ({route, navigation}) => {
   const [userDetail, changeUserDetail] = useContext(userDetailContext);
   const latestPhotosArray = route.params.latestPhotosArray;
   const [currentImageIndex, setcurrentImageIndex] = React.useState(0);
@@ -50,29 +36,32 @@ const LatestPhotos = ({ route, navigation }) => {
   const [like, setLike] = React.useState(0);
   const d = new Date();
   const months = [
-    { label: 'January', value: 'January' },
-    { label: 'February', value: 'February' },
-    { label: 'March', value: 'March' },
-    { label: 'April', value: 'April' },
-    { label: 'May', value: 'May' },
-    { label: 'June', value: 'June' },
-    { label: 'July', value: 'July' },
-    { label: 'August', value: 'August' },
-    { label: 'September', value: 'September' },
-    { label: 'October', value: 'October' },
-    { label: 'November', value: 'November' },
-    { label: 'December', value: 'December' },
+    {label: 'January', value: 'January'},
+    {label: 'February', value: 'February'},
+    {label: 'March', value: 'March'},
+    {label: 'April', value: 'April'},
+    {label: 'May', value: 'May'},
+    {label: 'June', value: 'June'},
+    {label: 'July', value: 'July'},
+    {label: 'August', value: 'August'},
+    {label: 'September', value: 'September'},
+    {label: 'October', value: 'October'},
+    {label: 'November', value: 'November'},
+    {label: 'December', value: 'December'},
   ];
   const [selectedMonth, setMonth] = useState(months[0].value);
 
   const [todaysPhotos, setTodaysPhotos] = useState([]);
   const [weeksPhotos, setWeeksPhotos] = useState([]);
   const [monthsPhotos, setMonthsPhotos] = useState([]);
+  const [todaysPhotosLoading, setTodaysPhotosLoading] = useState(true);
+  const [weeksPhotosLoading, setWeeksPhotosLoading] = useState(true);
+  const [monthsPhotosLoading, setMonthsPhotosLoading] = useState(true);
 
   useEffect(() => {
     var month = new Date().getMonth();
     setMonth(months[month].value);
-    console.log('month-', months[month].value)
+    console.log('month-', months[month].value);
     loadImage('today');
     loadImage('week');
     loadImageMonth(months[month].value);
@@ -81,17 +70,21 @@ const LatestPhotos = ({ route, navigation }) => {
     network.getResponse(
       EndPoints.latestPhotos,
       'POST',
-      { page: 1, filter: type },
+      {page: 1, filter: type, count: 4},
       userDetail.token,
       (response) => {
         switch (type) {
           case 'today':
+            setTodaysPhotosLoading(false);
             setTodaysPhotos(response.data);
             break;
           case 'week':
+            setWeeksPhotosLoading(false);
             setWeeksPhotos(response.data);
             break;
-          default: setMonthsPhotos(response.data);
+          default:
+            setMonthsPhotosLoading(false);
+            setMonthsPhotos(response.data);
             break;
         }
       },
@@ -104,7 +97,7 @@ const LatestPhotos = ({ route, navigation }) => {
     network.getResponse(
       EndPoints.latestPhotos,
       'POST',
-      { page: 1, filter: 'month', month: val },
+      {page: 1, filter: 'month', month: val},
       userDetail.token,
       (response) => {
         setMonthsPhotos(response.data);
@@ -115,33 +108,19 @@ const LatestPhotos = ({ route, navigation }) => {
     );
   };
   const onChangeMonth = (val) => {
-    console.log('val-', val)
-    network.getResponse(
-      EndPoints.latestPhotos,
-      'POST',
-      { page: 1, filter: 'month', month: val },
-      userDetail.token,
-      (response) => {
-        console.log('response--', response.data);
-        setMonthsPhotos(response.data);
-        navigation.navigate('Gallery', { type: val });
-      },
-      (error) => {
-        console.log('error', error);
-      },
-    );
+    navigation.navigate('Gallery', {type: 'month', month: val});
   };
   const storeLike = (url, like, index) => {
     setIsLoading(true);
     network.getResponse(
       EndPoints.storeLikes,
       'POST',
-      { url, like },
+      {url, like},
       userDetail.token,
       (response) => {
         console.log(response);
         if (response && response.message) {
-          Toast.show({ text: response.message });
+          Toast.show({text: response.message});
         }
         if (response && response.file) {
           let photosTemp = modalPhotos;
@@ -159,38 +138,28 @@ const LatestPhotos = ({ route, navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      {/* <ImageBackground
-        source={bottomCurve}
-        style={{
-          width: widthPercentageToDP(100),
-          height: 200,
-          position: 'absolute',
-          bottom: -100,
-        }}
-        resizeMode="contain"
-      /> */}
+    <View style={{flex: 1}}>
       <Header title="Latest Photos" backButton="true" />
 
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
         bounces={false}
-        style={{ paddingTop: 20 }}
+        style={{paddingTop: 20}}
         contentContainerStyle={{
           paddingBottom: 60,
           paddingLeft: 10,
           paddingRight: 10,
         }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
           <TextView>Today</TextView>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('Gallery', { todaysPhotos, type: 'today' });
-            }}>
-            <ViewMoreLink>View More</ViewMoreLink>
-          </TouchableOpacity>
         </View>
+
         <View>
           <FlatList
             data={todaysPhotos}
@@ -198,103 +167,255 @@ const LatestPhotos = ({ route, navigation }) => {
             removeClippedSubviews={false}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
-            renderItem={({ item, index }) => {
+            keyExtractor={() => Math.random().toString()}
+            ListEmptyComponent={
+              todaysPhotosLoading ? (
+                <View flexDirection="row" flex={1}>
+                  <ContentLoader
+                    key={Math.random}
+                    title={false}
+                    avatar={true}
+                    aShape={'square'}
+                    active
+                    listSize={4}
+                    itemStyle={{margin: 0, padding: 0}}
+                    avatarStyles={{
+                      height: widthPercentageToDP(25) - 9,
+                      width: widthPercentageToDP(25) - 9,
+                      marginRight: 0,
+                      padding: 0,
+                    }}
+                    paragraphStyles={{display: 'none'}}
+                    containerStyles={{
+                      height: widthPercentageToDP(25),
+                      width: widthPercentageToDP(25),
+                      paddingHorizontal: 0,
+                      paddingBottom: 0,
+                    }}
+                    imageStyles={{marginRight: 0, padding: 0}}
+                  />
+                </View>
+              ) : (
+                <View
+                  style={{
+                    height: widthPercentageToDP(25) - 9,
+                    justifyContent: 'center',
+                  }}>
+                  <Text>Nothing to show</Text>
+                </View>
+              )
+            }
+            renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
                   key={Math.random()}
                   onPress={() => {
-                    setShowModal(true);
-                    setModalPhotos(latestPhotosArray);
-                    setcurrentImageIndex(index);
+                    if (index == 3 || index == todaysPhotos.length - 1) {
+                      navigation.navigate('Gallery', {
+                        todaysPhotos,
+                        type: 'today',
+                      });
+                    } else {
+                      setShowModal(true);
+                      setModalPhotos(latestPhotosArray);
+                      setcurrentImageIndex(index);
+                    }
                   }}>
-                  <ImagesView source={{ uri: item.url }} />
+                  {(index == 3 || index == todaysPhotos.length - 1) && (
+                    <ViewMore>
+                      <ViewMoreLink>View More</ViewMoreLink>
+                    </ViewMore>
+                  )}
+                  <ImagesView source={{uri: item.url}} />
                 </TouchableOpacity>
               );
             }}
           />
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
             <TextView>Week</TextView>
-            <TouchableOpacity
-              style={{
-                height: 30,
-                width: 100,
-              }}
-              onPress={() => {
-                navigation.navigate('Gallery', { weeksPhotos, type: 'week' });
-              }}>
-              <ViewMoreLink>View More</ViewMoreLink>
-            </TouchableOpacity>
           </View>
           <FlatList
             data={weeksPhotos}
             horizontal={true}
             removeClippedSubviews={false}
             showsVerticalScrollIndicator={false}
+            keyExtractor={() => Math.random().toString()}
+            ListEmptyComponent={
+              weeksPhotosLoading ? (
+                <View flexDirection="row" flex={1}>
+                  <ContentLoader
+                    key={Math.random}
+                    title={false}
+                    avatar={true}
+                    aShape={'square'}
+                    active
+                    listSize={4}
+                    itemStyle={{margin: 0, padding: 0}}
+                    avatarStyles={{
+                      height: widthPercentageToDP(25) - 9,
+                      width: widthPercentageToDP(25) - 9,
+                      marginRight: 0,
+                      padding: 0,
+                    }}
+                    paragraphStyles={{display: 'none'}}
+                    containerStyles={{
+                      height: widthPercentageToDP(25),
+                      width: widthPercentageToDP(25),
+                      paddingHorizontal: 0,
+                      paddingBottom: 0,
+                    }}
+                    imageStyles={{marginRight: 0, padding: 0}}
+                  />
+                </View>
+              ) : (
+                <View
+                  style={{
+                    height: widthPercentageToDP(25) - 9,
+                    justifyContent: 'center',
+                  }}>
+                  <Text>Nothing to show</Text>
+                </View>
+              )
+            }
             showsHorizontalScrollIndicator={false}
-            renderItem={({ item, index }) => {
+            renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
                   key={Math.random()}
                   onPress={() => {
-                    setShowModal(true);
-                    setModalPhotos(latestPhotosArray);
-                    setcurrentImageIndex(index);
+                    if (index == 3 || index == weeksPhotos.length - 1) {
+                      navigation.navigate('Gallery', {
+                        weeksPhotos,
+                        type: 'week',
+                      });
+                    } else {
+                      setShowModal(true);
+                      setModalPhotos(latestPhotosArray);
+                      setcurrentImageIndex(index);
+                    }
                   }}>
-                  <ImagesView source={{ uri: item.url }} />
+                  {(index == 3 || index == weeksPhotos.length - 1) && (
+                    <ViewMore>
+                      <ViewMoreLink>View More</ViewMoreLink>
+                    </ViewMore>
+                  )}
+                  <ImagesView source={{uri: item.url}} />
                 </TouchableOpacity>
               );
             }}
           />
-          <View style={[{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
+          <View
+            style={[
+              {
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              },
+            ]}>
             <TextView>Month</TextView>
             <View
               style={{
                 ...(Platform.OS !== 'android' && {
-                  zIndex: 10
-                })
-              }}
-            >
+                  zIndex: 10,
+                }),
+              }}>
               <DropDownPicker
-                scrollViewProps={{ scrollEnabled: true }}
+                scrollViewProps={{scrollEnabled: true}}
                 items={months}
                 defaultValue={selectedMonth}
-                containerStyle={{ height: 40, width: 120 }}
-                style={{ borderColor:'transparent'}}
+                containerStyle={{height: 40, width: 120, padding: 0}}
+                style={{borderColor: 'transparent', padding: 0, marginRight: 0}}
                 itemStyle={{
                   justifyContent: 'flex-start',
                 }}
                 dropDownStyle={{}}
-                onChangeItem={val => { onChangeMonth(val.value); }}
+                autoScrollToDefaultValue={true}
+                onChangeItem={(val) => {
+                  onChangeMonth(val.value);
+                }}
               />
             </View>
           </View>
-         {monthsPhotos.length>0 && <FlatList
+          <FlatList
             data={monthsPhotos}
             horizontal={true}
             removeClippedSubviews={false}
             showsVerticalScrollIndicator={false}
+            keyExtractor={() => Math.random().toString()}
+            ListEmptyComponent={
+              monthsPhotosLoading ? (
+                <View flexDirection="row" flex={1}>
+                  <ContentLoader
+                    key={Math.random}
+                    title={false}
+                    avatar={true}
+                    aShape={'square'}
+                    active
+                    listSize={4}
+                    itemStyle={{margin: 0, padding: 0}}
+                    avatarStyles={{
+                      height: widthPercentageToDP(25) - 9,
+                      width: widthPercentageToDP(25) - 9,
+                      marginRight: 0,
+                      padding: 0,
+                    }}
+                    paragraphStyles={{display: 'none'}}
+                    containerStyles={{
+                      height: widthPercentageToDP(25),
+                      width: widthPercentageToDP(25),
+                      paddingHorizontal: 0,
+                      paddingBottom: 0,
+                    }}
+                    imageStyles={{marginRight: 0, padding: 0}}
+                  />
+                </View>
+              ) : (
+                <View
+                  style={{
+                    height: widthPercentageToDP(25) - 9,
+                    justifyContent: 'center',
+                  }}>
+                  <Text>Nothing to show</Text>
+                </View>
+              )
+            }
             showsHorizontalScrollIndicator={false}
-            renderItem={({ item, index }) => {
+            renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
                   key={Math.random()}
                   onPress={() => {
-                    setShowModal(true);
-                    setModalPhotos(monthsPhotos);
-                    setcurrentImageIndex(index);
+                    if (index == 3 || index == monthsPhotos.length - 1) {
+                      navigation.navigate('Gallery', {
+                        type: 'month',
+                        month: selectedMonth,
+                      });
+                    } else {
+                      setShowModal(true);
+                      setModalPhotos(monthsPhotos);
+                      setcurrentImageIndex(index);
+                    }
                   }}>
-                  <ImagesView source={{ uri: item.url }} />
+                  {(index == 3 || index == monthsPhotos.length - 1) && (
+                    <ViewMore>
+                      <ViewMoreLink>View More</ViewMoreLink>
+                    </ViewMore>
+                  )}
+                  <ImagesView source={{uri: item.url}} />
                 </TouchableOpacity>
               );
             }}
-          />}
+          />
           <LastImage>
             <LastaddImage
               source={photoworld}
               initHeight="150"
-              initWidth={widthPercentageToDP(100) - 20}
-
-            // borderRadius={3}
+              initWidth={widthPercentageToDP(100) - 21}
             />
           </LastImage>
         </View>
@@ -331,7 +452,7 @@ const LatestPhotos = ({ route, navigation }) => {
           onCancel={() => setShowModal(false)}
           index={currentImageIndex}
           renderImage={(props) => <FastImage {...props} />}
-          renderIndicator={() => { }}
+          renderIndicator={() => {}}
           renderFooter={(index) => {
             let likes = modalPhotos[index].likes.split('-');
             console.log(modalPhotos[index]);
@@ -341,57 +462,57 @@ const LatestPhotos = ({ route, navigation }) => {
                 {isLoading ? (
                   <ActivityIndicator color="purple" />
                 ) : (
-                    <>
-                      {total > 0 && (
-                        <Text
-                          style={[
-                            styles.votePercentage,
-                            { width: 60, textAlign: 'right' },
-                          ]}>
-                          {Math.floor((likes[1] / total) * 100)}%
-                        </Text>
-                      )}
+                  <>
+                    {total > 0 && (
                       <Text
-                        onPress={() => {
-                          setLike(1);
-                          storeLike(modalPhotos[index].url, 0, index);
-                        }}
                         style={[
-                          styles.voteButton,
-                          styles.left,
-                          like == 1 ? styles.active : [],
+                          styles.votePercentage,
+                          {width: 60, textAlign: 'right'},
                         ]}>
-                        Nice
+                        {Math.floor((likes[1] / total) * 100)}%
+                      </Text>
+                    )}
+                    <Text
+                      onPress={() => {
+                        setLike(1);
+                        storeLike(modalPhotos[index].url, 0, index);
+                      }}
+                      style={[
+                        styles.voteButton,
+                        styles.left,
+                        like == 1 ? styles.active : [],
+                      ]}>
+                      Nice
                     </Text>
+                    <Text
+                      onPress={() => {
+                        setLike(2);
+                        storeLike(modalPhotos[index].url, 1, index);
+                      }}
+                      style={[
+                        styles.voteButton,
+                        styles.right,
+                        like == 2 ? styles.active : [],
+                      ]}>
+                      Supernice
+                    </Text>
+                    {total > 0 && (
                       <Text
-                        onPress={() => {
-                          setLike(2);
-                          storeLike(modalPhotos[index].url, 1, index);
-                        }}
                         style={[
-                          styles.voteButton,
-                          styles.right,
-                          like == 2 ? styles.active : [],
+                          styles.votePercentage,
+                          {width: 60, textAlign: 'left'},
                         ]}>
-                        Supernice
-                    </Text>
-                      {total > 0 && (
-                        <Text
-                          style={[
-                            styles.votePercentage,
-                            { width: 60, textAlign: 'left' },
-                          ]}>
-                          {Math.floor((likes[0] / total) * 100)}%
-                        </Text>
-                      )}
-                    </>
-                  )}
+                        {Math.floor((likes[0] / total) * 100)}%
+                      </Text>
+                    )}
+                  </>
+                )}
               </Voting>
             );
           }}
         />
       </Modal>
-    </View >
+    </View>
   );
 };
 const LastaddImage = styled(ResponsiveImage)({});
@@ -400,28 +521,17 @@ const LastImage = styled(View)({
   padding: 1,
 });
 const ImagesView = styled(FastImage)({
-  width: widthPercentageToDP(22) - 8,
-  height: widthPercentageToDP(22) - 8,
+  width: widthPercentageToDP(25) - 9,
+  height: widthPercentageToDP(25) - 9,
   margin: 2,
   resizeMode: 'cover',
-  zIndex: -99
-});
-const ViewMoreLink = styled(Text)({
-  textAlign: 'right',
-  fontSize: 16,
-  color: '#A176C5',
-  fontFamily: 'FuturaPT-Book',
+  zIndex: -99,
 });
 const TextView = styled(Text)({
   fontSize: 19,
   fontWeight: '600',
   color: '#484848',
   fontFamily: 'FuturaPT-Book',
-});
-const SectionHeading = styled(View)({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'baseline',
 });
 const Voting = styled(View)({
   flexDirection: 'row',
@@ -430,14 +540,6 @@ const Voting = styled(View)({
   padding: 10,
   width: widthPercentageToDP(100),
 });
-const FirstView = styled(View)({
-  flexDirection: 'row',
-  marginLeft: -2,
-  marginRight: -2,
-  marginBottom: 20,
-  overflow: 'scroll',
-});
-
 const styles = StyleSheet.create({
   voteButton: {
     textTransform: 'uppercase',
@@ -464,6 +566,23 @@ const styles = StyleSheet.create({
     padding: 10,
     fontWeight: 'bold',
   },
+});
+const ViewMoreLink = styled(Text)({
+  color: 'white',
+  fontFamily: 'FuturaPT-Book',
+});
+const ViewMore = styled(View)({
+  backgroundColor: '#F5C84B',
+  flex: 1,
+  opacity: 0.9,
+  //borderRadius: 6,
+  justifyContent: 'center',
+  alignItems: 'center',
+  position: 'absolute',
+  width: widthPercentageToDP(25) - 9,
+  top: 2,
+  left: 2,
+  height: widthPercentageToDP(25) - 9,
 });
 
 export default LatestPhotos;

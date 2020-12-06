@@ -268,7 +268,11 @@ const Trivia = ({navigation}) => {
               </View>
             </QuesVIew>
             <ResponsiveImage
-              style={{marginLeft: 14, marginTop: 20}}
+              style={{
+                marginLeft: 12,
+                marginTop: 20,
+                width: widthPercentageToDP(100) - 24,
+              }}
               source={photoworld}
               initHeight="150"
               initWidth="396"
