@@ -72,10 +72,10 @@ const LatestPhotos = ({ route, navigation }) => {
   useEffect(() => {
     var month = new Date().getMonth();
     setMonth(months[month].value);
-    console.log('month-', month)
+    console.log('month-', months[month].value)
     loadImage('today');
     loadImage('week');
-    loadImage(months[month].value);
+    loadImageMonth(months[month].value);
   }, []);
   const loadImage = (type) => {
     network.getResponse(
@@ -100,12 +100,26 @@ const LatestPhotos = ({ route, navigation }) => {
       },
     );
   };
+  const loadImageMonth = (val) => {
+    network.getResponse(
+      EndPoints.latestPhotos,
+      'POST',
+      { page: 1, filter: 'month', month: val },
+      userDetail.token,
+      (response) => {
+        setMonthsPhotos(response.data);
+      },
+      (error) => {
+        console.log('error', error);
+      },
+    );
+  };
   const onChangeMonth = (val) => {
     console.log('val-', val)
     network.getResponse(
       EndPoints.latestPhotos,
       'POST',
-      { page: 1, filter: val },
+      { page: 1, filter: 'month', month: val },
       userDetail.token,
       (response) => {
         console.log('response--', response.data);
@@ -146,7 +160,7 @@ const LatestPhotos = ({ route, navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <ImageBackground
+      {/* <ImageBackground
         source={bottomCurve}
         style={{
           width: widthPercentageToDP(100),
@@ -155,8 +169,9 @@ const LatestPhotos = ({ route, navigation }) => {
           bottom: -100,
         }}
         resizeMode="contain"
-      />
+      /> */}
       <Header title="Latest Photos" backButton="true" />
+
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
@@ -230,21 +245,30 @@ const LatestPhotos = ({ route, navigation }) => {
               );
             }}
           />
-          <View style={[{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }, Platform.OS=='ios'&&{zIndex:10}]}>
+          <View style={[{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
             <TextView>Month</TextView>
-            <DropDownPicker
-              items={months}
-              defaultValue={selectedMonth}
-              containerStyle={{ height: 40, width: 120, zIndex:99 }}
-              style={{ backgroundColor: 'transparent', zIndex:99 }}
-              itemStyle={{
-                justifyContent: 'flex-start', zIndex:99
+            <View
+              style={{
+                ...(Platform.OS !== 'android' && {
+                  zIndex: 10
+                })
               }}
-              dropDownStyle={{ backgroundColor: '#fff', zIndex:99 }}
-              onChangeItem={val => { onChangeMonth(val.value); }}
-            />
+            >
+              <DropDownPicker
+                scrollViewProps={{ scrollEnabled: true }}
+                items={months}
+                defaultValue={selectedMonth}
+                containerStyle={{ height: 40, width: 120 }}
+                style={{ borderColor:'transparent'}}
+                itemStyle={{
+                  justifyContent: 'flex-start',
+                }}
+                dropDownStyle={{}}
+                onChangeItem={val => { onChangeMonth(val.value); }}
+              />
+            </View>
           </View>
-          <FlatList
+         {monthsPhotos.length>0 && <FlatList
             data={monthsPhotos}
             horizontal={true}
             removeClippedSubviews={false}
@@ -256,14 +280,14 @@ const LatestPhotos = ({ route, navigation }) => {
                   key={Math.random()}
                   onPress={() => {
                     setShowModal(true);
-                    setModalPhotos(latestPhotosArray);
+                    setModalPhotos(monthsPhotos);
                     setcurrentImageIndex(index);
                   }}>
                   <ImagesView source={{ uri: item.url }} />
                 </TouchableOpacity>
               );
             }}
-          />
+          />}
           <LastImage>
             <LastaddImage
               source={photoworld}
@@ -380,8 +404,8 @@ const ImagesView = styled(FastImage)({
   height: widthPercentageToDP(22) - 8,
   margin: 2,
   resizeMode: 'cover',
-  zIndex:-99
- });
+  zIndex: -99
+});
 const ViewMoreLink = styled(Text)({
   textAlign: 'right',
   fontSize: 16,
