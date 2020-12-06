@@ -10,9 +10,10 @@ import {
 } from 'react-native';
 import Button from '../../components/button';
 import {Textarea, Form, Toast} from 'native-base';
+import {CheckBox} from 'react-native-elements';
 import Numeral from 'numeral';
 import {Dialog} from 'react-native-simple-dialogs';
-import {bottomCurve} from '../../common/images';
+import {bottomCurve, iconchecked, unchecked} from '../../common/images';
 import styled from 'styled-components/native';
 import {
   heightPercentageToDP,
@@ -27,6 +28,7 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch, useSelector} from 'react-redux';
 import {ActionTypes} from '../../redux/ActionTypes';
 import reducer from '../../redux/reducer';
+import ResponsiveImage from 'react-native-responsive-image';
 
 const QuestionDetail = ({navigation, route}) => {
   const {question} = route.params;
@@ -38,7 +40,7 @@ const QuestionDetail = ({navigation, route}) => {
   const [yourResponse, setYourResponse] = React.useState('');
   const [responses, setResponses] = React.useState(question.answers);
   const [isLoading, setisLoading] = React.useState(false);
-  const [keyword, setKeyword] = React.useState('');
+  const [anonymousChecked, setAnonymousChecked] = React.useState(false);
   const [editReponse, setEditReponse] = React.useState(false);
   const [responsesView, setResponsesView] = React.useState(<></>);
 
@@ -134,7 +136,7 @@ const QuestionDetail = ({navigation, route}) => {
           }}>
           <BasicText>{element.ans}</BasicText>
           <View>
-            {element.user.id == userDetail.user.id && (
+            {element.user_id == userDetail.user.id && (
               <View
                 style={{
                   flexDirection: 'row',
@@ -171,7 +173,7 @@ const QuestionDetail = ({navigation, route}) => {
 
         <Score>
           <User>
-            - {element.user.username}{' '}
+            - {element.user_name}{' '}
             <TimingText>({element.published_at})</TimingText>
           </User>
           <View
@@ -311,6 +313,32 @@ const QuestionDetail = ({navigation, route}) => {
                 padding: 10,
               }}
             />
+
+            <CheckBox
+              title="Post as anonymous"
+              textStyle={{
+                fontSize: 16,
+                fontWeight: '400',
+                fontFamily: 'FuturaPT-Medium',
+                color: 'black',
+              }}
+              checkedIcon={
+                <FontAwesome5Icon
+                  name="check-square"
+                  style={{fontSize: 20, color: 'purple'}}
+                  solid
+                />
+              }
+              uncheckedIcon={
+                <FontAwesome5Icon
+                  name="square"
+                  style={{fontSize: 20, color: 'purple'}}
+                />
+              }
+              checked={anonymousChecked}
+              onPress={() => setAnonymousChecked(!anonymousChecked)}
+              containerStyle={styles.containerchecked}
+            />
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Button
@@ -325,6 +353,7 @@ const QuestionDetail = ({navigation, route}) => {
                       {
                         question_id: question.id,
                         response: yourResponse,
+                        anonymous: anonymousChecked,
                       },
                       userDetail.token,
                       (response) => {
@@ -438,21 +467,6 @@ const QuestionDetail = ({navigation, route}) => {
     </View>
   );
 };
-const ViewTextarea = styled(View)({
-  padding: 10,
-  borderRadius: 4,
-  borderWidth: 1.5,
-  borderColor: '#F4F5F6',
-  shadowColor: '#000',
-  shadowOffset: {
-    width: 0,
-    height: 0.1,
-  },
-  shadowOpacity: 0.2,
-  shadowRadius: 9,
-  elevation: 3,
-  background: 'white',
-});
 const Score = styled(View)({
   marginLeft: 20,
   marginTop: 10,
@@ -478,11 +492,6 @@ const BasicText = styled(Text)({
   fontSize: 16,
   width: widthPercentageToDP(100) - 105,
 });
-const Question = styled(Text)({
-  // padding: 15,
-  fontFamily: 'FuturaPT-Light',
-  fontSize: 16,
-});
 const Card = styled(View)({
   borderRadius: 4,
   padding: 10,
@@ -506,4 +515,22 @@ const Heading = styled(Text)({
   fontFamily: 'FuturaPT-Medium',
   marginLeft: 5,
 });
+
+export const styles = StyleSheet.create({
+  containerchecked: {
+    backgroundColor: 0,
+    borderWidth: 0,
+    marginRight: '6%',
+    fontFamily: 'FuturaPT-Light',
+    color: 'red',
+    marginTop: 20,
+    paddingLeft: 0,
+    marginLeft: 0,
+  },
+});
+
+const Checkicons = styled(ResponsiveImage)({
+  tintColor: '#000',
+});
+
 export default QuestionDetail;

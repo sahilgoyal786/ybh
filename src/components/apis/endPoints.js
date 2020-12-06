@@ -9,7 +9,7 @@ const EndPoints = {
   profileUpdate: {url: 'user/profile/update'},
   passwordUpdate: {url: 'update-password'},
 
-  votingImages: {url: 'voting-images', cache_age: 4},
+  votingImages: {url: 'voting-images', cache_age: 0.5},
   castVote: {url: 'voting-images'},
   leaderBoard: {url: 'leader-board'},
 

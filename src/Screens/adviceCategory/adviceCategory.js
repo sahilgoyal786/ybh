@@ -303,7 +303,8 @@ const AdviceCategory = ({route, navigation}) => {
             style={{
               inputAndroid: {
                 backgroundColor: 'transparent',
-                width: 130,
+                textAlign: 'right',
+                paddingRight: 35,
                 alignSelf: 'flex-end',
                 color: 'black',
               },
@@ -314,10 +315,13 @@ const AdviceCategory = ({route, navigation}) => {
                 textAlign: 'right',
                 paddingRight: 35,
               },
-              iconContainer: {
-                top: 0,
-                right: 15,
-              },
+              iconContainer:
+                Platform.OS == 'android'
+                  ? {
+                      bottom: 16,
+                      right: 20,
+                    }
+                  : {},
             }}
             value={sortCriteria}
             onValueChange={(value) => {

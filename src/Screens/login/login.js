@@ -20,7 +20,7 @@ import {
 } from 'react-native-responsive-screen';
 import Button from '../../components/button';
 import axios from 'axios';
-import {Formik} from 'formik';
+import {Formik, useFormikContext} from 'formik';
 import ResponsiveImage from 'react-native-responsive-image';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation} from '@react-navigation/native';
@@ -48,6 +48,21 @@ const Login = (props) => {
     bootstrapAsync();
   }, []);
 
+  const CheckSavedEmail = () => {
+    const formik = useFormikContext();
+    React.useEffect(() => {
+      const bootstrapAsync = async () => {
+        let saved_email = await storage.getData('remember_email');
+        // console.log('saved_email', saved_email);
+        if (saved_email) {
+          formik.setFieldValue('email', saved_email);
+        }
+      };
+      bootstrapAsync();
+    }, []);
+    return null;
+  };
+
   return (
     <KeyboardAwareScrollView
       contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
@@ -73,6 +88,7 @@ const Login = (props) => {
             if (deviceToken) {
               values['device_token'] = deviceToken;
             }
+            storage.setData('remember_email', values.email);
             network.getResponse(
               EndPoints.login,
               'POST',
@@ -113,6 +129,7 @@ const Login = (props) => {
             values,
           }) => (
             <SigninButton>
+              <CheckSavedEmail />
               <TextInput
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}

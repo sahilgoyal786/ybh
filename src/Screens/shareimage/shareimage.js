@@ -38,6 +38,7 @@ import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import {Toast} from 'native-base';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 const ShareImage = () => {
   const navigation = useNavigation();
@@ -136,10 +137,17 @@ const ShareImage = () => {
               fontFamily: 'FuturaPT-Medium',
             }}
             checkedIcon={
-              <Checkicons source={unchecked} initHeight="18" initWidth="18" />
+              <FontAwesome5Icon
+                name="check-square"
+                style={{fontSize: 20, color: 'purple'}}
+                solid
+              />
             }
             uncheckedIcon={
-              <Checkicons source={iconchecked} initHeight="18" initWidth="18" />
+              <FontAwesome5Icon
+                name="square"
+                style={{fontSize: 20, color: 'purple'}}
+              />
             }
             checked={!checked}
             onPress={() => setChecked(!checked)}
