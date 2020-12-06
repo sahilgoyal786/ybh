@@ -24,7 +24,8 @@ import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import ContentLoader from 'react-native-easy-content-loader';
-import {Picker} from '@react-native-community/picker';
+import RNPickerSelect from 'react-native-picker-select';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 // import { Form } from 'formik';
 const LatestPhotos = ({route, navigation}) => {
@@ -51,7 +52,9 @@ const LatestPhotos = ({route, navigation}) => {
     {label: 'November', value: 'November'},
     {label: 'December', value: 'December'},
   ];
-  const [selectedMonth, setMonth] = useState(months[0].value);
+
+  var month = new Date().getMonth();
+  const selectedMonth = months[month].value;
 
   const [todaysPhotos, setTodaysPhotos] = useState([]);
   const [weeksPhotos, setWeeksPhotos] = useState([]);
@@ -61,8 +64,6 @@ const LatestPhotos = ({route, navigation}) => {
   const [monthsPhotosLoading, setMonthsPhotosLoading] = useState(true);
 
   useEffect(() => {
-    var month = new Date().getMonth();
-    setMonth(months[month].value);
     // console.log('month-', months[month].value);
     loadImage('today');
     loadImage('week');
@@ -319,30 +320,38 @@ const LatestPhotos = ({route, navigation}) => {
             }}>
             <TextView>Month</TextView>
             <View>
-              <Picker
-                style={{height: 50, width: 150, padding: 0, textAlign: 'right'}}
-                selectedValue={selectedMonth}
-                onValueChange={(itemValue) => {
-                  if (initCompleted) {
-                    onChangeMonth(itemValue);
-                  }
-                  if (itemValue == selectedMonth) {
-                    setInitCompleted(true);
-                  }
-                }}>
-                <Picker.Item label="January" value={'January'} />
-                <Picker.Item label="February" value={'February'} />
-                <Picker.Item label="March" value={'March'} />
-                <Picker.Item label="April" value={'April'} />
-                <Picker.Item label="May" value={'May'} />
-                <Picker.Item label="June" value={'June'} />
-                <Picker.Item label="July" value={'July'} />
-                <Picker.Item label="August" value={'August'} />
-                <Picker.Item label="September" value={'September'} />
-                <Picker.Item label="October" value={'October'} />
-                <Picker.Item label="November" value={'November'} />
-                <Picker.Item label="December" value={'December'} />
-              </Picker>
+              <RNPickerSelect
+                items={months}
+                onValueChange={(value) => {
+                  if (selectedMonth !== value) onChangeMonth(value);
+                }}
+                style={{
+                  inputAndroid: {
+                    color: 'black',
+                    paddingRight: 35,
+                    textAlign: 'right',
+                    fontSize: 16,
+                  },
+                  inputIOS: {
+                    backgroundColor: 'transparent',
+                    alignSelf: 'flex-end',
+                    color: 'black',
+                    textAlign: 'right',
+                    paddingRight: 35,
+                  },
+                }}
+                value={selectedMonth}
+                useNativeAndroidPickerStyle={false}
+                Icon={() => {
+                  return (
+                    // <Image source={downarrow} style={{width: 12, height: 12}} />
+                    <FontAwesome5Icon
+                      name="caret-down"
+                      style={{fontSize: 20}}
+                    />
+                  );
+                }}
+              />
             </View>
           </View>
           <FlatList
