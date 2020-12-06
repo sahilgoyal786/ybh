@@ -54,7 +54,7 @@ const LatestPhotos = ({route, navigation}) => {
   ];
 
   var month = new Date().getMonth();
-  const selectedMonth = months[month].value;
+  const [selectedMonth, setSelectedMonth] = React.useState(months[month].value);
 
   const [todaysPhotos, setTodaysPhotos] = useState([]);
   const [weeksPhotos, setWeeksPhotos] = useState([]);
@@ -239,6 +239,7 @@ const LatestPhotos = ({route, navigation}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
+              marginTop: 20,
             }}>
             <TextView>Week</TextView>
           </View>
@@ -317,14 +318,16 @@ const LatestPhotos = ({route, navigation}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
+              marginTop: 20,
             }}>
             <TextView>Month</TextView>
             <View>
               <RNPickerSelect
                 items={months}
                 onValueChange={(value) => {
-                  if (selectedMonth !== value) onChangeMonth(value);
+                  setSelectedMonth(value);
                 }}
+                onDonePress={() => onChangeMonth(selectedMonth)}
                 style={{
                   inputAndroid: {
                     color: 'black',
