@@ -21,7 +21,7 @@ const EndPoints = {
 
   tokenUpdate: {url: 'user/device-token/update'},
 
-  getLatestBlog: {url: 'blogs?page_size=1', cache_age: 12},
+  getLatestBlog: {url: 'blogs?page_size=1', cache_age: 1},
   blogs: {url: 'blogs', dont_cache: true},
 
   getTriviaQuestions: {url: 'questions/trivia', dont_cache: true},
