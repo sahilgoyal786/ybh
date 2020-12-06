@@ -171,7 +171,7 @@ const Gallery = ({route, navigation}) => {
           {loadingMore ? (
             <ActivityIndicator color="purple" size="large" />
           ) : (
-            <Text>You haven't uploaded any photos yet.</Text>
+            <Text>Nothing to show.</Text>
           )}
         </View>
       }

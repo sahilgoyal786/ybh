@@ -325,7 +325,14 @@ const LatestPhotos = ({route, navigation}) => {
               <RNPickerSelect
                 items={months}
                 onValueChange={(value) => {
-                  setSelectedMonth(value);
+                  if (Platform.OS !== 'ios') {
+                    if (value !== selectedMonth) {
+                      setSelectedMonth(value);
+                      onChangeMonth(value);
+                    }
+                  } else {
+                    setSelectedMonth(value);
+                  }
                 }}
                 onDonePress={() => onChangeMonth(selectedMonth)}
                 style={{
@@ -342,6 +349,13 @@ const LatestPhotos = ({route, navigation}) => {
                     textAlign: 'right',
                     paddingRight: 35,
                   },
+                  iconContainer:
+                    Platform.OS == 'android'
+                      ? {
+                          bottom: 12,
+                          right: 10,
+                        }
+                      : {},
                 }}
                 value={selectedMonth}
                 useNativeAndroidPickerStyle={false}
