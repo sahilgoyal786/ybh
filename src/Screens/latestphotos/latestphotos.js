@@ -9,6 +9,8 @@ import {
   Modal,
   ActivityIndicator,
   FlatList,
+  TouchableOpacity,
+  Platform
 } from 'react-native';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
@@ -30,7 +32,6 @@ import {
 } from '../../common/images';
 import { Form, Content, Container, Icon, Toast } from 'native-base';
 import { Picker } from '@react-native-community/picker';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../../components/header';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import FastImage from 'react-native-fast-image';
@@ -49,20 +50,20 @@ const LatestPhotos = ({ route, navigation }) => {
   const [like, setLike] = React.useState(0);
   const d = new Date();
   const months = [
-    {label: 'January', value: 'January'},
-    {label: 'February', value: 'February'},
-    {label: 'March', value: 'March'},
-    {label: 'April', value: 'April'},
-    {label: 'May', value: 'May'},
-    {label: 'June', value: 'June'},
-    {label: 'July', value: 'July'},
-    {label: 'August', value: 'August'},
-    {label: 'September', value: 'September'},
-    {label: 'October', value: 'October'},
-    {label: 'November', value: 'November'},
-    {label: 'December', value: 'December'},
-];
-const [selectedMonth, setMonth] = useState(months[0].value);
+    { label: 'January', value: 'January' },
+    { label: 'February', value: 'February' },
+    { label: 'March', value: 'March' },
+    { label: 'April', value: 'April' },
+    { label: 'May', value: 'May' },
+    { label: 'June', value: 'June' },
+    { label: 'July', value: 'July' },
+    { label: 'August', value: 'August' },
+    { label: 'September', value: 'September' },
+    { label: 'October', value: 'October' },
+    { label: 'November', value: 'November' },
+    { label: 'December', value: 'December' },
+  ];
+  const [selectedMonth, setMonth] = useState(months[0].value);
 
   const [todaysPhotos, setTodaysPhotos] = useState([]);
   const [weeksPhotos, setWeeksPhotos] = useState([]);
@@ -74,7 +75,7 @@ const [selectedMonth, setMonth] = useState(months[0].value);
     console.log('month-', month)
     loadImage('today');
     loadImage('week');
-    onChangeMonth(months[month].value);
+    loadImage(months[month].value);
   }, []);
   const loadImage = (type) => {
     network.getResponse(
@@ -90,7 +91,7 @@ const [selectedMonth, setMonth] = useState(months[0].value);
           case 'week':
             setWeeksPhotos(response.data);
             break;
-          default:
+          default: setMonthsPhotos(response.data);
             break;
         }
       },
@@ -145,7 +146,7 @@ const [selectedMonth, setMonth] = useState(months[0].value);
 
   return (
     <View style={{ flex: 1 }}>
-      <Image
+      <ImageBackground
         source={bottomCurve}
         style={{
           width: widthPercentageToDP(100),
@@ -166,7 +167,7 @@ const [selectedMonth, setMonth] = useState(months[0].value);
           paddingLeft: 10,
           paddingRight: 10,
         }}>
-        <SectionHeading>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <TextView>Today</TextView>
           <TouchableOpacity
             onPress={() => {
@@ -174,43 +175,29 @@ const [selectedMonth, setMonth] = useState(months[0].value);
             }}>
             <ViewMoreLink>View More</ViewMoreLink>
           </TouchableOpacity>
-        </SectionHeading>
+        </View>
         <View>
-          <ScrollView horizontal={true}>
-            <FirstView>
-              <ImageBackground
-                source={backsec}
-                style={{
-                  height: 0,
-                  width: 70,
-                  borderRadius: 50,
-                  position: 'absolute',
-                  right: widthPercentageToDP(1),
-                }}
-              />
-              <FlatList
-                data={todaysPhotos}
-                horizontal={true}
-                removeClippedSubviews={false}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item, index }) => {
-                  return (
-                    <TouchableOpacity
-                      key={Math.random()}
-                      onPress={() => {
-                        setShowModal(true);
-                        setModalPhotos(latestPhotosArray);
-                        setcurrentImageIndex(index);
-                      }}>
-                      <ImagesView source={{ uri: item.url }} />
-                    </TouchableOpacity>
-                  );
-                }}
-              />
-            </FirstView>
-          </ScrollView>
-          <SectionHeading>
+          <FlatList
+            data={todaysPhotos}
+            horizontal={true}
+            removeClippedSubviews={false}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item, index }) => {
+              return (
+                <TouchableOpacity
+                  key={Math.random()}
+                  onPress={() => {
+                    setShowModal(true);
+                    setModalPhotos(latestPhotosArray);
+                    setcurrentImageIndex(index);
+                  }}>
+                  <ImagesView source={{ uri: item.url }} />
+                </TouchableOpacity>
+              );
+            }}
+          />
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <TextView>Week</TextView>
             <TouchableOpacity
               style={{
@@ -222,118 +209,61 @@ const [selectedMonth, setMonth] = useState(months[0].value);
               }}>
               <ViewMoreLink>View More</ViewMoreLink>
             </TouchableOpacity>
-          </SectionHeading>
-          <ScrollView horizontal={true}>
-            <FirstView>
-              <FlatList
-                data={weeksPhotos}
-                horizontal={true}
-                removeClippedSubviews={false}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item, index }) => {
-                  return (
-                    <TouchableOpacity
-                      key={Math.random()}
-                      onPress={() => {
-                        setShowModal(true);
-                        setModalPhotos(latestPhotosArray);
-                        setcurrentImageIndex(index);
-                      }}>
-                      <ImagesView source={{ uri: item.url }} />
-                    </TouchableOpacity>
-                  );
-                }}
-              />
-            </FirstView>
-          </ScrollView>
-
-          <SectionHeading>
-            <Image
-              source={backfirst}
-              style={{ position: 'absolute', left: -20 }}
-            />
+          </View>
+          <FlatList
+            data={weeksPhotos}
+            horizontal={true}
+            removeClippedSubviews={false}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item, index }) => {
+              return (
+                <TouchableOpacity
+                  key={Math.random()}
+                  onPress={() => {
+                    setShowModal(true);
+                    setModalPhotos(latestPhotosArray);
+                    setcurrentImageIndex(index);
+                  }}>
+                  <ImagesView source={{ uri: item.url }} />
+                </TouchableOpacity>
+              );
+            }}
+          />
+          <View style={[{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }, Platform.OS=='ios'&&{zIndex:10}]}>
             <TextView>Month</TextView>
             <DropDownPicker
               items={months}
               defaultValue={selectedMonth}
-              containerStyle={{ height: 40, width:120 }}
-              style={{ backgroundColor: '#fff' }}
+              containerStyle={{ height: 40, width: 120, zIndex:99 }}
+              style={{ backgroundColor: 'transparent', zIndex:99 }}
               itemStyle={{
-                justifyContent: 'flex-start'
+                justifyContent: 'flex-start', zIndex:99
               }}
-              dropDownStyle={{ backgroundColor: '#fff' }}
-              onChangeItem={val =>{onChangeMonth(val.value);}}
+              dropDownStyle={{ backgroundColor: '#fff', zIndex:99 }}
+              onChangeItem={val => { onChangeMonth(val.value); }}
             />
-            {/* <Picker
-              style={{
-                justifyContent: 'flex-end',
-                alignSelf: 'flex-end',
-                height: 30,
-                width: 150,
-                flexGrow: 0,
-              }}
-              mode="dropdown"
-              placeholder="Select One"
-              textStyle={{
-                fontSize: 12,
-                fontWeight: '600',
-                color: '#484848',
-                fontFamily: 'FuturaPT-Book',
-              }}
-              note={false}
-              iosIcon={
-                <ResponsiveImage
-                  style={{ tintColor: '#000' }}
-                  source={downarrow}
-                  initHeight="16"
-                  initWidth="5"
-                />
-              }
-              selectedValue={Value}
-              onValueChange={(val) => {
-                console.log('val-', val);
-                onChangeMonth(val);
-                setValue(val);
-              }}>
-              <Picker.Item label="January" value="January" />
-              <Picker.Item label="February" value="February" />
-              <Picker.Item label="March" value="March" />
-              <Picker.Item label="April" value="April" />
-              <Picker.Item label="May" value="May" />
-              <Picker.Item label="June" value="June" />
-              <Picker.Item label="July" value="July" />
-              <Picker.Item label="August" value="August" />
-              <Picker.Item label="September" value="September" />
-              <Picker.Item label="October" value="October" />
-              <Picker.Item label="November" value="November" />
-              <Picker.Item label="December" value="December" />
-            </Picker> */}
-          </SectionHeading>
-          <ScrollView horizontal={true}>
-            <FirstView>
-              <FlatList
-                data={monthsPhotos}
-                horizontal={true}
-                removeClippedSubviews={false}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item, index }) => {
-                  return (
-                    <TouchableOpacity
-                      key={Math.random()}
-                      onPress={() => {
-                        setShowModal(true);
-                        setModalPhotos(latestPhotosArray);
-                        setcurrentImageIndex(index);
-                      }}>
-                      <ImagesView source={{ uri: item.url }} />
-                    </TouchableOpacity>
-                  );
-                }}
-              />
-            </FirstView>
-          </ScrollView>
+          </View>
+          <FlatList
+            data={monthsPhotos}
+            horizontal={true}
+            removeClippedSubviews={false}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item, index }) => {
+              return (
+                <TouchableOpacity
+                  key={Math.random()}
+                  onPress={() => {
+                    setShowModal(true);
+                    setModalPhotos(latestPhotosArray);
+                    setcurrentImageIndex(index);
+                  }}>
+                  <ImagesView source={{ uri: item.url }} />
+                </TouchableOpacity>
+              );
+            }}
+          />
           <LastImage>
             <LastaddImage
               source={photoworld}
@@ -345,7 +275,6 @@ const [selectedMonth, setMonth] = useState(months[0].value);
           </LastImage>
         </View>
       </ScrollView>
-
       <Modal visible={showModal}>
         <View
           style={{
@@ -438,7 +367,7 @@ const [selectedMonth, setMonth] = useState(months[0].value);
           }}
         />
       </Modal>
-    </View>
+    </View >
   );
 };
 const LastaddImage = styled(ResponsiveImage)({});
@@ -451,8 +380,8 @@ const ImagesView = styled(FastImage)({
   height: widthPercentageToDP(22) - 8,
   margin: 2,
   resizeMode: 'cover',
-  zIndex: 1,
-});
+  zIndex:-99
+ });
 const ViewMoreLink = styled(Text)({
   textAlign: 'right',
   fontSize: 16,
