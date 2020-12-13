@@ -191,3 +191,28 @@ export const fetchLeaderBoard = (userDetail, changeUserDetail) => {
     );
   });
 };
+
+export const downloadAdBanners = (userDetail, changeUserDetail) => {
+  console.log('downloadAdBanners');
+  network.getResponse(
+    EndPoints.getAdvertisements,
+    'GET',
+    {},
+    userDetail.token || '',
+    (response) => {
+      console.log('downloadAdBanners', response);
+      console.log('downloadAdBanners', Constants.systemFonts);
+      if (response.length > 0) {
+        response.forEach((element) => {
+          // Save to device
+        });
+      }
+    },
+    (error) => {
+      console.log('changeUserDetail for LeaderBoard');
+    },
+    false,
+    '',
+    true,
+  );
+};

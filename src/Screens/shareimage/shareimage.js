@@ -120,13 +120,14 @@ const ShareImage = () => {
         <MainView>
           <SubHeading>Disclaimer Text</SubHeading>
           <FirstText>
-            Morbi vel urn et risus efficitururn et risus, Morbi vel urn et risus
-            efficitururn et risus
+            YBHApp reserves the right, in its sole discretion, without notice,
+            to remove any content that does not adhere to these terms. You will
+            not post photographs that may be inappropriate in nature in the
+            YAHApp’s sole discretion. This means that any photo you submit, must
+            not be inappropriate, offensive or otherwise offensive and must not
+            contain (without limitation) any of the following: profanity, nudity
+            or pornographic material.
           </FirstText>
-          <SecText>
-            Morbi vel urn et risus efficitururn et , Morbi vel urn et risus
-            efficitururn et risus
-          </SecText>
         </MainView>
         <MainnnView>
           <CheckBox
@@ -136,14 +137,14 @@ const ShareImage = () => {
               fontWeight: '400',
               fontFamily: 'FuturaPT-Medium',
             }}
-            checkedIcon={
+            uncheckedIcon={
               <FontAwesome5Icon
                 name="check-square"
                 style={{fontSize: 20, color: 'purple'}}
                 solid
               />
             }
-            uncheckedIcon={
+            checkedIcon={
               <FontAwesome5Icon
                 name="square"
                 style={{fontSize: 20, color: 'purple'}}

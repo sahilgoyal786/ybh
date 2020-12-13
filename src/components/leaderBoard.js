@@ -28,7 +28,12 @@ const LeaderBoard = ({userDetailTemp = false}) => {
       <BoxView>
         <ViewBox>
           {temp.leaderBoard && temp.leaderBoard.authUser ? (
-            <TextRank>Your Rank: {temp.leaderBoard.authUser.rank}</TextRank>
+            <>
+              <TextRank>Your Rank: {temp.leaderBoard.authUser.rank}</TextRank>
+              <TextRank style={{fontSize: 12}}>
+                (Points: {temp.leaderBoard.authUser.points})
+              </TextRank>
+            </>
           ) : (
             <ActivityIndicator color="white" />
           )}

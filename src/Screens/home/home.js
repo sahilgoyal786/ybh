@@ -8,6 +8,8 @@ import {
   SafeAreaView,
   Platform,
   ScrollView,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
@@ -34,6 +36,8 @@ import storage from '../../components/apis/storage';
 import {Dialog} from 'react-native-simple-dialogs';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import {Toast} from 'native-base';
 
 const Home = () => {
   const [votingImages, setVotingImages] = React.useState([]);
@@ -44,12 +48,17 @@ const Home = () => {
   const [latestPhotos, setLatestPhotos] = React.useState([]);
   const [latestPhotosLoaded, setLatestPhotosLoaded] = React.useState(false);
   const [latestPhotosArray, setLatestPhotosArray] = React.useState([]);
+  const [modalPhotos, setModalPhotos] = React.useState([]);
   const [leaderBoardLoading, setLeaderBoardLoading] = React.useState(false);
   const [loadingFailed, setLoadingFailed] = React.useState(false);
   const [tipOfTheDay, setTipOfTheDay] = React.useState(false);
   const [latestArticle, setLatestArticle] = React.useState(null);
+  const [currentIndex, setCurrentIndex] = React.useState(null);
   const navigation = useNavigation();
+  const [showModal, setShowModal] = React.useState(false);
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
+  const [like, setLike] = React.useState(0);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   var votingImagesPlaceholder = [];
   var latestPhotosPlaceholder = [];
@@ -137,32 +146,42 @@ const Home = () => {
           for (let i = 0; i < 6; i++) {
             latestPhotosArray.push(response[i]);
             tempLatestPhotosArray.push(
-              <LatestPhoto
-                key={i}
-                resizeMode={FastImage.resizeMode.cover}
-                source={{uri: response[i]['url']}}>
-                {i == 5 && (
-                  <ViewMore>
-                    <TouchableOpacity
-                      onPress={() => {
-                        //console.log(latestPhotosArray);
-                        navigation.navigate('LatestPhotos', {
-                          latestPhotosArray,
-                        });
-                      }}>
-                      <View
-                        style={{
-                          flex: 1,
-                          width: widthPercentageToDP(30),
-                          alignItems: 'center',
-                          justifyContent: 'center',
+              <TouchableOpacity
+                key={Math.random().toString()}
+                onPress={() => {
+                  if (i !== 5) {
+                    setModalPhotos(latestPhotosArray);
+                    setCurrentIndex(i);
+                    setShowModal(true);
+                  }
+                }}>
+                <LatestPhoto
+                  key={i}
+                  resizeMode={FastImage.resizeMode.cover}
+                  source={{uri: response[i]['url']}}>
+                  {i == 5 && (
+                    <ViewMore>
+                      <TouchableOpacity
+                        onPress={() => {
+                          //console.log(latestPhotosArray);
+                          navigation.navigate('LatestPhotos', {
+                            latestPhotosArray,
+                          });
                         }}>
-                        <TextMore>More</TextMore>
-                      </View>
-                    </TouchableOpacity>
-                  </ViewMore>
-                )}
-              </LatestPhoto>,
+                        <View
+                          style={{
+                            flex: 1,
+                            width: widthPercentageToDP(30),
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}>
+                          <TextMore>More</TextMore>
+                        </View>
+                      </TouchableOpacity>
+                    </ViewMore>
+                  )}
+                </LatestPhoto>
+              </TouchableOpacity>,
             );
           }
           setLatestPhotosArray(latestPhotosArray);
@@ -228,6 +247,34 @@ const Home = () => {
         setLeaderBoardLoading(false);
       });
   };
+
+  const storeLike = (url, like, index) => {
+    setIsLoading(true);
+    network.getResponse(
+      EndPoints.storeLikes,
+      'POST',
+      {url, like},
+      userDetail.token,
+      (response) => {
+        // console.log(response);
+        if (response && response.message) {
+          Toast.show({text: response.message});
+        }
+        if (response && response.file) {
+          let photosTemp = modalPhotos;
+          photosTemp[index] = response.file;
+          setModalPhotos(modalPhotos);
+        }
+        setLike(0);
+        setIsLoading(false);
+      },
+      (response) => {
+        console.log(response);
+        setIsLoading(false);
+      },
+    );
+  };
+
   return (
     <View style={{flex: 1}}>
       <Image
@@ -269,40 +316,47 @@ const Home = () => {
                   flexWrap: 'wrap',
                 }}>
                 {!votingEnabled && imageOfTheWeek ? (
-                  <ImageOfTheWeek source={{uri: imageOfTheWeek}}>
-                    <View
-                      style={{
-                        padding: 2,
-                        paddingBottom: 10,
-                        bottom: -2,
-                        marginTop: 127,
-                        height: 40,
-                        right: -2,
-                      }}>
-                      <LinearGradient
-                        colors={[
-                          'transparent',
-                          '#F8BA17',
-                          '#F8BA17',
-                          '#F8BA17',
-                        ]}
-                        style={styles.linearGradient}
-                        start={{x: 0, y: 0.5}}
-                        end={{x: 1, y: 0.5}}>
-                        <Text
-                          style={{
-                            textAlign: 'right',
-                            // padding: 5,
-                            color: 'white',
-                            height: 30,
-                            lineHeight: 30,
-                            paddingRight: 10,
-                          }}>
-                          Image of the Week
-                        </Text>
-                      </LinearGradient>
-                    </View>
-                  </ImageOfTheWeek>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalPhotos([{url: imageOfTheWeek}]);
+                      setCurrentIndex(null);
+                      setShowModal(true);
+                    }}>
+                    <ImageOfTheWeek source={{uri: imageOfTheWeek}}>
+                      <View
+                        style={{
+                          padding: 2,
+                          paddingBottom: 10,
+                          bottom: -2,
+                          marginTop: 127,
+                          height: 40,
+                          right: -2,
+                        }}>
+                        <LinearGradient
+                          colors={[
+                            'transparent',
+                            '#F8BA17',
+                            '#F8BA17',
+                            '#F8BA17',
+                          ]}
+                          style={styles.linearGradient}
+                          start={{x: 0, y: 0.5}}
+                          end={{x: 1, y: 0.5}}>
+                          <Text
+                            style={{
+                              textAlign: 'right',
+                              // padding: 5,
+                              color: 'white',
+                              height: 30,
+                              lineHeight: 30,
+                              paddingRight: 10,
+                            }}>
+                            Image of the Week
+                          </Text>
+                        </LinearGradient>
+                      </View>
+                    </ImageOfTheWeek>
+                  </TouchableOpacity>
                 ) : votingImagesLoaded ? (
                   votingImages
                 ) : (
@@ -475,6 +529,99 @@ const Home = () => {
           </View>
         </Dialog>
       </ScrollView>
+
+      <Modal visible={showModal}>
+        <View
+          style={{
+            position: 'absolute',
+            left: 20,
+            top: 40,
+            height: 25,
+            backgroundColor: 'white',
+            width: 25,
+            borderRadius: 40,
+            zIndex: 100,
+          }}>
+          <Text
+            style={{
+              color: 'black',
+              textAlign: 'center',
+              height: 25,
+              width: 25,
+              textAlignVertical: 'center',
+              fontWeight: '900',
+              lineHeight: 25,
+            }}
+            onPress={() => setShowModal(false)}>
+            X
+          </Text>
+        </View>
+        <ImageViewer
+          imageUrls={modalPhotos}
+          enableSwipeDown={true}
+          index={currentIndex}
+          onCancel={() => setShowModal(false)}
+          renderImage={(props) => <FastImage {...props} />}
+          renderIndicator={() => {}}
+          renderFooter={(index) => {
+            let likes = modalPhotos[index].likes.split('-');
+            // console.log(modalPhotos[index]);
+            let total = parseInt(likes[0]) + parseInt(likes[1]);
+            return (
+              <Voting>
+                {isLoading ? (
+                  <ActivityIndicator color="purple" />
+                ) : (
+                  <>
+                    {total > 0 && (
+                      <Text
+                        style={[
+                          styles.votePercentage,
+                          {width: 60, textAlign: 'right'},
+                        ]}>
+                        {Math.floor((likes[1] / total) * 100)}%
+                      </Text>
+                    )}
+                    <Text
+                      onPress={() => {
+                        setLike(1);
+                        storeLike(modalPhotos[index].url, 0, index);
+                      }}
+                      style={[
+                        styles.voteButton,
+                        styles.left,
+                        like == 1 ? styles.active : [],
+                      ]}>
+                      Nice
+                    </Text>
+                    <Text
+                      onPress={() => {
+                        setLike(2);
+                        storeLike(modalPhotos[index].url, 1, index);
+                      }}
+                      style={[
+                        styles.voteButton,
+                        styles.right,
+                        like == 2 ? styles.active : [],
+                      ]}>
+                      Supernice
+                    </Text>
+                    {total > 0 && (
+                      <Text
+                        style={[
+                          styles.votePercentage,
+                          {width: 60, textAlign: 'left'},
+                        ]}>
+                        {Math.floor((likes[0] / total) * 100)}%
+                      </Text>
+                    )}
+                  </>
+                )}
+              </Voting>
+            );
+          }}
+        />
+      </Modal>
     </View>
   );
 };
@@ -490,6 +637,13 @@ const VotingImage = styled(FastImage)({
   width: widthPercentageToDP(66.67 / 4) - 10,
   marginBottom: 5,
   backgroundColor: '#DADADA',
+});
+const Voting = styled(View)({
+  flexDirection: 'row',
+  justifyContent: 'center',
+  background: 'white',
+  padding: 10,
+  width: widthPercentageToDP(100),
 });
 const LatestPhoto = styled(FastImage)({
   borderRadius: 6,
@@ -546,6 +700,31 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontSize: 18,
     fontFamily: 'FuturaPT-Medium',
+  },
+  voteButton: {
+    textTransform: 'uppercase',
+    paddingVertical: 10,
+    width: widthPercentageToDP(30),
+    textAlign: 'center',
+    borderWidth: 1,
+    color: 'black',
+  },
+  active: {
+    backgroundColor: 'purple',
+    color: 'white',
+  },
+  left: {
+    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 4,
+  },
+  right: {
+    borderTopRightRadius: 4,
+    borderLeftWidth: 0,
+    borderBottomRightRadius: 4,
+  },
+  votePercentage: {
+    padding: 10,
+    fontWeight: 'bold',
   },
 });
 

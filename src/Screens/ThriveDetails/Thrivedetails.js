@@ -2,18 +2,16 @@ import React, {Component} from 'react';
 import {addbtmimg, topbanner, bottomCurve} from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
+
+import HTML from 'react-native-render-html';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-
-import {useNavigation, DrawerActions} from '@react-navigation/native';
-
 import {
   StyleSheet,
-  TouchableOpacity,
   Text,
   ScrollView,
   View,
@@ -118,9 +116,14 @@ const Thrivedetails = ({route, navigation}) => {
             }}
             resizeMode="cover"
           />
-          <Text style={{marginTop: 15, padding: 10, marginBottom: 20}}>
-            {article.content}
-          </Text>
+          <View style={{marginTop: 15, padding: 10, marginBottom: 20}}>
+            <HTML
+              html={article.content}
+              imagesMaxWidth={widthPercentageToDP(100) - 30}
+              contentWidth={widthPercentageToDP(100) - 30}
+              computeEmbeddedMaxWidth={widthPercentageToDP(100) - 30}
+            />
+          </View>
           {/* <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
           <ButtonSUbmit
             // onPress={() => setDialog(true)}
@@ -133,23 +136,6 @@ const Thrivedetails = ({route, navigation}) => {
             linear
           />
         </View> */}
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              backgroundColor: '#F4E8FE',
-              width: windowWidth - 80,
-              marginLeft: 40,
-              paddingHorizontal: wp(20),
-              height: 30,
-            }}>
-            <Text>Share: </Text>
-            {/* <Image source={facebook} style={{height: 20, width: 20}} />
-            <Image source={twiter} style={{height: 20, width: 20}} />
-            <Image source={insta} style={{height: 20, width: 20}} />
-            <Image source={linkedin} style={{height: 20, width: 20}} /> */}
-          </View>
           <Image
             source={addbtmimg}
             style={{

@@ -28,180 +28,225 @@ const Privacy = () => {
         <View style={{marginBottom: 20}}>
           <Heading>Privacy Policy</Heading>
           <Text>
-            In hac habitasse platea dictumst. Curabitur condimentum turpis ut
-            felis luctus tempor. Duis ac volutpat nibh. Praesent molestie
-            tincidunt orci, ac tincidunt dui. Donec risus lacus, aliquet eu eros
-            ac, tincidunt pretium justo. Sed sit amet laoreet neque. Morbi nec
-            ex at turpis dictum dictum at eu nisi. Cras elementum ante sed nisl
-            ullamcorper tempor. Nullam justo tortor, mattis non ante sit amet,
-            molestie elementum est. Maecenas eu placerat metus, a molestie
-            libero. Nullam maximus bibendum iaculis. Donec vel elit molestie,
-            interdum quam vel, placerat ligula. Mauris sit amet mattis orci, ut
-            pharetra libero. Nunc in sem pellentesque, consectetur diam vel,
-            volutpat orci. Nulla volutpat dui et metus commodo, id porttitor
-            metus semper. Integer ultrices vitae nisl non scelerisque. Curabitur
-            ac tortor vitae neque interdum porttitor. Nunc dictum et turpis id
-            varius. Maecenas sit amet diam suscipit mi efficitur tincidunt.
-            Mauris tempus elementum dignissim.
-          </Text>
-        </View>
-        <View style={{marginBottom: 20}}>
-          <Heading>Integer pretium massa posuere</Heading>
-          <Text>
-            Duis venenatis augue ut vehicula consequat. Fusce tincidunt at velit
-            eu faucibus. Praesent egestas fermentum facilisis. Nam sit amet leo
-            neque. Nunc a metus at tellus maximus placerat. Duis semper, nunc
-            eget posuere feugiat, magna ex tincidunt mauris, sit amet euismod
-            velit enim id sem. Suspendisse quis leo nisi. Nunc et congue mi. Nam
-            eget vestibulum velit. Donec bibendum pretium magna, ac blandit dui
-            tincidunt at. Pellentesque pellentesque sollicitudin tellus, ut
-            mattis massa. Nam tempus auctor magna id feugiat. Cras urna velit,
-            molestie ac facilisis sed, dictum faucibus justo. Fusce porttitor
-            sit amet elit at vehicula. Praesent enim orci, pellentesque ut
-            scelerisque eget, maximus quis dui. Ut sed libero eu ex vehicula
-            condimentum vel nec diam.
-          </Text>
-        </View>
-        <View style={{marginBottom: 20}}>
-          <Heading>Integer pretium massa posuere</Heading>
-          <Text>
-            Donec quis sem et dolor efficitur consequat. Nullam ultricies nunc
-            nec tortor tempus tempus. Fusce et pretium sem. Nullam tempor
-            venenatis lectus, sit amet laoreet orci consectetur a. Ut sit amet
-            interdum massa. Morbi imperdiet porttitor felis at porta. Mauris eu
-            arcu cursus, sodales leo quis, tincidunt elit. Nullam consectetur
-            ante nec urna vestibulum consectetur. Aliquam erat volutpat.
-            Maecenas vitae magna ut ipsum sollicitudin feugiat in ac justo.
-            Interdum et malesuada fames ac ante ipsum primis in faucibus.
-            Aliquam imperdiet aliquet odio, et ornare felis molestie ac. Sed
-            sagittis velit nec ex dictum tempor. Nulla condimentum malesuada
-            finibus. Ut ullamcorper arcu arcu, eu hendrerit purus eleifend nec.
+            Your privacy is critically important to us at Yourbusinesshive a
+            subsidiary of Bilyak Consulting LTD, we have a few fundamental
+            principles:
           </Text>
           <Text>
-            Ut lobortis lorem eget auctor feugiat. Etiam tristique, sapien at
-            scelerisque egestas, turpis lacus congue arcu, sed efficitur lacus
-            metus a tellus. Suspendisse quis tempus risus, in posuere est. Donec
-            nec libero accumsan, ultricies felis quis, viverra diam. Phasellus
-            consequat bibendum odio eget condimentum. In hac habitasse platea
-            dictumst. Etiam imperdiet euismod lorem, eget elementum arcu rutrum
-            sed. Integer pulvinar lectus metus, ac fringilla sem commodo ut.
-            Morbi quis lobortis est. Interdum et malesuada fames ac ante ipsum
-            primis in faucibus. Fusce venenatis, nibh vel aliquet facilisis, ex
-            nisi interdum urna, luctus rutrum nibh enim non massa. Pellentesque
-            a arcu mi. Aenean consectetur ante eget gravida congue.
+            • We are thoughtful about the personal information we ask you to
+            provide and the personal information that we collect about you
+            through the operation of our services.
           </Text>
-        </View>
-        <View style={{marginBottom: 20}}>
-          <Heading>Integer pretium massa posuere</Heading>
           <Text>
-            Aliquam erat volutpat. Fusce accumsan commodo tellus sed euismod.
-            Vivamus bibendum ante et elit laoreet, a efficitur metus imperdiet.
-            Nulla facilisis, erat eu ullamcorper blandit, eros magna ullamcorper
-            mi, in porttitor nunc erat ac nibh. Ut quis pellentesque risus. In
-            hac habitasse platea dictumst. Donec ornare, tortor a aliquam
-            vehicula, odio eros viverra ante, sed convallis arcu ante vel nisl.
-            Duis mattis, sem id dictum lacinia, lectus diam venenatis enim, eget
-            finibus leo diam nec leo. Quisque condimentum in velit eu placerat.
-            Sed laoreet tempus sem, imperdiet interdum metus ornare nec. Ut
-            finibus consequat lorem, quis imperdiet ex luctus in. Duis est arcu,
-            mollis eu consequat eu, dapibus eu lectus. Aliquam a mauris nulla.
-            Vestibulum augue nibh, facilisis nec ipsum vitae, pretium interdum
-            ligula. Nunc id cursus metus. Praesent arcu arcu, commodo id sem
-            vel, auctor efficitur libero.
+            • We store personal information for only as long as we have a reason
+            to keep it.
           </Text>
-        </View>
-        <View style={{marginBottom: 20}}>
-          <Heading>Integer pretium massa posuere</Heading>
           <Text>
-            Pellentesque habitant morbi tristique senectus et netus et malesuada
-            fames ac turpis egestas. Curabitur sed massa ex. Fusce elementum
-            nibh faucibus orci mattis pulvinar. Integer feugiat maximus velit ut
-            pellentesque. Fusce semper dui ut magna aliquet semper. Ut pharetra
-            varius pretium. Donec mattis, urna id porta interdum, neque nisl
-            facilisis sapien, ac pulvinar libero diam non metus. Vestibulum ante
-            ipsum primis in faucibus orci luctus et ultrices posuere cubilia
-            curae; Quisque fermentum enim dolor, ut faucibus dolor fermentum
-            quis. Proin id sem consectetur nisl ultricies congue. Proin eu
-            eleifend enim, quis malesuada lectus. Fusce quis leo eu ex
-            scelerisque venenatis vitae vitae orci. Nunc eget augue sit amet
-            mauris gravida semper. Nunc nisl odio, pulvinar vitae commodo eget,
-            blandit sed massa. Aliquam accumsan, est id suscipit tempor, lectus
-            massa porta augue, in gravida risus diam vel neque. Morbi vehicula
-            posuere enim vel imperdiet. Ut a lacinia eros, non condimentum
-            lorem. Nam ornare erat pretium nunc tempor, eu gravida justo
-            rhoncus.
+            • We aim to make it as simple as possible for you to control what
+            information you share with us on the app.
           </Text>
-        </View>
-        <View style={{marginBottom: 20}}>
-          <Heading>Integer pretium massa posuere</Heading>
           <Text>
-            Orci varius natoque penatibus et magnis dis parturient montes,
-            nascetur ridiculus mus. Cras a justo dictum dui imperdiet suscipit.
-            Integer auctor est non ex commodo, a hendrerit elit ornare. Donec
-            pellentesque magna in turpis semper porttitor. Nunc sed accumsan
-            nulla. Cras pharetra posuere ex eu lacinia. Donec volutpat sodales
-            tellus, sit amet malesuada leo pellentesque sit amet. Interdum et
-            malesuada fames ac ante ipsum primis in faucibus. Pellentesque
-            facilisis sem massa, quis rutrum ex posuere sed. Donec non erat ex.
-            Etiam ut elit convallis, interdum justo eu, dapibus quam. Donec eu
-            purus interdum, feugiat justo in, ultrices ex. Aenean ut mollis
-            ante. Proin porta augue nec lacinia efficitur. Duis placerat nibh
-            quis pharetra maximus. Cras tempus dui ex. Etiam non aliquam eros.
-            Praesent at neque sed eros consectetur gravida. Sed sed mauris sit
-            amet purus porttitor finibus. In turpis lectus, iaculis eget dolor
-            non, varius ornare nunc. Ut non cursus sapien. Maecenas velit odio,
-            tincidunt ut purus in, placerat convallis magna. Aenean pulvinar
-            nulla arcu, non placerat diam commodo sit amet. Curabitur commodo
-            tincidunt malesuada. Donec vitae mollis libero. Vivamus felis elit,
-            blandit et volutpat eu, pretium id dui. Fusce interdum velit eu
-            hendrerit varius. Pellentesque id ligula ac lacus gravida semper eu
-            ut velit. Vivamus ut mauris augue. Morbi arcu purus, tempor quis
-            enim sit amet, tempor commodo tellus. Fusce scelerisque justo sed
-            neque malesuada, nec hendrerit sapien ultrices. Phasellus
-            pellentesque interdum lorem et varius.
+            • We aim for full transparency on how we gather, use, and share your
+            personal information.
           </Text>
-        </View>
-        <View style={{marginBottom: 20}}>
-          <Heading>Integer pretium massa posuere</Heading>
+          <Heading>1. Our Aim and Duty of care </Heading>
           <Text>
-            Nullam ligula enim, aliquam in ullamcorper in, convallis vitae
-            augue. Curabitur tincidunt elit nec congue pellentesque. Vestibulum
-            ultrices ac nisl sit amet mattis. Sed ipsum nisl, consequat et lorem
-            a, malesuada maximus sem. Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit. Vestibulum eu viverra libero. Morbi vestibulum
-            sapien eu enim rutrum, efficitur vulputate nulla scelerisque. In sed
-            pulvinar sapien. Nullam porttitor nisl velit, non porttitor leo
-            ultrices convallis. Praesent efficitur eget nunc sed sagittis.
-            Aliquam erat volutpat. Proin sodales tincidunt mi eget congue.
-            Vivamus ullamcorper dui ex. Cras porttitor nunc vitae ante auctor
-            interdum. Vivamus vitae imperdiet erat. Praesent bibendum, lectus id
-            maximus suscipit, augue leo tincidunt dui, consectetur rutrum est
-            dolor at arcu. Pellentesque eu turpis eu arcu molestie lobortis id
-            nec metus. Nullam non est vel neque cursus semper ut et libero.
-            Fusce porta interdum nisi, vel sagittis augue scelerisque nec.
-            Nullam bibendum nibh augue, a ullamcorper purus tempus et. Etiam
-            lobortis dolor eget nulla viverra, in pharetra urna feugiat. Aliquam
-            scelerisque vehicula nibh, aliquet pulvinar eros venenatis eget.
-            Proin elementum tempus ligula vel imperdiet. In vestibulum justo in
-            facilisis fermentum. Quisque arcu dui, tincidunt a accumsan
-            vestibulum, placerat quis nisi. Integer pretium massa posuere libero
-            gravida convallis. Cras rutrum tincidunt diam in aliquet. Duis
-            imperdiet massa nec tincidunt laoreet. Sed et odio sit amet nisi
-            auctor congue.
+            We recognise our duty of care with regards to your data and will
+            always endeavour to do the right thing with the personal data you
+            choose to share with us, including: not compromising your anonymity;
+            protecting your privacy; storing your data securely and giving you
+            control over your own data.
           </Text>
-        </View>
-        <View style={{marginBottom: 60}}>
-          <Heading>Integer pretium massa posuere</Heading>
           <Text>
-            Phasellus at quam eu ipsum bibendum vehicula ac sit amet purus.
-            Class aptent taciti sociosqu ad litora torquent per conubia nostra,
-            per inceptos himenaeos. Nam posuere nulla sed faucibus pellentesque.
-            Sed augue urna, maximus at eros sit amet, vehicula lobortis mi.
-            Integer tincidunt venenatis nulla non molestie. Vestibulum semper
-            justo a mi semper iaculis. Maecenas quis diam eget lorem imperdiet
-            posuere nec quis lorem. Donec rutrum condimentum odio, ac placerat
-            eros. Praesent eu massa pretium ipsum ornare condimentum. Donec sed
-            urna arcu. In et massa felis.
+            Our mission at YBH is to help make some entertainment and knowledge
+            to you. We believe that securing your data, preserving your
+            anonymity, protecting your privacy, and giving you control over your
+            data are an important aspect of that mission.
+          </Text>
+          <Text>
+            We believe that employing data and data analytics appropriately can
+            improve the user experience on the YBH app. Data you give us when
+            filling in forms (when joining for example or when using our apps)
+            helps us show you more relevant things. It also allows us to see
+            which aspects of the site are popular and well-used, meaning we can
+            improve our app for you.{' '}
+          </Text>
+          <Heading>2. Your Data: What we Store and Why</Heading>
+          <Text>
+            We store IP addresses, cookies, your device’s unique ID, page
+            browsing history, ads you’ve viewed and clicked, searches you’ve
+            made on site, approximate location, and any enquiries you’ve made.
+            For registered members we also store username, password and email
+            address; forum discussions you might have with other users, photos
+            you have uploaded and like.
+          </Text>
+          <Text>
+            We store your email address to register you and contact you (if you
+            have asked for email newsletters) and we store things such as IP
+            address, cookies and device ID so that our systems recognise you if
+            you return to YBH. Subject to the permissions you have given us (as
+            described in your permissions and choices below), we may also pass
+            your device's reading habits to selected partners for them to show
+            you things that may be of interest to you (eg content or ads).
+          </Text>
+          <Text>
+            We only require your name and email when you want to join the YBH
+            app and you cannot use the app without fully providing it.{' '}
+          </Text>
+          <Text>
+            Subject to your permissions and choices, we collect, store and
+            process the data listed in this section. We believe we provide a
+            useful service, and therefore have a legitimate interest in
+            processing your data which benefits both YBH and you as a YBH user.
+          </Text>
+          <Text>We store the following data for all users</Text>
+          <Text>
+            • IP address, cookies, device ID – to identify your web browser and
+            device.
+          </Text>
+          <Text>
+            • Page browsing information – to enable us to show you more relevant
+            things and to understand how people use YBH, so we can improve it.
+          </Text>
+          <Text>
+            • We also use Google Analytics to report on page views in aggregate
+            to help us understand usage trends. We do not pass your personal
+            data to Google and your IP address is anonymised before we share
+            this information with Google Analytics.{' '}
+          </Text>
+          <Text>
+            • Ads viewed and clicked and searches you’ve made on site – to show
+            you more relevant ads and content in future.
+          </Text>
+          <Text>• Photos you have uploaded onto the site</Text>
+          <Text>
+            • Discussions that take place over on the forums (questions and
+            responses) so that we have a record.
+          </Text>
+          <Text>
+            • A summary of any actions we may have taken with regard to your use
+            of YBHApp{' '}
+          </Text>
+          <Text>
+            3. Your Data Protection Rights Under General Data Protection
+            Regulation (GDPR):{' '}
+          </Text>
+          <Text>
+            If you are a resident of the European Economic Area (EEA), you have
+            certain data protection rights YBHApp aims to take reasonable steps
+            to allow you to correct, amend, delete, or limit the use of your
+            Personal Data. If you wish to be informed what Personal Data, we
+            hold about you and if you want it to be removed from our systems,
+            please contact us on enquiries@yourbusinesshive.com. You can edit
+            your account information at any time. In certain circumstances, you
+            have the following data protection rights:
+          </Text>
+          <Text>
+            • The right to access, update or to delete the information we have
+            on you. Whenever made possible, you can access, update or request
+            deletion of your Personal Data directly within your account settings
+            section. If you are unable to perform these actions yourself, please
+            contact us to assist you.
+          </Text>
+          <Text>
+            • The right of rectification. You have the right to have your
+            information rectified if that information is inaccurate or
+            incomplete.
+          </Text>
+          <Text>
+            • The right to object. You have the right to object to our
+            processing of your Personal Data.
+          </Text>
+          <Text>
+            • The right of restriction. You have the right to request that we
+            restrict the processing of your personal information.
+          </Text>
+          <Text>
+            • The right to data portability. You have the right to be provided
+            with a copy of the information we have on you in a structured,
+            machine-readable and commonly used format.
+          </Text>
+          <Text>
+            • The right to withdraw consent. You also have the right to withdraw
+            your consent at any time where mylearningacademy.com, relied on your
+            consent to process your personal information.
+          </Text>
+          <Text>
+            Please note that we may ask you to verify your identity before
+            responding to such requests.
+          </Text>
+          <Text>
+            You have the right to complain to a Data Protection Authority about
+            our collection and use of your Personal Data. For more information,
+            please contact your local data protection authority.
+          </Text>
+          <Heading>4. Release of Information: </Heading>
+          <Text>
+            We will not sell, trade, or rent your PII to other parties without
+            your consent. But we may share your PII with our current or future
+            “affiliates” (which means a Parent Company, subsidiary or company
+            under common control), in which case we would require our affiliates
+            to honour this Privacy Policy. However, the use of your PII by our
+            Service Partners, is governed by the respective privacy policies of
+            those partners and is not subject to our control. Please consult
+            each site’s privacy policy. Except as otherwise discussed in this
+            Privacy Policy, this document only addresses he use and disclosure
+            of information we collect from you. We are not responsible for the
+            policies and practices of third parties. We may disclose your PII as
+            required by law, such as to comply with a subpoena or, similar legal
+            process; and when we believe in good faith that disclosure is
+            necessary to protect our rights, protect your safety or the safety
+            of others, investigate fraud, or respond to a government request.{' '}
+          </Text>
+          <Heading>5. Correct and update your information: </Heading>
+          <Text>
+            Users can modify or change their password and e-mail address through
+            their “My Profile” settings. Also, Users can modify, change or
+            delete their personal information anytime.{' '}
+          </Text>
+          <Heading>6. Security: </Heading>
+          <Text>
+            We transmit and store the information we collect using standard
+            security techniques. However, given the nature of the Internet and
+            the fact that network security measures are not full proof, we
+            cannot guarantee the security of such information.{' '}
+          </Text>
+          <Heading>7. Transfer of Information: </Heading>
+          <Text>
+            This Site processes information about our Users on servers located
+            in a number of countries. The Company may also subcontract
+            processing or sharing of information to third parties located in
+            other countries, other than your home country. Also, such
+            information may be transferred to another company if ownership of
+            IPL changes. Therefore, information may be transferred cross
+            international borders outside the country where you use our
+            services, including to countries that do not have laws providing
+            specific protection for personal data or those that have different
+            legal rules on data protection. You expressly consent to this.{' '}
+          </Text>
+          <Heading>8. Retention:</Heading>
+          <Text>
+            We may retain PII information about the user, as long as it is
+            necessary for business purposes. Also, we may retain aggregated
+            anonymous information indefinitely. In addition, we may retain your
+            information for an additional period as is permitted or required to,
+            among other things, comply with our legal obligations, resolve
+            disputes, and enforce agreements.{' '}
+          </Text>
+          <Heading>9. Changes to the Privacy Policy: </Heading>
+          <Text>
+            We may make changes to this Privacy Policy from time to time, and
+            for any reason. You are advised to consult this privacy policy
+            regularly for any changes, as we deem your continued use, following
+            posting of any amendment, modification or change, approval of all
+            changes.{' '}
+          </Text>
+          <Heading>10. Contact Us: </Heading>
+          <Text>
+            If you have any questions concerning this Privacy Policy please
+            contact us at enquiries@yourbusinesshive.com Suite 521/522 The
+            Kings’ plaza, opposite NAF conference Centre, off Ahmadu bello way.
+            Kado. Abuja{' '}
           </Text>
         </View>
       </ScrollView>
@@ -229,7 +274,8 @@ const styles = StyleSheet.create({
 
 const Heading = styled(Text)({
   fontSize: 20,
-  marginBottom: 10,
+  marginBottom: 5,
+  marginTop: 12,
 });
 
 export default Privacy;

@@ -41,6 +41,8 @@ const EndPoints = {
   deleteAdviceResponse: {url: 'advice/response/delete'},
 
   voteOnResponse: {url: 'user/responses/vote'},
+
+  getAdvertisements: {url: 'advertisements', cache_age: 24},
 };
 
 export default EndPoints;

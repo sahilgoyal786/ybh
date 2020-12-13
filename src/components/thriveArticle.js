@@ -40,7 +40,7 @@ const ThriveArticle = ({article = {}, compact, navigate}) => {
           <Text
             style={compact ? styles.text_content : styles.text_content_large}
             numberOfLines={compact ? 4 : 4}>
-            {article.content}
+            {article.content.replace(/(<([^>]+)>)/gi, '')}
           </Text>
           {!compact ? (
             <View style={{justifyContent: 'flex-start'}}>

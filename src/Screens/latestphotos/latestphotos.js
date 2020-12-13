@@ -213,7 +213,7 @@ const LatestPhotos = ({route, navigation}) => {
                 <TouchableOpacity
                   key={Math.random()}
                   onPress={() => {
-                    if (index == 3 || index == todaysPhotos.length - 1) {
+                    if (index == 3) {
                       navigation.navigate('Gallery', {
                         todaysPhotos,
                         type: 'today',
@@ -224,9 +224,9 @@ const LatestPhotos = ({route, navigation}) => {
                       setcurrentImageIndex(index);
                     }
                   }}>
-                  {(index == 3 || index == todaysPhotos.length - 1) && (
+                  {index == 3 && (
                     <ViewMore>
-                      <ViewMoreLink>View More</ViewMoreLink>
+                      <ViewMoreLink>More</ViewMoreLink>
                     </ViewMore>
                   )}
                   <ImagesView source={{uri: item.url}} />
@@ -292,7 +292,7 @@ const LatestPhotos = ({route, navigation}) => {
                 <TouchableOpacity
                   key={Math.random()}
                   onPress={() => {
-                    if (index == 3 || index == weeksPhotos.length - 1) {
+                    if (index == 3) {
                       navigation.navigate('Gallery', {
                         weeksPhotos,
                         type: 'week',
@@ -303,9 +303,9 @@ const LatestPhotos = ({route, navigation}) => {
                       setcurrentImageIndex(index);
                     }
                   }}>
-                  {(index == 3 || index == weeksPhotos.length - 1) && (
+                  {index == 3 && (
                     <ViewMore>
-                      <ViewMoreLink>View More</ViewMoreLink>
+                      <ViewMoreLink>More</ViewMoreLink>
                     </ViewMore>
                   )}
                   <ImagesView source={{uri: item.url}} />
@@ -420,7 +420,7 @@ const LatestPhotos = ({route, navigation}) => {
                 <TouchableOpacity
                   key={Math.random()}
                   onPress={() => {
-                    if (index == 3 || index == monthsPhotos.length - 1) {
+                    if (index == 3) {
                       navigation.navigate('Gallery', {
                         type: 'month',
                         month: selectedMonth,
@@ -431,9 +431,9 @@ const LatestPhotos = ({route, navigation}) => {
                       setcurrentImageIndex(index);
                     }
                   }}>
-                  {(index == 3 || index == monthsPhotos.length - 1) && (
+                  {index == 3 && (
                     <ViewMore>
-                      <ViewMoreLink>View More</ViewMoreLink>
+                      <ViewMoreLink>More</ViewMoreLink>
                     </ViewMore>
                   )}
                   <ImagesView source={{uri: item.url}} />
@@ -446,6 +446,7 @@ const LatestPhotos = ({route, navigation}) => {
               source={photoworld}
               initHeight="150"
               initWidth={widthPercentageToDP(100) - 21}
+              style={{width: widthPercentageToDP(100) - 22}}
             />
           </LastImage>
         </View>
