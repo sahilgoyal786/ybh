@@ -20,6 +20,7 @@ import {
   Image,
   Platform,
   Dimensions,
+  Share,
   Linking,
 } from 'react-native';
 //import { Image } from 'native-base';
@@ -120,13 +121,33 @@ const Thrivedetails = ({route, navigation}) => {
             }}
             resizeMode="cover"
           />
-          <View style={{marginTop: 15, padding: 10, marginBottom: 20}}>
+          <View style={{marginTop: 15, padding: 10, marginBottom: 10}}>
             <HTML
-              html={article.content}
+              source={{html: article.content}}
               imagesMaxWidth={widthPercentageToDP(100) - 30}
               contentWidth={widthPercentageToDP(100) - 30}
-              computeEmbeddedMaxWidth={widthPercentageToDP(100) - 30}
             />
+            <Text
+              style={{
+                marginTop: 30,
+                fontSize: 20,
+                textAlign: 'center',
+                color: 'purple',
+                padding: 10,
+                borderColor: 'purple',
+                borderWidth: 2,
+                borderRadius: 4,
+              }}
+              onPress={() => {
+                Share.share({
+                  message:
+                    'Lets Have Fun! #YBH https://ybhive.app DOWNLOAD NOW!!',
+                  url: 'https://ybhive.app',
+                });
+              }}>
+              <FontAwesome5Icon name="share" style={{fontSize: 20}} /> Share
+              With Friends
+            </Text>
           </View>
           {/* <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
           <ButtonSUbmit
