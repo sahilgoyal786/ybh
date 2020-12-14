@@ -39,6 +39,7 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import {Toast} from 'native-base';
+let RNFS = require('react-native-fs');
 
 const Home = () => {
   const [votingImages, setVotingImages] = React.useState([]);
@@ -104,41 +105,60 @@ const Home = () => {
   );
 
   React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      storage.getData(EndPoints.votingImages.url).then((data) => {
+        if (data) {
+        } else {
+          getVotingImages();
+        }
+      });
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  const getVotingImages = () => {
+    const tempVotingImagesArray = [];
+    network.getResponse(
+      EndPoints.votingImages,
+      'GET',
+      {},
+      userDetail.token || '',
+      (response) => {
+        // console.log(response);
+        if (response.photos) {
+          response = response.photos;
+          for (let i = 0; i < 8; i++) {
+            // console.log(response[i]);
+            votingImagesURLS.push(response[i]['url']);
+            tempVotingImagesArray.push(
+              <VotingImage
+                key={i}
+                source={{uri: response[i]['url']}}
+                resizeMode={FastImage.resizeMode.cover}
+              />,
+            );
+          }
+          setVotingImagesURLS(votingImagesURLS);
+          setVotingImages(tempVotingImagesArray);
+        } else if (response.image_of_the_week) {
+          setVotingEnabled(false);
+          setImageOfTheWeek(response.image_of_the_week);
+        } else {
+          setVotingEnabled(false);
+        }
+        setVotingImagesLoaded(true);
+      },
+      (error) => console.log('error', error),
+    );
+  };
+
+  React.useEffect(() => {
     const tempVotingImagesArray = [];
     const tempLatestPhotosArray = [];
     const votingImagesURLS = [];
     try {
-      network.getResponse(
-        EndPoints.votingImages,
-        'GET',
-        {},
-        userDetail.token || '',
-        (response) => {
-          // console.log(response);
-          if (response.photos) {
-            response = response.photos;
-            for (let i = 0; i < 8; i++) {
-              votingImagesURLS.push(response[i]['url']);
-              tempVotingImagesArray.push(
-                <VotingImage
-                  key={i}
-                  source={{uri: response[i]['url']}}
-                  resizeMode={FastImage.resizeMode.cover}
-                />,
-              );
-            }
-            setVotingImagesURLS(votingImagesURLS);
-            setVotingImages(tempVotingImagesArray);
-          } else if (response.image_of_the_week) {
-            setVotingEnabled(false);
-            setImageOfTheWeek(response.image_of_the_week);
-          } else {
-            setVotingEnabled(false);
-          }
-          setVotingImagesLoaded(true);
-        },
-        (error) => console.log('error', error),
-      );
+      getVotingImages();
       network.getResponse(
         EndPoints.latestPhotos,
         'GET',
@@ -457,9 +477,10 @@ const Home = () => {
                 <Image
                   source={{
                     uri:
-                      Platform.OS == 'android'
-                        ? 'file://' + homeTopRight.path
-                        : homeTopRight.path,
+                      'file://' +
+                      RNFS.DocumentDirectoryPath +
+                      '/' +
+                      homeTopRight.path,
                   }}
                   style={{
                     width: '100%',
@@ -480,9 +501,10 @@ const Home = () => {
               <Image
                 source={{
                   uri:
-                    Platform.OS == 'android'
-                      ? 'file://' + homeBottom.path
-                      : homeBottom.path,
+                    'file://' +
+                    RNFS.DocumentDirectoryPath +
+                    '/' +
+                    homeBottom.path,
                 }}
                 style={{
                   width: '100%',
@@ -650,7 +672,7 @@ const Home = () => {
                         <Text
                           style={[
                             styles.votePercentage,
-                            {width: 60, textAlign: 'right'},
+                            {width: 70, textAlign: 'right'},
                           ]}>
                           {Math.floor((likes[1] / total) * 100)}%
                         </Text>
@@ -683,7 +705,7 @@ const Home = () => {
                         <Text
                           style={[
                             styles.votePercentage,
-                            {width: 60, textAlign: 'left'},
+                            {width: 70, textAlign: 'left'},
                           ]}>
                           {Math.floor((likes[0] / total) * 100)}%
                         </Text>

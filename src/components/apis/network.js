@@ -81,7 +81,7 @@ const network = {
     file,
     file_name,
   ) {
-    let headers = {};
+    let headers = {'X-Requested-With': 'XMLHttpRequest'};
     let formData = {};
     formData = new FormData();
     for (var key in data) {

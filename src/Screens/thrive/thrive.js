@@ -64,7 +64,7 @@ const Thrive = ({route, navigation}) => {
     const tempBlogsArray = [];
     setLoadingMore(true);
     let params = {page, keyword};
-    console.log(page, totalPages);
+    // console.log(page, totalPages);
     if (totalPages > -1 && page > totalPages) {
       return;
     } else {
@@ -72,13 +72,13 @@ const Thrive = ({route, navigation}) => {
       setPage(page + 1);
     }
     if (selectedCategory !== 0 && categories[selectedCategory - 1]) {
-      console.log(
-        selectedCategory - 1,
-        categories[selectedCategory - 1].category,
-      );
+      // console.log(
+      //   selectedCategory - 1,
+      //   categories[selectedCategory - 1].category,
+      // );
       params['category'] = categories[selectedCategory - 1].category;
     }
-    console.log(params);
+    // console.log(params);
     try {
       network.getResponse(
         EndPoints.blogs,
@@ -91,7 +91,7 @@ const Thrive = ({route, navigation}) => {
             setCategories(response.categories);
           }
           if (response.category) {
-            console.log('category', response.category);
+            // console.log('category', response.category);
           }
           response = response.blogs;
           for (let i = 0; i < response.data.length; i++) {
@@ -120,7 +120,7 @@ const Thrive = ({route, navigation}) => {
     LoadBlogs();
   }, []);
   React.useEffect(() => {
-    console.log(page, 'page-useEffect');
+    // console.log(page, 'page-useEffect');
     if (page == 0) {
       setTotalPages(-1);
       setBlogs([]);
@@ -129,7 +129,7 @@ const Thrive = ({route, navigation}) => {
   }, [page]);
 
   React.useEffect(() => {
-    console.log(selectedCategory, 'selectedCategory-useEffect');
+    // console.log(selectedCategory, 'selectedCategory-useEffect');
   }, [selectedCategory]);
 
   const renderCategories = () => {

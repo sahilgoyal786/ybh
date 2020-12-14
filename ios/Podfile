@@ -3,14 +3,20 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '10.0'
 
-target 'ybh' do
+target 'YBH' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
-  target 'ybhTests' do
+
+    permissions_path = '../node_modules/react-native-permissions/ios'
+
+    pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
+
+
+  target 'YBHTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -25,10 +31,10 @@ target 'ybh' do
   end
 end
 
-target 'ybh-tvOS' do
-  # Pods for ybh-tvOS
+target 'YBH-tvOS' do
+  # Pods for YBH-tvOS
 
-  target 'ybh-tvOSTests' do
+  target 'YBH-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

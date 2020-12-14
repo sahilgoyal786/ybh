@@ -14,6 +14,8 @@ import {
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
+
+let RNFS = require('react-native-fs');
 // import DropDownPicker from 'react-native-dropdown-picker';
 
 import {Toast} from 'native-base';
@@ -474,9 +476,10 @@ const LatestPhotos = ({route, navigation}) => {
                 <LastaddImage
                   source={{
                     uri:
-                      Platform.OS == 'android'
-                        ? 'file://' + latestPhotosBottom.path
-                        : latestPhotosBottom.path,
+                      'file://' +
+                      RNFS.DocumentDirectoryPath +
+                      '/' +
+                      latestPhotosBottom.path,
                   }}
                   initHeight="150"
                   initWidth={widthPercentageToDP(100) - 21}
@@ -550,7 +553,7 @@ const LatestPhotos = ({route, navigation}) => {
                       <Text
                         style={[
                           styles.votePercentage,
-                          {width: 60, textAlign: 'right'},
+                          {width: 70, textAlign: 'right'},
                         ]}>
                         {Math.floor((likes[1] / total) * 100)}%
                       </Text>
@@ -583,7 +586,7 @@ const LatestPhotos = ({route, navigation}) => {
                       <Text
                         style={[
                           styles.votePercentage,
-                          {width: 60, textAlign: 'left'},
+                          {width: 70, textAlign: 'left'},
                         ]}>
                         {Math.floor((likes[0] / total) * 100)}%
                       </Text>

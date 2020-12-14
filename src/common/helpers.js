@@ -236,6 +236,7 @@ export const downloadAdBanners = (userDetail, changeUserDetail) => {
           if (response.length > 0) {
             cleanup(response);
             response.forEach((element) => {
+              // console.log(element.file);
               let path = RNFS.DocumentDirectoryPath + '/' + element.file.path;
               RNFS.exists(path).then((exists) => {
                 // console.log(path, exists);
@@ -248,7 +249,10 @@ export const downloadAdBanners = (userDetail, changeUserDetail) => {
                     // console.log('DOWNLOADED', file);
                     storage.setData(
                       element.location,
-                      JSON.stringify({path, url: element.url}),
+                      JSON.stringify({
+                        path: element.file.path,
+                        url: element.url,
+                      }),
                     );
                   });
                 }

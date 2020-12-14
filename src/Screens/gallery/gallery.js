@@ -294,7 +294,7 @@ const Gallery = ({route, navigation}) => {
                           <Text
                             style={[
                               styles.votePercentage,
-                              {width: 60, textAlign: 'right'},
+                              {width: 70, textAlign: 'right'},
                             ]}>
                             {Math.floor((likes[1] / total) * 100)}%
                           </Text>
@@ -327,7 +327,7 @@ const Gallery = ({route, navigation}) => {
                           <Text
                             style={[
                               styles.votePercentage,
-                              {width: 60, textAlign: 'left'},
+                              {width: 70, textAlign: 'left'},
                             ]}>
                             {Math.floor((likes[0] / total) * 100)}%
                           </Text>

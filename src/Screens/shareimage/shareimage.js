@@ -12,6 +12,7 @@ import {
 import styled from 'styled-components/native';
 
 import ResponsiveImage from 'react-native-responsive-image';
+let RNFS = require('react-native-fs');
 //import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   heightPercentageToDP,
@@ -252,12 +253,13 @@ const ShareImage = () => {
                 <LastaddImage
                   source={{
                     uri:
-                      Platform.OS == 'android'
-                        ? 'file://' + shareImageBottom.path
-                        : shareImageBottom.path,
+                      'file://' +
+                      RNFS.DocumentDirectoryPath +
+                      '/' +
+                      shareImageBottom.path,
                   }}
-                  initHeight="200"
-                  initWidth="390"
+                  initHeight="142"
+                  initWidth="380"
                 />
               </TouchableOpacity>
             )}

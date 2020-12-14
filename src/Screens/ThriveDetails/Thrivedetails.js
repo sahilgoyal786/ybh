@@ -3,6 +3,7 @@ import {addbtmimg, topbanner, bottomCurve} from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
 
+let RNFS = require('react-native-fs');
 import HTML from 'react-native-render-html';
 import {
   heightPercentageToDP,
@@ -72,9 +73,10 @@ const Thrivedetails = ({route, navigation}) => {
               <Image
                 source={{
                   uri:
-                    Platform.OS == 'android'
-                      ? 'file://' + thriveTop.path
-                      : thriveTop.path,
+                    'file://' +
+                    RNFS.DocumentDirectoryPath +
+                    '/' +
+                    thriveTop.path,
                 }}
                 style={{
                   width: widthPercentageToDP(100) - 60,
@@ -144,9 +146,10 @@ const Thrivedetails = ({route, navigation}) => {
               <Image
                 source={{
                   uri:
-                    Platform.OS == 'android'
-                      ? 'file://' + thriveBottom.path
-                      : thriveBottom.path,
+                    'file://' +
+                    RNFS.DocumentDirectoryPath +
+                    '/' +
+                    thriveBottom.path,
                 }}
                 style={{
                   height: 60,

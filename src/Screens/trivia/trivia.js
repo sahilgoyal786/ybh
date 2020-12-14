@@ -11,6 +11,7 @@ import {
   Linking,
 } from 'react-native';
 import Button from '../../components/button';
+let RNFS = require('react-native-fs');
 
 import {ListItem, CheckBox, Toast, Body} from 'native-base';
 
@@ -280,9 +281,10 @@ const Trivia = ({navigation}) => {
                 <ResponsiveImage
                   source={{
                     uri:
-                      Platform.OS == 'android'
-                        ? 'file://' + triviaBottom.path
-                        : triviaBottom.path,
+                      'file://' +
+                      RNFS.DocumentDirectoryPath +
+                      '/' +
+                      triviaBottom.path,
                   }}
                   style={{
                     marginLeft: 12,

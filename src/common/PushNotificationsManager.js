@@ -62,6 +62,9 @@ export default class PushNotificationManager extends React.Component {
         // Calling completion on iOS with `alert: true` will present the native iOS inApp notification.
         this.setState({notification: notification});
         this.setState({dialogVisible: true});
+        if (notification.payload.type == 'voting') {
+          storage.removeData(EndPoints.votingImages.url);
+        }
         completion({alert: false, sound: false, badge: false});
       },
     );
@@ -131,12 +134,12 @@ export default class PushNotificationManager extends React.Component {
             title={
               Platform.OS == 'android'
                 ? this.state.notification.payload['gcm.notification.title']
-                : 'Notification Received'
+                : this.state.notification.payload['title']
             }
             message={
               Platform.OS == 'android'
                 ? this.state.notification.payload['gcm.notification.body']
-                : 'Notification Body'
+                : this.state.notification.payload['body']
             }
             visible={this.state.dialogVisible}
             onTouchOutside={() => this.setState({dialogVisible: false})}
