@@ -81,11 +81,30 @@ const Gallery = ({route, navigation}) => {
       {url, like},
       userDetail.token,
       (response) => {
-        console.log(response);
+        // console.log(response);
         if (response && response.message) {
           Toast.show({text: response.message});
         }
         if (response && response.file) {
+          let userDetailTemp = userDetail;
+          if (userDetailTemp.likes) {
+            let voteIndex = userDetailTemp.likes.findIndex((photo) => {
+              if (photo.url == url) {
+                return true;
+              }
+            });
+            if (voteIndex >= 0) {
+              userDetailTemp.likes[voteIndex] = {
+                url,
+                likes: response.file.likes,
+              };
+            } else {
+              userDetailTemp.likes.push({url, likes: response.file.likes});
+            }
+          } else {
+            userDetailTemp.likes = new Array({url, likes: response.file.likes});
+          }
+          changeUserDetail(userDetailTemp);
           let photosTemp = photos;
           photosTemp[index] = response.file;
           setPhotos(photos);
@@ -245,9 +264,25 @@ const Gallery = ({route, navigation}) => {
               index={currentImageIndex}
               renderImage={(props) => <FastImage {...props} />}
               renderIndicator={() => {}}
+              enablePreload={true}
+              saveToLocalByLongPress={false}
+              loadingRender={() => {
+                return <ActivityIndicator color="white" />;
+              }}
               renderFooter={(index) => {
                 let likes = photos[index].likes.split('-');
-                console.log(photos[index]);
+                if (userDetail.likes) {
+                  // console.log(userDetail.likes);
+                  let voteIndex = userDetail.likes.findIndex((photo) => {
+                    if (photo.url == photos[index].url) {
+                      return true;
+                    }
+                  });
+                  if (voteIndex >= 0) {
+                    likes = userDetail.likes[voteIndex]['likes'].split('-');
+                  }
+                }
+                // console.log(photos[index]);
                 let total = parseInt(likes[0]) + parseInt(likes[1]);
                 return (
                   <Voting>

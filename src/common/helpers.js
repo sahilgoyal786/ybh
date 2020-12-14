@@ -2,6 +2,7 @@ import {Toast} from 'native-base';
 import storage from '../components/apis/storage';
 import network from '../components/apis/network';
 import EndPoints from '../components/apis/endPoints';
+let RNFS = require('react-native-fs');
 
 export const SyncContent = async (userDetail, changeUserDetail) => {
   Toast.show({text: 'Syncing...'});
@@ -28,7 +29,7 @@ const updateSync = (userDetail, changeUserDetail, completed = false) => {
     userDetailTemp['synced'] += 10;
     changeUserDetail(userDetailTemp);
   }
-  console.log(userDetailTemp['synced'] + '/' + userDetailTemp['syncTotal']);
+  // console.log(userDetailTemp['synced'] + '/' + userDetailTemp['syncTotal']);
 };
 export const getRelationshipMeterQuestionsFromServer = async (
   userDetail,
@@ -107,7 +108,7 @@ export const sendResponsesToServer = async (userDetail, changeUserDetail) => {
         ques_id_values.push(ques_id);
         ans_id_values.push(ans_id);
       }
-      console.log({ques_id: ques_id_values, ans_id: ans_id_values});
+      // console.log({ques_id: ques_id_values, ans_id: ans_id_values});
       return new Promise((resolve, reject) => {
         network.getResponse(
           EndPoints.postTriviaAnswers,
@@ -115,7 +116,7 @@ export const sendResponsesToServer = async (userDetail, changeUserDetail) => {
           {ques_id: ques_id_values, ans_id: ans_id_values},
           userDetail.token,
           (response) => {
-            console.log(response);
+            // console.log(response);
             if (response.message) {
               let userDetailTemp = userDetail;
               userDetailTemp.user['rank'] = response.rank;
@@ -164,7 +165,7 @@ export const todaysDate = () => {
 };
 
 export const fetchLeaderBoard = (userDetail, changeUserDetail) => {
-  console.log('fetchLeaderBoard');
+  // console.log('fetchLeaderBoard');
   updateSync(userDetail, changeUserDetail);
   return new Promise((resolve, reject) => {
     network.getResponse(
@@ -176,7 +177,7 @@ export const fetchLeaderBoard = (userDetail, changeUserDetail) => {
         let userDetailTemp = userDetail;
         userDetailTemp.leaderBoard = response;
         changeUserDetail(userDetailTemp);
-        console.log('changeUserDetail for LeaderBoard');
+        // console.log('changeUserDetail for LeaderBoard');
         updateSync(userDetail, changeUserDetail, true);
         resolve(true);
       },
@@ -192,27 +193,76 @@ export const fetchLeaderBoard = (userDetail, changeUserDetail) => {
   });
 };
 
-export const downloadAdBanners = (userDetail, changeUserDetail) => {
-  console.log('downloadAdBanners');
-  network.getResponse(
-    EndPoints.getAdvertisements,
-    'GET',
-    {},
-    userDetail.token || '',
-    (response) => {
-      console.log('downloadAdBanners', response);
-      console.log('downloadAdBanners', Constants.systemFonts);
-      if (response.length > 0) {
-        response.forEach((element) => {
-          // Save to device
+const cleanup = (response) => {
+  let path = RNFS.DocumentDirectoryPath + '/banners';
+  RNFS.exists(path).then((exists) => {
+    if (exists) {
+      RNFS.readdir(path).then((contents) => {
+        contents.forEach((file) => {
+          let index = response.findIndex((banner) => {
+            return banner.file.path.indexOf(file) > 0;
+          });
+          if (index >= 0) {
+          } else {
+            RNFS.unlink(path + '/' + file);
+          }
         });
-      }
-    },
-    (error) => {
-      console.log('changeUserDetail for LeaderBoard');
-    },
-    false,
-    '',
-    true,
-  );
+      });
+    }
+  });
+  // response.forEach((element) => {
+
+  // });
+};
+
+export const downloadAdBanners = (userDetail, changeUserDetail) => {
+  // console.log('downloadAdBanners');
+
+  let path = RNFS.DocumentDirectoryPath + '/banners';
+  RNFS.exists(path).then((exists) => {
+    if (!exists) {
+      // return;
+      RNFS.mkdir(path).then(() => downloadAdBanners);
+    } else {
+      // RNFS.unlink(path);
+      // return;
+      network.getResponse(
+        EndPoints.getAdvertisements,
+        'GET',
+        {},
+        userDetail.token || '',
+        (response) => {
+          // console.log('downloadAdBanners', response);
+          if (response.length > 0) {
+            cleanup(response);
+            response.forEach((element) => {
+              let path = RNFS.DocumentDirectoryPath + '/' + element.file.path;
+              RNFS.exists(path).then((exists) => {
+                // console.log(path, exists);
+                if (!exists) {
+                  // console.log(element.file.url);
+                  RNFS.downloadFile({
+                    fromUrl: element.file.url,
+                    toFile: path,
+                  }).promise.then((file) => {
+                    // console.log('DOWNLOADED', file);
+                    storage.setData(
+                      element.location,
+                      JSON.stringify({path, url: element.url}),
+                    );
+                  });
+                }
+              });
+            });
+          }
+        },
+        (error) => {
+          console.log('changeUserDetail for LeaderBoard');
+        },
+        false,
+        '',
+        true,
+      );
+    }
+  });
 };

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import {addbtmimg, topbanner, bottomCurve} from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
@@ -19,41 +19,34 @@ import {
   Image,
   Platform,
   Dimensions,
+  Linking,
 } from 'react-native';
 //import { Image } from 'native-base';
 import Button from '../../components/button';
 import Header from '../../components/header';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import storage from '../../components/apis/storage';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-const ButtonSUbmit = styled(Button)({
-  width: widthPercentageToDP(39),
-  marginRight: widthPercentageToDP(5),
-});
-const BackgroundImage = styled(ImageBackground)({
-  height:
-    Platform.OS === 'ios'
-      ? heightPercentageToDP(118)
-      : heightPercentageToDP(130),
-  // width: widthPercentageToDP(100),
-});
-
-const MenuIcon = styled(ResponsiveImage)({
-  alignSelf: 'flex-end',
-  // marginTop: heightPercentageToDP(4),
-  marginRight: widthPercentageToDP(4),
-});
-
-const TextThirive = styled(Text)({
-  fontSize: 9,
-  color: 'gray',
-  letterSpacing: 0.3,
-  marginTop: 2,
-  fontFamily: 'FuturaPT-Medium',
-});
 
 const Thrivedetails = ({route, navigation}) => {
+  const [thriveTop, setThriveTop] = React.useState(false);
+  const [thriveBottom, setThriveBottom] = React.useState(false);
+
+  useEffect(() => {
+    storage.getData('thrive_top').then((data) => {
+      if (data) {
+        setThriveTop(JSON.parse(data));
+      }
+    });
+    storage.getData('thrive_bottom').then((data) => {
+      if (data) {
+        setThriveBottom(JSON.parse(data));
+      }
+    });
+  }, []);
+
   const {article} = route.params;
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -74,15 +67,24 @@ const Thrivedetails = ({route, navigation}) => {
         style={{paddingTop: 20}}
         contentContainerStyle={{paddingBottom: 40}}>
         <View style={{backgroundColor: 'white'}}>
-          <Image
-            source={topbanner}
-            style={{
-              width: widthPercentageToDP(100) - 60,
-              marginLeft: 30,
-              height: 40,
-            }}
-            resizeMode="contain"
-          />
+          {thriveTop && (
+            <TouchableOpacity onPress={() => Linking.openURL(thriveTop.url)}>
+              <Image
+                source={{
+                  uri:
+                    Platform.OS == 'android'
+                      ? 'file://' + thriveTop.path
+                      : thriveTop.path,
+                }}
+                style={{
+                  width: widthPercentageToDP(100) - 60,
+                  marginLeft: 30,
+                  height: 40,
+                }}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          )}
           <Text style={{marginTop: 15, paddingHorizontal: 10, fontSize: 20}}>
             {article.title}
           </Text>
@@ -136,15 +138,25 @@ const Thrivedetails = ({route, navigation}) => {
             linear
           />
         </View> */}
-          <Image
-            source={addbtmimg}
-            style={{
-              height: 60,
-              width: windowWidth - 20,
-              marginLeft: 10,
-              marginTop: 10,
-            }}
-          />
+
+          {thriveBottom && (
+            <TouchableOpacity onPress={() => Linking.openURL(thriveBottom.url)}>
+              <Image
+                source={{
+                  uri:
+                    Platform.OS == 'android'
+                      ? 'file://' + thriveBottom.path
+                      : thriveBottom.path,
+                }}
+                style={{
+                  height: 60,
+                  width: windowWidth - 20,
+                  marginLeft: 10,
+                  marginTop: 10,
+                }}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
     </View>

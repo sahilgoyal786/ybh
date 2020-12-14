@@ -12,6 +12,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import DrawerScreen from '../Screens/drawer/drawer';
 import BottomTab from '../common/Bottomtabs';
+import {navigationRef} from '../common/RootNavigation';
 import Home from '../Screens/home/home';
 import ShareImage from '../Screens/shareimage/shareimage';
 import RelationMeter from '../Screens/relationmeter/relationmeter';
@@ -186,8 +187,8 @@ function Routes() {
 
       // Subscribe
       const subscribe = NetInfo.addEventListener((state) => {
-        console.log('Connection type', state.type);
-        console.log('Is connected?', state.isConnected);
+        // console.log('Connection type', state.type);
+        // console.log('Is connected?', state.isConnected);
         let userDetailTemp = userDetail;
         if (userDetail !== null) {
           userDetailTemp.is_connected = state.isConnected;
@@ -244,21 +245,22 @@ function Routes() {
     [],
   );
 
-  React.useEffect(() => console.log('userDetail from routes', userDetail), [
-    userDetail,
-  ]);
+  // React.useEffect(() => console.log('userDetail from routes', userDetail), [
+  //   userDetail,
+  // ]);
   const myStore = getStore();
   return (
     <Root>
       <Provider store={myStore}>
         <AuthContext.Provider value={authContext}>
           <userDetailContext.Provider value={[userDetail, changeUserDetail]}>
-            <PushNotificationManager>
-              <NavigationContainer
-                theme={{
-                  ...DefaultTheme,
-                  colors: {...DefaultTheme.colors, background: 'white'},
-                }}>
+            <NavigationContainer
+              ref={navigationRef}
+              theme={{
+                ...DefaultTheme,
+                colors: {...DefaultTheme.colors, background: 'white'},
+              }}>
+              <PushNotificationManager>
                 {state.isLoading ? (
                   <Stack.Navigator headerMode="none">
                     <Stack.Screen name="Loading" component={Loading} />
@@ -277,8 +279,8 @@ function Routes() {
                     <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
                   </Stack.Navigator>
                 )}
-              </NavigationContainer>
-            </PushNotificationManager>
+              </PushNotificationManager>
+            </NavigationContainer>
           </userDetailContext.Provider>
         </AuthContext.Provider>
       </Provider>

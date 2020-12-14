@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Text,
   SafeAreaView,
@@ -7,6 +7,7 @@ import {
   Dimensions,
   StyleSheet,
   Image,
+  Linking,
 } from 'react-native';
 import styled from 'styled-components/native';
 
@@ -17,16 +18,11 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import Button from '../../components/button';
-
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 import {
   uploadicon,
   backsec,
-  iconchecked,
-  unchecked,
-  photoworld,
   bottomCurve,
   tickicon,
   sync,
@@ -39,6 +35,7 @@ import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import {Toast} from 'native-base';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import storage from '../../components/apis/storage';
 
 const ShareImage = () => {
   const navigation = useNavigation();
@@ -48,6 +45,7 @@ const ShareImage = () => {
   const [uploaded, setUploaded] = useState(null);
   const screenHeight = Dimensions.get('window').height;
   const [userDetail, changeUserDetail] = useContext(userDetailContext);
+  const [shareImageBottom, setShareImageBottom] = React.useState(false);
 
   const handleChoosePhoto = () => {
     if (!checked) {
@@ -73,7 +71,6 @@ const ShareImage = () => {
       }
     });
   };
-
   const uploadPhoto = (photoResource) => {
     setIsLoading(true);
     setUploaded(null);
@@ -98,6 +95,14 @@ const ShareImage = () => {
       'image',
     );
   };
+
+  useEffect(() => {
+    storage.getData('share_image_bottom').then((data) => {
+      if (data) {
+        setShareImageBottom(JSON.parse(data));
+      }
+    });
+  }, []);
 
   return (
     <View style={{flex: 1}}>
@@ -241,12 +246,21 @@ const ShareImage = () => {
                 marginLeft: widthPercentageToDP(66),
               }}
             />
-
-            <LastaddImage
-              source={photoworld}
-              initHeight="130"
-              initWidth="381"
-            />
+            {shareImageBottom && (
+              <TouchableOpacity
+                onPress={() => Linking.openURL(shareImageBottom.url)}>
+                <LastaddImage
+                  source={{
+                    uri:
+                      Platform.OS == 'android'
+                        ? 'file://' + shareImageBottom.path
+                        : shareImageBottom.path,
+                  }}
+                  initHeight="200"
+                  initWidth="390"
+                />
+              </TouchableOpacity>
+            )}
           </View>
         </LastImage>
       </ScrollView>
@@ -261,9 +275,6 @@ export const styles = StyleSheet.create({
     fontFamily: 'FuturaPT-Light',
     color: 'red',
   },
-});
-const Checkicons = styled(ResponsiveImage)({
-  tintColor: '#000',
 });
 const MainnnView = styled.View({
   flexDirection: 'row',
@@ -281,11 +292,6 @@ const LastImage = styled(View)({
   // marginTop: heightPercentageToDP(2),
 
   marginLeft: widthPercentageToDP(4),
-});
-const UploadView = styled(View)({
-  flexDirection: 'row',
-  alignItems: 'center',
-  alignSelf: 'center',
 });
 const ImageeView = styled(View)({
   position: 'absolute',
@@ -326,29 +332,5 @@ const MainView = styled(View)({
   backgroundColor: '#FAF9FF',
   borderRightWidth: 4,
   borderBottomWidth: 4,
-});
-const MenuIcon = styled(ResponsiveImage)({
-  alignSelf: 'flex-end',
-  marginRight: widthPercentageToDP(4),
-});
-const WelcomeText = styled(Text)({
-  fontSize: 22,
-  color: '#ffffff',
-  fontWeight: '500',
-  fontFamily: 'FuturaPT-Medium',
-  marginLeft: -widthPercentageToDP(2),
-  marginTop: -heightPercentageToDP(0.1),
-});
-const BackgroundImage = styled(ImageBackground)({
-  height: Platform.OS === 'ios' ? '87%' : '100%',
-  bottom: 0,
-  marginTop: 50,
-});
-const WelcomeView = styled(View)({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginTop: '-14%',
-  marginLeft: 12,
 });
 export default ShareImage;

@@ -9,13 +9,13 @@ import {
   FlatList,
   TouchableOpacity,
   Platform,
+  Linking,
 } from 'react-native';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 // import DropDownPicker from 'react-native-dropdown-picker';
 
-import {photoworld} from '../../common/images';
 import {Toast} from 'native-base';
 import Header from '../../components/header';
 import ImageViewer from 'react-native-image-zoom-viewer';
@@ -26,6 +26,7 @@ import userDetailContext from '../../common/userDetailContext';
 import ContentLoader from 'react-native-easy-content-loader';
 import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import storage from '../../components/apis/storage';
 
 // import { Form } from 'formik';
 const LatestPhotos = ({route, navigation}) => {
@@ -36,6 +37,7 @@ const LatestPhotos = ({route, navigation}) => {
   const [showModal, setShowModal] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [modalPhotos, setModalPhotos] = React.useState([]);
+  const [latestPhotosBottom, setlatestPhotosBottom] = React.useState(false);
   const [like, setLike] = React.useState(0);
   const d = new Date();
   const months = [
@@ -68,6 +70,11 @@ const LatestPhotos = ({route, navigation}) => {
     loadImage('today');
     loadImage('week');
     loadImageMonth(months[month].value);
+    storage.getData('latest_photos_bottom').then((data) => {
+      if (data) {
+        setlatestPhotosBottom(JSON.parse(data));
+      }
+    });
   }, []);
   const loadImage = (type) => {
     network.getResponse(
@@ -126,6 +133,25 @@ const LatestPhotos = ({route, navigation}) => {
           Toast.show({text: response.message});
         }
         if (response && response.file) {
+          let userDetailTemp = userDetail;
+          if (userDetailTemp.likes) {
+            let voteIndex = userDetailTemp.likes.findIndex((photo) => {
+              if (photo.url == url) {
+                return true;
+              }
+            });
+            if (voteIndex >= 0) {
+              userDetailTemp.likes[voteIndex] = {
+                url,
+                likes: response.file.likes,
+              };
+            } else {
+              userDetailTemp.likes.push({url, likes: response.file.likes});
+            }
+          } else {
+            userDetailTemp.likes = new Array({url, likes: response.file.likes});
+          }
+          changeUserDetail(userDetailTemp);
           let photosTemp = modalPhotos;
           photosTemp[index] = response.file;
           setModalPhotos(modalPhotos);
@@ -442,12 +468,22 @@ const LatestPhotos = ({route, navigation}) => {
             }}
           />
           <LastImage>
-            <LastaddImage
-              source={photoworld}
-              initHeight="150"
-              initWidth={widthPercentageToDP(100) - 21}
-              style={{width: widthPercentageToDP(100) - 22}}
-            />
+            {latestPhotosBottom && (
+              <TouchableOpacity
+                onPress={() => Linking.openURL(latestPhotosBottom.url)}>
+                <LastaddImage
+                  source={{
+                    uri:
+                      Platform.OS == 'android'
+                        ? 'file://' + latestPhotosBottom.path
+                        : latestPhotosBottom.path,
+                  }}
+                  initHeight="150"
+                  initWidth={widthPercentageToDP(100) - 21}
+                  style={{width: widthPercentageToDP(100) - 22}}
+                />
+              </TouchableOpacity>
+            )}
           </LastImage>
         </View>
       </ScrollView>
@@ -484,8 +520,24 @@ const LatestPhotos = ({route, navigation}) => {
           index={currentImageIndex}
           renderImage={(props) => <FastImage {...props} />}
           renderIndicator={() => {}}
+          enablePreload={true}
+          saveToLocalByLongPress={false}
+          loadingRender={() => {
+            return <ActivityIndicator color="white" />;
+          }}
           renderFooter={(index) => {
             let likes = modalPhotos[index].likes.split('-');
+            if (userDetail.likes) {
+              // console.log(userDetail.likes);
+              let voteIndex = userDetail.likes.findIndex((photo) => {
+                if (photo.url == modalPhotos[index].url) {
+                  return true;
+                }
+              });
+              if (voteIndex >= 0) {
+                likes = userDetail.likes[voteIndex]['likes'].split('-');
+              }
+            }
             // console.log(modalPhotos[index]);
             let total = parseInt(likes[0]) + parseInt(likes[1]);
             return (

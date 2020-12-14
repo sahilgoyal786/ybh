@@ -264,6 +264,7 @@ const MyPhotos = () => {
               index={currentImageIndex}
               renderIndicator={() => {}}
               enablePreload={true}
+              saveToLocalByLongPress={false}
               renderImage={(props) => <FastImage {...props} />}
               loadingRender={() => {
                 return <ActivityIndicator color="white" />;

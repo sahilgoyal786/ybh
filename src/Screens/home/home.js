@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
   Modal,
+  Linking,
   ActivityIndicator,
 } from 'react-native';
 import styled from 'styled-components/native';
@@ -31,7 +32,7 @@ import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import {AuthContext} from '../../common/AuthContext';
 import LinearGradient from 'react-native-linear-gradient';
-import {fetchLeaderBoard} from '../../common/helpers';
+import {downloadAdBanners, fetchLeaderBoard} from '../../common/helpers';
 import storage from '../../components/apis/storage';
 import {Dialog} from 'react-native-simple-dialogs';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -59,6 +60,8 @@ const Home = () => {
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const [like, setLike] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [homeBottom, setHomeBottom] = React.useState(false);
+  const [homeTopRight, setHomeTopRight] = React.useState(false);
 
   var votingImagesPlaceholder = [];
   var latestPhotosPlaceholder = [];
@@ -211,6 +214,18 @@ const Home = () => {
           setLoadingFailed(true);
           setLeaderBoardLoading(false);
         });
+
+      downloadAdBanners(userDetail, changeUserDetail);
+      storage.getData('home_top_right').then((data) => {
+        if (data) {
+          setHomeTopRight(JSON.parse(data));
+        }
+      });
+      storage.getData('home_bottom').then((data) => {
+        if (data) {
+          setHomeBottom(JSON.parse(data));
+        }
+      });
     } catch (exception) {
       console.log('exception', exception);
     }
@@ -226,7 +241,7 @@ const Home = () => {
         var oneDay = 1000 * 60 * 60 * 24;
         var today = Math.floor(diff / oneDay);
         if (tipsOfTheDay[today] !== '') {
-          console.log(tipsOfTheDay[today]);
+          // console.log(tipsOfTheDay[today]);
           setTipOfTheDay(tipsOfTheDay[today]);
           tipsOfTheDay[today] = '';
           await storage.setData('TipsOfTheDay', JSON.stringify(tipsOfTheDay));
@@ -261,6 +276,26 @@ const Home = () => {
           Toast.show({text: response.message});
         }
         if (response && response.file) {
+          let userDetailTemp = userDetail;
+          if (userDetailTemp.likes) {
+            let voteIndex = userDetailTemp.likes.findIndex((photo) => {
+              if (photo.url == url) {
+                return true;
+              }
+            });
+            if (voteIndex >= 0) {
+              userDetailTemp.likes[voteIndex] = {
+                url,
+                likes: response.file.likes,
+              };
+            } else {
+              userDetailTemp.likes.push({url, likes: response.file.likes});
+            }
+          } else {
+            userDetailTemp.likes = new Array({url, likes: response.file.likes});
+          }
+          changeUserDetail(userDetailTemp);
+
           let photosTemp = modalPhotos;
           photosTemp[index] = response.file;
           setModalPhotos(modalPhotos);
@@ -416,26 +451,47 @@ const Home = () => {
               paddingLeft: 10,
               paddingRight: 10,
             }}>
-            <Image
-              source={addimage}
-              style={{
-                width: '100%',
-                height: undefined,
-                aspectRatio: 32 / 21,
-                padding: 0,
-                marginBottom: 10,
-              }}></Image>
+            {homeTopRight && (
+              <TouchableOpacity
+                onPress={() => Linking.openURL(homeTopRight.url)}>
+                <Image
+                  source={{
+                    uri:
+                      Platform.OS == 'android'
+                        ? 'file://' + homeTopRight.path
+                        : homeTopRight.path,
+                  }}
+                  style={{
+                    width: '100%',
+                    height: undefined,
+                    aspectRatio: 32 / 21,
+                    padding: 0,
+                    marginBottom: 10,
+                  }}
+                />
+              </TouchableOpacity>
+            )}
             <LeaderBoard userDetailTemp={userDetail} />
           </View>
         </View>
         <LastImage>
-          <Image
-            source={bottomadd}
-            style={{
-              width: '100%',
-              height: undefined,
-              aspectRatio: 395 / 100,
-            }}></Image>
+          {homeBottom && (
+            <TouchableOpacity onPress={() => Linking.openURL(homeBottom.url)}>
+              <Image
+                source={{
+                  uri:
+                    Platform.OS == 'android'
+                      ? 'file://' + homeBottom.path
+                      : homeBottom.path,
+                }}
+                style={{
+                  width: '100%',
+                  height: undefined,
+                  aspectRatio: 395 / 100,
+                }}
+              />
+            </TouchableOpacity>
+          )}
         </LastImage>
         <Dialog
           visible={false}
@@ -562,63 +618,83 @@ const Home = () => {
           index={currentIndex}
           onCancel={() => setShowModal(false)}
           renderImage={(props) => <FastImage {...props} />}
+          enablePreload={true}
+          saveToLocalByLongPress={false}
+          loadingRender={() => {
+            return <ActivityIndicator color="white" />;
+          }}
           renderIndicator={() => {}}
           renderFooter={(index) => {
-            let likes = modalPhotos[index].likes.split('-');
-            // console.log(modalPhotos[index]);
-            let total = parseInt(likes[0]) + parseInt(likes[1]);
-            return (
-              <Voting>
-                {isLoading ? (
-                  <ActivityIndicator color="purple" />
-                ) : (
-                  <>
-                    {total > 0 && (
+            if (modalPhotos[index] && modalPhotos[index].likes) {
+              let likes = modalPhotos[index].likes.split('-');
+              if (userDetail.likes) {
+                // console.log(userDetail.likes);
+                let voteIndex = userDetail.likes.findIndex((photo) => {
+                  if (photo.url == modalPhotos[index].url) {
+                    return true;
+                  }
+                });
+                if (voteIndex >= 0) {
+                  likes = userDetail.likes[voteIndex]['likes'].split('-');
+                }
+              }
+              // console.log(modalPhotos[index]);
+              let total = parseInt(likes[0]) + parseInt(likes[1]);
+              return (
+                <Voting>
+                  {isLoading ? (
+                    <ActivityIndicator color="purple" />
+                  ) : (
+                    <>
+                      {total > 0 && (
+                        <Text
+                          style={[
+                            styles.votePercentage,
+                            {width: 60, textAlign: 'right'},
+                          ]}>
+                          {Math.floor((likes[1] / total) * 100)}%
+                        </Text>
+                      )}
                       <Text
+                        onPress={() => {
+                          setLike(1);
+                          storeLike(modalPhotos[index].url, 0, index);
+                        }}
                         style={[
-                          styles.votePercentage,
-                          {width: 60, textAlign: 'right'},
+                          styles.voteButton,
+                          styles.left,
+                          like == 1 ? styles.active : [],
                         ]}>
-                        {Math.floor((likes[1] / total) * 100)}%
+                        Nice
                       </Text>
-                    )}
-                    <Text
-                      onPress={() => {
-                        setLike(1);
-                        storeLike(modalPhotos[index].url, 0, index);
-                      }}
-                      style={[
-                        styles.voteButton,
-                        styles.left,
-                        like == 1 ? styles.active : [],
-                      ]}>
-                      Nice
-                    </Text>
-                    <Text
-                      onPress={() => {
-                        setLike(2);
-                        storeLike(modalPhotos[index].url, 1, index);
-                      }}
-                      style={[
-                        styles.voteButton,
-                        styles.right,
-                        like == 2 ? styles.active : [],
-                      ]}>
-                      Supernice
-                    </Text>
-                    {total > 0 && (
                       <Text
+                        onPress={() => {
+                          setLike(2);
+                          storeLike(modalPhotos[index].url, 1, index);
+                        }}
                         style={[
-                          styles.votePercentage,
-                          {width: 60, textAlign: 'left'},
+                          styles.voteButton,
+                          styles.right,
+                          like == 2 ? styles.active : [],
                         ]}>
-                        {Math.floor((likes[0] / total) * 100)}%
+                        Supernice
                       </Text>
-                    )}
-                  </>
-                )}
-              </Voting>
-            );
+                      {total > 0 && (
+                        <Text
+                          style={[
+                            styles.votePercentage,
+                            {width: 60, textAlign: 'left'},
+                          ]}>
+                          {Math.floor((likes[0] / total) * 100)}%
+                        </Text>
+                      )}
+                    </>
+                  )}
+                </Voting>
+              );
+            } else {
+              return <></>;
+            }
           }}
         />
       </Modal>

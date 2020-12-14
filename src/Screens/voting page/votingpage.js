@@ -16,6 +16,7 @@ import {
   Image,
   Dimensions,
   Modal,
+  ActivityIndicator,
 } from 'react-native';
 import Header from '../../components/header';
 import {Toast} from 'native-base';
@@ -222,8 +223,13 @@ const VotingPage = ({route, navigation}) => {
             enableSwipeDown={true}
             onCancel={() => setShowModal(false)}
             index={currentImageIndex}
+            enablePreload={true}
+            saveToLocalByLongPress={false}
             renderIndicator={() => {}}
             renderImage={(props) => <FastImage {...props} />}
+            loadingRender={() => {
+              return <ActivityIndicator color="white" />;
+            }}
             renderHeader={(index) => {
               return (
                 <View

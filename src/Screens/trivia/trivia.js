@@ -8,12 +8,13 @@ import {
   SafeAreaView,
   FlatList,
   Image,
+  Linking,
 } from 'react-native';
 import Button from '../../components/button';
 
 import {ListItem, CheckBox, Toast, Body} from 'native-base';
 
-import {bottomCurve, photoworld, sync} from '../../common/images';
+import {bottomCurve} from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
 import {
@@ -36,6 +37,7 @@ const Trivia = ({navigation}) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [result, setResult] = useState(0);
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
+  const [triviaBottom, setTriviaBottom] = React.useState(false);
 
   const submitAnswer = () => {
     if (selectedAnswer === null) {
@@ -121,6 +123,11 @@ const Trivia = ({navigation}) => {
 
   React.useEffect(() => {
     LoadQuestions();
+    storage.getData('trivia_bottom').then((data) => {
+      if (data) {
+        setTriviaBottom(JSON.parse(data));
+      }
+    });
   }, []);
 
   React.useEffect(() => {
@@ -267,16 +274,26 @@ const Trivia = ({navigation}) => {
                 </View>
               </View>
             </QuesVIew>
-            <ResponsiveImage
-              style={{
-                marginLeft: 12,
-                marginTop: 20,
-                width: widthPercentageToDP(100) - 24,
-              }}
-              source={photoworld}
-              initHeight="150"
-              initWidth="396"
-            />
+            {triviaBottom && (
+              <TouchableOpacity
+                onPress={() => Linking.openURL(triviaBottom.url)}>
+                <ResponsiveImage
+                  source={{
+                    uri:
+                      Platform.OS == 'android'
+                        ? 'file://' + triviaBottom.path
+                        : triviaBottom.path,
+                  }}
+                  style={{
+                    marginLeft: 12,
+                    marginTop: 20,
+                    width: widthPercentageToDP(100) - 24,
+                  }}
+                  initHeight="150"
+                  initWidth="396"
+                />
+              </TouchableOpacity>
+            )}
           </>
         ) : (
           <ContentLoader />
