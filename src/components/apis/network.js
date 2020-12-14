@@ -3,7 +3,7 @@ import axios from 'axios';
 import {call} from 'react-native-reanimated';
 import storage from './storage';
 
-const api_host = 'https://ybh.32bitsolutions.com/api/';
+const api_host = 'https://api.ybhive.app/api/';
 
 const network = {
   cacheExpired: function (endpoint, value) {
@@ -12,11 +12,11 @@ const network = {
       Math.floor(Date.now() / 1000) >
       value.timestamp + endpoint.cache_age * 60 * 60
     ) {
-      console.log(
-        Math.floor(Date.now() / 1000),
-        value.timestamp,
-        endpoint.cache_age * 60 * 60,
-      );
+      // console.log(
+      //   Math.floor(Date.now() / 1000),
+      //   value.timestamp,
+      //   endpoint.cache_age * 60 * 60,
+      // );
       return true;
     } else return false;
   },
