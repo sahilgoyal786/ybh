@@ -129,7 +129,7 @@ const ShareImage = () => {
             YBHApp reserves the right, in its sole discretion, without notice,
             to remove any content that does not adhere to these terms. You will
             not post photographs that may be inappropriate in nature in the
-            YAHApp’s sole discretion. This means that any photo you submit, must
+            YBH’s sole discretion. This means that any photo you submit, must
             not be inappropriate, offensive or otherwise offensive and must not
             contain (without limitation) any of the following: profanity, nudity
             or pornographic material.
