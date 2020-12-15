@@ -275,27 +275,29 @@ const Trivia = ({navigation}) => {
                 </View>
               </View>
             </QuesVIew>
-            {triviaBottom && (
-              <TouchableOpacity
-                onPress={() => Linking.openURL(triviaBottom.url)}>
-                <ResponsiveImage
-                  source={{
-                    uri:
-                      'file://' +
-                      RNFS.DocumentDirectoryPath +
-                      '/' +
-                      triviaBottom.path,
-                  }}
-                  style={{
-                    marginLeft: 12,
-                    marginTop: 20,
-                    width: widthPercentageToDP(100) - 24,
-                  }}
-                  initHeight="150"
-                  initWidth="396"
-                />
-              </TouchableOpacity>
-            )}
+
+            <LastImage>
+              {triviaBottom && (
+                <TouchableOpacity
+                  onPress={() => Linking.openURL(triviaBottom.url)}>
+                  <Image
+                    source={{
+                      uri:
+                        'file://' +
+                        RNFS.DocumentDirectoryPath +
+                        '/' +
+                        triviaBottom.path,
+                    }}
+                    style={{
+                      width: '100%',
+                      aspectRatio: 208 / 79,
+                      padding: 0,
+                      marginBottom: 10,
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
+            </LastImage>
           </>
         ) : (
           <ContentLoader />
@@ -333,5 +335,10 @@ const QuesVIew = styled(View)({
 });
 const Checkicons = styled(ResponsiveImage)({
   tintColor: '#000',
+});
+const LastImage = styled(View)({
+  marginLeft: 13,
+  marginTop: 20,
+  width: widthPercentageToDP(100) - 26,
 });
 export default Trivia;

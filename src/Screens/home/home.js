@@ -484,7 +484,6 @@ const Home = () => {
                   }}
                   style={{
                     width: '100%',
-                    height: undefined,
                     aspectRatio: 32 / 21,
                     padding: 0,
                     marginBottom: 10,

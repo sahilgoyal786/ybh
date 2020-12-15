@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Platform,
   Linking,
+  Image,
 } from 'react-native';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
@@ -248,7 +249,7 @@ const LatestPhotos = ({route, navigation}) => {
                       });
                     } else {
                       setShowModal(true);
-                      setModalPhotos(latestPhotosArray);
+                      setModalPhotos(todaysPhotos);
                       setcurrentImageIndex(index);
                     }
                   }}>
@@ -327,7 +328,7 @@ const LatestPhotos = ({route, navigation}) => {
                       });
                     } else {
                       setShowModal(true);
-                      setModalPhotos(latestPhotosArray);
+                      setModalPhotos(weeksPhotos);
                       setcurrentImageIndex(index);
                     }
                   }}>
@@ -469,26 +470,30 @@ const LatestPhotos = ({route, navigation}) => {
               );
             }}
           />
-          <LastImage>
-            {latestPhotosBottom && (
-              <TouchableOpacity
-                onPress={() => Linking.openURL(latestPhotosBottom.url)}>
-                <LastaddImage
-                  source={{
-                    uri:
-                      'file://' +
-                      RNFS.DocumentDirectoryPath +
-                      '/' +
-                      latestPhotosBottom.path,
-                  }}
-                  initHeight="150"
-                  initWidth={widthPercentageToDP(100) - 21}
-                  style={{width: widthPercentageToDP(100) - 22}}
-                />
-              </TouchableOpacity>
-            )}
-          </LastImage>
         </View>
+
+        <LastImage>
+          {latestPhotosBottom && (
+            <TouchableOpacity
+              onPress={() => Linking.openURL(latestPhotosBottom.url)}>
+              <Image
+                source={{
+                  uri:
+                    'file://' +
+                    RNFS.DocumentDirectoryPath +
+                    '/' +
+                    latestPhotosBottom.path,
+                }}
+                style={{
+                  width: '100%',
+                  aspectRatio: 208 / 79,
+                  padding: 0,
+                  marginBottom: 10,
+                }}
+              />
+            </TouchableOpacity>
+          )}
+        </LastImage>
       </ScrollView>
       <Modal visible={showModal}>
         <View
@@ -601,11 +606,6 @@ const LatestPhotos = ({route, navigation}) => {
     </View>
   );
 };
-const LastaddImage = styled(ResponsiveImage)({});
-const LastImage = styled(View)({
-  marginTop: 40,
-  padding: 1,
-});
 const ImagesView = styled(FastImage)({
   width: widthPercentageToDP(25) - 9,
   height: widthPercentageToDP(25) - 9,
@@ -669,6 +669,11 @@ const ViewMore = styled(View)({
   top: 2,
   left: 2,
   height: widthPercentageToDP(25) - 9,
+});
+const LastImage = styled(View)({
+  marginLeft: 2,
+  marginTop: 30,
+  width: widthPercentageToDP(100) - 24,
 });
 
 export default LatestPhotos;

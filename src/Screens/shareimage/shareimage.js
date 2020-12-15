@@ -237,33 +237,26 @@ const ShareImage = () => {
         </View>
 
         <LastImage>
-          <View>
-            <ImageBackground
-              source={backsec}
-              style={{
-                height: 80,
-                width: 70,
-                borderRadius: 50,
-                marginLeft: widthPercentageToDP(66),
-              }}
-            />
-            {shareImageBottom && (
-              <TouchableOpacity
-                onPress={() => Linking.openURL(shareImageBottom.url)}>
-                <LastaddImage
-                  source={{
-                    uri:
-                      'file://' +
-                      RNFS.DocumentDirectoryPath +
-                      '/' +
-                      shareImageBottom.path,
-                  }}
-                  initHeight="142"
-                  initWidth="380"
-                />
-              </TouchableOpacity>
-            )}
-          </View>
+          {shareImageBottom && (
+            <TouchableOpacity
+              onPress={() => Linking.openURL(shareImageBottom.url)}>
+              <Image
+                source={{
+                  uri:
+                    'file://' +
+                    RNFS.DocumentDirectoryPath +
+                    '/' +
+                    shareImageBottom.path,
+                }}
+                style={{
+                  width: '100%',
+                  aspectRatio: 208 / 79,
+                  padding: 0,
+                  marginBottom: 10,
+                }}
+              />
+            </TouchableOpacity>
+          )}
         </LastImage>
       </ScrollView>
     </View>
@@ -291,9 +284,9 @@ const LastaddImage = styled(ResponsiveImage)({
   marginTop: -heightPercentageToDP(5),
 });
 const LastImage = styled(View)({
-  // marginTop: heightPercentageToDP(2),
-
-  marginLeft: widthPercentageToDP(4),
+  marginLeft: 15,
+  marginTop: 20,
+  width: widthPercentageToDP(100) - 30,
 });
 const ImageeView = styled(View)({
   position: 'absolute',

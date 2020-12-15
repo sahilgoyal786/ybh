@@ -29,6 +29,7 @@ import Header from '../../components/header';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import storage from '../../components/apis/storage';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import FastImage from 'react-native-fast-image';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -69,25 +70,27 @@ const Thrivedetails = ({route, navigation}) => {
         style={{paddingTop: 20}}
         contentContainerStyle={{paddingBottom: 40}}>
         <View style={{backgroundColor: 'white'}}>
-          {thriveTop && (
-            <TouchableOpacity onPress={() => Linking.openURL(thriveTop.url)}>
-              <Image
-                source={{
-                  uri:
-                    'file://' +
-                    RNFS.DocumentDirectoryPath +
-                    '/' +
-                    thriveTop.path,
-                }}
-                style={{
-                  width: widthPercentageToDP(100) - 60,
-                  marginLeft: 30,
-                  height: 40,
-                }}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          )}
+          <LastImage>
+            {thriveTop && (
+              <TouchableOpacity onPress={() => Linking.openURL(thriveTop.url)}>
+                <Image
+                  source={{
+                    uri:
+                      'file://' +
+                      RNFS.DocumentDirectoryPath +
+                      '/' +
+                      thriveTop.path,
+                  }}
+                  style={{
+                    width: '100%',
+                    aspectRatio: 170 / 21,
+                    padding: 0,
+                    marginBottom: 10,
+                  }}
+                />
+              </TouchableOpacity>
+            )}
+          </LastImage>
           <Text style={{marginTop: 15, paddingHorizontal: 10, fontSize: 20}}>
             {article.title}
           </Text>
@@ -111,7 +114,7 @@ const Thrivedetails = ({route, navigation}) => {
             </View>
           </View>
 
-          <Image
+          <FastImage
             source={{uri: article.file.url}}
             style={{
               height: widthPercentageToDP(100) - 20,
@@ -162,25 +165,28 @@ const Thrivedetails = ({route, navigation}) => {
           />
         </View> */}
 
-          {thriveBottom && (
-            <TouchableOpacity onPress={() => Linking.openURL(thriveBottom.url)}>
-              <Image
-                source={{
-                  uri:
-                    'file://' +
-                    RNFS.DocumentDirectoryPath +
-                    '/' +
-                    thriveBottom.path,
-                }}
-                style={{
-                  height: 60,
-                  width: windowWidth - 20,
-                  marginLeft: 10,
-                  marginTop: 10,
-                }}
-              />
-            </TouchableOpacity>
-          )}
+          <LastImage>
+            {thriveBottom && (
+              <TouchableOpacity
+                onPress={() => Linking.openURL(thriveBottom.url)}>
+                <Image
+                  source={{
+                    uri:
+                      'file://' +
+                      RNFS.DocumentDirectoryPath +
+                      '/' +
+                      thriveBottom.path,
+                  }}
+                  style={{
+                    width: '100%',
+                    aspectRatio: 1041 / 148,
+                    padding: 0,
+                    marginBottom: 30,
+                  }}
+                />
+              </TouchableOpacity>
+            )}
+          </LastImage>
         </View>
       </ScrollView>
     </View>
@@ -216,6 +222,10 @@ const Category = styled(Text)({
   borderRadius: 8,
   textTransform: 'capitalize',
   color: 'grey',
+});
+const LastImage = styled(View)({
+  marginLeft: 10,
+  width: widthPercentageToDP(100) - 20,
 });
 
 export default Thrivedetails;
