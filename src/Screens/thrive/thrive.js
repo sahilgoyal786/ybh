@@ -198,9 +198,13 @@ const Thrive = ({route, navigation}) => {
           : {
               flex: 1,
             },
-        {
-          minHeight: heightPercentageToDP(100) - 35,
-        })
+        Platform.OS == 'ios'
+          ? {
+              minHeight: heightPercentageToDP(100) - 80,
+            }
+          : {
+              minHeight: heightPercentageToDP(100) - 35,
+            })
       }
       data={blogs}
       renderItem={renderItem}
