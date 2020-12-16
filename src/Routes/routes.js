@@ -136,8 +136,15 @@ function HomeDrawer() {
 }
 
 function Routes() {
-  const [userDetail, changeUserDetail] = React.useState(null);
-
+  // const [userDetail, changeUserDetail] = React.useState(null);
+  const [stateUser, setState] = React.useState({userDetail: {}});
+  const {userDetail} = stateUser;
+  const changeUserDetail = React.useCallback(
+    (newState) => {
+      setState({userDetail: {...stateUser.userDetail, ...newState}});
+    },
+    [stateUser, setState],
+  );
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
