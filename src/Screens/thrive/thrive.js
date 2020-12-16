@@ -186,6 +186,7 @@ const Thrive = ({route, navigation}) => {
       onEndReached={() => {
         // console.log(blogs.length, totalPages, page < totalPages);
         if (blogs.length && totalPages && page < totalPages) {
+          console.log(page, totalPages);
           setLoadingMore(true);
           LoadBlogs();
         }
@@ -198,7 +199,7 @@ const Thrive = ({route, navigation}) => {
               flex: 1,
             },
         {
-          minHeight: heightPercentageToDP(100) - 70,
+          minHeight: heightPercentageToDP(100) - 35,
         })
       }
       data={blogs}
@@ -281,7 +282,7 @@ const Thrive = ({route, navigation}) => {
           style={{
             height: 230,
             position: 'absolute',
-            bottom: -150,
+            bottom: -120,
             zIndex: -10,
           }}>
           <Image

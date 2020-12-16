@@ -15,12 +15,12 @@ import userDetailContext from '../common/userDetailContext';
 const Header = ({title, backButton = false}) => {
   const navigation = useNavigation();
   return (
-    <View style={{width: widthPercentageToDP(100), height: 114}}>
+    <View style={{width: widthPercentageToDP(100), height: 120}}>
       <Image
         source={headerView}
         style={{
           width: widthPercentageToDP(100),
-          height: 100,
+          height: 107,
           resizeMode: 'stretch',
         }}
       />

@@ -365,7 +365,7 @@ const AdviceCategory = ({route, navigation}) => {
             source={bottomCurve}
             style={{
               width: widthPercentageToDP(100),
-              height: 200,
+              height: 230,
             }}
             resizeMode="contain"
           />
