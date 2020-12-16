@@ -146,14 +146,14 @@ const ShareImage = () => {
             uncheckedIcon={
               <FontAwesome5Icon
                 name="check-square"
-                style={{fontSize: 20, color: 'purple'}}
+                style={{fontSize: 20, color: '#A073C4'}}
                 solid
               />
             }
             checkedIcon={
               <FontAwesome5Icon
                 name="square"
-                style={{fontSize: 20, color: 'purple'}}
+                style={{fontSize: 20, color: '#A073C4'}}
               />
             }
             checked={!checked}

@@ -551,7 +551,7 @@ const LatestPhotos = ({route, navigation}) => {
             return (
               <Voting>
                 {isLoading ? (
-                  <ActivityIndicator color="purple" />
+                  <ActivityIndicator color="#A073C4" />
                 ) : (
                   <>
                     {total > 0 && (
@@ -636,7 +636,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   active: {
-    backgroundColor: 'purple',
+    backgroundColor: '#A073C4',
     color: 'white',
   },
   left: {

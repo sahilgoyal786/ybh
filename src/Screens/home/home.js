@@ -580,7 +580,7 @@ const Home = () => {
               }}>
               <FontAwesome5Icon
                 name="lightbulb"
-                style={{fontSize: 40, color: 'purple'}}
+                style={{fontSize: 40, color: '#A073C4'}}
               />
               {tipOfTheDay && (
                 <Text
@@ -593,7 +593,7 @@ const Home = () => {
               style={{
                 backgroundColor: 'white',
                 borderRadius: 500,
-                color: 'purple',
+                color: '#A073C4',
                 marginTop: 200,
                 padding: 2,
               }}>
@@ -664,7 +664,7 @@ const Home = () => {
               return (
                 <Voting>
                   {isLoading ? (
-                    <ActivityIndicator color="purple" />
+                    <ActivityIndicator color="#A073C4" />
                   ) : (
                     <>
                       {total > 0 && (
@@ -807,7 +807,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   active: {
-    backgroundColor: 'purple',
+    backgroundColor: '#A073C4',
     color: 'white',
   },
   left: {

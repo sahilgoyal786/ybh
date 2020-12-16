@@ -166,7 +166,7 @@ const verifyEmail = ({route, navigation}) => {
               {timeLeft >= 0 && <Text>Available In {timeLeft} seconds</Text>}
             </Text> */}
             {isLoading && (
-              <ActivityIndicator color="purple" style={{marginTop: 30}} />
+              <ActivityIndicator color="#A073C4" style={{marginTop: 30}} />
             )}
           </View>
         </SigninButton>

@@ -147,7 +147,27 @@ const TnC = () => {
             If you have any queries, please contact our customer support at
             enquiries@yourbusinesshive.com
           </Text>
-          <Text></Text>
+          <Strong style={{marginTop: 20}}>
+            - We filter objectionable content by approving every content
+            uploaded.
+          </Strong>
+          <Strong>
+            - We reserve the right to delete any comments or contents we find
+            abusive or unsuitable or reported by a member as inappropriate.
+          </Strong>
+          <Strong>
+            - Users can flag objectionable content by sending an email to the
+            admin on enquiries@yourbusinesshive.com
+          </Strong>
+          <Strong>
+            - We reserve the right to delete/suspend and block abusive users or
+            does that upload any inappropriate content.
+          </Strong>
+          <Strong>
+            - We will respond to any objectionable content reports within 24
+            hours by removing the content and suspending/blocking the user
+            responsible for uploading the offending content.
+          </Strong>
         </View>
       </ScrollView>
     </View>

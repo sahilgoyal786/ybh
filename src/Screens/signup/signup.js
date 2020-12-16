@@ -32,10 +32,13 @@ import storage from '../../components/apis/storage';
 import {SignupValidationSchema} from '../../common/validations';
 import userDetailContest from '../../common/userDetailContext';
 import EndPoints from '../../components/apis/endPoints';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 const Signup = () => {
   const [Tab, setTab] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [showTermsError, setShowTermsError] = useState(false);
   const navigation = useNavigation();
   const data = [
     {
@@ -153,6 +156,10 @@ const Signup = () => {
           password_confirmation: '',
         }}
         onSubmit={(values) => {
+          if (!termsAgreed) {
+            setShowTermsError(true);
+            return;
+          }
           setIsLoading(true);
           network.getResponse(
             EndPoints.register,
@@ -256,6 +263,30 @@ const Signup = () => {
             {errors.password_confirmation && (
               <Text style={styles.error_message}>
                 {errors.password_confirmation}
+              </Text>
+            )}
+            <TextInputView>
+              <Text style={{fontSize: 16, marginTop: 20}}>
+                <FontAwesome5Icon
+                  solid={termsAgreed}
+                  name={!termsAgreed ? 'square' : 'check-square'}
+                  onPress={() => setTermsAgreed(!termsAgreed)}
+                  style={{fontSize: 18, padding: 4, color: '#A073C4'}}
+                />{' '}
+                <Text onPress={() => setTermsAgreed(!termsAgreed)}>
+                  I agree to the{' '}
+                </Text>
+                <Text
+                  onPress={() => navigation.navigate('TnC')}
+                  style={{textDecorationLine: 'underline', color: '#A073C4'}}>
+                  terms and conditions
+                </Text>
+              </Text>
+            </TextInputView>
+
+            {showTermsError && !termsAgreed && (
+              <Text style={styles.error_message}>
+                You need to agree to the terms and conditions to proceed.
               </Text>
             )}
             <Button

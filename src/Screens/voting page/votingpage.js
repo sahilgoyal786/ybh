@@ -113,7 +113,7 @@ const VotingPage = ({route, navigation}) => {
               {selectedImageIndex == index && (
                 <View
                   style={{
-                    backgroundColor: 'purple',
+                    backgroundColor: '#A073C4',
                     position: 'absolute',
                     top: 0,
                     left: 0,
@@ -271,11 +271,11 @@ const VotingPage = ({route, navigation}) => {
                     <View
                       style={{
                         backgroundColor:
-                          index == selectedImageIndex ? 'purple' : 'black',
+                          index == selectedImageIndex ? '#A073C4' : 'black',
                         flexDirection: 'row',
                         borderWidth: 1,
                         borderColor:
-                          index == selectedImageIndex ? 'purple' : 'white',
+                          index == selectedImageIndex ? '#A073C4' : 'white',
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         borderRadius: 6,

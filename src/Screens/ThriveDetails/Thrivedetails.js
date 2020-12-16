@@ -135,9 +135,9 @@ const Thrivedetails = ({route, navigation}) => {
                 marginTop: 30,
                 fontSize: 20,
                 textAlign: 'center',
-                color: 'purple',
+                color: '#A073C4',
                 padding: 10,
-                borderColor: 'purple',
+                borderColor: '#A073C4',
                 borderWidth: 2,
                 borderRadius: 4,
               }}

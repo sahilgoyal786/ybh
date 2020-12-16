@@ -188,7 +188,7 @@ const Gallery = ({route, navigation}) => {
         <View
           style={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
           {loadingMore ? (
-            <ActivityIndicator color="purple" size="large" />
+            <ActivityIndicator color="#A073C4" size="large" />
           ) : (
             <Text>Nothing to show.</Text>
           )}
@@ -215,7 +215,7 @@ const Gallery = ({route, navigation}) => {
           }}>
           {loadingMore && (
             <ActivityIndicator
-              color="purple"
+              color="#A073C4"
               style={{
                 marginTop: 100,
                 position: 'absolute',
@@ -287,7 +287,7 @@ const Gallery = ({route, navigation}) => {
                 return (
                   <Voting>
                     {isLoading ? (
-                      <ActivityIndicator color="purple" />
+                      <ActivityIndicator color="#A073C4" />
                     ) : (
                       <>
                         {total > 0 && (
@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   active: {
-    backgroundColor: 'purple',
+    backgroundColor: '#A073C4',
     color: 'white',
   },
   left: {

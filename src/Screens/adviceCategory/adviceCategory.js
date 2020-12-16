@@ -55,7 +55,7 @@ const AdviceCategory = ({route, navigation}) => {
             }}>
             <FontAwesome5Icon
               name="info-circle"
-              style={{fontSize: 40, color: 'purple'}}
+              style={{fontSize: 40, color: '#A073C4'}}
             />
           </View>
           <TouchableOpacity
@@ -193,7 +193,7 @@ const AdviceCategory = ({route, navigation}) => {
         <View
           style={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
           {isLoading || loadingMore ? (
-            <ActivityIndicator color="purple" size="large" />
+            <ActivityIndicator color="#A073C4" size="large" />
           ) : (
             <Text>No questions have been asked yet, be the first one.</Text>
           )}
@@ -353,7 +353,7 @@ const AdviceCategory = ({route, navigation}) => {
           }}>
           {loadingMore && (
             <ActivityIndicator
-              color="purple"
+              color="#A073C4"
               style={{
                 marginTop: 100,
                 position: 'absolute',

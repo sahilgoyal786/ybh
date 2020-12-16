@@ -81,7 +81,7 @@ const Button = ({
                 ) : (
                   <></>
                 )}
-                <Text style={{color: 'purple'}}>{name}</Text>
+                <Text style={{color: '#A073C4'}}>{name}</Text>
               </TextSignup>
             )}
           </LinearGradientColor>

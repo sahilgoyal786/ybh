@@ -120,7 +120,7 @@ const Profile = () => {
               {isLoading && (
                 <ActivityIndicator
                   size="large"
-                  color="purple"
+                  color="#A073C4"
                   style={{
                     zIndex: 10,
                     position: 'absolute',

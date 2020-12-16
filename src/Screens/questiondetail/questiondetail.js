@@ -148,7 +148,7 @@ const QuestionDetail = ({navigation, route}) => {
                   name="edit"
                   style={{
                     fontSize: 15,
-                    color: 'purple',
+                    color: '#A073C4',
                   }}
                   onPress={() => {
                     setEditReponse(element);
@@ -266,7 +266,7 @@ const QuestionDetail = ({navigation, route}) => {
             style={{
               textAlign: 'right',
               marginRight: 5,
-              color: 'purple',
+              color: '#A073C4',
             }}
             onPress={() => setDialog(true)}>
             Post Your Reponse
@@ -325,14 +325,14 @@ const QuestionDetail = ({navigation, route}) => {
               checkedIcon={
                 <FontAwesome5Icon
                   name="check-square"
-                  style={{fontSize: 20, color: 'purple'}}
+                  style={{fontSize: 20, color: '#A073C4'}}
                   solid
                 />
               }
               uncheckedIcon={
                 <FontAwesome5Icon
                   name="square"
-                  style={{fontSize: 20, color: 'purple'}}
+                  style={{fontSize: 20, color: '#A073C4'}}
                 />
               }
               checked={anonymousChecked}
@@ -475,7 +475,7 @@ const Score = styled(View)({
 });
 const User = styled(Text)({
   fontSize: 13,
-  color: 'purple',
+  color: '#A073C4',
   marginLeft: -widthPercentageToDP(3),
   fontFamily: 'FuturaPT-Book',
   fontStyle: 'italic',

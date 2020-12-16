@@ -217,7 +217,7 @@ const Thrive = ({route, navigation}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <ActivityIndicator size="large" color="purple" />
+            <ActivityIndicator size="large" color="#A073C4" />
           </View>
         ) : (
           <View
@@ -299,7 +299,7 @@ const Thrive = ({route, navigation}) => {
           />
           {blogs.length > 0 && loadingMore && (
             <ActivityIndicator
-              color="purple"
+              color="#A073C4"
               style={{
                 top: 70,
                 position: 'absolute',

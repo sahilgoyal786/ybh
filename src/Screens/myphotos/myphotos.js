@@ -215,7 +215,7 @@ const MyPhotos = () => {
           }}>
           {loadingMore && (
             <ActivityIndicator
-              color="purple"
+              color="#A073C4"
               style={{
                 marginTop: 100,
                 position: 'absolute',

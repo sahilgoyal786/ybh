@@ -280,6 +280,7 @@ function Routes() {
                     <Stack.Screen name="Login" component={Login} />
                     <Stack.Screen name="Signup" component={Signup} />
                     <Stack.Screen name="Forgot" component={Forgot} />
+                    <Stack.Screen name="TnC" component={TnC} />
                     <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
                     <Stack.Screen name="SetPassword" component={SetPassword} />
                   </Stack.Navigator>

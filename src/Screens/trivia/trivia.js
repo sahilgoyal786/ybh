@@ -207,7 +207,7 @@ const Trivia = ({navigation}) => {
                               if (result == 0) setSelectedAnswer(answer.id);
                             }}
                             key={answer.id}
-                            color="purple"
+                            color="#A073C4"
                           />
                           <TouchableOpacity
                             onPress={() => {
