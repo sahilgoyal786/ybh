@@ -1,18 +1,18 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from '../Screens/welcome/welcome';
 import Login from '../Screens/login/login';
 import Signup from '../Screens/signup/signup';
 import Forgot from '../Screens/forgot/forgot';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {widthPercentageToDP} from 'react-native-responsive-screen';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { widthPercentageToDP } from 'react-native-responsive-screen';
 import DrawerScreen from '../Screens/drawer/drawer';
 import BottomTab from '../common/Bottomtabs';
-import {navigationRef} from '../common/RootNavigation';
+import { navigationRef } from '../common/RootNavigation';
 import Home from '../Screens/home/home';
 import ShareImage from '../Screens/shareimage/shareimage';
 import RelationMeter from '../Screens/relationmeter/relationmeter';
@@ -38,18 +38,18 @@ import {
   trivia,
   homeicon,
 } from '../common/images';
-import {Root, Toast} from 'native-base';
+import { Root, Toast } from 'native-base';
 import storage from '../components/apis/storage';
 import network from '../components/apis/network';
-import {AuthContext} from '../common/AuthContext';
+import { AuthContext } from '../common/AuthContext';
 import userDetailContext from '../common/userDetailContext';
 import Loading from '../Screens/loading/loading';
 import EndPoints from '../components/apis/endPoints';
 import NetInfo from '@react-native-community/netinfo';
 
 import PushNotificationManager from '../common/PushNotificationsManager';
-import {Provider} from 'react-redux';
-import {getStore} from '../common/reduxStore';
+import { Provider } from 'react-redux';
+import { getStore } from '../common/reduxStore';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -100,24 +100,24 @@ function HomeTabs() {
       <Tab.Screen
         name="home"
         component={HomeComponent}
-        options={{icon: homeicon}}
+        options={{ icon: homeicon }}
       />
       <Tab.Screen
         name="ShareImage"
         component={ShareImageComponent}
-        options={{icon: shareimage}}
+        options={{ icon: shareimage }}
       />
       <Tab.Screen
         name="GetAdvice"
         component={AdviceComponent}
-        options={{icon: getadvice}}
+        options={{ icon: getadvice }}
       />
       <Tab.Screen
         name="RelationMeter"
         component={RelationMeter}
-        options={{icon: relationmeter}}
+        options={{ icon: relationmeter }}
       />
-      <Tab.Screen name="Trivia" component={Trivia} options={{icon: trivia}} />
+      <Tab.Screen name="Trivia" component={Trivia} options={{ icon: trivia }} />
     </Tab.Navigator>
   );
 }
@@ -126,7 +126,7 @@ function HomeDrawer() {
   return (
     <Drawer.Navigator
       drawerPosition={'right'}
-      drawerStyle={{width: widthPercentageToDP(70)}}
+      drawerStyle={{ width: widthPercentageToDP(70) }}
       drawerContent={(props) => <DrawerScreen {...props} />}>
       <Drawer.Screen name="Home" component={HomeTabs} />
       {/* */}
@@ -135,8 +135,15 @@ function HomeDrawer() {
 }
 
 function Routes() {
-  const [userDetail, changeUserDetail] = React.useState(null);
-
+  // const [userDetail, changeUserDetail] = React.useState(null);
+  const [stateUser, setState] = React.useState({ userDetail: {} })
+  const { userDetail } = stateUser;
+  const changeUserDetail = React.useCallback(
+    newState => {
+      setState({ userDetail: { ...stateUser.userDetail, ...newState } })
+    },
+    [stateUser, setState],
+  )
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -193,7 +200,7 @@ function Routes() {
         if (userDetail !== null) {
           userDetailTemp.is_connected = state.isConnected;
           changeUserDetail(userDetailTemp);
-          dispatch({type: 'USER_UPDATE', user: userDetail.user});
+          dispatch({ type: 'USER_UPDATE', user: userDetail.user });
         }
         // console.log(userDetail);
       });
@@ -206,12 +213,12 @@ function Routes() {
         const user = JSON.parse(await storage.getData('user'));
         if (userDetail?.access_token || token) {
           userToken = (userDetail && userDetail.token) || token;
-          dispatch({type: 'RESTORE_TOKEN', token: userToken, user});
+          dispatch({ type: 'RESTORE_TOKEN', token: userToken, user });
         } else {
-          dispatch({type: 'SIGN_OUT'});
+          dispatch({ type: 'SIGN_OUT' });
         }
       } catch (err) {
-        dispatch({type: 'SIGN_OUT'});
+        dispatch({ type: 'SIGN_OUT' });
       }
     };
 
@@ -228,7 +235,7 @@ function Routes() {
         });
       },
       signOut: () => {
-        dispatch({type: 'SIGN_OUT'});
+        dispatch({ type: 'SIGN_OUT' });
       },
       updateUserDetail: (userDetailTemp, response) => {
         for (var key in response) {
@@ -239,7 +246,7 @@ function Routes() {
         changeUserDetail(userDetailTemp);
       },
       signUp: async (data) => {
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
       },
     }),
     [],
@@ -258,7 +265,7 @@ function Routes() {
               ref={navigationRef}
               theme={{
                 ...DefaultTheme,
-                colors: {...DefaultTheme.colors, background: 'white'},
+                colors: { ...DefaultTheme.colors, background: 'white' },
               }}>
               <PushNotificationManager>
                 {state.isLoading ? (
@@ -275,10 +282,10 @@ function Routes() {
                     <Stack.Screen name="SetPassword" component={SetPassword} />
                   </Stack.Navigator>
                 ) : (
-                  <Stack.Navigator headerMode="none">
-                    <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
-                  </Stack.Navigator>
-                )}
+                      <Stack.Navigator headerMode="none">
+                        <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
+                      </Stack.Navigator>
+                    )}
               </PushNotificationManager>
             </NavigationContainer>
           </userDetailContext.Provider>
