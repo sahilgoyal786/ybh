@@ -50,6 +50,7 @@ import NetInfo from '@react-native-community/netinfo';
 import PushNotificationManager from '../common/PushNotificationsManager';
 import {Provider} from 'react-redux';
 import {getStore} from '../common/reduxStore';
+import {StatusBar} from 'react-native';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -251,6 +252,7 @@ function Routes() {
   const myStore = getStore();
   return (
     <Root>
+      <StatusBar backgroundColor="#FFFFFF00" translucent></StatusBar>
       <Provider store={myStore}>
         <AuthContext.Provider value={authContext}>
           <userDetailContext.Provider value={[userDetail, changeUserDetail]}>
