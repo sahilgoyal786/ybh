@@ -62,9 +62,7 @@ export default class PushNotificationManager extends React.Component {
         // Calling completion on iOS with `alert: true` will present the native iOS inApp notification.
         this.setState({notification: notification});
         this.setState({dialogVisible: true});
-        if (notification.payload.type == 'voting') {
-          storage.removeData(EndPoints.votingImages.url);
-        }
+        this.doStuff(notification, false);
         completion({alert: false, sound: false, badge: false});
       },
     );
@@ -75,7 +73,7 @@ export default class PushNotificationManager extends React.Component {
         console.log(
           `Notification opened with an action identifier: ${notification.identifier}`,
         );
-        this.doStuff(notification);
+        this.doStuff(notification, true);
 
         completion();
       },
@@ -84,7 +82,7 @@ export default class PushNotificationManager extends React.Component {
     Notifications.events().registerNotificationReceivedBackground(
       (notification, completion) => {
         console.log('Notification Received - Background', notification);
-        this.doStuff(notification);
+        this.doStuff(notification, true);
         // Calling completion on iOS with `alert: true` will present the native iOS inApp notification.
         completion({alert: true, sound: true, badge: false});
       },
@@ -95,24 +93,24 @@ export default class PushNotificationManager extends React.Component {
         if (notification) {
           console.log('Initial notification was:', notification || 'N/A');
           setTimeout(() => {
-            this.doStuff(notification);
+            this.doStuff(notification, true);
           }, 1000);
         }
       })
       .catch((err) => console.error('getInitialNotifiation() failed', err));
   };
 
-  doStuff = (notification) => {
+  doStuff = (notification, navigate) => {
     if (notification.payload.type) {
       switch (notification.payload.type) {
         case 'photo_approved':
-          RootNavigation.navigate('MyPhotos');
+          if (navigate) RootNavigation.navigate('MyPhotos');
           break;
         case 'advice_question_approved':
-          RootNavigation.navigate('MyQuestions');
+          if (navigate) RootNavigation.navigate('MyQuestions');
           break;
         case 'rejection':
-          RootNavigation.navigate('TnC');
+          if (navigate) RootNavigation.navigate('TnC');
           break;
         case 'voting':
           storage.removeData(EndPoints.votingImages);

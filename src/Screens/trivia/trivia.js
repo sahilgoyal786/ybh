@@ -124,18 +124,22 @@ const Trivia = ({navigation}) => {
 
   React.useEffect(() => {
     LoadQuestions();
-    storage.getData('trivia_bottom').then((data) => {
-      if (data) {
-        setTriviaBottom(JSON.parse(data));
-      }
-    });
   }, []);
+
+  React.useEffect(() => {
+    LoadQuestions();
+  }, [userDetail]);
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       if (questions == null) {
         LoadQuestions();
       }
+      storage.getData('trivia_bottom').then((data) => {
+        if (data) {
+          setTriviaBottom(JSON.parse(data));
+        }
+      });
     });
 
     return unsubscribe;

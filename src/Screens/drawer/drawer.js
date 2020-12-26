@@ -14,8 +14,7 @@ import {AuthContext} from '../../common/AuthContext';
 import {
   todaysDate,
   SyncContent,
-  getRelationshipMeterQuestionsFromServer,
-  getTriviaQuestionsFromServer,
+  getQuestionsFromServer,
   sendResponsesToServer,
   getTipsOfTheDay,
 } from '../../common/helpers';
@@ -37,8 +36,16 @@ const Drawer = ({navigation}) => {
   const [showAdviceSubmenu, setShowAdviceSubmenu] = React.useState(false);
 
   useEffect(() => {
-    console.log('test--');
-  }, [userDetail]);
+    if (
+      typeof userDetail.just_logged_in !== 'undefined' &&
+      userDetail.just_logged_in == true
+    ) {
+      onSynce();
+      let userDetailTemp = userDetail;
+      userDetailTemp.just_logged_in = false;
+      changeUserDetail(userDetailTemp);
+    }
+  }, []);
   const ontest = () => {
     console.log('userDetail--', userDetail);
   };
@@ -55,7 +62,7 @@ const Drawer = ({navigation}) => {
   };
   const onSynce = async () => {
     let userDetailTemp = userDetail;
-    userDetailTemp['syncTotal'] = 40;
+    userDetailTemp['syncTotal'] = 30;
     userDetailTemp['synced'] = 0;
     changeUserDetail(userDetailTemp);
 
@@ -65,15 +72,7 @@ const Drawer = ({navigation}) => {
     await storage.setData('lastSyncDate', todaysDate());
 
     updateSync(userDetail, false);
-    await getRelationshipMeterQuestionsFromServer(userDetail, changeUserDetail)
-      .then((status) => {
-        updateSync(userDetail, true);
-      })
-      .catch((err) => {
-        updateSync(userDetail, true);
-      });
-    updateSync(userDetail, false);
-    await getTriviaQuestionsFromServer(userDetail, changeUserDetail)
+    await getQuestionsFromServer(userDetail, changeUserDetail)
       .then((status) => {
         updateSync(userDetail, true);
       })
@@ -96,6 +95,8 @@ const Drawer = ({navigation}) => {
       .catch((err) => {
         updateSync(userDetail, true);
       });
+    Toast.show({text: 'Sync completed'});
+    setTimeout(() => setIsSyncing(false), 1000);
   };
   const onSignout = () => {
     let userDetailTemp = userDetail;
@@ -146,8 +147,6 @@ const Drawer = ({navigation}) => {
           <TouchableOpacity
             onPress={async () => {
               await onSynce();
-              Toast.show({text: 'Sync completed'});
-              setTimeout(() => setIsSyncing(false), 1000);
             }}>
             <View
               style={{

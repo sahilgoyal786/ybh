@@ -14,8 +14,9 @@ export const SyncContent = async (userDetail, changeUserDetail) => {
   userDetailTemp['synced'] = 0;
   changeUserDetail(userDetailTemp);
 
-  await getRelationshipMeterQuestionsFromServer(userDetail, changeUserDetail);
-  await getTriviaQuestionsFromServer(userDetail, changeUserDetail);
+  // await getRelationshipMeterQuestionsFromServer(userDetail, changeUserDetail);
+  // await getTriviaQuestionsFromServer(userDetail, changeUserDetail);
+  await getQuestionsFromServer(userDetail, changeUserDetail);
   await sendResponsesToServer(userDetail, changeUserDetail);
   await fetchLeaderBoard(userDetail, changeUserDetail);
 };
@@ -30,6 +31,32 @@ const updateSync = (userDetail, changeUserDetail, completed = false) => {
     changeUserDetail(userDetailTemp);
   }
   // console.log(userDetailTemp['synced'] + '/' + userDetailTemp['syncTotal']);
+};
+export const getQuestionsFromServer = async (userDetail, changeUserDetail) => {
+  return new Promise((resolve, reject) => {
+    network.getResponse(
+      EndPoints.getAllQuestions,
+      'GET',
+      {},
+      userDetail.token,
+      (response) => {
+        // console.log(response);
+        storage.setData(
+          'RelationshipMeterQuestions',
+          JSON.stringify(response['relationship_meter_questions']),
+        );
+        storage.setData(
+          'TriviaQuestions',
+          JSON.stringify(response['trivia_questions']),
+        );
+        resolve(true);
+      },
+      (error) => {
+        console.log('error', error);
+        updateSync(true);
+      },
+    );
+  });
 };
 export const getRelationshipMeterQuestionsFromServer = async (
   userDetail,
@@ -120,10 +147,13 @@ export const sendResponsesToServer = async (userDetail, changeUserDetail) => {
             if (response.message) {
               let userDetailTemp = userDetail;
               userDetailTemp.user['rank'] = response.rank;
-              changeUserDetail(userDetailTemp);
               storage.setData('SavedTriviaResponses', JSON.stringify([]));
               storage.removeData(EndPoints.leaderBoard.url);
-              fetchLeaderBoard(userDetail, changeUserDetail);
+              //fetchLeaderBoard(userDetail, changeUserDetail);
+              if (response.leaderboard) {
+                userDetailTemp.leaderBoard = response.leaderboard;
+              }
+              changeUserDetail(userDetailTemp);
               resolve(true);
             }
           },

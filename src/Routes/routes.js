@@ -228,6 +228,7 @@ function Routes() {
   const authContext = React.useMemo(
     () => ({
       signIn: (response) => {
+        response.just_logged_in = true;
         changeUserDetail(response);
         dispatch({
           type: 'SIGN_IN',

@@ -24,6 +24,7 @@ const EndPoints = {
   getLatestBlog: {url: 'blogs?page_size=1', cache_age: 1},
   blogs: {url: 'blogs', dont_cache: true},
 
+  getAllQuestions: {url: 'questions/all', dont_cache: true},
   getTriviaQuestions: {url: 'questions/trivia', dont_cache: true},
   getTipsOfTheDay: {url: 'tips', dont_cache: true},
   getRelationshipMeterQuestions: {
