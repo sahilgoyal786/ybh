@@ -32,7 +32,6 @@ const Drawer = ({navigation}) => {
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   let d = new Date();
   const [isSyncing, setIsSyncing] = React.useState(false);
-  const [lastSyncDate, setLastSyncDate] = React.useState(null);
   const [showAdviceSubmenu, setShowAdviceSubmenu] = React.useState(false);
 
   useEffect(() => {
@@ -45,6 +44,13 @@ const Drawer = ({navigation}) => {
       userDetailTemp.just_logged_in = false;
       changeUserDetail(userDetailTemp);
     }
+    storage.getData('lastSyncDate').then((lastSyncDate) => {
+      if (lastSyncDate) {
+        let userDetailTemp = userDetail;
+        userDetailTemp.lastSyncDate = lastSyncDate;
+        changeUserDetail(userDetailTemp);
+      }
+    });
   }, []);
   const ontest = () => {
     console.log('userDetail--', userDetail);
@@ -68,8 +74,6 @@ const Drawer = ({navigation}) => {
 
     Toast.show({text: 'Syncing...'});
     setIsSyncing(true);
-
-    await storage.setData('lastSyncDate', todaysDate());
 
     updateSync(userDetail, false);
     await getQuestionsFromServer(userDetail, changeUserDetail)
@@ -96,6 +100,12 @@ const Drawer = ({navigation}) => {
         updateSync(userDetail, true);
       });
     Toast.show({text: 'Sync completed'});
+
+    userDetailTemp = userDetail;
+    userDetailTemp['lastSyncDate'] = todaysDate();
+    changeUserDetail(userDetailTemp);
+    await storage.setData('lastSyncDate', todaysDate());
+
     setTimeout(() => setIsSyncing(false), 1000);
   };
   const onSignout = () => {
@@ -114,7 +124,7 @@ const Drawer = ({navigation}) => {
         resizeMode="cover">
         <TouchableOpacity
           onPress={() => {
-            navigation.dispatch(DrawerActions.jumpTo('Profile'));
+            navigation.navigate('Profile');
           }}>
           <MainView>
             <View>
@@ -139,9 +149,8 @@ const Drawer = ({navigation}) => {
       <MainThirdView>
         <View
           style={{
-            flexDirection: 'row',
+            flexDirection: 'column',
             alignItems: 'baseline',
-            justifyContent: 'space-between',
             marginBottom: 30,
           }}>
           <TouchableOpacity
@@ -157,6 +166,7 @@ const Drawer = ({navigation}) => {
                 // justifyContent: 'flex-start',
                 borderRadius: 5,
                 flexDirection: 'row',
+                marginBottom: 5,
               }}>
               <FontAwesome5Icon
                 name="sync"
@@ -170,14 +180,16 @@ const Drawer = ({navigation}) => {
               <Text style={{color: 'white'}}>Sync</Text>
             </View>
           </TouchableOpacity>
-          {/* <Text
-            style={{
-              color: 'white',
-              fontSize: 12,
-              paddingLeft: 4,
-            }}>
-            (Last Sync: {lastSyncDate})
-          </Text> */}
+          {userDetail.lastSyncDate && (
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 12,
+                paddingLeft: 4,
+              }}>
+              (Last Sync: {userDetail.lastSyncDate}){' '}
+            </Text>
+          )}
         </View>
         {isSyncing && (
           <ProgressBar

@@ -154,7 +154,7 @@ const network = {
           // cannot use context api here
         }
         if (error.response && error.response.data) {
-          console.log(error.response.data, 'axios response1');
+          console.log(error.response.data, 'axios response1', endpoint.url);
         } else {
           console.log(error, 'axios response2');
         }

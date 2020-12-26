@@ -207,7 +207,7 @@ function Routes() {
       });
 
       // Unsubscribe
-      subscribe();
+      // subscribe();
 
       try {
         const token = await storage.getData('access_token');

@@ -143,7 +143,6 @@ export const sendResponsesToServer = async (userDetail, changeUserDetail) => {
           {ques_id: ques_id_values, ans_id: ans_id_values},
           userDetail.token,
           (response) => {
-            // console.log(response);
             if (response.message) {
               let userDetailTemp = userDetail;
               userDetailTemp.user['rank'] = response.rank;
@@ -188,8 +187,10 @@ export const todaysDate = () => {
     ' ' +
     months[d.getMonth()] +
     ', ' +
+    (d.getHours() < 10 ? '0' : '') +
     d.getHours() +
     ':' +
+    (d.getMinutes() < 10 ? '0' : '') +
     d.getMinutes()
   );
 };

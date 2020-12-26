@@ -22,30 +22,40 @@ export default class PushNotificationManager extends React.Component {
   }
 
   registerDevice = () => {
-    Notifications.events().registerRemoteNotificationsRegistered((event) => {
-      // TODO: Send the token to my server so it could send back push notifications...
-      const [userDetail, changeUserDetail] = this.context;
-      if (userDetail && typeof userDetail.device_token == 'undefined') {
-        console.log('Device Token Received', typeof userDetail.device_token);
-        console.log('Device Token Received', event.deviceToken);
-        let userDetailTemp = userDetail;
-        userDetailTemp['device_token'] = event.deviceToken;
-        changeUserDetail(userDetailTemp);
-        network.getResponse(
-          EndPoints.tokenUpdate,
-          'POST',
-          {device_token: event.deviceToken},
-          userDetail.token,
-          (response) => {
-            console.log(response);
-          },
-          (response) => {
-            console.log(response);
-          },
-        );
-      }
-      storage.setData('device_token', event.deviceToken);
-    });
+    Notifications.events().registerRemoteNotificationsRegistered(
+      (event) => async () => {
+        // TODO: Send the token to my server so it could send back push notifications...
+        const [userDetail, changeUserDetail] = this.context;
+        let device_token = await storage.getData('device_token');
+        if (
+          userDetail &&
+          userDetail.token &&
+          typeof userDetail.device_token == 'undefined' &&
+          device_token !== event.deviceToken
+        ) {
+          console.log('Device Token Received', typeof userDetail.device_token);
+          console.log('Device Token Received', event.deviceToken);
+          let userDetailTemp = userDetail;
+          userDetailTemp['device_token'] = event.deviceToken;
+          changeUserDetail(userDetailTemp);
+          network.getResponse(
+            EndPoints.tokenUpdate,
+            'POST',
+            {device_token: event.deviceToken},
+            userDetail.token,
+            (response) => {
+              console.log(response);
+            },
+            (response) => {
+              console.log(response);
+            },
+          );
+        } else {
+          // console.log(userDetail);
+        }
+        storage.setData('device_token', event.deviceToken);
+      },
+    );
     Notifications.events().registerRemoteNotificationsRegistrationFailed(
       (event) => {
         console.error(event);
@@ -62,7 +72,9 @@ export default class PushNotificationManager extends React.Component {
         // Calling completion on iOS with `alert: true` will present the native iOS inApp notification.
         this.setState({notification: notification});
         this.setState({dialogVisible: true});
-        this.doStuff(notification, false);
+        if (notification.payload.type == 'voting') {
+          storage.removeData(EndPoints.votingImages.url);
+        }
         completion({alert: false, sound: false, badge: false});
       },
     );
@@ -73,7 +85,7 @@ export default class PushNotificationManager extends React.Component {
         console.log(
           `Notification opened with an action identifier: ${notification.identifier}`,
         );
-        this.doStuff(notification, true);
+        this.doStuff(notification);
 
         completion();
       },
@@ -82,7 +94,7 @@ export default class PushNotificationManager extends React.Component {
     Notifications.events().registerNotificationReceivedBackground(
       (notification, completion) => {
         console.log('Notification Received - Background', notification);
-        this.doStuff(notification, true);
+        this.doStuff(notification);
         // Calling completion on iOS with `alert: true` will present the native iOS inApp notification.
         completion({alert: true, sound: true, badge: false});
       },
@@ -93,24 +105,24 @@ export default class PushNotificationManager extends React.Component {
         if (notification) {
           console.log('Initial notification was:', notification || 'N/A');
           setTimeout(() => {
-            this.doStuff(notification, true);
+            this.doStuff(notification);
           }, 1000);
         }
       })
       .catch((err) => console.error('getInitialNotifiation() failed', err));
   };
 
-  doStuff = (notification, navigate) => {
+  doStuff = (notification) => {
     if (notification.payload.type) {
       switch (notification.payload.type) {
         case 'photo_approved':
-          if (navigate) RootNavigation.navigate('MyPhotos');
+          RootNavigation.navigate('MyPhotos');
           break;
         case 'advice_question_approved':
-          if (navigate) RootNavigation.navigate('MyQuestions');
+          RootNavigation.navigate('MyQuestions');
           break;
         case 'rejection':
-          if (navigate) RootNavigation.navigate('TnC');
+          RootNavigation.navigate('TnC');
           break;
         case 'voting':
           storage.removeData(EndPoints.votingImages);

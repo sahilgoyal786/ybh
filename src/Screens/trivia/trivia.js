@@ -29,6 +29,9 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import storage from '../../components/apis/storage';
 import ContentLoader from 'react-native-easy-content-loader';
 import userDetailContext from '../../common/userDetailContext';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import {sendResponsesToServer} from '../../common/helpers';
+import {ActivityIndicator} from 'react-native';
 
 const Trivia = ({navigation}) => {
   const [question, setQuestion] = useState(null);
@@ -39,6 +42,7 @@ const Trivia = ({navigation}) => {
   const [result, setResult] = useState(0);
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const [triviaBottom, setTriviaBottom] = React.useState(false);
+  const [isSyncing, setIsSyncing] = React.useState(false);
 
   const submitAnswer = () => {
     if (selectedAnswer === null) {
@@ -90,10 +94,17 @@ const Trivia = ({navigation}) => {
   const LoadQuestions = () => {
     const bootstrapAsync = async () => {
       try {
+        let SavedTriviaResponses = await storage.getData(
+          'SavedTriviaResponses',
+        );
+        if (SavedTriviaResponses !== null) {
+          setSavedResponses(JSON.parse(SavedTriviaResponses));
+        }
         let questionsTemp = await storage.getData('TriviaQuestions');
         let answeredQuestionsTemp = await storage.getData(
           'AnsweredTriviaQuestions',
         );
+        console.log(answeredQuestionsTemp);
         if (answeredQuestionsTemp && answeredQuestionsTemp !== null) {
           answeredQuestionsTemp = JSON.parse(answeredQuestionsTemp);
         } else {
@@ -107,13 +118,6 @@ const Trivia = ({navigation}) => {
         } else {
           // console.log('Loading questions from server');
           Toast.show({text: 'Please press sync to sync with the server'});
-        }
-
-        let SavedTriviaResponses = await storage.getData(
-          'SavedTriviaResponses',
-        );
-        if (SavedTriviaResponses !== null) {
-          setSavedResponses(JSON.parse(SavedTriviaResponses));
         }
       } catch (exception) {
         console.log('exception', exception);
@@ -189,7 +193,7 @@ const Trivia = ({navigation}) => {
           <>
             <QuesVIew>
               <View style={{flex: 2}}>
-                {question && question.id && (
+                {question && question.id && !isSyncing && (
                   <View>
                     <TitleText>Question:</TitleText>
                     <View style={{marginBottom: 10}}>
@@ -272,9 +276,60 @@ const Trivia = ({navigation}) => {
                     </View>
                   </View>
                 )}
+                {isSyncing && (
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: 300,
+                    }}>
+                    <ActivityIndicator color="purple" size="large" />
+                    <Text>Syncing...</Text>
+                  </View>
+                )}
               </View>
               <View style={{flex: 1}}>
                 <View style={{marginRight: 12}}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (!isSyncing) {
+                        if (savedResponses.length) {
+                          sendResponsesToServer(
+                            userDetail,
+                            changeUserDetail,
+                          ).then(() => setIsSyncing(false));
+                          setIsSyncing(true);
+                        } else {
+                          Toast.show({
+                            text:
+                              'Nothing to sync, please answer some questions first and then press sync.',
+                            duration: 3000,
+                          });
+                        }
+                      }
+                    }}>
+                    <View
+                      style={{
+                        padding: 10,
+                        borderColor: 'purple',
+                        borderWidth: 2,
+                        justifyContent: 'center',
+                        borderRadius: 5,
+                        flexDirection: 'row',
+                        marginBottom: 5,
+                      }}>
+                      <FontAwesome5Icon
+                        name="sync"
+                        style={{
+                          color: 'purple',
+                          fontSize: 12,
+                          marginRight: 8,
+                          textAlignVertical: 'center',
+                        }}
+                      />
+                      <Text style={{color: 'purple'}}>Sync</Text>
+                    </View>
+                  </TouchableOpacity>
                   <LeaderBoard userDetailTemp={userDetail} />
                 </View>
               </View>
