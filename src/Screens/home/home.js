@@ -344,6 +344,7 @@ const Home = () => {
       <Header
         title={
           (userDetail &&
+            userDetail.user &&
             userDetail.user.username &&
             'Welcome ' + userDetail.user.username) ||
           ''

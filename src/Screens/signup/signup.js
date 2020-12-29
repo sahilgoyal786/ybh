@@ -176,19 +176,19 @@ const Signup = () => {
               // console.log(response);
               navigation.navigate('VerifyEmail', {email: response.user.email});
             },
-            (response) => {
+            (error) => {
               setIsLoading(false);
-              // console.log(response, typeof response, 'api response');
-              if (response.errors) {
-                // console.log('error in');
-                const errors = response.errors;
-                // console.log(errors, 'error object');
+              if (
+                error.response &&
+                error.response.data &&
+                error.response.data.errors
+              ) {
+                const errors = error.response.data.errors;
                 for (const key in errors) {
-                  // console.log(key, errors.hasOwnProperty(key));
                   if (errors.hasOwnProperty(key)) {
-                    // console.log('innn loop', errors[key]);
                     const element = errors[key];
                     Toast.show({text: element[0]});
+                    return;
                   }
                 }
               }
@@ -210,7 +210,7 @@ const Signup = () => {
             <TextInputView>
               <TextInput
                 name="name"
-                placeholder="Your Name"
+                placeholder="Choose Username"
                 onChangeText={handleChange('name')}
                 onBlur={handleBlur('name')}
                 value={values.name}

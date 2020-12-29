@@ -189,7 +189,7 @@ const Trivia = ({navigation}) => {
         bounces={false}
         style={{paddingTop: 20}}
         contentContainerStyle={{paddingBottom: 60}}>
-        {questions && questions.length ? (
+        {questions && questions.length == 0 ? (
           <>
             <QuesVIew>
               <View style={{flex: 2}}>
@@ -286,6 +286,17 @@ const Trivia = ({navigation}) => {
                     <ActivityIndicator color="purple" size="large" />
                     <Text>Syncing...</Text>
                   </View>
+                )}
+                {question == null && (
+                  <>
+                    <Text style={{fontSize: 25, marginBottom: 10}}>
+                      Superb!
+                    </Text>
+                    <Text>
+                      Seems you've completed all the questions, please come back
+                      later for more.
+                    </Text>
+                  </>
                 )}
               </View>
               <View style={{flex: 1}}>

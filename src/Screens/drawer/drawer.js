@@ -131,7 +131,7 @@ const Drawer = ({navigation}) => {
               <FirstView>
                 <ImagesView
                   source={
-                    userDetail && userDetail.user.avatar
+                    userDetail && userDetail.user && userDetail.user.avatar
                       ? {uri: userDetail.user.avatar}
                       : placeholderProfilePhoto
                   }
@@ -140,7 +140,7 @@ const Drawer = ({navigation}) => {
             </View>
             <ThirdView>
               <UserNameText>
-                {userDetail && userDetail.user.username}
+                {userDetail && userDetail.user && userDetail.user.username}
               </UserNameText>
             </ThirdView>
           </MainView>

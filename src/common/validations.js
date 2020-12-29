@@ -5,7 +5,7 @@ export const SignupValidationSchema = yup.object({
     .string()
     .email('Please enter a valid email')
     .required('Email Address is Required'),
-  name: yup.string().required('Name is Required'),
+  name: yup.string().required('Username is Required'),
   password: yup
     .string()
     .min(8, ({min}) => `Password must be at least ${min} characters`)
