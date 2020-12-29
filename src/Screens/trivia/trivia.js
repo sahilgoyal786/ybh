@@ -189,7 +189,7 @@ const Trivia = ({navigation}) => {
         bounces={false}
         style={{paddingTop: 20}}
         contentContainerStyle={{paddingBottom: 60}}>
-        {questions && questions.length == 0 ? (
+        {questions && questions.length >= 0 ? (
           <>
             <QuesVIew>
               <View style={{flex: 2}}>
