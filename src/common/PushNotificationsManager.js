@@ -22,40 +22,37 @@ export default class PushNotificationManager extends React.Component {
   }
 
   registerDevice = () => {
-    Notifications.events().registerRemoteNotificationsRegistered(
-      (event) => async () => {
-        // TODO: Send the token to my server so it could send back push notifications...
-        const [userDetail, changeUserDetail] = this.context;
-        let device_token = await storage.getData('device_token');
-        if (
-          userDetail &&
-          userDetail.token &&
-          typeof userDetail.device_token == 'undefined' &&
-          device_token !== event.deviceToken
-        ) {
-          console.log('Device Token Received', typeof userDetail.device_token);
-          console.log('Device Token Received', event.deviceToken);
-          let userDetailTemp = userDetail;
-          userDetailTemp['device_token'] = event.deviceToken;
-          changeUserDetail(userDetailTemp);
-          network.getResponse(
-            EndPoints.tokenUpdate,
-            'POST',
-            {device_token: event.deviceToken},
-            userDetail.token,
-            (response) => {
-              console.log(response);
-            },
-            (response) => {
-              console.log(response);
-            },
-          );
-        } else {
-          // console.log(userDetail);
-        }
-        storage.setData('device_token', event.deviceToken);
-      },
-    );
+    Notifications.events().registerRemoteNotificationsRegistered((event) => {
+      // TODO: Send the token to my server so it could send back push notifications...
+      const [userDetail, changeUserDetail] = this.context;
+      //let device_token = await storage.getData('device_token');
+      if (
+        userDetail &&
+        userDetail.token &&
+        typeof userDetail.device_token == 'undefined'
+      ) {
+        console.log('Device Token Received', typeof userDetail.device_token);
+        console.log('Device Token Received', event.deviceToken);
+        let userDetailTemp = userDetail;
+        userDetailTemp['device_token'] = event.deviceToken;
+        changeUserDetail(userDetailTemp);
+        network.getResponse(
+          EndPoints.tokenUpdate,
+          'POST',
+          {device_token: event.deviceToken},
+          userDetail.token,
+          (response) => {
+            console.log(response);
+          },
+          (response) => {
+            console.log(response);
+          },
+        );
+      } else {
+        // console.log(userDetail);
+      }
+      storage.setData('device_token', event.deviceToken);
+    });
     Notifications.events().registerRemoteNotificationsRegistrationFailed(
       (event) => {
         console.error(event);
