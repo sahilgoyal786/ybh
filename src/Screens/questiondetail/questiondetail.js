@@ -42,7 +42,7 @@ const QuestionDetail = ({navigation, route}) => {
   const [isLoading, setisLoading] = React.useState(false);
   const [anonymousChecked, setAnonymousChecked] = React.useState(false);
   const [editReponse, setEditReponse] = React.useState(false);
-  const [responsesView, setResponsesView] = React.useState(<></>);
+  const [replyTo, setReplyTo] = React.useState(false);
 
   React.useEffect(() => {
     // renderResponses();
@@ -153,6 +153,7 @@ const QuestionDetail = ({navigation, route}) => {
                   onPress={() => {
                     setEditReponse(element);
                     setDialog(true);
+                    setReplyTo(false);
                     setYourResponse(element.ans);
                   }}
                 />
@@ -181,11 +182,28 @@ const QuestionDetail = ({navigation, route}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
+            <FontAwesome5Icon
+              name="reply"
+              style={{
+                color: '#A073C4',
+                fontSize: 15,
+                marginRight: 5,
+              }}
+              onPress={() => {
+                setReplyTo({
+                  user_name: element.user_name,
+                  user_id: element.user_id,
+                });
+                setYourResponse('@' + element.user_name + ' ');
+                setDialog(true);
+              }}
+            />
             <Text
               style={{
                 fontSize: 13,
                 color: '#484848',
                 height: 20,
+                marginLeft: 10,
               }}>
               {isLoading ? (
                 <Text>...</Text>
@@ -247,7 +265,7 @@ const QuestionDetail = ({navigation, route}) => {
         contentContainerStyle={{padding: 10, paddingBottom: 40}}>
         <Heading>Question</Heading>
         <Card style={{marginTop: heightPercentageToDP(1)}}>
-          <BasicText>{question.ques}</BasicText>
+          <BasicTextFullWidth>{question.ques}</BasicTextFullWidth>
           <Score>
             <User>
               <TimingText>({question.published_at})</TimingText>
@@ -268,13 +286,18 @@ const QuestionDetail = ({navigation, route}) => {
               marginRight: 5,
               color: '#A073C4',
             }}
-            onPress={() => setDialog(true)}>
+            onPress={() => {
+              setReplyTo(false);
+              setYourResponse('');
+              setDialog(true);
+            }}>
             Post Your Reponse
           </Text>
         </View>
         <FlatList
           data={responses}
           renderItem={({item}) => renderResponse(item)}
+          keyExtractor={(item) => item.id.toString()}
           ListEmptyComponent={
             <Text style={{marginLeft: 5, marginBottom: 20, marginTop: 15}}>
               No one has responded yet, be the first one
@@ -284,7 +307,11 @@ const QuestionDetail = ({navigation, route}) => {
         <View style={{alignSelf: 'center'}}>
           <Button
             isLoading={false}
-            onPress={() => setDialog(true)}
+            onPress={() => {
+              setReplyTo(false);
+              setYourResponse('');
+              setDialog(true);
+            }}
             style={{
               marginTop: heightPercentageToDP(3),
               width: widthPercentageToDP(94),
@@ -353,6 +380,8 @@ const QuestionDetail = ({navigation, route}) => {
                       {
                         question_id: question.id,
                         response: yourResponse,
+                        replied_to:
+                          replyTo && replyTo.user_id ? replyTo.user_id : null,
                         anonymous: anonymousChecked,
                       },
                       userDetail.token,
@@ -491,6 +520,14 @@ const BasicText = styled(Text)({
   fontFamily: 'FuturaPT-Light',
   fontSize: 16,
   width: widthPercentageToDP(100) - 105,
+  textAlign: 'justify',
+});
+const BasicTextFullWidth = styled(Text)({
+  // padding: 15,
+  fontFamily: 'FuturaPT-Light',
+  fontSize: 16,
+  width: widthPercentageToDP(100) - 40,
+  textAlign: 'justify',
 });
 const Card = styled(View)({
   borderRadius: 4,

@@ -77,8 +77,8 @@ const Login = (props) => {
       <View style={{flex: 1, flexGrow: 1, minHeight: hp(30)}}>
         <Formik
           initialValues={{
-            email: 'admin@ybhive.app',
-            password: '123456789',
+            // email: 'sahilgoyal1@gmail.com',
+            // password: '123456789',
             email: '',
             password: '',
           }}

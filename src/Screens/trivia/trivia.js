@@ -292,7 +292,7 @@ const Trivia = ({navigation}) => {
                     <Text style={{fontSize: 25, marginBottom: 10}}>
                       Superb!
                     </Text>
-                    <Text>
+                    <Text style={{paddingRight: 20}}>
                       Seems you've completed all the questions, please come back
                       later for more.
                     </Text>
