@@ -43,8 +43,6 @@ export const compatibility_money = require('../assets/icons/compatibility/money.
 export const compatibility_social_media = require('../assets/icons/compatibility/social_media.png');
 export const compatibility_socialising = require('../assets/icons/compatibility/socialising.png');
 export const compatibility_travelling = require('../assets/icons/compatibility/travelling.png');
-export const left_pin = require('../assets/icons/compatibility/left-pin.png');
-export const right_pin = require('../assets/icons/compatibility/right-pin.png');
 export const stick2 = require('../assets/icons/compatibility/stick.png');
 export const compatibility_meter_bg = require('../assets/icons/compatibility/metter-bg.png');
 
