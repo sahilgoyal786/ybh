@@ -22,6 +22,7 @@ const Button = ({
   isLoading = false,
   icon = false,
   secondary = false,
+  tertiary = false,
   ...props
 }) => {
   return (
@@ -86,6 +87,37 @@ const Button = ({
             )}
           </LinearGradientColor>
         </LinearButton>
+      ) : tertiary ? (
+        <LinearButton {...props} onPress={onPress}>
+          <LinearGradientColor
+            style={{paddingVertical: 12, height: 46}}
+            colors={[tertiary.bg, tertiary.bg]}
+            start={{x: 0.1, y: 0.5}}
+            end={{x: 0.5, y: 0.1}}
+            locations={[0.1, 0.9]}>
+            {isLoading ? (
+              <ActivityIndicator color={tertiary.color} />
+            ) : (
+              <TextSignup>
+                {icon ? (
+                  <>
+                    <Image
+                      source={icon}
+                      style={{
+                        height: 20,
+                        width: 20,
+                      }}
+                    />
+                    <Text> </Text>
+                  </>
+                ) : (
+                  <></>
+                )}
+                <Text style={{color: tertiary.color}}>{name}</Text>
+              </TextSignup>
+            )}
+          </LinearGradientColor>
+        </LinearButton>
       ) : (
         <TouchableOpacityButton onPress={onPress}>
           {isLoading ? (
@@ -124,7 +156,7 @@ const LinearGradientColor = styled(LinearGradient)({
   justifyContent: 'center',
   alignItems: 'center',
   borderRadius: 5,
-  paddingVertical: hp(1.9),
+  paddingVertical: 20,
 });
 const TextSignup = styled(Text)({
   color: White,

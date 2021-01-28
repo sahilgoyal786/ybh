@@ -6,6 +6,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Welcome from '../Screens/welcome/welcome';
 import Login from '../Screens/login/login';
 import Signup from '../Screens/signup/signup';
+import CompatibilityTestsHome from '../Screens/CompatibilityTests/home';
+import CompatibilityTestsCategory from '../Screens/CompatibilityTests/category';
+import CompatibilityTestRequests from '../Screens/CompatibilityTests/requests';
 import Forgot from '../Screens/forgot/forgot';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -34,7 +37,7 @@ import Privacy from '../Screens/Privacy/Privacy';
 import {
   getadvice,
   relationmeter,
-  shareimage,
+  CompatibilityMenuIcon,
   trivia,
   homeicon,
 } from '../common/images';
@@ -51,6 +54,7 @@ import PushNotificationManager from '../common/PushNotificationsManager';
 import {Provider} from 'react-redux';
 import {getStore} from '../common/reduxStore';
 import {StatusBar} from 'react-native';
+import CompatibilityTestResult from '../Screens/CompatibilityTests/result';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -85,12 +89,25 @@ function AdviceComponent() {
     </Stack.Navigator>
   );
 }
-function ShareImageComponent() {
+function CompatibilityTestsComponent() {
   return (
     <Stack.Navigator headerMode="none">
-      <Tab.Screen name="ShareImage" component={ShareImage} />
-      <Stack.Screen name="MyPhotos" component={MyPhotos} />
-      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen
+        name="CompatibilityTestsHome"
+        component={CompatibilityTestsHome}
+      />
+      <Stack.Screen
+        name="CompatibilityTestsCategory"
+        component={CompatibilityTestsCategory}
+      />
+      <Stack.Screen
+        name="CompatibilityTestRequests"
+        component={CompatibilityTestRequests}
+      />
+      <Stack.Screen
+        name="CompatibilityTestResult"
+        component={CompatibilityTestResult}
+      />
     </Stack.Navigator>
   );
 }
@@ -104,9 +121,9 @@ function HomeTabs() {
         options={{icon: homeicon}}
       />
       <Tab.Screen
-        name="ShareImage"
-        component={ShareImageComponent}
-        options={{icon: shareimage}}
+        name="CompatibilityTestsHome"
+        component={CompatibilityTestsComponent}
+        options={{icon: CompatibilityMenuIcon}}
       />
       <Tab.Screen
         name="GetAdvice"

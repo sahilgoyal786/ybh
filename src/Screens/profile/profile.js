@@ -165,7 +165,21 @@ const Profile = () => {
                 setIsSaving(false);
               },
               (error) => {
-                // console.log(error.response.data);
+                if (
+                  error &&
+                  error.response &&
+                  error.response.data &&
+                  error.response.data.errors
+                ) {
+                  const errors = error.response.data.errors;
+                  for (const key in errors) {
+                    if (errors.hasOwnProperty(key)) {
+                      const element = errors[key];
+                      Toast.show({text: element[0]});
+                      break;
+                    }
+                  }
+                }
                 setIsSaving(false);
               },
             );
@@ -180,8 +194,8 @@ const Profile = () => {
           }) => (
             <View style={{width: '80%', alignSelf: 'center', marginTop: 20}}>
               <Input
-                placeholder="User Name"
-                label="Name"
+                placeholder="Username"
+                label="Username"
                 name="username"
                 value={values.username}
                 onChangeText={handleChange('username')}

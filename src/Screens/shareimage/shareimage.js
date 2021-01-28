@@ -280,9 +280,6 @@ const MainnnView = styled.View({
   marginTop: -heightPercentageToDP(1),
   marginBottom: heightPercentageToDP(2),
 });
-const LastaddImage = styled(ResponsiveImage)({
-  marginTop: -heightPercentageToDP(5),
-});
 const LastImage = styled(View)({
   marginLeft: 15,
   marginTop: 20,

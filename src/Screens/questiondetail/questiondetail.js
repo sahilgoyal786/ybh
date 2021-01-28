@@ -193,6 +193,7 @@ const QuestionDetail = ({navigation, route}) => {
                 setReplyTo({
                   user_name: element.user_name,
                   user_id: element.user_id,
+                  id: element.id,
                 });
                 setYourResponse('@' + element.user_name + ' ');
                 setDialog(true);
@@ -374,14 +375,19 @@ const QuestionDetail = ({navigation, route}) => {
                 if (yourResponse.length > 1) {
                   setisLoading(true);
                   if (editReponse == false) {
+                    console.log({
+                      question_id: question.id,
+                      response: yourResponse,
+                      replied_to: replyTo && replyTo.id ? replyTo.id : null,
+                      anonymous: anonymousChecked,
+                    });
                     network.getResponse(
                       EndPoints.postAdviceResponse,
                       'POST',
                       {
                         question_id: question.id,
                         response: yourResponse,
-                        replied_to:
-                          replyTo && replyTo.user_id ? replyTo.user_id : null,
+                        replied_to: replyTo && replyTo.id ? replyTo.id : null,
                         anonymous: anonymousChecked,
                       },
                       userDetail.token,

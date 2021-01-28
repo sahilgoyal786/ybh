@@ -23,8 +23,24 @@ const EndPoints = {
 
   getLatestBlog: {url: 'blogs?page_size=1', cache_age: 1},
   blogs: {url: 'blogs', dont_cache: true},
+  blogShow: {url: 'blogs/show', dont_cache: true},
+
+  submitCompatibilityTestResponses: {url: 'user/compatibility-test'},
+  compatibilityTestResult: {url: 'user/compatibility-test/results'},
+  respondToCompatibilityTestInvite: {
+    url: 'user/compatibility-test-invite/update',
+  },
+  getCompatibilityTests: {
+    url: 'user/compatibility-tests',
+    dont_cache: true,
+  },
+  getCompatibilityTestQuestions: {
+    url: 'compatibility-test/questions',
+    dont_cache: true,
+  },
 
   getAllQuestions: {url: 'questions/all', dont_cache: true},
+  searchUser: {url: 'search/users'},
   getTriviaQuestions: {url: 'questions/trivia', dont_cache: true},
   getTipsOfTheDay: {url: 'tips', dont_cache: true},
   getRelationshipMeterQuestions: {
@@ -36,6 +52,7 @@ const EndPoints = {
   postRelationshipMeterAnswers: {url: 'questions/relationship_meter/answers'},
 
   getAllAdviceQuestions: {url: 'advice/all'},
+  getAdviceQuestion: {url: 'advice/{id}/show'},
   postAdviceQuestion: {url: 'advice/store'},
   postAdviceResponse: {url: 'advice/response/store'},
   updateAdviceResponse: {url: 'advice/response/update'},

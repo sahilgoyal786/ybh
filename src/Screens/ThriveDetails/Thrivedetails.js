@@ -1,7 +1,6 @@
 import React, {Component, useEffect} from 'react';
-import {addbtmimg, topbanner, bottomCurve} from '../../common/images';
+import {bottomCurve} from '../../common/images';
 import styled from 'styled-components/native';
-import ResponsiveImage from 'react-native-responsive-image';
 
 let RNFS = require('react-native-fs');
 import HTML from 'react-native-render-html';
@@ -30,12 +29,17 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import storage from '../../components/apis/storage';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import FastImage from 'react-native-fast-image';
+import network from '../../components/apis/network';
+import EndPoints from '../../components/apis/endPoints';
+import userDetailContext from '../../common/userDetailContext';
 
 const windowWidth = Dimensions.get('window').width;
 
 const Thrivedetails = ({route, navigation}) => {
   const [thriveTop, setThriveTop] = React.useState(false);
   const [thriveBottom, setThriveBottom] = React.useState(false);
+  const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
+  const {article} = route.params;
 
   useEffect(() => {
     storage.getData('thrive_top').then((data) => {
@@ -48,9 +52,18 @@ const Thrivedetails = ({route, navigation}) => {
         setThriveBottom(JSON.parse(data));
       }
     });
+
+    console.log(EndPoints.blogShow);
+    network.getResponse(
+      EndPoints.blogShow,
+      'POST',
+      {id: article.id},
+      userDetail.token,
+      (response) => console.log(response),
+      (response) => console.log(response),
+    );
   }, []);
 
-  const {article} = route.params;
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <Image
@@ -152,18 +165,6 @@ const Thrivedetails = ({route, navigation}) => {
               With Friends
             </Text>
           </View>
-          {/* <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-          <ButtonSUbmit
-            // onPress={() => setDialog(true)}
-            name={'Previous'}
-            linear
-          />
-          <ButtonSUbmit
-            // onPress={() => setDialog(true)}
-            name={'Next'}
-            linear
-          />
-        </View> */}
 
           <LastImage>
             {thriveBottom && (

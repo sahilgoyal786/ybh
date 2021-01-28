@@ -72,6 +72,8 @@ export default class PushNotificationManager extends React.Component {
         if (notification.payload.type == 'voting') {
           storage.removeData(EndPoints.votingImages.url);
         }
+        const [userDetail, changeUserDetail] = this.context;
+        this.doStuff(notification, userDetail);
         completion({alert: false, sound: false, badge: false});
       },
     );
@@ -91,7 +93,8 @@ export default class PushNotificationManager extends React.Component {
     Notifications.events().registerNotificationReceivedBackground(
       (notification, completion) => {
         console.log('Notification Received - Background', notification);
-        this.doStuff(notification);
+        const [userDetail, changeUserDetail] = this.context;
+        this.doStuff(notification, userDetail);
         // Calling completion on iOS with `alert: true` will present the native iOS inApp notification.
         completion({alert: true, sound: true, badge: false});
       },
@@ -109,7 +112,7 @@ export default class PushNotificationManager extends React.Component {
       .catch((err) => console.error('getInitialNotifiation() failed', err));
   };
 
-  doStuff = (notification) => {
+  doStuff = (notification, userDetail = {}) => {
     if (notification.payload.type) {
       switch (notification.payload.type) {
         case 'photo_approved':
@@ -120,6 +123,21 @@ export default class PushNotificationManager extends React.Component {
           break;
         case 'rejection':
           RootNavigation.navigate('TnC');
+          break;
+        case 'comment_on_response':
+          network.getResponse(
+            EndPoints.getAdviceQuestion,
+            'POST',
+            {advice_question_id: notification.payload.ques_id},
+            userDetail.token,
+            (response) => {
+              console.log(response);
+            },
+            (response) => {
+              console.log(response);
+            },
+          );
+          // RootNavigation.navigate('TnC');
           break;
         case 'voting':
           storage.removeData(EndPoints.votingImages);

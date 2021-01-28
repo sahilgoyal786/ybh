@@ -132,7 +132,8 @@ const VotingPage = ({route, navigation}) => {
     return content;
   };
 
-  const {votingImagesURLS} = route.params;
+  let {votingImagesURLS} = route.params;
+  votingImagesURLS = votingImagesURLS.slice(0, 8);
   let galleryMapped = [];
   votingImagesURLS.forEach(function (url) {
     galleryMapped.push({url});

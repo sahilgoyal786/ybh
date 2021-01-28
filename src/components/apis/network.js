@@ -110,6 +110,7 @@ const network = {
     headers[
       'Content-Type'
     ] = `multipart/form-data boundary=${formData._boundary}`;
+    headers['Accept'] = 'application/json';
     if (access_token) {
       headers['Authorization'] = 'Bearer ' + access_token;
     }

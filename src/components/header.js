@@ -49,7 +49,12 @@ const Header = ({title, backButton = false}) => {
                   ? navigation.goBack()
                   : navigation.navigate(backButton);
             }}>
-            <WelcomeText style={{marginTop: 4, marginLeft: 2}}>
+            <WelcomeText
+              style={{
+                marginTop: 4,
+                marginLeft: 2,
+                textTransform: 'capitalize',
+              }}>
               {title}
             </WelcomeText>
           </TouchableWithoutFeedback>
