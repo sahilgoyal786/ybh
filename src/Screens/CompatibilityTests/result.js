@@ -134,13 +134,14 @@ const CompatibilityTestResult = ({route, navigation}) => {
                   <Text
                     style={{
                       padding: 10,
+                      paddingHorizontal: 0,
                       fontSize: 20,
                       flex: 1,
                       textAlign: 'center',
                       textTransform: 'capitalize',
                     }}>
                     {' '}
-                    --{' '}
+                    &{' '}
                   </Text>
                   <Text
                     style={{
