@@ -23,6 +23,7 @@ import FastImage from 'react-native-fast-image';
 import {boolean} from 'yup';
 import {Toast} from 'native-base';
 import {findIndex} from 'react-native-draggable-grid/src/utils';
+import storage from '../../components/apis/storage';
 
 const CompatibilityTestRequests = ({route, navigation}) => {
   const [tests, setTests] = useState([]);
@@ -36,9 +37,18 @@ const CompatibilityTestRequests = ({route, navigation}) => {
     const unsubscribe = navigation.addListener('focus', () => {
       LoadRequests();
     });
-
+    removeNotificationDot();
     return unsubscribe;
   }, [navigation]);
+
+  const removeNotificationDot = () => {
+    if (userDetail['user']['has_new_compat_notification']) {
+      storage.removeData('new_compat_notification');
+      let userDetailTemp = userDetail;
+      delete userDetailTemp['user']['has_new_compat_notification'];
+      changeUserDetail(userDetailTemp);
+    }
+  };
 
   const postInviteReponse = (invite_id, is_accept) => {
     console.log({invite_id, is_accept});
@@ -238,6 +248,7 @@ const CompatibilityTestRequests = ({route, navigation}) => {
         userDetail.token,
         (response) => {
           console.log('response', response);
+          removeNotificationDot();
           if (
             response.compatibilityTests &&
             response.compatibilityTests.length > 0

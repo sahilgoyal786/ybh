@@ -131,23 +131,24 @@ const QuestionDetail = ({navigation, route}) => {
         key={Math.random().toString()}>
         <View
           style={{
-            flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
           <BasicText>{element.ans}</BasicText>
-          <View>
+          <View style={{alignContent: 'flex-end'}}>
             {element.user_id == userDetail.user.id && (
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   marginTop: 3,
-                  width: 50,
+                  width: 75,
+                  marginVertical: 10,
+                  alignSelf: 'flex-end',
                 }}>
                 <FontAwesome5Icon
                   name="edit"
                   style={{
-                    fontSize: 15,
+                    fontSize: 20,
                     color: '#A073C4',
                   }}
                   onPress={() => {
@@ -160,7 +161,7 @@ const QuestionDetail = ({navigation, route}) => {
                 <FontAwesome5Icon
                   name={isLoading ? 'spinner' : 'trash'}
                   style={{
-                    fontSize: 15,
+                    fontSize: 20,
                     color: '#D30000',
                   }}
                   onPress={() =>
@@ -525,7 +526,7 @@ const BasicText = styled(Text)({
   // padding: 15,
   fontFamily: 'FuturaPT-Light',
   fontSize: 16,
-  width: widthPercentageToDP(100) - 105,
+  width: widthPercentageToDP(100) - 40,
   textAlign: 'justify',
 });
 const BasicTextFullWidth = styled(Text)({

@@ -32,6 +32,7 @@ import userDetailContext from '../../common/userDetailContext';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {sendResponsesToServer} from '../../common/helpers';
 import {ActivityIndicator} from 'react-native';
+import {Share} from 'react-native';
 
 const Trivia = ({navigation}) => {
   const [question, setQuestion] = useState(null);
@@ -298,6 +299,22 @@ const Trivia = ({navigation}) => {
                     </Text>
                   </>
                 )}
+
+                <Button
+                  linear
+                  style={{
+                    width: widthPercentageToDP(200 / 3) - 20,
+                    marginTop: 80,
+                  }}
+                  onPress={() => {
+                    Share.share({
+                      message:
+                        'Hey! Come have fun with doing trivia and more on ybhapp. Download app from https://ybhive.app',
+                      url: 'https://ybhive.app',
+                    });
+                  }}
+                  name="Invite Friends"
+                />
               </View>
               <View style={{flex: 1}}>
                 <View style={{marginRight: 12}}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Text, View, StyleSheet, Platform, Image} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {
@@ -10,8 +10,24 @@ import {selectedTabCurve} from '../common/images';
 import ResponsiveImage from 'react-native-responsive-image';
 import Trivia from '../Screens/trivia/trivia';
 import LinearGradient from 'react-native-linear-gradient';
+import userDetailContext from './userDetailContext';
+import storage from '../components/apis/storage';
 
 const BottomTab = ({state, descriptors, navigation}) => {
+  const [userDetail, changeUserDetail] = useContext(userDetailContext);
+
+  storage.getData('new_compat_notification').then((new_compat_notification) => {
+    if (
+      new_compat_notification &&
+      new_compat_notification == 'true' &&
+      !userDetail['user']['has_new_compat_notification']
+    ) {
+      let userDetailTemp = userDetail;
+      userDetailTemp['user']['has_new_compat_notification'] = true;
+      changeUserDetail(userDetail);
+    }
+  });
+  // console.log(userDetail);
   return (
     <View style={styles.ButtonContainer}>
       {state.routes.map((route, index) => {
@@ -22,7 +38,7 @@ const BottomTab = ({state, descriptors, navigation}) => {
             : options.title !== undefined
             ? options.title
             : route.name;
-
+        // console.log(label);
         const isFocused = state.index === index;
 
         const onPress = () => {
@@ -100,6 +116,20 @@ const BottomTab = ({state, descriptors, navigation}) => {
                     <Image source={selectedTabCurve} resizeMode="contain" />
                   </View>
                 )}
+                {userDetail['user']['has_new_compat_notification'] &&
+                  label == 'CompatibilityTestsHome' && (
+                    <View
+                      style={{
+                        height: 10,
+                        width: 10,
+                        borderRadius: 10,
+                        backgroundColor: 'red',
+                        position: 'absolute',
+                        top: 15,
+                        zIndex: 9,
+                        right: widthPercentageToDP(10) - 20,
+                      }}></View>
+                  )}
                 <ResponsiveImage
                   source={options.icon}
                   initHeight="30"

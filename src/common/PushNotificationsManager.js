@@ -73,7 +73,7 @@ export default class PushNotificationManager extends React.Component {
           storage.removeData(EndPoints.votingImages.url);
         }
         const [userDetail, changeUserDetail] = this.context;
-        this.doStuff(notification, userDetail);
+        this.doStuff(notification, userDetail, changeUserDetail);
         completion({alert: false, sound: false, badge: false});
       },
     );
@@ -94,7 +94,7 @@ export default class PushNotificationManager extends React.Component {
       (notification, completion) => {
         console.log('Notification Received - Background', notification);
         const [userDetail, changeUserDetail] = this.context;
-        this.doStuff(notification, userDetail);
+        this.doStuff(notification, userDetail, changeUserDetail);
         // Calling completion on iOS with `alert: true` will present the native iOS inApp notification.
         completion({alert: true, sound: true, badge: false});
       },
@@ -112,8 +112,9 @@ export default class PushNotificationManager extends React.Component {
       .catch((err) => console.error('getInitialNotifiation() failed', err));
   };
 
-  doStuff = (notification, userDetail = {}) => {
+  doStuff = (notification, userDetail = {}, changeUserDetail = {}) => {
     if (notification.payload.type) {
+      console.log(notification.payload.type);
       switch (notification.payload.type) {
         case 'photo_approved':
           RootNavigation.navigate('MyPhotos');
@@ -123,6 +124,17 @@ export default class PushNotificationManager extends React.Component {
           break;
         case 'rejection':
           RootNavigation.navigate('TnC');
+          break;
+        case 'compatibility_test':
+        case 'compatibility_test_result':
+          if (userDetail && userDetail['user']) {
+            let userDetailTemp = userDetail;
+            userDetail['user']['has_new_compat_notification'] = true;
+            changeUserDetail(userDetailTemp);
+            console.log('UPDATE USERDETAIL');
+          }
+          storage.setData('new_compat_notification', 'true');
+          storage.setData('new_compat_notification', 'true');
           break;
         case 'comment_on_response':
           network.getResponse(

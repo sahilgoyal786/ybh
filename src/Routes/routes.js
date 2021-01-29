@@ -67,6 +67,7 @@ function HomeComponent() {
       <Stack.Screen name="VotingPage" component={VotingPage} />
       <Stack.Screen name="Thrive" component={Thrive} />
       <Stack.Screen name="TnC" component={TnC} />
+      <Stack.Screen name="ShareImage" component={ShareImage} />
       <Stack.Screen name="Privacy" component={Privacy} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="LatestPhotos" component={LatestPhotos} />

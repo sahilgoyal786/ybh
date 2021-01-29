@@ -227,6 +227,12 @@ const Drawer = ({navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
+            navigation.navigate('ShareImage');
+          }}>
+          <PageText>Upload Photo</PageText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
             navigation.navigate('Profile');
           }}>
           <PageText>My Profile</PageText>

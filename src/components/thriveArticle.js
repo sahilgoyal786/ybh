@@ -49,24 +49,6 @@ const ThriveArticle = ({article = {}, compact, navigate}) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                {/* <ResponsiveImage
-                style={{
-                  marginTop: 5,
-                }}
-                source={profile}
-                initHeight="8"
-                initWidth="8"
-              />
-              <Text
-                style={{
-                  fontSize: 10,
-                  color: '#848585',
-                  marginTop: 5,
-                  marginLeft: 5,
-                  fontFamily: 'FuturaPT-Medium',
-                }}>
-                By: joe Smith
-              </Text> */}
                 <Text
                   style={{
                     fontSize: 10,

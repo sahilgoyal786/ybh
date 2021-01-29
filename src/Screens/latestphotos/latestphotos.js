@@ -20,6 +20,7 @@ let RNFS = require('react-native-fs');
 // import DropDownPicker from 'react-native-dropdown-picker';
 
 import {Toast} from 'native-base';
+import Button from '../../components/button';
 import Header from '../../components/header';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import FastImage from 'react-native-fast-image';
@@ -469,6 +470,21 @@ const LatestPhotos = ({route, navigation}) => {
                 </TouchableOpacity>
               );
             }}
+          />
+
+          <Button
+            onPress={() => {
+              navigation.navigate('ShareImage');
+            }}
+            linear
+            name=" Upload Photo"
+            style={{marginTop: 40, width: widthPercentageToDP(100) - 20}}
+            icon={
+              <FontAwesome5Icon
+                name="upload"
+                style={{fontSize: 20, marginRight: 20}}
+              />
+            }
           />
         </View>
 

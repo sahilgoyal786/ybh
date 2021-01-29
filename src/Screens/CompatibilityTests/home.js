@@ -42,6 +42,24 @@ const CompatibilityTestsHome = ({navigation}) => {
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const [isLoading, setisLoading] = useState(false);
 
+  const notification_bubble = userDetail['user'][
+    'has_new_compat_notification'
+  ] ? (
+    <>
+      <View
+        style={{
+          height: 10,
+          width: 10,
+          borderRadius: 10,
+          backgroundColor: 'red',
+        }}
+      />
+      <Text> My Tests/Requests</Text>
+    </>
+  ) : (
+    'My Tests/Requests'
+  );
+
   return (
     <View style={{flex: 1}}>
       <Image
@@ -61,7 +79,7 @@ const CompatibilityTestsHome = ({navigation}) => {
         style={{paddingTop: 0}}
         contentContainerStyle={{paddingBottom: 60}}>
         <Button
-          name={'My Tests/Requests'}
+          name={notification_bubble}
           linear
           onPress={() => navigation.navigate('CompatibilityTestRequests')}
           style={{marginLeft: 20, width: widthPercentageToDP(100) - 40}}

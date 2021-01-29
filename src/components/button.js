@@ -38,7 +38,7 @@ const Button = ({
               <ActivityIndicator color="#FFF" />
             ) : (
               <TextSignup>
-                {icon ? (
+                {typeof icon == 'string' ? (
                   <>
                     <Image
                       source={icon}
@@ -49,10 +49,12 @@ const Button = ({
                     />
                     <Text> </Text>
                   </>
+                ) : typeof icon == 'object' ? (
+                  <>{icon}</>
                 ) : (
                   <></>
                 )}
-                <Text>{name}</Text>
+                {typeof name == 'string' ? <Text>{name}</Text> : name}
               </TextSignup>
             )}
           </LinearGradientColor>

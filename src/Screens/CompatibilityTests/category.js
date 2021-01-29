@@ -24,6 +24,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {StackActions} from '@react-navigation/native';
 import {ActionTypes} from '../../redux/ActionTypes';
+import {Share} from 'react-native';
 const CompatibilityTestsCategory = ({route, navigation}) => {
   const [questions, setQuestions] = useState([]);
   const [myAnswers, setMyAnswers] = useState([]);
@@ -308,19 +309,28 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
                       // color: 'purple',
                       width: widthPercentageToDP(100) - 40,
                       marginLeft: 20,
-                      marginTop: -20,
-                      borderColor: '#A073C4',
-                      borderBottomWidth: 1,
+                      marginTop: -23,
+                      borderWidth: 1,
+                      borderColor: '#F4F5F6',
+                      shadowColor: '#F4F5F6',
+                      shadowOpacity: 0.2,
+                      shadowRadius: 10,
+                      elevation: 2,
+                      shadowOffset: {
+                        width: 1,
+                        height: 1,
+                      },
+                      borderTopWidth: 0,
+                      paddingVertical: 10,
                     }}>
                     {results.map((result) => {
                       return (
                         <Text
+                          key={result.id.toString()}
                           style={{
-                            padding: 20,
+                            padding: 8,
+                            paddingLeft: 15,
                             color: '#A073C4',
-                            borderColor: '#A073C4',
-                            borderWidth: 1,
-                            borderBottomWidth: 0,
                           }}
                           onPress={() => {
                             console.log(result);
@@ -334,6 +344,23 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
                         </Text>
                       );
                     })}
+                    <Text
+                      key="invite_user"
+                      style={{
+                        padding: 8,
+                        paddingLeft: 15,
+                        color: '#A073C4',
+                        fontWeight: 'bold',
+                      }}
+                      onPress={() => {
+                        Share.share({
+                          message:
+                            'I am inviting you to come and take a compatibility test with me. Let’s see how compatible we are. Download app from https://ybhive.app',
+                          url: 'https://ybhive.app',
+                        });
+                      }}>
+                      Not on YBH? Invite Them!
+                    </Text>
                   </ScrollView>
                 </View>
               )}

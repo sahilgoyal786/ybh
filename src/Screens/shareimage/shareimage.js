@@ -116,7 +116,7 @@ const ShareImage = () => {
           bottom: -100,
         }}
         resizeMode="contain"></Image>
-      <Header title="Upload Image" />
+      <Header title="Upload Image" backButton="true" />
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}

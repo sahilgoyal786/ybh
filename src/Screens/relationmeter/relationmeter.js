@@ -22,6 +22,8 @@ import Header from '../../components/header';
 import storage from '../../components/apis/storage';
 import ContentLoader from 'react-native-easy-content-loader';
 import {Toast} from 'native-base';
+import Button from '../../components/button';
+import {Share} from 'react-native';
 
 const RelationMeter = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -266,6 +268,22 @@ const RelationMeter = ({navigation}) => {
             <ContentLoader />
           </ContainerView>
         )}
+        <Button
+          linear
+          style={{
+            width: widthPercentageToDP(100) - 30,
+            marginLeft: 15,
+            marginTop: 60,
+          }}
+          onPress={() => {
+            Share.share({
+              message:
+                'Hey! I have found a way to measure my love life. Come and measure yours and learn what how to improve it. Download app from https://ybhive.app',
+              url: 'https://ybhive.app',
+            });
+          }}
+          name="Invite Friends"
+        />
       </ScrollView>
     </View>
   );
