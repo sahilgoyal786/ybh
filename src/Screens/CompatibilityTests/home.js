@@ -42,23 +42,22 @@ const CompatibilityTestsHome = ({navigation}) => {
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const [isLoading, setisLoading] = useState(false);
 
-  const notification_bubble = userDetail['user'][
-    'has_new_compat_notification'
-  ] ? (
-    <>
-      <View
-        style={{
-          height: 10,
-          width: 10,
-          borderRadius: 10,
-          backgroundColor: 'red',
-        }}
-      />
-      <Text> My Tests/Requests</Text>
-    </>
-  ) : (
-    'My Tests/Requests'
-  );
+  const notification_bubble =
+    typeof userDetail['user']['has_new_compat_notification'] !== 'undefined' ? (
+      <>
+        <View
+          style={{
+            height: 10,
+            width: 10,
+            borderRadius: 10,
+            backgroundColor: 'red',
+          }}
+        />
+        <Text> My Tests/Requests</Text>
+      </>
+    ) : (
+      'My Tests/Requests'
+    );
 
   return (
     <View style={{flex: 1}}>

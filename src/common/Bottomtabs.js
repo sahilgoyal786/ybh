@@ -20,7 +20,8 @@ const BottomTab = ({state, descriptors, navigation}) => {
     if (
       new_compat_notification &&
       new_compat_notification == 'true' &&
-      !userDetail['user']['has_new_compat_notification']
+      typeof userDetail['user'] !== 'undefined' &&
+      typeof userDetail['user']['has_new_compat_notification'] === 'undefined'
     ) {
       let userDetailTemp = userDetail;
       userDetailTemp['user']['has_new_compat_notification'] = true;
@@ -116,7 +117,9 @@ const BottomTab = ({state, descriptors, navigation}) => {
                     <Image source={selectedTabCurve} resizeMode="contain" />
                   </View>
                 )}
-                {userDetail['user']['has_new_compat_notification'] &&
+                {typeof userDetail['user'] !== 'undefined' &&
+                  typeof userDetail['user']['has_new_compat_notification'] !==
+                    'undefined' &&
                   label == 'CompatibilityTestsHome' && (
                     <View
                       style={{
