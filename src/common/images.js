@@ -33,24 +33,33 @@ export const backfirst = require('../assets/icons/midd-pink-img.png');
 export const backsec = require('../assets/icons/top-img.png');
 export const downarrow = require('../assets/icons/down-arrow.png');
 export const white_downarrow = require('../assets/icons/downarrow.png');
-export const single = require('../assets/icons/single.png');
 
-export const compatibility_family = require('../assets/icons/compatibility/family.png');
-export const compatibility_food = require('../assets/icons/compatibility/food.png');
-export const compatibility_friends = require('../assets/icons/compatibility/friends.png');
-export const compatibility_love = require('../assets/icons/compatibility/love.png');
-export const compatibility_money = require('../assets/icons/compatibility/money.png');
-export const compatibility_social_media = require('../assets/icons/compatibility/social_media.png');
-export const compatibility_socialising = require('../assets/icons/compatibility/socialising.png');
-export const compatibility_travelling = require('../assets/icons/compatibility/travelling.png');
+export const compatibility_icons = {
+  family: require('../assets/icons/compatibility/family.png'),
+  food: require('../assets/icons/compatibility/food.png'),
+  friends: require('../assets/icons/compatibility/friends.png'),
+  love: require('../assets/icons/compatibility/love.png'),
+  money: require('../assets/icons/compatibility/money.png'),
+  social_media: require('../assets/icons/compatibility/social_media.png'),
+  travelling: require('../assets/icons/compatibility/travelling.png'),
+};
+
 export const stick2 = require('../assets/icons/compatibility/stick.png');
 export const compatibility_meter_bg = require('../assets/icons/compatibility/metter-bg.png');
 
-export const sexual = require('../assets/icons/sexual.png');
-export const finance = require('../assets/icons/finance.png');
-export const genral = require('../assets/icons/general.png');
-export const material = require('../assets/icons/marital.png');
-export const enterprene = require('../assets/icons/entrepreneurs.png');
+export const advice_icons = {
+  food: require('../assets/icons/advice/food.png'),
+  beauty: require('../assets/icons/advice/beauty.png'),
+  health: require('../assets/icons/advice/health.png'),
+  tech: require('../assets/icons/advice/tech.png'),
+  sexual: require('../assets/icons/advice/sexual.png'),
+  finance: require('../assets/icons/advice/finance.png'),
+  general: require('../assets/icons/advice/general.png'),
+  marital: require('../assets/icons/advice/marital.png'),
+  entrepreneurs: require('../assets/icons/advice/entrepreneurs.png'),
+  single: require('../assets/icons/advice/single.png'),
+};
+
 export const profile = require('../assets/icons/user.png');
 export const calendar = require('../assets/icons/calendar.png');
 export const vtngpage = require('../assets/icons/NewProject.png');

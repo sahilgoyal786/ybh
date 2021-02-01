@@ -9,17 +9,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 import {Textarea, Form, Toast} from 'native-base';
-import {
-  compatibility_family,
-  compatibility_food,
-  compatibility_friends,
-  compatibility_love,
-  compatibility_money,
-  compatibility_social_media,
-  compatibility_socialising,
-  compatibility_travelling,
-  bottomCurve,
-} from '../../common/images';
+import {bottomCurve} from '../../common/images';
+import * as images from '../../common/images';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -35,12 +26,22 @@ import Header from '../../components/header';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 const CompatibilityTestsHome = ({navigation}) => {
   const [dialog, setDialog] = useState(false);
   const [text, setText] = useState('Describe your situation...');
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const [isLoading, setisLoading] = useState(false);
+  const categories = [
+    'family',
+    'food',
+    'friends',
+    'love',
+    'money',
+    'social_media',
+    'travelling',
+  ];
 
   const notification_bubble =
     typeof userDetail['user']['has_new_compat_notification'] !== 'undefined' ? (
@@ -83,152 +84,67 @@ const CompatibilityTestsHome = ({navigation}) => {
           onPress={() => navigation.navigate('CompatibilityTestRequests')}
           style={{marginLeft: 20, width: widthPercentageToDP(100) - 40}}
         />
-        <ImagesWelcome>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('CompatibilityTestsCategory', {
-                Category: 'family',
-              });
-            }}>
-            <ImagesView
-              source={compatibility_family}
-              initHeight="160"
-              initWidth="130"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('CompatibilityTestsCategory', {
-                Category: 'food',
-              });
-            }}>
-            <ImagesView
-              source={compatibility_food}
-              initHeight="160"
-              initWidth="130"
-            />
-          </TouchableOpacity>
-        </ImagesWelcome>
-        <NameView>
-          <Text style={styles.categoryHeading}>Family</Text>
-
-          <Text style={styles.categoryHeading}>Food</Text>
-        </NameView>
-        <ImagesWelcome>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('CompatibilityTestsCategory', {
-                Category: 'friends',
-              });
-            }}>
-            <ImagesView
-              source={compatibility_friends}
-              initHeight="160"
-              initWidth="130"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('CompatibilityTestsCategory', {
-                Category: 'love',
-              });
-            }}>
-            <ImagesView
-              source={compatibility_love}
-              initHeight="160"
-              initWidth="130"
-            />
-          </TouchableOpacity>
-        </ImagesWelcome>
-        <NameView>
-          <Text style={styles.categoryHeading}>Friends</Text>
-          <Text style={styles.categoryHeading}>Love</Text>
-        </NameView>
-        <ImagesWelcome>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('CompatibilityTestsCategory', {
-                Category: 'money',
-              });
-            }}>
-            <ImagesView
-              source={compatibility_money}
-              initHeight="160"
-              initWidth="130"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('CompatibilityTestsCategory', {
-                Category: 'social_media',
-              });
-            }}>
-            <ImagesView
-              source={compatibility_social_media}
-              initHeight="160"
-              initWidth="130"
-            />
-          </TouchableOpacity>
-        </ImagesWelcome>
-        <NameView>
-          <Text style={styles.categoryHeading}>Money</Text>
-          <Text style={styles.categoryHeading}>Social Media</Text>
-        </NameView>
-        <ImagesWelcome>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('CompatibilityTestsCategory', {
-                Category: 'socialising',
-              });
-            }}>
-            <ImagesView
-              source={compatibility_socialising}
-              initHeight="160"
-              initWidth="130"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('CompatibilityTestsCategory', {
-                Category: 'travelling',
-              });
-            }}>
-            <ImagesView
-              source={compatibility_travelling}
-              initHeight="160"
-              initWidth="130"
-            />
-          </TouchableOpacity>
-        </ImagesWelcome>
-        <NameView>
-          <Text style={styles.categoryHeading}>Socialising</Text>
-          <Text style={styles.categoryHeading}>Travelling</Text>
-        </NameView>
+        {categories.map((cat) => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('CompatibilityTestsCategory', {
+                  Category: cat,
+                });
+              }}>
+              <ImagesWelcome>
+                <Image
+                  source={images['compatibility_icons'][cat.toLowerCase()]}
+                  style={{height: 40, width: 40}}
+                />
+                <Text style={styles.categoryHeading}>
+                  {cat.replace('_', ' ')}
+                </Text>
+                <FontAwesome5Icon
+                  name="chevron-right"
+                  style={styles.rightArrow}
+                />
+              </ImagesWelcome>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     </View>
   );
 };
-const NameView = styled(View)({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginTop: heightPercentageToDP(1),
-});
-const ImagesView = styled(ResponsiveImage)({});
 const ImagesWelcome = styled(View)({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginTop: heightPercentageToDP(3),
-  paddingRight: 40,
-  paddingLeft: 40,
+  marginHorizontal: 15,
+  backgroundColor: '#FFF',
+  marginTop: 4,
+  borderRadius: 4,
+  padding: 20,
+  flex: 1,
+  borderColor: '#F4F5F6',
+  shadowColor: '#F4F5F6',
+  shadowOffset: {
+    width: 0,
+    height: 1,
+  },
+  shadowOpacity: 0.2,
+  shadowRadius: 10,
+  elevation: 2,
 });
 const styles = StyleSheet.create({
   categoryHeading: {
     fontSize: 20,
     fontFamily: 'FuturaPT-Book',
-    width: widthPercentageToDP(50),
-    textAlign: 'center',
+    flex: 1,
+    flexGrow: 1,
+    textAlign: 'left',
+    paddingLeft: 30,
+    textTransform: 'capitalize',
+  },
+  rightArrow: {
+    fontSize: 24,
+    color: 'purple',
   },
 });
 export default CompatibilityTestsHome;
