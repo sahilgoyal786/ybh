@@ -119,20 +119,18 @@ const ImagesWelcome = styled(View)({
   alignItems: 'center',
   marginHorizontal: 15,
   backgroundColor: '#FFF',
-  marginTop: 4,
+  marginTop: 2,
+  marginBottom: 2,
   borderRadius: 4,
   padding: 20,
   flex: 1,
   borderColor: '#F4F5F6',
   shadowColor: '#F4F5F6',
-  shadowOffset: {
-    width: 0,
-    height: 1,
-  },
-  shadowOpacity: 0.2,
-  shadowRadius: 10,
+  shadowOpacity: 1,
+  shadowRadius: 2,
   elevation: 2,
 });
+
 const styles = StyleSheet.create({
   categoryHeading: {
     fontSize: 20,
