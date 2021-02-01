@@ -87,6 +87,7 @@ const CompatibilityTestsHome = ({navigation}) => {
         {categories.map((cat) => {
           return (
             <TouchableOpacity
+              key={Math.random().toString()}
               onPress={() => {
                 navigation.navigate('CompatibilityTestsCategory', {
                   Category: cat,

@@ -68,6 +68,7 @@ const GetAdvice2 = () => {
         {categories.map((cat) => {
           return (
             <TouchableOpacity
+              key={Math.random().toString()}
               onPress={() => {
                 navigation.navigate('AdviceCategory', {Category: cat});
               }}>
