@@ -9,15 +9,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 import {Textarea, Form, Toast} from 'native-base';
-import {
-  single,
-  sexual,
-  finance,
-  genral,
-  material,
-  enterprene,
-  bottomCurve,
-} from '../../common/images';
+import {bottomCurve} from '../../common/images';
+import * as images from '../../common/images';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -33,6 +26,7 @@ import Header from '../../components/header';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 const GetAdvice2 = () => {
   const navigation = useNavigation();
@@ -40,6 +34,18 @@ const GetAdvice2 = () => {
   const [text, setText] = useState('Describe your situation...');
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const [isLoading, setisLoading] = useState(false);
+  const categories = [
+    'Finance',
+    'Sexual',
+    'Marital',
+    'Entrepreneurs',
+    'Single',
+    'General',
+    'Food',
+    'Tech',
+    'Health',
+    'Beauty',
+  ];
 
   return (
     <View style={{flex: 1}}>
@@ -59,130 +65,63 @@ const GetAdvice2 = () => {
         bounces={false}
         style={{paddingTop: 0}}
         contentContainerStyle={{paddingBottom: 60}}>
-        <ImagesWelcome>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('AdviceCategory', {Category: 'Finance'});
-            }}>
-            <ImagesView source={finance} initHeight="130" initWidth="130" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('AdviceCategory', {Category: 'Sexual'});
-            }}>
-            <ImagesView source={sexual} initHeight="130" initWidth="130" />
-          </TouchableOpacity>
-        </ImagesWelcome>
-        <NameView>
-          <Text style={styles.categoryHeading}>Finance</Text>
-
-          <Text style={styles.categoryHeading}>Sexual</Text>
-        </NameView>
-        <ImagesWelcome>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('AdviceCategory', {Category: 'Marital'});
-            }}>
-            <ImagesView source={material} initHeight="130" initWidth="130" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('AdviceCategory', {
-                Category: 'Entrepreneurs',
-              });
-            }}>
-            <ImagesView source={enterprene} initHeight="130" initWidth="130" />
-          </TouchableOpacity>
-        </ImagesWelcome>
-        <NameView>
-          <Text style={styles.categoryHeading}>Marital</Text>
-          <Text style={styles.categoryHeading}>Entrepreneurs</Text>
-        </NameView>
-        <ImagesWelcome>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('AdviceCategory', {Category: 'Single'});
-            }}>
-            <ImagesView source={single} initHeight="130" initWidth="130" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('AdviceCategory', {Category: 'General'});
-            }}>
-            <ImagesView source={genral} initHeight="130" initWidth="130" />
-          </TouchableOpacity>
-        </ImagesWelcome>
-        <NameView>
-          <Text style={styles.categoryHeading}>Single</Text>
-          <Text style={styles.categoryHeading}>General</Text>
-        </NameView>
+        {categories.map((cat) => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('AdviceCategory', {Category: cat});
+              }}>
+              <ImagesWelcome>
+                <Image
+                  source={images['advice_icons'][cat.toLowerCase()]}
+                  style={{height: 40, width: 40}}
+                />
+                <Text style={styles.categoryHeading}>{cat}</Text>
+                <FontAwesome5Icon
+                  name="chevron-right"
+                  style={styles.rightArrow}
+                />
+              </ImagesWelcome>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     </View>
   );
 };
-const NameView = styled(View)({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginTop: heightPercentageToDP(1),
-});
-const ImagesView = styled(ResponsiveImage)({});
 const ImagesWelcome = styled(View)({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginTop: heightPercentageToDP(4),
-  paddingRight: 40,
-  paddingLeft: 40,
-});
-const SitutionView = styled(View)({
+  marginHorizontal: 15,
+  backgroundColor: '#FFF',
+  marginTop: 4,
+  borderRadius: 4,
+  padding: 20,
   flex: 1,
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginLeft: widthPercentageToDP(5),
-});
-const ButtonSUbmit = styled(Button)({
-  width: widthPercentageToDP(39),
-  marginRight: widthPercentageToDP(5),
-});
-const MenuIcon = styled(ResponsiveImage)({
-  alignSelf: 'flex-end',
-  marginRight: widthPercentageToDP(4),
-});
-const WelcomeText = styled(Text)({
-  fontSize: 24,
-  color: '#ffffff',
-  fontWeight: '500',
-  fontFamily: 'FuturaPT-Medium',
-  marginTop: -heightPercentageToDP(0.1),
-});
-const SitutionText = styled(Text)({
-  width: widthPercentageToDP(52),
-  fontSize: 19,
-  color: '#000',
-  fontWeight: '500',
-  fontFamily: 'FuturaPT-Book',
-
-  marginTop: -heightPercentageToDP(0.1),
-});
-const WelcomeView = styled(View)({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginTop: '-14%',
-  marginLeft: 8,
-});
-const BackgroundImage = styled(ImageBackground)({
-  height: '100%',
+  borderColor: '#F4F5F6',
+  shadowColor: '#F4F5F6',
+  shadowOffset: {
+    width: 0,
+    height: 1,
+  },
+  shadowOpacity: 0.2,
+  shadowRadius: 10,
+  elevation: 2,
 });
 
 const styles = StyleSheet.create({
   categoryHeading: {
     fontSize: 20,
     fontFamily: 'FuturaPT-Book',
-    width: widthPercentageToDP(50),
-    textAlign: 'center',
+    flex: 1,
+    flexGrow: 1,
+    textAlign: 'left',
+    paddingLeft: 30,
+  },
+  rightArrow: {
+    fontSize: 24,
+    color: 'purple',
   },
 });
 export default GetAdvice2;
