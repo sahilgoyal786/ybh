@@ -27,6 +27,9 @@ const EndPoints = {
 
   submitCompatibilityTestResponses: {url: 'user/compatibility-test'},
   compatibilityTestResult: {url: 'user/compatibility-test/results'},
+  deleteTest: {
+    url: 'user/compatibility-test/delete',
+  },
   respondToCompatibilityTestInvite: {
     url: 'user/compatibility-test-invite/update',
   },

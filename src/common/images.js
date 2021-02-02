@@ -42,6 +42,7 @@ export const compatibility_icons = {
   money: require('../assets/icons/compatibility/money.png'),
   social_media: require('../assets/icons/compatibility/social_media.png'),
   travelling: require('../assets/icons/compatibility/travelling.png'),
+  socialising: require('../assets/icons/compatibility/socialising.png'),
 };
 
 export const stick2 = require('../assets/icons/compatibility/stick.png');

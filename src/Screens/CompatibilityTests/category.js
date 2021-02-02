@@ -41,9 +41,9 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
     typeof route.params.test_id !== 'undefined' ? route.params.test_id : null;
 
   const performSearch = () => {
-    if (search.length < 3) {
+    if (search.length < 2) {
       Toast.show({
-        text: 'Please enter atleast 3 characters to search.',
+        text: 'Please enter atleast 2 characters to search.',
         duration: 3000,
       });
       return;

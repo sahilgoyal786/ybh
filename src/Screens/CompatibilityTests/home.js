@@ -41,6 +41,7 @@ const CompatibilityTestsHome = ({navigation}) => {
     'money',
     'social_media',
     'travelling',
+    'socialising',
   ];
 
   const notification_bubble =
