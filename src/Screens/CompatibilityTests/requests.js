@@ -176,14 +176,17 @@ const CompatibilityTestRequests = ({route, navigation}) => {
             {item.status == 'completed' ? (
               <>
                 <Button
-                  linear
+                  tertiary={{
+                    bg: '#FFF',
+                    color: 'purple',
+                  }}
                   name={'Results'}
+                  style={{width: 90, marginRight: 5}}
                   onPress={() => {
                     navigation.navigate('CompatibilityTestResult', {
                       test_id: item.id,
                     });
                   }}
-                  style={{width: 90, height: 40, marginRight: 5}}
                 />
                 <Button
                   tertiary={{
