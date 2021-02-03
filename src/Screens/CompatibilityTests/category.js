@@ -60,7 +60,7 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
         if (response.users && response.users.length > 0) {
           setResults(response.users);
         } else {
-          setResults(null);
+          setResults([]);
         }
       },
       (response) => {
@@ -286,6 +286,7 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
                   autoCapitalize="none"
                   placeholder="Search a user by email or username"
                   value={search}
+                  onBlur={() => setResults(null)}
                   onChangeText={(text) => setSearch(text)}
                   onSubmitEditing={() => performSearch()}
                 />
