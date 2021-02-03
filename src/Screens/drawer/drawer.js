@@ -8,7 +8,7 @@ import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import storage from '../../components/apis/storage';
 import {AuthContext} from '../../common/AuthContext';
 import {
@@ -311,7 +311,7 @@ const PageText = styled(Text)({
   fontWeight: 400,
   fontFamily: 'FuturaPT-Book',
 });
-const MainThirdView = styled(View)({
+const MainThirdView = styled(ScrollView)({
   marginLeft: widthPercentageToDP(10),
   marginTop: heightPercentageToDP(4),
   flexGrow: 1,
