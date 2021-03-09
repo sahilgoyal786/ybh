@@ -114,7 +114,7 @@ const CompatibilityTestRequests = ({route, navigation}) => {
   };
 
   const renderItem = (item, index) => {
-    console.log(item);
+    console.log(userDetail.user.id);
     return (
       <SecView>
         <View
@@ -132,9 +132,9 @@ const CompatibilityTestRequests = ({route, navigation}) => {
               borderRadius: 50,
             }}
             source={
-              item.invited_user.avatar
+              item.user_id == userDetail.user.id
                 ? {uri: item.invited_user.avatar}
-                : placeholderProfilePhoto
+                : {uri: item.user.avatar}
             }
           />
         </View>
@@ -146,7 +146,9 @@ const CompatibilityTestRequests = ({route, navigation}) => {
           }}>
           <View style={{flex: 4}}>
             <Text style={{fontSize: 20, color: '#454545'}}>
-              {item.invited_user.username}
+              {item.user_id == userDetail.user.id
+                ? item.invited_user.username
+                : item.user.username}
             </Text>
             <Text
               style={{
@@ -204,7 +206,10 @@ const CompatibilityTestRequests = ({route, navigation}) => {
             item.invited_user_id == userDetail.user.id &&
               item.compatibility_test_invite.status !== 'pending' ? (
               <Button
-                linear
+                tertiary={{
+                  bg: '#FFF',
+                  color: 'purple',
+                }}
                 name={'Answer Now'}
                 style={{width: 130, height: 46}}
                 onPress={() => {

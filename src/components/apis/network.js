@@ -32,9 +32,10 @@ const network = {
     no_cache = false,
   ) {
     if (
-      type.toLowerCase() == 'get' &&
-      endpoint.dont_cache == undefined &&
-      !no_cache
+      false
+      // type.toLowerCase() == 'get' &&
+      // endpoint.dont_cache == undefined &&
+      // !no_cache
     ) {
       storage.getData(endpoint.url).then((value) => {
         if (value == null || this.cacheExpired(endpoint, JSON.parse(value))) {
