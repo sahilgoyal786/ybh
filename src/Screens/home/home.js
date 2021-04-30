@@ -474,7 +474,8 @@ const Home = () => {
             }}>
             {homeTopRight && (
               <TouchableOpacity
-                onPress={() => Linking.openURL(homeTopRight.url)}>
+                // onPress={() => Linking.openURL(homeTopRight.url)}>
+                onPress={() => navigation.navigate('matchmakingTC')}>
                 <Image
                   source={{
                     uri:

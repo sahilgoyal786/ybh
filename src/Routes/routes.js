@@ -47,6 +47,16 @@ import network from '../components/apis/network';
 import {AuthContext} from '../common/AuthContext';
 import userDetailContext from '../common/userDetailContext';
 import Loading from '../Screens/loading/loading';
+import matchmakingTC from '../Screens/matchmaking/TnC';
+import Plans from '../Screens/matchmaking/Plans';
+import PersonalInfo1 from '../Screens/matchmaking/PersonalInfo1';
+import PersonalInfo2 from '../Screens/matchmaking/PersonalInfo2';
+import PersonalInfo3 from '../Screens/matchmaking/PersonalInfo3';
+import PersonalInfo4 from '../Screens/matchmaking/PersonalInfo4';
+import PersonalInfo5 from '../Screens/matchmaking/PersonalInfo5';
+import PersonalInfo6 from '../Screens/matchmaking/PersonalInfo6';
+import PersonalInfo7 from '../Screens/matchmaking/PersonalInfo7';
+import PersonalInfo8 from '../Screens/matchmaking/PersonalInfo8';
 import EndPoints from '../components/apis/endPoints';
 import NetInfo from '@react-native-community/netinfo';
 
@@ -63,6 +73,15 @@ function HomeComponent() {
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="matchmakingTC" component={matchmakingTC} />
+      <Stack.Screen name="PersonalInfo1" component={PersonalInfo1} />
+      <Stack.Screen name="PersonalInfo2" component={PersonalInfo2} />
+      <Stack.Screen name="PersonalInfo3" component={PersonalInfo3} />
+      <Stack.Screen name="PersonalInfo4" component={PersonalInfo4} />
+      <Stack.Screen name="PersonalInfo5" component={PersonalInfo5} />
+      <Stack.Screen name="PersonalInfo6" component={PersonalInfo6} />
+      <Stack.Screen name="PersonalInfo7" component={PersonalInfo7} />
+      <Stack.Screen name="PersonalInfo8" component={PersonalInfo8} />
       <Stack.Screen name="Thrivedetails" component={Thrivedetails} />
       <Stack.Screen name="VotingPage" component={VotingPage} />
       <Stack.Screen name="Thrive" component={Thrive} />
@@ -306,6 +325,7 @@ function Routes() {
                 ) : (
                   <Stack.Navigator headerMode="none">
                     <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
+                    <Stack.Screen name="Plans" component={Plans} />
                   </Stack.Navigator>
                 )}
               </PushNotificationManager>

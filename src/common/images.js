@@ -82,3 +82,41 @@ export const dryclnradio = require('../assets/icons/dry-clean.png');
 
 export const selectedTabCurve = require('../assets/icons/bottomtab-selected.png');
 export const placeholderProfilePhoto = require('../assets/icons/blank_portrait.png');
+
+export const PlanBackground = require('../assets/icons/matchmaking/plan-background.png');
+export const PlanTop = require('../assets/icons/matchmaking/plan-top.png');
+export const PlanBottom = require('../assets/icons/matchmaking/plan-bottom.png');
+
+export const ProfileIcon1 = require('../assets/icons/matchmaking/profile/icon1.png');
+export const ProfileIcon2 = require('../assets/icons/matchmaking/profile/icon2.png');
+export const ProfileIcon3 = require('../assets/icons/matchmaking/profile/icon3.png');
+export const ProfileIcon4 = require('../assets/icons/matchmaking/profile/icon4.png');
+export const ProfileIcon5 = require('../assets/icons/matchmaking/profile/icon5.png');
+export const ProfileIcon6 = require('../assets/icons/matchmaking/profile/icon6.png');
+export const ProfileIcon7 = require('../assets/icons/matchmaking/profile/icon7.png');
+export const ProfileIcon8 = require('../assets/icons/matchmaking/profile/icon8.png');
+export const ProfileNextIcon = require('../assets/icons/matchmaking/profile/next-icon.png');
+
+export const GovtEmpIcon = require('../assets/icons/matchmaking/profile/govt-employee.png');
+export const JoblessIcon = require('../assets/icons/matchmaking/profile/jobless.png');
+export const PoliticianIcon = require('../assets/icons/matchmaking/profile/politician.png');
+export const PvtComIcon = require('../assets/icons/matchmaking/profile/private-company.png');
+export const SelfEmpIcon = require('../assets/icons/matchmaking/profile/self-employee.png');
+export const StudentIcon = require('../assets/icons/matchmaking/profile/student-other.png');
+
+export const MaleIcon = require('../assets/icons/matchmaking/profile/male-icon.png');
+export const FemaleIcon = require('../assets/icons/matchmaking/profile/female-icon.png');
+
+export const FriendshipIcon = require('../assets/icons/matchmaking/profile/friendship.png');
+export const MarrigeIcon = require('../assets/icons/matchmaking/profile/marrige.png');
+
+export const ChildYesIcon = require('../assets/icons/matchmaking/profile/child-yes.png');
+export const ChildNoIcon = require('../assets/icons/matchmaking/profile/child-no.png');
+
+export const MarrigeYesIcon = require('../assets/icons/matchmaking/profile/marrige-yes.png');
+export const MarrigeNoIcon = require('../assets/icons/matchmaking/profile/marrige-no.png');
+
+export const BachelorDegreeIcon = require('../assets/icons/matchmaking/profile/bachelor-degree.png');
+export const MastersIcon = require('../assets/icons/matchmaking/profile/masters.png');
+export const SecondarySchoolIcon = require('../assets/icons/matchmaking/profile/secondary-school.png');
+export const PhDIcon = require('../assets/icons/matchmaking/profile/phd.png');
