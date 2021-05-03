@@ -1,19 +1,11 @@
 import React from 'react';
-import Button from '../../components/button';
 import {useNavigation} from '@react-navigation/native';
-import {
-  bottomCurve,
-  ProfileIcon4,
-  ProfileNextIcon,
-  FriendshipIcon,
-  MarrigeIcon
-} from '../../common/images';
+import {bottomCurve,ProfileIcon4,ProfileNextIcon,LookingForIcon} from '../../common/images';
 import styled from 'styled-components/native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {StyleSheet,Text,ScrollView,View,Image} from 'react-native';
+import {Text,ScrollView,View,Image} from 'react-native';
 import Header from '../../components/header';
-
 const PersonalInfo4 = () => {
   const navigation = useNavigation();
   return (
@@ -41,11 +33,11 @@ const PersonalInfo4 = () => {
           <TopImage source={ProfileIcon4} resizeMode="contain"></TopImage>
           <Heading>What are you looking for</Heading>
           <SingleElement style={{borderColor: '#f9bc16'}}>
-            <PImage source={MarrigeIcon}></PImage>
+            <PImage source={LookingForIcon['marrige']}></PImage>
             <PText>Marrige</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={LookingForIcon['friendship']}></PImage>
             <PText>Friendship</PText>
           </SingleElement>
           <TouchableOpacity onPress={() => navigation.navigate('PersonalInfo5')}>

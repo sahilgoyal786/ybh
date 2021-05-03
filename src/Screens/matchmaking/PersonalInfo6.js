@@ -1,19 +1,11 @@
 import React from 'react';
-import Button from '../../components/button';
 import {useNavigation} from '@react-navigation/native';
-import {
-  bottomCurve,
-  ProfileIcon6,
-  ProfileNextIcon,
-  ChildYesIcon,
-  ChildNoIcon
-} from '../../common/images';
+import {bottomCurve,ProfileIcon6,ProfileNextIcon,ChildrenIcon} from '../../common/images';
 import styled from 'styled-components/native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {StyleSheet,Text,ScrollView,View,Image} from 'react-native';
+import {Text,ScrollView,View,Image} from 'react-native';
 import Header from '../../components/header';
-
 const PersonalInfo6 = () => {
   const navigation = useNavigation();
   return (
@@ -41,11 +33,11 @@ const PersonalInfo6 = () => {
           <TopImage source={ProfileIcon6} resizeMode="contain"></TopImage>
           <Heading>Do you have children?</Heading>
           <SingleElement style={{borderColor: '#f9bc16'}}>
-            <PImage source={ChildYesIcon}></PImage>
+            <PImage source={ChildrenIcon['yes']}></PImage>
             <PText>Yes</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={ChildNoIcon}></PImage>
+            <PImage source={ChildrenIcon['no']}></PImage>
             <PText>No</PText>
           </SingleElement>
           <TouchableOpacity onPress={() => navigation.navigate('PersonalInfo7')}>

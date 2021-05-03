@@ -1,23 +1,11 @@
 import React from 'react';
-import Button from '../../components/button';
 import {useNavigation} from '@react-navigation/native';
-import {
-  bottomCurve,
-  ProfileIcon2,
-  ProfileNextIcon,
-  GovtEmpIcon,
-  PvtComIcon,
-  SelfEmpIcon,
-  PoliticianIcon,
-  JoblessIcon,
-  StudentIcon
-} from '../../common/images';
+import {bottomCurve,ProfileIcon2,ProfileNextIcon,ProfessionIcon} from '../../common/images';
 import styled from 'styled-components/native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {StyleSheet,Text,ScrollView,View,Image} from 'react-native';
+import {Text,ScrollView,View,Image} from 'react-native';
 import Header from '../../components/header';
-
 const PersonalInfo2 = () => {
   const navigation = useNavigation();
   return (
@@ -45,27 +33,27 @@ const PersonalInfo2 = () => {
           <TopImage source={ProfileIcon2} resizeMode="contain"></TopImage>
           <Heading>Profession</Heading>
           <SingleElement>
-            <PImage source={GovtEmpIcon}></PImage>
+            <PImage source={ProfessionIcon['govt']}></PImage>
             <PText>Govt. Employee</PText>
           </SingleElement>
           <SingleElement style={{borderColor: '#f9bc16'}}>
-            <PImage source={PvtComIcon}></PImage>
+            <PImage source={ProfessionIcon['private']}></PImage>
             <PText>Private Company</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={SelfEmpIcon}></PImage>
+            <PImage source={ProfessionIcon['self']}></PImage>
             <PText>Self-Employed</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={PoliticianIcon}></PImage>
+            <PImage source={ProfessionIcon['politician']}></PImage>
             <PText>Politician</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={JoblessIcon}></PImage>
+            <PImage source={ProfessionIcon['jobless']}></PImage>
             <PText>Jobless</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={StudentIcon}></PImage>
+            <PImage source={ProfessionIcon['student']}></PImage>
             <PText>Student/Other</PText>
           </SingleElement>
           <TouchableOpacity onPress={() => navigation.navigate('PersonalInfo3')}>

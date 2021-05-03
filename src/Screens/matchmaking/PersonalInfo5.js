@@ -1,18 +1,11 @@
 import React from 'react';
-import Button from '../../components/button';
 import {useNavigation} from '@react-navigation/native';
-import {
-  bottomCurve,
-  ProfileIcon5,
-  ProfileNextIcon,
-  FriendshipIcon
-} from '../../common/images';
+import {bottomCurve,ProfileIcon5,ProfileNextIcon,PartnerFunIcon} from '../../common/images';
 import styled from 'styled-components/native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {StyleSheet,Text,ScrollView,View,Image} from 'react-native';
+import {Text,ScrollView,View,Image} from 'react-native';
 import Header from '../../components/header';
-
 const PersonalInfo5 = () => {
   const navigation = useNavigation();
   return (
@@ -40,71 +33,71 @@ const PersonalInfo5 = () => {
           <TopImage source={ProfileIcon5} resizeMode="contain"></TopImage>
           <Heading>What do you like to do for Fun with your partner?</Heading>
           <SingleElement style={{borderColor: '#f9bc16'}}>
-            <PImage source={FriendshipIcon}></PImage>
-            <PText>plan a Date Night (or Day)</PText>
+            <PImage source={PartnerFunIcon['icon1']}></PImage>
+            <PText>Plan a Date Night (or Day)</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon2']}></PImage>
             <PText>Exercise</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon3']}></PImage>
             <PText>Cook Together</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon4']}></PImage>
             <PText>Couples Massage</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon5']}></PImage>
             <PText>Redecorate</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon6']}></PImage>
             <PText>Dance</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon7']}></PImage>
             <PText>Reading</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon8']}></PImage>
             <PText>Listen to a Podcast or Audiobook</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon9']}></PImage>
             <PText>Start a new Hobby</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon10']}></PImage>
             <PText>Play Games</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon11']}></PImage>
             <PText>Watch TV and Movies</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon12']}></PImage>
             <PText>Take a Walk</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon13']}></PImage>
             <PText>Travel</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon14']}></PImage>
             <PText>Shopping</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon15']}></PImage>
             <PText>Browse the Web</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon16']}></PImage>
             <PText>Visit fanily and friends</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FriendshipIcon}></PImage>
+            <PImage source={PartnerFunIcon['icon17']}></PImage>
             <PText>Others</PText>
           </SingleElement>
           <TouchableOpacity onPress={() => navigation.navigate('PersonalInfo6')}>

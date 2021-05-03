@@ -1,19 +1,11 @@
 import React from 'react';
-import Button from '../../components/button';
 import {useNavigation} from '@react-navigation/native';
-import {
-  bottomCurve,
-  ProfileIcon7,
-  ProfileNextIcon,
-  MarrigeYesIcon,
-  MarrigeNoIcon
-} from '../../common/images';
+import {bottomCurve,ProfileIcon7,ProfileNextIcon,MarriedIcon} from '../../common/images';
 import styled from 'styled-components/native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {StyleSheet,Text,ScrollView,View,Image} from 'react-native';
+import {Text,ScrollView,View,Image} from 'react-native';
 import Header from '../../components/header';
-
 const PersonalInfo7 = () => {
   const navigation = useNavigation();
   return (
@@ -41,11 +33,11 @@ const PersonalInfo7 = () => {
           <TopImage source={ProfileIcon7} resizeMode="contain"></TopImage>
           <Heading>Are you married?</Heading>
           <SingleElement style={{borderColor: '#f9bc16'}}>
-            <PImage source={MarrigeYesIcon}></PImage>
+            <PImage source={MarriedIcon['yes']}></PImage>
             <PText>Yes</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={MarrigeNoIcon}></PImage>
+            <PImage source={MarriedIcon['no']}></PImage>
             <PText>No</PText>
           </SingleElement>
           <TouchableOpacity onPress={() => navigation.navigate('PersonalInfo8')}>
@@ -100,7 +92,7 @@ const ProgressWrap = styled(View)({
   position: 'relative'
 });
 const ProgressInner = styled(View)({
-  width: '40%',
+  width: '46.667%',
   height: 3,
   backgroundColor: '#7b43a5',
   borderTopLeftRadius: 5,

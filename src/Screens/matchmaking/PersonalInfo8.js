@@ -1,21 +1,11 @@
 import React from 'react';
-import Button from '../../components/button';
 import {useNavigation} from '@react-navigation/native';
-import {
-  bottomCurve,
-  ProfileIcon8,
-  ProfileNextIcon,
-  BachelorDegreeIcon,
-  MastersIcon,
-  SecondarySchoolIcon,
-  PhDIcon
-} from '../../common/images';
+import {bottomCurve,ProfileIcon8,ProfileNextIcon,EducationIcon} from '../../common/images';
 import styled from 'styled-components/native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {StyleSheet,Text,ScrollView,View,Image} from 'react-native';
+import {Text,ScrollView,View,Image} from 'react-native';
 import Header from '../../components/header';
-
 const PersonalInfo8 = () => {
   const navigation = useNavigation();
   return (
@@ -43,22 +33,22 @@ const PersonalInfo8 = () => {
           <TopImage source={ProfileIcon8} resizeMode="contain"></TopImage>
           <Heading>Your level of education</Heading>
           <SingleElement style={{borderColor: '#f9bc16'}}>
-            <PImage source={SecondarySchoolIcon}></PImage>
+            <PImage source={EducationIcon['secondary']}></PImage>
             <PText>Secondary school</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={BachelorDegreeIcon}></PImage>
+            <PImage source={EducationIcon['bachelor']}></PImage>
             <PText>Bachelor Degree</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={MastersIcon}></PImage>
+            <PImage source={EducationIcon['masters']}></PImage>
             <PText>Masters</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={PhDIcon}></PImage>
+            <PImage source={EducationIcon['phd']}></PImage>
             <PText>PhD</PText>
           </SingleElement>
-          <TouchableOpacity onPress={() => navigation.navigate('PersonalInfo8')}>
+          <TouchableOpacity onPress={() => navigation.navigate('PersonalInfo9')}>
             <ProfileNext source={ProfileNextIcon}></ProfileNext>
           </TouchableOpacity>
         </ProfileWrap>
@@ -110,7 +100,7 @@ const ProgressWrap = styled(View)({
   position: 'relative'
 });
 const ProgressInner = styled(View)({
-  width: '40%',
+  width: '53.334%',
   height: 3,
   backgroundColor: '#7b43a5',
   borderTopLeftRadius: 5,

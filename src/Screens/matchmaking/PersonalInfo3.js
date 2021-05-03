@@ -1,17 +1,10 @@
 import React from 'react';
-import Button from '../../components/button';
 import {useNavigation} from '@react-navigation/native';
-import {
-  bottomCurve,
-  ProfileIcon3,
-  ProfileNextIcon,
-  MaleIcon,
-  FemaleIcon
-} from '../../common/images';
+import {bottomCurve,ProfileIcon3,ProfileNextIcon,GenderIcon} from '../../common/images';
 import styled from 'styled-components/native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {StyleSheet,Text,ScrollView,View,Image} from 'react-native';
+import {Text,ScrollView,View,Image} from 'react-native';
 import Header from '../../components/header';
 
 const PersonalInfo3 = () => {
@@ -41,11 +34,11 @@ const PersonalInfo3 = () => {
           <TopImage source={ProfileIcon3} resizeMode="contain"></TopImage>
           <Heading>Gender</Heading>
           <SingleElement style={{borderColor: '#f9bc16'}}>
-            <PImage source={MaleIcon}></PImage>
+            <PImage source={GenderIcon['male']}></PImage>
             <PText>Male</PText>
           </SingleElement>
           <SingleElement>
-            <PImage source={FemaleIcon}></PImage>
+            <PImage source={GenderIcon['female']}></PImage>
             <PText>Female</PText>
           </SingleElement>
           <TouchableOpacity onPress={() => navigation.navigate('PersonalInfo4')}>

@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from '../../components/button';
 import {useNavigation} from '@react-navigation/native';
 import {bottomCurve,ProfileIcon1,ProfileNextIcon} from '../../common/images';
 import styled from 'styled-components/native';
@@ -7,7 +6,6 @@ import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {StyleSheet,TextInput,ScrollView,View,Image} from 'react-native';
 import Header from '../../components/header';
-
 const PersonalInfo1 = () => {
   const navigation = useNavigation();
   return (
