@@ -25,7 +25,7 @@ import userDetailContext from '../../common/userDetailContext';
 import FastImage from 'react-native-fast-image';
 
 import ContentLoader from 'react-native-easy-content-loader';
-import {bottomCurve} from '../../common/images';
+import {bottomCurve,MatchmakingBanner} from '../../common/images';
 import LeaderBoard from '../../components/leaderBoard';
 import Button from '../../components/button';
 import network from '../../components/apis/network';
@@ -329,6 +329,30 @@ const Home = () => {
       },
     );
   };
+  const getMatchMakingProfile = () => {
+    try {
+      network.getResponse(
+        EndPoints.checkMatchProfile,
+        'GET',
+        {},
+        userDetail.token || '',
+        (response) => {
+          if(response.mprofile && response.mpverified){
+            return navigation.navigate('MyConnection');
+          }else if(response.mprofile && !response.mpverified){
+            return navigation.navigate('PhotoVerification');
+          }else{
+            return navigation.navigate('matchmakingTC');
+          }
+        },
+        (error) => {
+          return navigation.navigate('matchmakingTC');
+        },
+      );
+    }catch(exception){
+      return navigation.navigate('matchmakingTC');
+    }
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -472,27 +496,18 @@ const Home = () => {
               paddingLeft: 10,
               paddingRight: 10,
             }}>
-            {homeTopRight && (
-              <TouchableOpacity
-                // onPress={() => Linking.openURL(homeTopRight.url)}>
-                onPress={() => navigation.navigate('matchmakingTC')}>
-                <Image
-                  source={{
-                    uri:
-                      'file://' +
-                      RNFS.DocumentDirectoryPath +
-                      '/' +
-                      homeTopRight.path,
-                  }}
-                  style={{
-                    width: '100%',
-                    aspectRatio: 32 / 21,
-                    padding: 0,
-                    marginBottom: 10,
-                  }}
-                />
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity onPress={() => getMatchMakingProfile()}>
+              <Image
+                source={MatchmakingBanner}
+                style={{
+                  width: '100%',
+                  height: 90,
+                  padding: 0,
+                  marginBottom: 10,
+                }}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
             <LeaderBoard userDetailTemp={userDetail} />
           </View>
         </View>

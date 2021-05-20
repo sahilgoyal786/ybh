@@ -18,6 +18,8 @@ export const homeicon = require('../assets/icons/homeicon.png');
 export const getadvice = require('../assets/icons/get-advice.png');
 export const CompatibilityMenuIcon = require('../assets/icons/compatibility-icon.png');
 export const menu = require('../assets/icons/menu.png');
+export const search = require('../assets/icons/search.png');
+export const fillter = require('../assets/icons/fillter.png');
 export const dots = require('../assets/icons/trivia-bg-img.png');
 export const headerView = require('../assets/icons/headerview.png');
 export const botomView = require('../assets/icons/curb-bg.png');
@@ -87,6 +89,24 @@ export const PlanBackground = require('../assets/icons/matchmaking/plan-backgrou
 export const PlanTop = require('../assets/icons/matchmaking/plan-top.png');
 export const PlanBottom = require('../assets/icons/matchmaking/plan-bottom.png');
 
+export const MatchmakingBanner = require('../assets/icons/matchmaking/banner.png');
+export const MatchIcons = {
+  icon1: require('../assets/icons/matchmaking/icon1.png'),
+  icon2: require('../assets/icons/matchmaking/icon2.png'),
+  icon3: require('../assets/icons/matchmaking/icon3.png'),
+  icon4: require('../assets/icons/matchmaking/icon4.png'),
+  icon5: require('../assets/icons/matchmaking/icon5.png'),
+  icon6: require('../assets/icons/matchmaking/icon6.png'),
+  icon7: require('../assets/icons/matchmaking/icon7.png'),
+  icon8: require('../assets/icons/matchmaking/icon8.png'),
+  icon9: require('../assets/icons/matchmaking/icon9.png'),
+  icon10: require('../assets/icons/matchmaking/icon10.png'),
+  icon11: require('../assets/icons/matchmaking/icon11.png'),
+  icon12: require('../assets/icons/matchmaking/icon12.png'),
+  icon13: require('../assets/icons/matchmaking/icon13.png'),
+  icon14: require('../assets/icons/matchmaking/icon14.png'),
+  icon15: require('../assets/icons/matchmaking/icon15.png')
+};
 export const ProfileIcon1 = require('../assets/icons/matchmaking/icon1.png');
 export const ProfileIcon2 = require('../assets/icons/matchmaking/icon2.png');
 export const ProfileIcon3 = require('../assets/icons/matchmaking/icon3.png');
@@ -105,6 +125,9 @@ export const ProfileIcon15 = require('../assets/icons/matchmaking/icon15.png');
 export const AddProfilePhotoIcon = require('../assets/icons/matchmaking/add-photo.png');
 export const SwipeTnCIcon = require('../assets/icons/matchmaking/swipe-icon.png');
 export const ProfileNextIcon = require('../assets/icons/matchmaking/next-icon.png');
+export const SendIcon = require('../assets/icons/send-icon.png');
+export const DotIcon = require('../assets/icons/dots-icon.png');
+
 export const BuildIcon = {
   slim: require('../assets/icons/matchmaking/build/slim.png'),
   average: require('../assets/icons/matchmaking/build/average.png'),
@@ -214,11 +237,14 @@ export const ConnectionImages = {
 };
 export const SearchIcons = {
   age : require('../assets/icons/age.png'),
-  address : require('../assets/icons/address.png')
+  address : require('../assets/icons/address.png'),
+  fillter : require('../assets/icons/fillter.png')
 };
 export const UserProfileIcons = {
   connect : require('../assets/icons/connect.png'),
   disconnect : require('../assets/icons/disconnect.png'),
   message : require('../assets/icons/message.png'),
+  colormessage : require('../assets/icons/message1.png'),
   pending : require('../assets/icons/pending.png'),
+  delete : require('../assets/icons/remove.png'),
 };

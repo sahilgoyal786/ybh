@@ -31,7 +31,7 @@ const Plans = () => {
           </PriceBoxWrap>
           <Button
             onPress={() => {
-              navigation.navigate('PhotoVerification');
+              navigation.navigate('PersonalInfo');
             }}
             style={{
               width: '100%',

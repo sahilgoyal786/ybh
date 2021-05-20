@@ -20,7 +20,6 @@ import userDetailContext from '../../common/userDetailContext';
 import Button from '../../components/button';
 import {Dialog} from 'react-native-simple-dialogs';
 import {Textarea, Toast} from 'native-base';
-import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {StackActions} from '@react-navigation/native';
 import {ActionTypes} from '../../redux/ActionTypes';

@@ -20,7 +20,7 @@ const SwipeTnC = () => {
           bottom: -100,
         }}
         resizeMode="contain"></Image>
-      <Header title="Terms & Conditions" backButton="true" />
+      <Header title="Terms & Conditions" backButton="true" showRightDrawer={false}/>
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
@@ -29,9 +29,9 @@ const SwipeTnC = () => {
         contentContainerStyle={{paddingBottom: 40}}>
         <ProfileWrap>
           <TopImage source={SwipeTnCIcon} resizeMode="contain"></TopImage>
-          <Text style={{width:'100%',fontSize:16,lineHeight:24,marginBottom:10}}>Before you swipe.</Text>
-          <Text style={{width:'100%',fontSize:16,lineHeight:24,marginBottom:10}}>Welcome! here we treat everyone with kindness and respect.</Text>
-          <Text style={{width:'100%',fontSize:16,lineHeight:24,marginBottom:10}}>In our mission to actively keep people safe while trying to meet then significant other. We ask you to join us in adhering to our guidelines.</Text>
+          <Text style={{width:'100%',fontSize:16,lineHeight:'24px',marginBottom:10}}>Before you swipe.</Text>
+          <Text style={{width:'100%',fontSize:16,lineHeight:'24px',marginBottom:10}}>Welcome! here we treat everyone with kindness and respect.</Text>
+          <Text style={{width:'100%',fontSize:16,lineHeight:'24px',marginBottom:10}}>In our mission to actively keep people safe while trying to meet then significant other. We ask you to join us in adhering to our guidelines.</Text>
           <Button
             onPress={() => {
               navigation.navigate('PhotoVerification');

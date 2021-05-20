@@ -47,24 +47,9 @@ import network from '../components/apis/network';
 import {AuthContext} from '../common/AuthContext';
 import userDetailContext from '../common/userDetailContext';
 import Loading from '../Screens/loading/loading';
-import matchmakingTC from '../Screens/matchmaking/TnC';
+import matchmakingTC from '../Screens/matchmaking/MatchTnC';
 import Plans from '../Screens/matchmaking/Plans';
-import PersonalInfo1 from '../Screens/matchmaking/PersonalInfo1';
-import PersonalInfo2 from '../Screens/matchmaking/PersonalInfo2';
-import PersonalInfo3 from '../Screens/matchmaking/PersonalInfo3';
-import PersonalInfo4 from '../Screens/matchmaking/PersonalInfo4';
-import PersonalInfo5 from '../Screens/matchmaking/PersonalInfo5';
-import PersonalInfo6 from '../Screens/matchmaking/PersonalInfo6';
-import PersonalInfo7 from '../Screens/matchmaking/PersonalInfo7';
-import PersonalInfo8 from '../Screens/matchmaking/PersonalInfo8';
-import PersonalInfo9 from '../Screens/matchmaking/PersonalInfo9';
-import PersonalInfo10 from '../Screens/matchmaking/PersonalInfo10';
-import PersonalInfo11 from '../Screens/matchmaking/PersonalInfo11';
-import PersonalInfo12 from '../Screens/matchmaking/PersonalInfo12';
-import PersonalInfo13 from '../Screens/matchmaking/PersonalInfo13';
-import PersonalInfo14 from '../Screens/matchmaking/PersonalInfo14';
-import PersonalInfo15 from '../Screens/matchmaking/PersonalInfo15';
-import PersonalInfo16 from '../Screens/matchmaking/PersonalInfo16';
+import PersonalInfo from '../Screens/matchmaking/PersonalInfo';
 import SwipeTnC from '../Screens/matchmaking/SwipeTnC';
 import PhotoVerification from '../Screens/matchmaking/PhotoVerification';
 import MessageLists from '../Screens/messages/MessageLists';
@@ -72,6 +57,7 @@ import ChatMessage from '../Screens/messages/ChatMessage';
 import MyConnection from '../Screens/MyConnection/MyConnection';
 import UserProfile from '../Screens/UserProfile/UserProfile';
 import Search from '../Screens/Search/Search';
+import Filter from '../Screens/Search/Filter';
 import EndPoints from '../components/apis/endPoints';
 import NetInfo from '@react-native-community/netinfo';
 
@@ -88,29 +74,8 @@ function HomeComponent() {
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="matchmakingTC" component={matchmakingTC} />
-      <Stack.Screen name="PersonalInfo1" component={PersonalInfo1} />
-      <Stack.Screen name="PersonalInfo2" component={PersonalInfo2} />
-      <Stack.Screen name="PersonalInfo3" component={PersonalInfo3} />
-      <Stack.Screen name="PersonalInfo4" component={PersonalInfo4} />
-      <Stack.Screen name="PersonalInfo5" component={PersonalInfo5} />
-      <Stack.Screen name="PersonalInfo6" component={PersonalInfo6} />
-      <Stack.Screen name="PersonalInfo7" component={PersonalInfo7} />
-      <Stack.Screen name="PersonalInfo8" component={PersonalInfo8} />
-      <Stack.Screen name="PersonalInfo9" component={PersonalInfo9} />
-      <Stack.Screen name="PersonalInfo10" component={PersonalInfo10} />
-      <Stack.Screen name="PersonalInfo11" component={PersonalInfo11} />
-      <Stack.Screen name="PersonalInfo12" component={PersonalInfo12} />
-      <Stack.Screen name="PersonalInfo13" component={PersonalInfo13} />
-      <Stack.Screen name="PersonalInfo14" component={PersonalInfo14} />
-      <Stack.Screen name="PersonalInfo15" component={PersonalInfo15} />
-      <Stack.Screen name="PersonalInfo16" component={PersonalInfo16} />
-      <Stack.Screen name="SwipeTnC" component={SwipeTnC} />
-      <Stack.Screen name="PhotoVerification" component={PhotoVerification} />
-      <Stack.Screen name="MessageLists" component={MessageLists} />
       <Stack.Screen name="MyConnection" component={MyConnection} />
       <Stack.Screen name="Search" component={Search} />
-      <Stack.Screen name="UserProfile" component={UserProfile} />
       <Stack.Screen name="Thrivedetails" component={Thrivedetails} />
       <Stack.Screen name="VotingPage" component={VotingPage} />
       <Stack.Screen name="Thrive" component={Thrive} />
@@ -354,8 +319,15 @@ function Routes() {
                 ) : (
                   <Stack.Navigator headerMode="none">
                     <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
+                    <Stack.Screen name="matchmakingTC" component={matchmakingTC} />
                     <Stack.Screen name="Plans" component={Plans} />
+                    <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
+                    <Stack.Screen name="SwipeTnC" component={SwipeTnC} />
+                    <Stack.Screen name="PhotoVerification" component={PhotoVerification} />
+                    <Stack.Screen name="UserProfile" component={UserProfile} />
+                    <Stack.Screen name="MessageLists" component={MessageLists} />
                     <Stack.Screen name="ChatMessage" component={ChatMessage} />
+                    <Stack.Screen name="Filter" component={Filter} />
                   </Stack.Navigator>
                 )}
               </PushNotificationManager>

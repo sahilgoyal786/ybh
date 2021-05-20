@@ -1,8 +1,8 @@
 import React, {Component, useContext} from 'react';
 import {Text, StyleSheet, View, TouchableOpacity, Image} from 'react-native';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
+import {useNavigation,DrawerActions} from '@react-navigation/native';
 import styled from 'styled-components/native';
-import {menu, headerView} from '../common/images';
+import {menu,headerView,search,fillter} from '../common/images';
 import ResponsiveImage from 'react-native-responsive-image';
 import {
   heightPercentageToDP,
@@ -12,7 +12,7 @@ import {backicon} from '../common/images';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import userDetailContext from '../common/userDetailContext';
 
-const Header = ({title, backButton = false}) => {
+const Header = ({title,backButton=false,showRightDrawer=true,searchBtn=false,userImage=false,filterButton=false}) => {
   const navigation = useNavigation();
   return (
     <View style={{width: widthPercentageToDP(100), height: 120}}>
@@ -25,7 +25,7 @@ const Header = ({title, backButton = false}) => {
         }}
       />
       <WelcomeView>
-        <View style={{flex: 1, flexDirection: 'row'}}>
+        <View style={{flex: 1, flexDirection: 'row',alignContent: 'center'}}>
           <TouchableOpacity
             onPress={() => {
               if (backButton !== false)
@@ -49,23 +49,39 @@ const Header = ({title, backButton = false}) => {
                   ? navigation.goBack()
                   : navigation.navigate(backButton);
             }}>
-            <WelcomeText
-              style={{
-                marginTop: 4,
-                marginLeft: 2,
-                textTransform: 'capitalize',
-              }}>
-              {title}
-            </WelcomeText>
+            <View style={{flexDirection: 'row'}}>
+              {userImage !== false && (
+                <Image source={{uri: userImage}} style={{width: 40,height: 40,borderRadius: 40,marginLeft: 10,marginRight: 10}}></Image>
+              )}
+              <WelcomeText
+                style={{
+                  marginTop: 4,
+                  marginLeft: 2,
+                  textTransform: 'capitalize',
+                }}>
+                {title}
+              </WelcomeText>
+            </View>
           </TouchableWithoutFeedback>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.dispatch(DrawerActions.toggleDrawer());
-          }}>
-          {/* {userDetail.is_connected ? <Text>Y</Text> : <Text>N</Text>} */}
-          <MenuIcon source={menu} initHeight="30" initWidth="30" />
-        </TouchableOpacity>
+        {filterButton !== false && (
+          <TouchableOpacity onPress={() => navigation.navigate('Filter')}>
+            <MenuIcon source={fillter} initHeight="30" initWidth="30" />
+          </TouchableOpacity>
+        )}
+        {searchBtn !== false && (
+          <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+            <MenuIcon source={search} initHeight="30" initWidth="30" />
+          </TouchableOpacity>
+        )}
+        {showRightDrawer !== false && (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.dispatch(DrawerActions.toggleDrawer());
+            }}>
+            <MenuIcon source={menu} initHeight="30" initWidth="30" />
+          </TouchableOpacity>
+        )}
       </WelcomeView>
     </View>
   );

@@ -126,7 +126,7 @@ const network = {
       data: formData,
     })
       .then((response) => {
-        // console.log(response.data, 'axios response');
+        // console.log(response.data);
         if (response.data) {
           if (type.toLowerCase() == 'get') {
             response.data.timestamp = Math.floor(Date.now() / 1000);

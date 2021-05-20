@@ -8,7 +8,7 @@ import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {StyleSheet, Text, ScrollView, View, Image} from 'react-native';
 import Header from '../../components/header';
 
-const TnC = () => {
+const MatchTnC = () => {
   const navigation = useNavigation();
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -21,7 +21,7 @@ const TnC = () => {
           bottom: -100,
         }}
         resizeMode="contain"></Image>
-      <Header title="Terms & Conditions" backButton="true" />
+      <Header title="Terms & Conditions" backButton="true" showRightDrawer={false}/>
       <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
@@ -44,7 +44,7 @@ const TnC = () => {
               width: '100%',
               marginTop: 40
             }}
-            name={'Agree'}
+            name={'Next'}
             linear
           />
         </View>
@@ -81,4 +81,4 @@ const Strong = styled(Text)({
   marginTop: 10,
 });
 
-export default TnC;
+export default MatchTnC;

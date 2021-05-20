@@ -28,7 +28,7 @@ import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import ContentLoader from 'react-native-easy-content-loader';
-import RNPickerSelect from 'react-native-picker-select';
+import {Picker as RNPickerSelect} from '@react-native-picker/picker';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import storage from '../../components/apis/storage';
 

@@ -27,7 +27,6 @@ import RNSpeedometer from '../../components/speedometer/compatibility';
 import Button from '../../components/button';
 import {Dialog} from 'react-native-simple-dialogs';
 import {Textarea, Toast} from 'native-base';
-import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {ActionTypes} from '../../redux/ActionTypes';
 const CompatibilityTestResult = ({route, navigation}) => {

@@ -64,6 +64,26 @@ const EndPoints = {
   voteOnResponse: {url: 'user/responses/vote'},
 
   getAdvertisements: {url: 'advertisements', cache_age: 24},
-};
 
+  ProfileImageUpload: {url: 'matchmaking/image-upload'},
+  myConnections: {url: 'matchmaking/profiles'},
+  getMatchProfile: {url: 'matchmaking/profile/'},
+  checkMatchProfile: {url: 'matchmaking/profile/check'},
+  createMatchProfile: {url: 'matchmaking/profile/add'},
+  verifyMatchProfile: {url: 'matchmaking/profile/verify'},
+  searchMatchProfile: {url: 'matchmaking/profile/search'},
+  deleteMatchProfile: {url: 'matchmaking/profile/delete'},
+
+  sendProfileRequest: {url: 'matchmaking/request/send'},
+  acceptProfileRequest: {url: 'matchmaking/request/accept'},
+  declineProfileRequest: {url: 'matchmaking/request/decline'},
+  disconnectProfileRequest: {url: 'matchmaking/request/disconnect'},
+
+  getChats: {url: 'chats'},
+  createChat: {url: 'chat/create'},
+  deleteChat: {url: 'chat/delete'},
+  getChatMessages: {url: 'chat/messages/{id}'},
+  sendMessage: {url: 'chat/message/send'},
+  deleteMessage: {url: 'chat/message/delete'},
+};
 export default EndPoints;
