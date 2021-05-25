@@ -1,8 +1,16 @@
 import React from 'react';
-import {bottomCurve,SearchIcons,search} from '../../common/images';
+import {bottomCurve, SearchIcons, search} from '../../common/images';
 import styled from 'styled-components/native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
-import {Text,ScrollView,View,Image,ActivityIndicator,TouchableWithoutFeedback,RefreshControl} from 'react-native';
+import {
+  Text,
+  ScrollView,
+  View,
+  Image,
+  ActivityIndicator,
+  TouchableWithoutFeedback,
+  RefreshControl,
+} from 'react-native';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
@@ -10,9 +18,9 @@ import Header from '../../components/header';
 import storage from '../../components/apis/storage';
 import {Toast} from 'native-base';
 
-class Search extends React.Component{
+class Search extends React.Component {
   static contextType = userDetailContext;
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       isLoading: false,
@@ -21,22 +29,22 @@ class Search extends React.Component{
       search: null,
       profiles: null,
       filters: {
-        age: [18,60],
+        age: [18, 60],
         children: null,
         education: null,
         religion: null,
-        partnerheight: [140,200],
+        partnerheight: [140, 200],
         build: null,
         ethnicity: null,
         smoker: null,
         religiosity: null,
-        family: null
+        family: null,
       },
     };
   }
-  componentDidMount(){
+  componentDidMount() {
     const user = this.context;
-    if(user.length){
+    if (user.length) {
       this.searchUsers(user[0].token);
     }
   }
@@ -48,33 +56,33 @@ class Search extends React.Component{
     this.setState({search: value});
   };
   searchUsers = (userToken) => {
-    this.setState({isLoading: true});
+    this.setState({token: userToken});
     storage.getData('filter').then((filter) => {
       filter = JSON.parse(filter);
-      if(filter){
-        this.setState({filters: filter});
-        try{
+      if (filter) {
+        this.setState({isLoading: true, filters: filter});
+        try {
           network.getResponse(
             EndPoints.searchMatchProfile,
             'POST',
             filter,
             userToken,
             (response) => {
-              if(response && response.length){
-                this.setState({token: userToken,isLoading: false,profiles: response});
-              }else{
-                this.setState({token: userToken,isLoading: false,profiles: []});
-                Toast.show({text: "No user found."});
+              if (response && response.length) {
+                this.setState({isLoading: false, profiles: response});
+              } else {
+                this.setState({isLoading: false, profiles: []});
+                Toast.show({text: 'No user found.'});
               }
             },
             (error) => {
-              this.setState({token: userToken,isLoading: false});
-              console.log('error',error);
+              this.setState({isLoading: false});
+              console.log('error', error);
             },
           );
-        }catch(exception){
-          this.setState({token: userToken,isLoading: false});
-          console.log('exception',exception);
+        } catch (exception) {
+          this.setState({isLoading: false});
+          console.log('exception', exception);
         }
       }
     });
@@ -83,30 +91,30 @@ class Search extends React.Component{
     this.setState({refreshing: true});
     storage.getData('filter').then((filter) => {
       filter = JSON.parse(filter);
-      if(filter){
+      if (filter) {
         this.setState({filters: filter});
-        try{
+        try {
           network.getResponse(
             EndPoints.searchMatchProfile,
             'POST',
             filter,
             this.state.token,
             (response) => {
-              if(response && response.length){
-                this.setState({refreshing: false,profiles: response});
-              }else{
-                this.setState({refreshing: false,profiles: []});
-                Toast.show({text: "No user found."});
+              if (response && response.length) {
+                this.setState({refreshing: false, profiles: response});
+              } else {
+                this.setState({refreshing: false, profiles: []});
+                Toast.show({text: 'No user found.'});
               }
             },
             (error) => {
               this.setState({refreshing: false});
-              console.log('error',error);
+              console.log('error', error);
             },
           );
-        }catch(exception){
+        } catch (exception) {
           this.setState({refreshing: false});
-          console.log('exception',exception);
+          console.log('exception', exception);
         }
       }
     });
@@ -115,37 +123,71 @@ class Search extends React.Component{
   render() {
     const {navigation} = this.props;
     return (
-      <View style={{flex: 1,backgroundColor: '#fff'}}>
+      <View style={{flex: 1, backgroundColor: '#fff'}}>
         {this.state.isLoading && (
-          <ActivityIndicator color="#fff" size="large" style={{position:'absolute',left:0,top:0,right:0,bottom:0,backgroundColor:'#00000080',zIndex:9999}}/>
+          <ActivityIndicator
+            color="#fff"
+            size="large"
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: '#00000080',
+              zIndex: 9999,
+            }}
+          />
         )}
-        <Image source={bottomCurve} style={{width: widthPercentageToDP(100),height: 200,position: 'absolute',bottom: -100}} resizeMode="contain"/>
-        <Header title="Search" backButton="true" filterButton="true"/>
+        <Image
+          source={bottomCurve}
+          style={{
+            width: widthPercentageToDP(100),
+            height: 200,
+            position: 'absolute',
+            bottom: -100,
+          }}
+          resizeMode="contain"
+        />
+        <Header title="Search" backButton="true" filterButton="true" />
         {this.state.profiles && (
-          <ScrollView 
-            alwaysBounceHorizontal={false} 
-            alwaysBounceVertical={false} 
-            bounces={false} 
-            style={{padding: 5,paddingTop: 20}} 
+          <ScrollView
+            alwaysBounceHorizontal={false}
+            alwaysBounceVertical={false}
+            bounces={false}
+            style={{padding: 5, paddingTop: 20}}
             contentContainerStyle={{paddingBottom: 40}}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
                 onRefresh={this.onRefreshSearch}
               />
-            }
-          >
+            }>
             <UserListWrap>
-              {this.state.profiles.map((profile,index) => {
+              {this.state.profiles.map((profile, index) => {
                 return (
-                  <TouchableWithoutFeedback key={index} onPress={() => navigation.navigate('UserProfile',{profile_id: profile.id})}>
+                  <TouchableWithoutFeedback
+                    key={index}
+                    onPress={() =>
+                      navigation.navigate('UserProfile', {
+                        profile_id: profile.id,
+                      })
+                    }>
                     <UserList>
                       <UserName>{profile.username}</UserName>
                       <UserData>
-                        <IconImage source={SearchIcons['age']} resizeMode="contain"/>
+                        <IconImage
+                          source={SearchIcons['age']}
+                          resizeMode="contain"
+                        />
                         <UserDataText>{profile.age}</UserDataText>
-                        <IconImage source={SearchIcons['address']} resizeMode="contain"/>
-                        <UserDataText>{profile.state}, {profile.country}</UserDataText>
+                        <IconImage
+                          source={SearchIcons['address']}
+                          resizeMode="contain"
+                        />
+                        <UserDataText>
+                          {profile.state}, {profile.country}
+                        </UserDataText>
                       </UserData>
                     </UserList>
                   </TouchableWithoutFeedback>
@@ -173,29 +215,36 @@ const UserList = styled(View)({
   marginBottom: 15,
   borderRadius: 10,
   backgroundColor: '#fff',
-  elevation: 5
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 1,
+    height: 1,
+  },
+  shadowOpacity: 0.2,
+  shadowRadius: 5,
+  elevation: 5,
 });
 const UserName = styled(Text)({
   fontSize: 18,
   lineHeight: '20px',
   color: '#7b43a5',
   fontWeight: 700,
-  marginBottom: 8
+  marginBottom: 8,
 });
 const UserData = styled(View)({
   flex: 1,
-  flexDirection: 'row'
+  flexDirection: 'row',
 });
 const UserDataText = styled(Text)({
   fontSize: 18,
   color: '#484848',
   fontWeight: 700,
   lineHeight: '20px',
-  marginRight: 20
+  marginRight: 20,
 });
 const IconImage = styled(Image)({
   width: 20,
   height: 20,
-  marginRight: 5
+  marginRight: 5,
 });
 export default Search;
