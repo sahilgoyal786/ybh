@@ -129,11 +129,11 @@ export const SendIcon = require('../assets/icons/send-icon.png');
 export const DotIcon = require('../assets/icons/dots-icon.png');
 
 export const BuildIcon = {
-  slim: require('../assets/icons/matchmaking/build/slim.png'),
-  average: require('../assets/icons/matchmaking/build/average.png'),
-  athletic: require('../assets/icons/matchmaking/build/athletic.png'),
-  large: require('../assets/icons/matchmaking/build/large.png'),
-  extra: require('../assets/icons/matchmaking/build/extra.png'),
+  slim: require('../assets/icons/matchmaking/build-icon/slim.png'),
+  average: require('../assets/icons/matchmaking/build-icon/average.png'),
+  athletic: require('../assets/icons/matchmaking/build-icon/athletic.png'),
+  large: require('../assets/icons/matchmaking/build-icon/large.png'),
+  extra: require('../assets/icons/matchmaking/build-icon/extra.png'),
 };
 export const ChildrenIcon = {
   yes: require('../assets/icons/matchmaking/children/yes.png'),
