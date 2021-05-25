@@ -297,6 +297,12 @@ const Drawer = ({navigation}) => {
           }}>
           <PageText>Terms & Conditions</PageText>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('MessageLists');
+          }}>
+          <PageText>Chats</PageText>
+        </TouchableOpacity>
         <TouchableOpacity onPress={onSignout}>
           <PageText>Logout</PageText>
         </TouchableOpacity>
