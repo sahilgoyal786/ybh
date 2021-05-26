@@ -73,6 +73,54 @@ class UserProfile extends React.Component {
       console.log('exception',exception);
     }
   };
+  acceptProfileRequest = () => {
+    this.setState({isLoading: true});
+    try{
+      network.getResponse(
+        EndPoints.acceptProfileRequest,
+        'POST',
+        {profile_id: this.state.profile.mylist.matchmaking_profile_id, user_id: this.state.profile.mylist.connection_id},
+        '',
+        (response) => {
+          if(response && response.message) {
+            Toast.show({text: response.message});
+          }
+          this.LoadProfile(this.state.token);
+        },
+        (error) => {
+          this.setState({isLoading: false});
+          console.log('error',error);
+        },
+      );
+    }catch(exception){
+      this.setState({isLoading: false});
+      console.log('exception',exception);
+    }
+  };
+  declineProfileRequest = () => {
+    this.setState({isLoading: true});
+    try{
+      network.getResponse(
+        EndPoints.declineProfileRequest,
+        'POST',
+        {profile_id: this.state.profile.mylist.matchmaking_profile_id, user_id: this.state.profile.mylist.connection_id},
+        '',
+        (response) => {
+          if(response && response.message) {
+            Toast.show({text: response.message});
+          }
+          this.LoadProfile(this.state.token);
+        },
+        (error) => {
+          this.setState({isLoading: false});
+          console.log('error',error);
+        },
+      );
+    }catch(exception){
+      this.setState({isLoading: false});
+      console.log('exception',exception);
+    }
+  };
   disconnectRequest = () => {
     this.setState({isLoading: true});
     try{
@@ -156,6 +204,40 @@ class UserProfile extends React.Component {
           </TouchableOpacity>
         </View>
       );
+    }else if(this.state.profile.mylist && !this.state.profile.mylist.status && this.state.profile.user_id == this.state.profile.mylist.connection_id){
+      btns.push(
+        <View key={'btnInList'}
+        style={{
+          flexDirection: 'row',
+          marginTop: 10,
+        }}>
+          <TouchableOpacity onPress={() => this.acceptProfileRequest()}>
+            <View
+              style={{
+                padding: 5,
+                backgroundColor: '#7b43a5',
+                borderRadius: 5,
+                paddingLeft: 20,
+                paddingRight: 20
+              }}>
+              <Text style={{color: 'white'}}>Accept</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.declineProfileRequest()}>
+            <View
+              style={{
+                padding: 5,
+                backgroundColor: '#7b43a5',
+                borderRadius: 5,
+                paddingLeft: 20,
+                paddingRight: 20,
+                marginLeft: 10
+              }}>
+              <Text style={{color: 'white'}}>Decline</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      );
     }else if(this.state.profile.mylist && !this.state.profile.mylist.status){
       btns.push(
         <View key={'btnPending'}
@@ -207,7 +289,7 @@ class UserProfile extends React.Component {
         <Header title={this.state.profile.username} backButton="true" showRightDrawer={false}/>
         <ScrollView alwaysBounceHorizontal={false} alwaysBounceVertical={false} bounces={false} style={{padding:30,paddingTop:20}} contentContainerStyle={{paddingBottom:40}}>
           <UserProfileWrap>
-            <UserImage source={this.state.profile.photo ? {uri: this.state.profile.photo} : placeholderProfilePhoto} resizeMode="contain"></UserImage>
+            <UserImage source={this.state.profile.photo ? {uri: this.state.profile.photo} : placeholderProfilePhoto} resizeMode="cover"></UserImage>
             <UserName>{this.state.profile.username}</UserName>
             <UserData>Age: {this.state.profile.age}, {this.state.profile.country}</UserData>
             {btns}
