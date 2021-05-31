@@ -40,6 +40,8 @@ import Header from '../../components/header';
 import Slider from '@react-native-community/slider';
 import {Toast} from 'native-base';
 import ImagePicker from 'react-native-image-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 
 class PersonalInfo extends React.Component {
   static contextType = userDetailContext;
@@ -48,6 +50,8 @@ class PersonalInfo extends React.Component {
     this.state = {
       currentStep: 1,
       isLoading: false,
+      dob : '',
+      showDOBPicker : false,
       token: null,
       emailValidate: false,
       data: {
@@ -88,6 +92,12 @@ class PersonalInfo extends React.Component {
   updateProfileData = (label, value) => {
     this.state.data[label] = value;
     this.setState({data: this.state.data});
+  };
+  setShowDOBPicker = (status) => {
+    this.setState({showDOBPicker: status});
+  };
+  setDOB = (dob) => {
+    this.setState({dob});
   };
   convertedCentoFeet = () => {
     var userHeight = this.state.data.height;
@@ -871,15 +881,31 @@ class PersonalInfo extends React.Component {
                   );
                 } else if (item.subType == 'dob') {
                   return (
-                    <TextInput
+                    <>
+                    <TextInput 
+                      onTouchStart={() => this.setShowDOBPicker(true)}
                       key={index}
                       name={item.name}
+                      value={this.state.dob ? new Date(this.state.dob).toISOString().slice(0, 10) : ''}
                       style={styles.input}
+                      pointerEvents="none"
                       placeholder={item.placeholder}
-                      onChangeText={(text) =>
-                        this.updateProfileData(item.name, text)
-                      }
                     />
+                    {this.state.showDOBPicker && (
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={this.state.dob ? new Date(this.state.dob) : new Date((new Date()).valueOf() - 25*365*24*60*60*1000)}
+                        display="default"
+                        onChange={(event, selectedDate) => {
+                          if(selectedDate){
+                            this.updateProfileData(item.name, selectedDate.toISOString().slice(0, 10));
+                            this.setShowDOBPicker(false);
+                            this.setDOB(selectedDate.valueOf());
+                          }
+                        } }
+                      />
+                    )}
+                    </>
                   );
                 }
               } else if (item.type == 'select') {

@@ -496,8 +496,11 @@ const Home = () => {
               paddingLeft: 10,
               paddingRight: 10,
             }}>
-            <TouchableOpacity onPress={() => getMatchMakingProfile()}>
-              <Image
+            <TouchableOpacity onPress={() => getMatchMakingProfile()} style={{marginBottom: 10}}>
+              <View style={{backgroundColor: '#7b42a5', alignItems: "center", justifyContent:"center", paddingVertical: 20, borderRadius: 6}}>
+                <Text style={{color: "white"}}>Match Making</Text>
+              </View>
+              {/* <Image
                 source={MatchmakingBanner}
                 style={{
                   width: '100%',
@@ -506,7 +509,7 @@ const Home = () => {
                   marginBottom: 10,
                 }}
                 resizeMode="contain"
-              />
+              /> */}
             </TouchableOpacity>
             <LeaderBoard userDetailTemp={userDetail} />
           </View>

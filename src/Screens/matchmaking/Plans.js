@@ -40,6 +40,7 @@ const Plans = () => {
             name={'Buy Now!'}
             linear
           />
+          <Text style={{ marginTop: 5, padding: 5}} onPress={() => navigation.navigate('Welcomeuser')}>Go Back</Text>
         </ViewBox>
         <BottomImage source={PlanBottom} resizeMode="contain"></BottomImage>
       </BoxView>
