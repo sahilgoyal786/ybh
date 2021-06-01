@@ -546,9 +546,9 @@ const Card = styled(View)({
     width: 0,
     height: 0.1,
   },
-  shadowOpacity: 0.9,
+  shadowOpacity: '0.9',
   shadowRadius: 7,
-  elevation: 3,
+  elevation: '3',
   background: 'white',
   marginBottom: 10,
 });

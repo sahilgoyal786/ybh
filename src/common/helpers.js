@@ -301,3 +301,9 @@ export const downloadAdBanners = (userDetail, changeUserDetail) => {
     }
   });
 };
+export const GetFormattedDate = (date) => {
+  var month = String(date.getMonth() + 1).padStart(2, '0');
+  var day = String(date.getDate()).padStart(2, '0');
+  var year = date.getFullYear();
+  return month + '/' + day + '/' + year;
+};

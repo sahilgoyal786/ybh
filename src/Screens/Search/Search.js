@@ -220,9 +220,9 @@ const UserList = styled(View)({
     width: 1,
     height: 1,
   },
-  shadowOpacity: 0.2,
+  shadowOpacity: '0.2',
   shadowRadius: 5,
-  elevation: 5,
+  elevation: '5',
 });
 const UserName = styled(Text)({
   fontSize: 18,

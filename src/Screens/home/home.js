@@ -25,7 +25,7 @@ import userDetailContext from '../../common/userDetailContext';
 import FastImage from 'react-native-fast-image';
 
 import ContentLoader from 'react-native-easy-content-loader';
-import {bottomCurve,MatchmakingBanner} from '../../common/images';
+import {bottomCurve, MatchmakingBanner} from '../../common/images';
 import LeaderBoard from '../../components/leaderBoard';
 import Button from '../../components/button';
 import network from '../../components/apis/network';
@@ -337,11 +337,11 @@ const Home = () => {
         {},
         userDetail.token || '',
         (response) => {
-          if(response.mprofile && response.mpverified){
+          if (response.mprofile && response.mpverified) {
             return navigation.navigate('MyConnection');
-          }else if(response.mprofile && !response.mpverified){
+          } else if (response.mprofile && !response.mpverified) {
             return navigation.navigate('PhotoVerification');
-          }else{
+          } else {
             return navigation.navigate('matchmakingTC');
           }
         },
@@ -349,7 +349,7 @@ const Home = () => {
           return navigation.navigate('matchmakingTC');
         },
       );
-    }catch(exception){
+    } catch (exception) {
       return navigation.navigate('matchmakingTC');
     }
   };
@@ -496,9 +496,18 @@ const Home = () => {
               paddingLeft: 10,
               paddingRight: 10,
             }}>
-            <TouchableOpacity onPress={() => getMatchMakingProfile()} style={{marginBottom: 10}}>
-              <View style={{backgroundColor: '#7b42a5', alignItems: "center", justifyContent:"center", paddingVertical: 20, borderRadius: 6}}>
-                <Text style={{color: "white"}}>Match Making</Text>
+            <TouchableOpacity
+              onPress={() => getMatchMakingProfile()}
+              style={{marginBottom: 10}}>
+              <View
+                style={{
+                  backgroundColor: '#7b42a5',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingVertical: 20,
+                  borderRadius: 6,
+                }}>
+                <Text style={{color: 'white'}}>Match Making</Text>
               </View>
               {/* <Image
                 source={MatchmakingBanner}

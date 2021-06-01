@@ -235,9 +235,9 @@ const DayTag = styled(Text)({
     width: 1,
     height: 1,
   },
-  shadowOpacity: 0.2,
+  shadowOpacity: '0.2',
   shadowRadius: 5,
-  elevation: 5,
+  elevation: '5',
   margin: 'auto',
   marginTop: 15,
   marginBottom: 15,
@@ -275,9 +275,9 @@ const UserTxtMsg = styled(Text)({
     width: 1,
     height: 1,
   },
-  shadowOpacity: 0.2,
+  shadowOpacity: '0.2',
   shadowRadius: 5,
-  elevation: 5,
+  elevation: '5',
   marginBottom: 5,
 });
 const MyMessage = styled(Text)({

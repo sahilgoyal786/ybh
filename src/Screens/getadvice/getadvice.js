@@ -103,9 +103,9 @@ const ImagesWelcome = styled(View)({
   flex: 1,
   borderColor: '#F4F5F6',
   shadowColor: '#F4F5F6',
-  shadowOpacity: 1,
+  shadowOpacity: '1',
   shadowRadius: 2,
-  elevation: 2,
+  elevation: '2',
 });
 
 const styles = StyleSheet.create({

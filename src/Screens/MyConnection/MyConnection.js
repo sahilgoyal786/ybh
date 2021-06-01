@@ -259,9 +259,9 @@ const UserListInner = styled(View)({
     width: 1,
     height: 1,
   },
-  shadowOpacity: 0.2,
+  shadowOpacity: '0.2',
   shadowRadius: 5,
-  elevation: 10,
+  elevation: '10',
 });
 const DotImage = styled(Image)({
   width: 10,

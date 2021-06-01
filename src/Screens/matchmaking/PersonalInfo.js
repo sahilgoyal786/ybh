@@ -41,7 +41,10 @@ import Slider from '@react-native-community/slider';
 import {Toast} from 'native-base';
 import ImagePicker from 'react-native-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import {countries} from '../../common/countries';
+import RNPickerSelect from 'react-native-picker-select';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import {GetFormattedDate} from '../../common/helpers';
 
 class PersonalInfo extends React.Component {
   static contextType = userDetailContext;
@@ -50,8 +53,7 @@ class PersonalInfo extends React.Component {
     this.state = {
       currentStep: 1,
       isLoading: false,
-      dob : '',
-      showDOBPicker : false,
+      showDatePicker: false,
       token: null,
       emailValidate: false,
       data: {
@@ -93,11 +95,8 @@ class PersonalInfo extends React.Component {
     this.state.data[label] = value;
     this.setState({data: this.state.data});
   };
-  setShowDOBPicker = (status) => {
-    this.setState({showDOBPicker: status});
-  };
-  setDOB = (dob) => {
-    this.setState({dob});
+  setShowDatePicker = (name) => {
+    this.setState({showDatePicker: name});
   };
   convertedCentoFeet = () => {
     var userHeight = this.state.data.height;
@@ -235,7 +234,7 @@ class PersonalInfo extends React.Component {
           },
           {
             type: 'text',
-            subType: 'dob',
+            subType: 'datepicker',
             name: 'dob',
             placeholder: 'Date of Birth',
           },
@@ -248,8 +247,8 @@ class PersonalInfo extends React.Component {
           },
           {type: 'text', subType: 'text', name: 'state', placeholder: 'State'},
           {
-            type: 'text',
-            subType: 'text',
+            type: 'dropdown',
+            options: countries,
             name: 'country',
             placeholder: 'Country',
           },
@@ -879,32 +878,48 @@ class PersonalInfo extends React.Component {
                       }
                     />
                   );
-                } else if (item.subType == 'dob') {
+                } else if (item.subType == 'datepicker') {
                   return (
                     <>
-                    <TextInput 
-                      onTouchStart={() => this.setShowDOBPicker(true)}
-                      key={index}
-                      name={item.name}
-                      value={this.state.dob ? new Date(this.state.dob).toISOString().slice(0, 10) : ''}
-                      style={styles.input}
-                      pointerEvents="none"
-                      placeholder={item.placeholder}
-                    />
-                    {this.state.showDOBPicker && (
-                      <DateTimePicker
-                        testID="dateTimePicker"
-                        value={this.state.dob ? new Date(this.state.dob) : new Date((new Date()).valueOf() - 25*365*24*60*60*1000)}
-                        display="default"
-                        onChange={(event, selectedDate) => {
-                          if(selectedDate){
-                            this.updateProfileData(item.name, selectedDate.toISOString().slice(0, 10));
-                            this.setShowDOBPicker(false);
-                            this.setDOB(selectedDate.valueOf());
-                          }
-                        } }
+                      <TextInput
+                        onTouchStart={() => this.setShowDatePicker(item.name)}
+                        key={index}
+                        name={item.name}
+                        caretHidden={true}
+                        value={
+                          this.state.data[item.name]
+                            ? this.state.data[item.name]
+                            : ''
+                        }
+                        style={styles.input}
+                        pointerEvents="box-only"
+                        placeholder={item.placeholder}
                       />
-                    )}
+                      {this.state.showDatePicker &&
+                        this.state.showDatePicker == item.name && (
+                          <DateTimePicker
+                            testID="dateTimePicker"
+                            value={
+                              this.state.data[item.name]
+                                ? new Date(this.state.data[item.name])
+                                : new Date(
+                                    new Date().valueOf() -
+                                      25 * 365 * 24 * 60 * 60 * 1000,
+                                  )
+                            }
+                            display="default"
+                            onChange={(event, selectedDate) => {
+                              if (selectedDate) {
+                                console.log(GetFormattedDate(selectedDate));
+                                this.updateProfileData(
+                                  item.name,
+                                  GetFormattedDate(selectedDate),
+                                );
+                                this.setShowDatePicker(false);
+                              }
+                            }}
+                          />
+                        )}
                     </>
                   );
                 }
@@ -1014,6 +1029,68 @@ class PersonalInfo extends React.Component {
                       this.updateProfileData(item.name, text)
                     }
                   />
+                );
+              } else if (item.type == 'dropdown') {
+                return (
+                  <RNPickerSelect
+                    placeholder={{
+                      label: item.placeholder,
+                      key: Math.random().toString(),
+                    }}
+                    items={item.options}
+                    style={{
+                      inputAndroid: {
+                        ...{
+                          backgroundColor: 'transparent',
+                          paddingRight: 35,
+                          color: 'black',
+                        },
+                        ...styles.input,
+                      },
+                      inputIOS: {
+                        ...{
+                          backgroundColor: 'transparent',
+                          paddingRight: 35,
+                          color: 'black',
+                        },
+                        ...styles.input,
+                      },
+                      iconContainer:
+                        Platform.OS == 'android'
+                          ? {
+                              bottom: 36,
+                              right: 20,
+                            }
+                          : {},
+                    }}
+                    value={this.state.data[item.name]}
+                    onValueChange={(value) => {
+                      if (value !== this.state.data[item.name])
+                        this.updateProfileData(item.name, value);
+                    }}
+                    useNativeAndroidPickerStyle={false}
+                    Icon={() => {
+                      return (
+                        // <Image source={downarrow} style={{width: 12, height: 12}} />
+                        <FontAwesome5Icon
+                          name="caret-down"
+                          style={{fontSize: 15}}
+                        />
+                      );
+                    }}
+                  />
+
+                  // <TextInput
+                  //   key={index}
+                  //   multiline={true}
+                  //   numberOfLines={item.line}
+                  //   name={item.name}
+                  //   style={styles.input}
+                  //   placeholder={item.placeholder}
+                  //   onChangeText={(text) =>
+                  //     this.updateProfileData(item.name, text)
+                  //   }
+                  // />
                 );
               }
             })}
@@ -1173,9 +1250,9 @@ const SingleElement = styled(View)({
     width: 1,
     height: 1,
   },
-  shadowOpacity: 0.2,
+  shadowOpacity: '0.2',
   shadowRadius: 5,
-  elevation: 5,
+  elevation: '5',
 });
 const PImage = styled(Image)({
   width: 30,
@@ -1186,6 +1263,6 @@ const PText = styled(Text)({
   fontSize: 20,
   color: '#484848',
   fontWeight: 600,
-  lineHeight: 30,
+  lineHeight: '30px',
 });
 export default PersonalInfo;
