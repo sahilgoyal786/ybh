@@ -44,9 +44,12 @@ class Search extends React.Component {
   }
   componentDidMount() {
     const user = this.context;
-    if (user.length) {
-      this.searchUsers(user[0].token);
-    }
+    const {navigation} = this.props;
+    navigation.addListener('focus', () => {
+      if (user.length) {
+        this.searchUsers(user[0].token);
+      }
+    });
   }
   updateAccessToken = (userToken) => {
     this.setState({token: userToken});
