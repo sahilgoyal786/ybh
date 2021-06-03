@@ -56,6 +56,8 @@ import MessageLists from '../Screens/messages/MessageLists';
 import ChatMessage from '../Screens/messages/ChatMessage';
 import MyConnection from '../Screens/MyConnection/MyConnection';
 import UserProfile from '../Screens/UserProfile/UserProfile';
+import MyProfile from '../Screens/MyProfile/MyProfile';
+import EditMyProfile from '../Screens/MyProfile/EditMyProfile';
 import Search from '../Screens/Search/Search';
 import Filter from '../Screens/Search/Filter';
 import EndPoints from '../components/apis/endPoints';
@@ -325,6 +327,8 @@ function Routes() {
                     <Stack.Screen name="SwipeTnC" component={SwipeTnC} />
                     <Stack.Screen name="PhotoVerification" component={PhotoVerification} />
                     <Stack.Screen name="UserProfile" component={UserProfile} />
+                    <Stack.Screen name="MyProfile" component={MyProfile} />
+                    <Stack.Screen name="EditMyProfile" component={EditMyProfile} />
                     <Stack.Screen name="MessageLists" component={MessageLists} />
                     <Stack.Screen name="ChatMessage" component={ChatMessage} />
                     <Stack.Screen name="Filter" component={Filter} />

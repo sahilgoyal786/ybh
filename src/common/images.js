@@ -64,6 +64,7 @@ export const advice_icons = {
 };
 
 export const profile = require('../assets/icons/user.png');
+export const profileWhiteIcon = require('../assets/icons/user-icon.png');
 export const calendar = require('../assets/icons/calendar.png');
 export const vtngpage = require('../assets/icons/NewProject.png');
 export const vtngbtn = require('../assets/icons/vote-btn.png');
@@ -125,6 +126,7 @@ export const ProfileIcon15 = require('../assets/icons/matchmaking/icon15.png');
 export const AddProfilePhotoIcon = require('../assets/icons/matchmaking/add-photo.png');
 export const SwipeTnCIcon = require('../assets/icons/matchmaking/swipe-icon.png');
 export const ProfileNextIcon = require('../assets/icons/matchmaking/next-icon.png');
+export const ProfilePrevIcon = require('../assets/icons/matchmaking/prev-icon.png');
 export const SendIcon = require('../assets/icons/send-icon.png');
 export const DotIcon = require('../assets/icons/dots-icon.png');
 
@@ -217,23 +219,6 @@ export const SmokeIcon = {
 export const Uploadimageicon = {
   take: require('../assets/icons/matchmaking/upload-image/take-picture.png'),
   upload: require('../assets/icons/matchmaking/upload-image/upload-from-device.png')
-};
-export const UserImages = {
-  user1 : require('../assets/icons/messages/user1.png'),
-  user2 : require('../assets/icons/messages/user2.png'),
-  user3 : require('../assets/icons/messages/user3.png'),
-  user4 : require('../assets/icons/messages/user4.png'),
-  user5 : require('../assets/icons/messages/user5.png'),
-};
-export const ConnectionImages = {
-  user1 : require('../assets/icons/connection/user1.jpg'),
-  user2 : require('../assets/icons/connection/user2.jpg'),
-  user3 : require('../assets/icons/connection/user3.jpg'),
-  user4 : require('../assets/icons/connection/user4.jpg'),
-  user5 : require('../assets/icons/connection/user5.jpg'),
-  user6 : require('../assets/icons/connection/user6.jpg'),
-  user7 : require('../assets/icons/connection/user7.jpg'),
-  user8 : require('../assets/icons/connection/user8.jpg'),
 };
 export const SearchIcons = {
   age : require('../assets/icons/age.png'),

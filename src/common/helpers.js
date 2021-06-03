@@ -307,3 +307,10 @@ export const GetFormattedDate = (date) => {
   var year = date.getFullYear();
   return month + '/' + day + '/' + year;
 };
+export const GetFormattedDateWithMonth = (date) => {
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var month = monthNames[date.getMonth()];
+  var day = String(date.getDate()).padStart(2, '0');
+  var year = date.getFullYear();
+  return month + ' ' + day + ', ' + year;
+};

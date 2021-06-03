@@ -18,6 +18,7 @@ import {
   AddProfilePhotoIcon,
   Uploadimageicon,
   ProfileNextIcon,
+  ProfilePrevIcon
 } from '../../common/images';
 import Button from '../../components/button';
 import styled from 'styled-components/native';
@@ -44,7 +45,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {countries} from '../../common/countries';
 import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import {GetFormattedDate} from '../../common/helpers';
+import {GetFormattedDateWithMonth} from '../../common/helpers';
+import storage from '../../components/apis/storage';
 
 class PersonalInfo extends React.Component {
   static contextType = userDetailContext;
@@ -56,7 +58,7 @@ class PersonalInfo extends React.Component {
       showDatePicker: false,
       token: null,
       emailValidate: false,
-      data: {
+      profile: {
         username: null,
         dob: null,
         tribe: null,
@@ -87,34 +89,45 @@ class PersonalInfo extends React.Component {
     if (user.length) {
       this.updateAccessToken(user[0].token);
     }
+    storage.getData('myprofile').then((myprofile) => {
+      myprofile = JSON.parse(myprofile);
+      if(myprofile){
+        this.setState({profile: myprofile});
+      }
+    });
   }
   updateAccessToken = (userToken) => {
     this.setState({token: userToken});
   };
   updateProfileData = (label, value) => {
-    this.state.data[label] = value;
-    this.setState({data: this.state.data});
+    this.state.profile[label] = value;
+    this.setState({profile: this.state.profile});
   };
   setShowDatePicker = (name) => {
     this.setState({showDatePicker: name});
   };
   convertedCentoFeet = () => {
-    var userHeight = this.state.data.height;
+    var userHeight = this.state.profile.height;
     var realFeet = (userHeight * 0.3937) / 12;
     var feet = Math.floor(realFeet);
     var inches = Math.round((realFeet - feet) * 12);
     return feet + "'" + inches + '" - ' + userHeight + 'cm';
   };
   chaneSteps = (current) => {
-    var currentStep = current + 1;
-    this.setState({currentStep: currentStep});
+    storage.setData('myprofile', JSON.stringify(this.state.profile));
+    var activeStep = current + 1;
+    this.setState({currentStep: activeStep});
+  };
+  previousSteps = (current) => {
+    let activeStep = current - 1;
+    this.setState({currentStep: activeStep});
   };
   checkValidation = (conditions) => {
     var validate = false;
     conditions.forEach((condition) => {
       if (
-        this.state.data[condition] == '' ||
-        this.state.data[condition] == null
+        this.state.profile[condition] == '' ||
+        this.state.profile[condition] == null
       ) {
         validate = true;
       }
@@ -137,13 +150,14 @@ class PersonalInfo extends React.Component {
       network.getResponse(
         EndPoints.createMatchProfile,
         'POST',
-        this.state.data,
+        this.state.profile,
         this.state.token,
         (response) => {
           this.setState({isLoading: false});
           if (response && response.message) {
             Toast.show({text: response.message});
           }
+          storage.removeData('myprofile');
           navigation.navigate('SwipeTnC');
         },
         (error) => {
@@ -828,7 +842,7 @@ class PersonalInfo extends React.Component {
             {step.icon && this.state.currentStep == steps.length && (
               <View style={{position: 'relative', textAlign: 'center'}}>
                 <TopImage source={step.icon} resizeMode="contain"></TopImage>
-                {this.state.data.profile_photo && (
+                {this.state.profile.profile_photo && (
                   <TopImage
                     style={{
                       position: 'absolute',
@@ -841,7 +855,7 @@ class PersonalInfo extends React.Component {
                     source={{
                       uri:
                         'https://api.ybhive.app/storage/' +
-                        this.state.data.profile_photo,
+                        this.state.profile.profile_photo,
                     }}
                     resizeMode="cover"></TopImage>
                 )}
@@ -855,6 +869,7 @@ class PersonalInfo extends React.Component {
                     <TextInput
                       key={index}
                       name={item.name}
+                      value={this.state.profile[item.name]}
                       style={styles.input}
                       placeholder={item.placeholder}
                       onChangeText={(text) =>
@@ -867,8 +882,9 @@ class PersonalInfo extends React.Component {
                     <EmailInput
                       key={index}
                       name={item.name}
+                      value={this.state.profile[item.name]}
                       style={
-                        !this.state.emailValidate && this.state.data[item.name]
+                        !this.state.emailValidate && this.state.profile[item.name]
                           ? {borderBottomColor: '#f00'}
                           : {}
                       }
@@ -887,8 +903,8 @@ class PersonalInfo extends React.Component {
                         name={item.name}
                         caretHidden={true}
                         value={
-                          this.state.data[item.name]
-                            ? this.state.data[item.name]
+                          this.state.profile[item.name]
+                            ? this.state.profile[item.name]
                             : ''
                         }
                         style={styles.input}
@@ -900,8 +916,8 @@ class PersonalInfo extends React.Component {
                           <DateTimePicker
                             testID="dateTimePicker"
                             value={
-                              this.state.data[item.name]
-                                ? new Date(this.state.data[item.name])
+                              this.state.profile[item.name]
+                                ? new Date(this.state.profile[item.name])
                                 : new Date(
                                     new Date().valueOf() -
                                       25 * 365 * 24 * 60 * 60 * 1000,
@@ -910,10 +926,10 @@ class PersonalInfo extends React.Component {
                             display="default"
                             onChange={(event, selectedDate) => {
                               if (selectedDate) {
-                                console.log(GetFormattedDate(selectedDate));
+                                console.log(GetFormattedDateWithMonth(selectedDate));
                                 this.updateProfileData(
                                   item.name,
-                                  GetFormattedDate(selectedDate),
+                                  GetFormattedDateWithMonth(selectedDate),
                                 );
                                 this.setShowDatePicker(false);
                               }
@@ -932,7 +948,7 @@ class PersonalInfo extends React.Component {
                     }>
                     <SingleElement
                       style={
-                        this.state.data[item.label] == item.name
+                        this.state.profile[item.label] == item.name
                           ? {borderColor: '#f9bc16'}
                           : {}
                       }>
@@ -960,6 +976,7 @@ class PersonalInfo extends React.Component {
                     </View>
                     <View style={{flex: 1, flexDirection: 'row'}}>
                       <Slider
+                        value={this.state.profile[item.label]}
                         style={{width: '100%', height: 40}}
                         minimumValue={item.minValue}
                         maximumValue={item.maxValue}
@@ -990,7 +1007,7 @@ class PersonalInfo extends React.Component {
                       onPress={() => this.openImageLibrary(item.label)}>
                       <SingleElement
                         style={
-                          this.state.data[item.label] == item.name
+                          this.state.profile[item.label] == item.name
                             ? {borderColor: '#f9bc16'}
                             : {}
                         }>
@@ -1006,7 +1023,7 @@ class PersonalInfo extends React.Component {
                       onPress={() => this.openCamera(item.label)}>
                       <SingleElement
                         style={
-                          this.state.data[item.label] == item.name
+                          this.state.profile[item.label] == item.name
                             ? {borderColor: '#f9bc16'}
                             : {}
                         }>
@@ -1023,6 +1040,7 @@ class PersonalInfo extends React.Component {
                     multiline={true}
                     numberOfLines={item.line}
                     name={item.name}
+                    value={this.state.profile[item.name]}
                     style={styles.input}
                     placeholder={item.placeholder}
                     onChangeText={(text) =>
@@ -1032,78 +1050,80 @@ class PersonalInfo extends React.Component {
                 );
               } else if (item.type == 'dropdown') {
                 return (
-                  <RNPickerSelect
-                    placeholder={{
-                      label: item.placeholder,
-                      key: Math.random().toString(),
-                    }}
-                    items={item.options}
-                    style={{
-                      inputAndroid: {
-                        ...{
-                          backgroundColor: 'transparent',
-                          paddingRight: 35,
-                          color: 'black',
-                        },
-                        ...styles.input,
-                      },
-                      inputIOS: {
-                        ...{
-                          backgroundColor: 'transparent',
-                          paddingRight: 35,
-                          color: 'black',
-                        },
-                        ...styles.input,
-                      },
-                      iconContainer:
-                        Platform.OS == 'android'
-                          ? {
-                              bottom: 36,
-                              right: 20,
-                            }
-                          : {},
-                    }}
-                    value={this.state.data[item.name]}
-                    onValueChange={(value) => {
-                      if (value !== this.state.data[item.name])
-                        this.updateProfileData(item.name, value);
-                    }}
-                    useNativeAndroidPickerStyle={false}
-                    Icon={() => {
-                      return (
-                        // <Image source={downarrow} style={{width: 12, height: 12}} />
-                        <FontAwesome5Icon
-                          name="caret-down"
-                          style={{fontSize: 15}}
-                        />
-                      );
-                    }}
-                  />
-
-                  // <TextInput
-                  //   key={index}
-                  //   multiline={true}
-                  //   numberOfLines={item.line}
-                  //   name={item.name}
-                  //   style={styles.input}
-                  //   placeholder={item.placeholder}
-                  //   onChangeText={(text) =>
-                  //     this.updateProfileData(item.name, text)
-                  //   }
+                  // <RNPickerSelect
+                  //   placeholder={{
+                  //     label: item.placeholder,
+                  //     key: Math.random().toString(),
+                  //   }}
+                  //   items={item.options}
+                  //   style={{
+                  //     inputAndroid: {
+                  //       ...{
+                  //         backgroundColor: 'transparent',
+                  //         paddingRight: 35,
+                  //         color: 'black',
+                  //       },
+                  //       ...styles.input,
+                  //     },
+                  //     inputIOS: {
+                  //       ...{
+                  //         backgroundColor: 'transparent',
+                  //         paddingRight: 35,
+                  //         color: 'black',
+                  //       },
+                  //       ...styles.input,
+                  //     },
+                  //     iconContainer:
+                  //       Platform.OS == 'android'
+                  //         ? {
+                  //             bottom: 36,
+                  //             right: 20,
+                  //           }
+                  //         : {},
+                  //   }}
+                  //   value={this.state.profile[item.name]}
+                  //   onValueChange={(value) => {
+                  //     if (value !== this.state.profile[item.name])
+                  //       this.updateProfileData(item.name, value);
+                  //   }}
+                  //   useNativeAndroidPickerStyle={false}
+                  //   Icon={() => {
+                  //     return (
+                  //       // <Image source={downarrow} style={{width: 12, height: 12}} />
+                  //       <FontAwesome5Icon
+                  //         name="caret-down"
+                  //         style={{fontSize: 15}}
+                  //       />
+                  //     );
+                  //   }}
                   // />
+
+                  <TextInput
+                    key={index}
+                    multiline={true}
+                    numberOfLines={item.line}
+                    name={item.name}
+                    value={this.state.profile[item.name]}
+                    style={styles.input}
+                    placeholder={item.placeholder}
+                    onChangeText={(text) =>
+                      this.updateProfileData(item.name, text)
+                    }
+                  />
                 );
               }
             })}
             {this.state.currentStep < steps.length && (
-              <TouchableOpacity
-                disabled={this.checkValidation(step.validation)}
-                onPress={() => this.chaneSteps(this.state.currentStep)}>
-                <ProfileNext
-                  source={ProfileNextIcon}
-                  style={
-                    this.checkValidation(step.validation) ? {opacity: 0.4} : {}
-                  }></ProfileNext>
-              </TouchableOpacity>
+              <View style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'center'}}>
+                {this.state.currentStep > 1 && (
+                  <TouchableOpacity onPress={() => this.previousSteps(this.state.currentStep)}>
+                    <ProfilePrev source={ProfilePrevIcon}></ProfilePrev>
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity disabled={this.checkValidation(step.validation)} onPress={() => this.chaneSteps(this.state.currentStep)}>
+                  <ProfileNext source={ProfileNextIcon} style={this.checkValidation(step.validation) ? {opacity: 0.4} : {}}></ProfileNext>
+                </TouchableOpacity>
+              </View>
             )}
             {this.state.currentStep == steps.length && (
               <Button
@@ -1226,6 +1246,13 @@ const ProfileNext = styled(Image)({
   height: 70,
   margin: 'auto',
   marginTop: 20,
+});
+const ProfilePrev = styled(Image)({
+  width: 70,
+  height: 70,
+  margin: 'auto',
+  marginTop: 20,
+  marginRight: 15
 });
 const Heading = styled(Text)({
   fontSize: 20,

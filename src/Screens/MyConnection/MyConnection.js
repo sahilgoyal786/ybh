@@ -30,9 +30,12 @@ class MyConnection extends React.Component {
   }
   componentDidMount() {
     const user = this.context;
-    if (user.length) {
-      this.LoadConnections(user[0].token);
-    }
+    const {navigation} = this.props;
+    navigation.addListener('focus', () => {
+      if(user.length){
+        this.LoadConnections(user[0].token);
+      }
+    });
   }
   LoadConnections = (token) => {
     try {
@@ -200,7 +203,7 @@ class MyConnection extends React.Component {
             bottom: -100,
           }}
           resizeMode="contain"></Image>
-        <Header title="My Connections" backButton="true" searchBtn="true" />
+        <Header title="My Connections" backButton="true" searchBtn="true" myProfileBtn="true"/>
         <ScrollView
           alwaysBounceHorizontal={false}
           alwaysBounceVertical={false}

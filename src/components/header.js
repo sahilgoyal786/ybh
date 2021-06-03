@@ -2,7 +2,7 @@ import React, {Component, useContext} from 'react';
 import {Text, StyleSheet, View, TouchableOpacity, Image} from 'react-native';
 import {useNavigation,DrawerActions} from '@react-navigation/native';
 import styled from 'styled-components/native';
-import {menu,headerView,search,fillter} from '../common/images';
+import {menu,headerView,search,fillter,profileWhiteIcon} from '../common/images';
 import ResponsiveImage from 'react-native-responsive-image';
 import {
   heightPercentageToDP,
@@ -12,7 +12,7 @@ import {backicon} from '../common/images';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import userDetailContext from '../common/userDetailContext';
 
-const Header = ({title,backButton=false,showRightDrawer=true,searchBtn=false,userImage=false,filterButton=false}) => {
+const Header = ({title,backButton=false,showRightDrawer=true,searchBtn=false,userImage=false,filterButton=false,myProfileBtn=false}) => {
   const navigation = useNavigation();
   return (
     <View style={{width: widthPercentageToDP(100), height: 120}}>
@@ -64,6 +64,11 @@ const Header = ({title,backButton=false,showRightDrawer=true,searchBtn=false,use
             </View>
           </TouchableWithoutFeedback>
         </View>
+        {myProfileBtn !== false && (
+          <TouchableOpacity onPress={() => navigation.navigate('MyProfile')}>
+            <MenuIcon source={profileWhiteIcon} initHeight="30" initWidth="30" />
+          </TouchableOpacity>
+        )}
         {filterButton !== false && (
           <TouchableOpacity onPress={() => navigation.navigate('Filter')}>
             <MenuIcon source={fillter} initHeight="30" initWidth="30" />
