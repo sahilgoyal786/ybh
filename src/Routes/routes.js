@@ -76,8 +76,6 @@ function HomeComponent() {
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="MyConnection" component={MyConnection} />
-      <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="Thrivedetails" component={Thrivedetails} />
       <Stack.Screen name="VotingPage" component={VotingPage} />
       <Stack.Screen name="Thrive" component={Thrive} />
@@ -329,6 +327,8 @@ function Routes() {
                     <Stack.Screen name="UserProfile" component={UserProfile} />
                     <Stack.Screen name="MyProfile" component={MyProfile} />
                     <Stack.Screen name="EditMyProfile" component={EditMyProfile} />
+                    <Stack.Screen name="MyConnection" component={MyConnection} />
+                    <Stack.Screen name="Search" component={Search} />
                     <Stack.Screen name="MessageLists" component={MessageLists} />
                     <Stack.Screen name="ChatMessage" component={ChatMessage} />
                     <Stack.Screen name="Filter" component={Filter} />

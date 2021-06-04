@@ -13,7 +13,7 @@ export default class PushNotificationManager extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {notification: null, dialogVisible: false, dialogMatchVisible: false, dialogMatchResponseVisible: false, dialogMessageVisible: false};
+    this.state = {notification: null, dialogVisible: false, dialogMessageVisible: false};
   }
 
   componentDidMount() {
@@ -154,12 +154,6 @@ export default class PushNotificationManager extends React.Component {
         case 'voting':
           storage.removeData(EndPoints.votingImages);
         break;
-        case 'match_profile_request':
-          this.setState({dialogVisible: false, dialogMatchVisible: true});
-        break;
-        case 'match_profile_response':
-          this.setState({dialogMatchResponseVisible: true,dialogVisible: false});
-        break;
         case 'received_message':
           this.setState({dialogMessageVisible: true,dialogVisible: false});
         break;
@@ -169,52 +163,6 @@ export default class PushNotificationManager extends React.Component {
       }
     }
   };
-  acceptUserProfile = (notification) => {
-    let fromUser = JSON.parse(notification.payload.request_from);
-    let toUser = JSON.parse(notification.payload.request_to);
-    try{
-      network.getResponse(
-        EndPoints.acceptProfileRequest,
-        'POST',
-        {profile_id: toUser.id,user_id: fromUser.user_id},
-        '',
-        (response) => {
-          console.log(response);
-          this.setState({dialogMatchVisible: false})
-        },
-        (error) => {
-          console.log(error);
-          this.setState({dialogMatchVisible: false})
-        },
-      );
-    }catch(exception){
-      console.log(exception);
-    }
-  };
-  declineUserProfile = (notification) => {
-    let fromUser = JSON.parse(notification.payload.request_from);
-    let toUser = JSON.parse(notification.payload.request_to);
-    try{
-      network.getResponse(
-        EndPoints.declineProfileRequest,
-        'POST',
-        {profile_id: toUser.id,user_id: fromUser.user_id},
-        '',
-        (response) => {
-          console.log(response);
-          this.setState({dialogMatchVisible: false});
-        },
-        (error) => {
-          console.log(error);
-          this.setState({dialogMatchVisible: false});
-        },
-      );
-    }catch(exception){
-      this.setState({dialogMatchVisible: false});
-      console.log(exception);
-    }
-  };
-
   render() {
     const {children} = this.props;
     return (
@@ -237,53 +185,6 @@ export default class PushNotificationManager extends React.Component {
             positiveButton={{
               title: 'OK',
               onPress: () => this.setState({dialogVisible: false}),
-            }}
-          />
-        )}
-        {this.state.notification !== null && (
-          <ConfirmDialog
-            title={
-              Platform.OS == 'android'
-                ? this.state.notification.payload['gcm.notification.title']
-                : this.state.notification.payload['title']
-            }
-            message={
-              Platform.OS == 'android'
-                ? this.state.notification.payload['gcm.notification.body']
-                : this.state.notification.payload['body']
-            }
-            visible={this.state.dialogMatchResponseVisible}
-            onTouchOutside={() => this.setState({dialogMatchResponseVisible: false})}
-            positiveButton={{
-              title: 'Visit Profile',
-              onPress: () => {
-                this.setState({dialogMatchResponseVisible: false});
-                RootNavigation.navigate('UserProfile',{profile_id: this.state.notification.payload.profile_id});
-              },
-            }}
-          />
-        )}
-        {this.state.notification !== null && (
-          <ConfirmDialog
-            title={
-              Platform.OS == 'android'
-                ? this.state.notification.payload['gcm.notification.title']
-                : this.state.notification.payload['title']
-            }
-            message={
-              Platform.OS == 'android'
-                ? this.state.notification.payload['gcm.notification.body']
-                : this.state.notification.payload['body']
-            }
-            visible={this.state.dialogMatchVisible}
-            onTouchOutside={() => this.setState({dialogMatchVisible: false})}
-            positiveButton={{
-              title: 'Accept',
-              onPress: () => this.acceptUserProfile(this.state.notification)
-            }}
-            negativeButton={{
-              title: 'Decline',
-              onPress: () => this.declineUserProfile(this.state.notification)
             }}
           />
         )}

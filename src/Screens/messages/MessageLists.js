@@ -64,8 +64,8 @@ class MessageLists extends React.Component{
                   <TouchableWithoutFeedback key={index} onPress={() => navigation.navigate('ChatMessage',{chat_id: chat.id,name: chat.user.username,receiver: chat.user.user_id,photo: chat.user.photo})}>
                     <MessageList>
                       <MessageIcon>
-                        <UserImage source={chat.user.photo ? {uri: chat.user.photo} : placeholderProfilePhoto} resizeMode="contain"></UserImage>
-                        <UserStatus style={{backgroundColor: '#04e534'}}></UserStatus>
+                        <UserImage source={chat.user.photo ? {uri: chat.user.photo} : placeholderProfilePhoto} resizeMode="cover"></UserImage>
+                        {/* <UserStatus style={{backgroundColor: '#04e534'}}></UserStatus> */}
                       </MessageIcon>
                       <MessageData>
                         <UserName>{chat.user.username}</UserName>
@@ -114,7 +114,7 @@ const MessageData = styled(View)({
 const UserImage = styled(Image)({
   width: 80,
   height: 80,
-  borderRadius: 100
+  borderRadius: 80
 });
 const UserName = styled(Text)({
   fontSize: 18,

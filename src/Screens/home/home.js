@@ -25,7 +25,7 @@ import userDetailContext from '../../common/userDetailContext';
 import FastImage from 'react-native-fast-image';
 
 import ContentLoader from 'react-native-easy-content-loader';
-import {bottomCurve, MatchmakingBanner} from '../../common/images';
+import {bottomCurve, MatchLogo} from '../../common/images';
 import LeaderBoard from '../../components/leaderBoard';
 import Button from '../../components/button';
 import network from '../../components/apis/network';
@@ -337,20 +337,24 @@ const Home = () => {
         {},
         userDetail.token || '',
         (response) => {
-          if (response.mprofile && response.mpverified) {
+          if(response && response.status == "activate"){
             return navigation.navigate('MyConnection');
-          } else if (response.mprofile && !response.mpverified) {
+          }else if(response && response.status == "deactivate"){
+            Toast.show({text: 'Your profile is deactivated by Admin'});
+          }else if(response && response.status == "pending_verification" && response.verify_profile_photo){
+            Toast.show({text: 'Your profile is awaiting for Admin Approval.'});
+          }else if(response && response.status == "pending_verification"){
             return navigation.navigate('PhotoVerification');
-          } else {
+          }else{
             return navigation.navigate('matchmakingTC');
           }
         },
         (error) => {
-          return navigation.navigate('matchmakingTC');
+          console.log('error', error);
         },
       );
     } catch (exception) {
-      return navigation.navigate('matchmakingTC');
+      console.log('exception', exception);
     }
   };
 
@@ -496,29 +500,8 @@ const Home = () => {
               paddingLeft: 10,
               paddingRight: 10,
             }}>
-            <TouchableOpacity
-              onPress={() => getMatchMakingProfile()}
-              style={{marginBottom: 10}}>
-              <View
-                style={{
-                  backgroundColor: '#7b42a5',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  paddingVertical: 20,
-                  borderRadius: 6,
-                }}>
-                <Text style={{color: 'white'}}>Match Making</Text>
-              </View>
-              {/* <Image
-                source={MatchmakingBanner}
-                style={{
-                  width: '100%',
-                  height: 90,
-                  padding: 0,
-                  marginBottom: 10,
-                }}
-                resizeMode="contain"
-              /> */}
+            <TouchableOpacity onPress={() => getMatchMakingProfile()} style={{marginBottom: 10}}>
+              <Image source={MatchLogo} style={{width: '100%',height: 130,padding: 0}} resizeMode="contain"/>
             </TouchableOpacity>
             <LeaderBoard userDetailTemp={userDetail} />
           </View>

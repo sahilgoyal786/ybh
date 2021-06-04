@@ -152,7 +152,7 @@ class Search extends React.Component {
           }}
           resizeMode="contain"
         />
-        <Header title="Search" backButton="true" filterButton="true" />
+        <Header title="Search" backButton="true" filterButton="true" showRightDrawer={false}/>
         {this.state.profiles && (
           <ScrollView
             alwaysBounceHorizontal={false}

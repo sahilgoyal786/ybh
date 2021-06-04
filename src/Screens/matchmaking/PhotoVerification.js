@@ -38,7 +38,7 @@ class PhotoVerification extends React.Component {
       maxWidth: 1000,
       maxHeight: 1000,
     };
-    ImagePicker.launchImageLibrary(options, (response) => {
+    ImagePicker.launchCamera(options, (response) => {
       if (response.uri) {
         if (response.fileSize < 5000000) {
           this.verifyProfileImage(response);
@@ -60,7 +60,7 @@ class PhotoVerification extends React.Component {
         (response) => {
           this.setState({profile_photo: response.url, isLoading: false});
           Toast.show({text: response.message});
-          navigation.navigate('MyConnection');
+          navigation.navigate('Home');
         },
         (error) => {
           this.setState({isLoading: false});

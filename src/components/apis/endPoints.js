@@ -67,6 +67,7 @@ const EndPoints = {
 
   ProfileImageUpload: {url: 'matchmaking/image-upload'},
   myConnections: {url: 'matchmaking/profiles'},
+  pendingConnections: {url: 'matchmaking/pending-profiles'},
   getMatchProfile: {url: 'matchmaking/profile/'},
   myProfile: {url: 'matchmaking/my-profile'},
   checkMatchProfile: {url: 'matchmaking/profile/check'},

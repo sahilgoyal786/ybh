@@ -90,7 +90,7 @@ export const PlanBackground = require('../assets/icons/matchmaking/plan-backgrou
 export const PlanTop = require('../assets/icons/matchmaking/plan-top.png');
 export const PlanBottom = require('../assets/icons/matchmaking/plan-bottom.png');
 
-export const MatchmakingBanner = require('../assets/icons/matchmaking/banner.png');
+export const MatchLogo = require('../assets/icons/matchmaking/match-logo.png');
 export const MatchIcons = {
   icon1: require('../assets/icons/matchmaking/icon1.png'),
   icon2: require('../assets/icons/matchmaking/icon2.png'),
