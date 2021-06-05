@@ -872,7 +872,7 @@ class PersonalInfo extends React.Component {
                       value={this.state.profile[item.name]}
                       style={styles.input}
                       placeholder={item.placeholder}
-                      placeholderTextColor={"#111"}
+                      placeholderTextColor={"#484848"}
                       onChangeText={(text) =>
                         this.updateProfileData(item.name, text)
                       }
@@ -890,7 +890,7 @@ class PersonalInfo extends React.Component {
                           : {}
                       }
                       placeholder={item.placeholder}
-                      placeholderTextColor={"#111"}
+                      placeholderTextColor={"#484848"}
                       onChangeText={(text) =>
                         this.validateEmailData(item.name, text)
                       }
@@ -912,7 +912,7 @@ class PersonalInfo extends React.Component {
                         style={styles.input}
                         pointerEvents="box-only"
                         placeholder={item.placeholder}
-                        placeholderTextColor={"#111"}
+                        placeholderTextColor={"#484848"}
                       />
                       {this.state.showDatePicker &&
                         this.state.showDatePicker == item.name && (
@@ -1046,7 +1046,7 @@ class PersonalInfo extends React.Component {
                     value={this.state.profile[item.name]}
                     style={styles.input}
                     placeholder={item.placeholder}
-                    placeholderTextColor={"#111"}
+                    placeholderTextColor={"#484848"}
                     onChangeText={(text) =>
                       this.updateProfileData(item.name, text)
                     }
@@ -1110,7 +1110,7 @@ class PersonalInfo extends React.Component {
                     value={this.state.profile[item.name]}
                     style={styles.input}
                     placeholder={item.placeholder}
-                    placeholderTextColor={"#111"}
+                    placeholderTextColor={"#484848"}
                     onChangeText={(text) =>
                       this.updateProfileData(item.name, text)
                     }

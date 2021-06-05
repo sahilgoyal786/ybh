@@ -518,16 +518,16 @@ class EditMyProfile extends React.Component{
                             if(item.type == 'text'){
                                 if(item.subType == 'text'){
                                     return (
-                                        <TextInput key={index} name={item.name} value={this.state.profile[item.name]} style={styles.input} placeholder={item.placeholder} placeholderTextColor={"#111"} onChangeText={(text) => this.updateProfileData(item.name, text)}/>
+                                        <TextInput key={index} name={item.name} value={this.state.profile[item.name]} style={styles.input} placeholder={item.placeholder} placeholderTextColor={"#484848"} onChangeText={(text) => this.updateProfileData(item.name, text)}/>
                                     );
                                 }else if (item.subType == 'email'){
                                     return (
-                                        <EmailInput key={index} editable={item.editable} name={item.name} value={this.state.profile[item.name]} style={!this.state.emailValidate && this.state.profile[item.name] ? {borderBottomColor: '#f00'} : {}} placeholder={item.placeholder} placeholderTextColor={"#111"} onChangeText={(text) => this.validateEmailData(item.name, text)}/>
+                                        <EmailInput key={index} editable={item.editable} name={item.name} value={this.state.profile[item.name]} style={!this.state.emailValidate && this.state.profile[item.name] ? {borderBottomColor: '#f00'} : {}} placeholder={item.placeholder} placeholderTextColor={"#484848"} onChangeText={(text) => this.validateEmailData(item.name, text)}/>
                                     );
                                 }else if(item.subType == 'datepicker'){
                                     return (
                                         <View key={index}>
-                                            <TextInput onTouchStart={() => this.setShowDatePicker(item.name)} name={item.name} caretHidden={true} value={this.state.profile[item.name] ? this.state.profile[item.name] : ''} style={styles.input} pointerEvents="box-only" placeholder={item.placeholder} placeholderTextColor={"#111"}/>
+                                            <TextInput onTouchStart={() => this.setShowDatePicker(item.name)} name={item.name} caretHidden={true} value={this.state.profile[item.name] ? this.state.profile[item.name] : ''} style={styles.input} pointerEvents="box-only" placeholder={item.placeholder} placeholderTextColor={"#484848"}/>
                                             {this.state.showDatePicker && this.state.showDatePicker == item.name && (
                                                 <DateTimePicker testID="dateTimePicker"
                                                     value={
@@ -607,7 +607,7 @@ class EditMyProfile extends React.Component{
                                 }
                             }else if(item.type == 'textarea'){
                                 return (
-                                    <TextInput key={index} multiline={true} value={this.state.profile[item.name]} numberOfLines={item.line} name={item.name} style={styles.input} placeholder={item.placeholder} placeholderTextColor={"#111"} onChangeText={(text) => this.updateProfileData(item.name, text)}/>
+                                    <TextInput key={index} multiline={true} value={this.state.profile[item.name]} numberOfLines={item.line} name={item.name} style={styles.input} placeholder={item.placeholder} placeholderTextColor={"#484848"} onChangeText={(text) => this.updateProfileData(item.name, text)}/>
                                 );
                             }else if(item.type == 'dropdown'){
                                 return (
@@ -637,7 +637,7 @@ class EditMyProfile extends React.Component{
                                     //         );
                                     //     }}
                                     // />
-                                    <TextInput key={index} value={this.state.profile[item.name]} numberOfLines={item.line} name={item.name} style={styles.input} placeholder={item.placeholder} placeholderTextColor={"#111"} onChangeText={(text) => this.updateProfileData(item.name, text)}/>
+                                    <TextInput key={index} value={this.state.profile[item.name]} numberOfLines={item.line} name={item.name} style={styles.input} placeholder={item.placeholder} placeholderTextColor={"#484848"} onChangeText={(text) => this.updateProfileData(item.name, text)}/>
                                 );
                             }
                         })}
