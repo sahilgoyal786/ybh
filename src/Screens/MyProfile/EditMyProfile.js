@@ -611,33 +611,33 @@ class EditMyProfile extends React.Component{
                                 );
                             }else if(item.type == 'dropdown'){
                                 return (
-                                    // <RNPickerSelect key={index} placeholder={{label: item.placeholder,key: Math.random().toString()}}
-                                    //     items={item.options}
-                                    //     style={{
-                                    //         inputAndroid: {
-                                    //             ...{backgroundColor: 'transparent',paddingRight: 35,color: 'black'},
-                                    //             ...styles.input,
-                                    //         },
-                                    //         inputIOS: {
-                                    //             ...{backgroundColor: 'transparent',paddingRight: 35,color: 'black'},
-                                    //             ...styles.input,
-                                    //         },
-                                    //         iconContainer: Platform.OS == 'android' ? {bottom: 36,right: 20} : {},
-                                    //     }}
-                                    //     value={this.state.profile[item.name]}
-                                    //     onValueChange={(value) => {
-                                    //         if(value !== this.state.profile[item.name]){
-                                    //             this.updateProfileData(item.name, value);
-                                    //         }
-                                    //     }}
-                                    //     useNativeAndroidPickerStyle={false}
-                                    //     Icon={() => {
-                                    //         return (
-                                    //             <FontAwesome5Icon name="caret-down" style={{fontSize: 15}}/>
-                                    //         );
-                                    //     }}
-                                    // />
-                                    <TextInput key={index} value={this.state.profile[item.name]} numberOfLines={item.line} name={item.name} style={styles.input} placeholder={item.placeholder} placeholderTextColor={"#484848"} onChangeText={(text) => this.updateProfileData(item.name, text)}/>
+                                    <RNPickerSelect key={index} placeholder={{label: item.placeholder,key: Math.random().toString()}}
+                                        items={item.options}
+                                        style={{
+                                            inputAndroid: {
+                                                ...{backgroundColor: 'transparent',paddingRight: 35,color: 'black'},
+                                                ...styles.input,
+                                            },
+                                            inputIOS: {
+                                                ...{backgroundColor: 'transparent',paddingRight: 35,color: 'black'},
+                                                ...styles.input,
+                                            },
+                                            iconContainer: Platform.OS == 'android' ? {bottom: 36,right: 20} : {},
+                                        }}
+                                        value={this.state.profile[item.name]}
+                                        onValueChange={(value) => {
+                                            if(value !== this.state.profile[item.name]){
+                                                this.updateProfileData(item.name, value);
+                                            }
+                                        }}
+                                        useNativeAndroidPickerStyle={false}
+                                        Icon={() => {
+                                            return (
+                                                <FontAwesome5Icon name="caret-down" style={{fontSize: 15}}/>
+                                            );
+                                        }}
+                                    />
+                                    // <TextInput key={index} value={this.state.profile[item.name]} numberOfLines={item.line} name={item.name} style={styles.input} placeholder={item.placeholder} placeholderTextColor={"#484848"} onChangeText={(text) => this.updateProfileData(item.name, text)}/>
                                 );
                             }
                         })}

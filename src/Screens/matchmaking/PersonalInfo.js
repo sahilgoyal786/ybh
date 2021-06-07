@@ -1054,67 +1054,66 @@ class PersonalInfo extends React.Component {
                 );
               } else if (item.type == 'dropdown') {
                 return (
-                  // <RNPickerSelect
-                  //   placeholder={{
-                  //     label: item.placeholder,
-                  //     key: Math.random().toString(),
-                  //   }}
-                  //   items={item.options}
-                  //   style={{
-                  //     inputAndroid: {
-                  //       ...{
-                  //         backgroundColor: 'transparent',
-                  //         paddingRight: 35,
-                  //         color: 'black',
-                  //       },
-                  //       ...styles.input,
-                  //     },
-                  //     inputIOS: {
-                  //       ...{
-                  //         backgroundColor: 'transparent',
-                  //         paddingRight: 35,
-                  //         color: 'black',
-                  //       },
-                  //       ...styles.input,
-                  //     },
-                  //     iconContainer:
-                  //       Platform.OS == 'android'
-                  //         ? {
-                  //             bottom: 36,
-                  //             right: 20,
-                  //           }
-                  //         : {},
-                  //   }}
-                  //   value={this.state.profile[item.name]}
-                  //   onValueChange={(value) => {
-                  //     if (value !== this.state.profile[item.name])
-                  //       this.updateProfileData(item.name, value);
-                  //   }}
-                  //   useNativeAndroidPickerStyle={false}
-                  //   Icon={() => {
-                  //     return (
-                  //       // <Image source={downarrow} style={{width: 12, height: 12}} />
-                  //       <FontAwesome5Icon
-                  //         name="caret-down"
-                  //         style={{fontSize: 15}}
-                  //       />
-                  //     );
-                  //   }}
-                  // />
-
-                  <TextInput
-                    key={index}
-                    multiline={true}
-                    numberOfLines={item.line}
-                    name={item.name}
+                  <RNPickerSelect
+                    placeholder={{
+                      label: item.placeholder,
+                      key: Math.random().toString(),
+                    }}
+                    items={item.options}
+                    style={{
+                      inputAndroid: {
+                        ...{
+                          backgroundColor: 'transparent',
+                          paddingRight: 35,
+                          color: 'black',
+                        },
+                        ...styles.input,
+                      },
+                      inputIOS: {
+                        ...{
+                          backgroundColor: 'transparent',
+                          paddingRight: 35,
+                          color: 'black',
+                        },
+                        ...styles.input,
+                      },
+                      iconContainer:
+                        Platform.OS == 'android'
+                          ? {
+                              bottom: 36,
+                              right: 20,
+                            }
+                          : {},
+                    }}
                     value={this.state.profile[item.name]}
-                    style={styles.input}
-                    placeholder={item.placeholder}
-                    placeholderTextColor={"#484848"}
-                    onChangeText={(text) =>
-                      this.updateProfileData(item.name, text)
-                    }
+                    onValueChange={(value) => {
+                      if (value !== this.state.profile[item.name])
+                        this.updateProfileData(item.name, value);
+                    }}
+                    useNativeAndroidPickerStyle={false}
+                    Icon={() => {
+                      return (
+                        // <Image source={downarrow} style={{width: 12, height: 12}} />
+                        <FontAwesome5Icon
+                          name="caret-down"
+                          style={{fontSize: 15}}
+                        />
+                      );
+                    }}
                   />
+                  // <TextInput
+                  //   key={index}
+                  //   multiline={true}
+                  //   numberOfLines={item.line}
+                  //   name={item.name}
+                  //   value={this.state.profile[item.name]}
+                  //   style={styles.input}
+                  //   placeholder={item.placeholder}
+                  //   placeholderTextColor={"#484848"}
+                  //   onChangeText={(text) =>
+                  //     this.updateProfileData(item.name, text)
+                  //   }
+                  // />
                 );
               }
             })}
