@@ -32,11 +32,11 @@ class MyConnection extends React.Component {
   componentDidMount() {
     const user = this.context;
     const {navigation} = this.props;
-    //navigation.addListener('focus', () => {
+    navigation.addListener('focus', () => {
       if(user.length){
         this.LoadConnections(user[0].token);
       }
-    //});
+    });
   }
   LoadConnections = (token) => {
     try {
@@ -285,7 +285,7 @@ class MyConnection extends React.Component {
             bottom: -100,
           }}
           resizeMode="contain"></Image>
-        <Header title="My Connections" backButton="true" searchBtn="true" myProfileBtn="true" showRightDrawer={false}/>
+        <Header title="My Connections" backButton="true" searchBtn="true" myProfileBtn="true" chatBtn={true} showRightDrawer={false}/>
         <TopBar>
           <TopBarInner>
             <ItemLeft 

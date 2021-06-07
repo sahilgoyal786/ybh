@@ -22,9 +22,12 @@ class MessageLists extends React.Component{
   }
   componentDidMount(){
     const user = this.context;
-    if(user.length){
-      this.loadUserChats(user[0].token);
-    }
+    const {navigation} = this.props;
+    navigation.addListener('focus', () => {
+      if(user.length){
+        this.loadUserChats(user[0].token);
+      }
+    });
   }
   loadUserChats = (userToken) => {
     this.setState({isLoading: true});
@@ -64,8 +67,7 @@ class MessageLists extends React.Component{
                   <TouchableWithoutFeedback key={index} onPress={() => navigation.navigate('ChatMessage',{chat_id: chat.id,name: chat.user.username,receiver: chat.user.user_id,photo: chat.user.photo})}>
                     <MessageList>
                       <MessageIcon>
-                        <UserImage source={chat.user.photo ? {uri: chat.user.photo} : placeholderProfilePhoto} resizeMode="cover"></UserImage>
-                        {/* <UserStatus style={{backgroundColor: '#04e534'}}></UserStatus> */}
+                        <UserImage source={(chat.user && chat.user.photo) ? {uri: chat.user.photo} : placeholderProfilePhoto} resizeMode="cover"></UserImage>
                       </MessageIcon>
                       <MessageData>
                         <UserName>{chat.user.username}</UserName>

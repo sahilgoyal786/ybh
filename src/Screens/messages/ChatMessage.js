@@ -37,12 +37,19 @@ class ChatMessage extends React.Component {
   }
   componentDidMount() {
     const user = this.context;
+    const {navigation} = this.props;
     if (user.length) {
       this.loadUserChatMessages(user[0].token);
     }
+    let interval = setInterval(() => {
+      this.loadChatMessages();
+    },10000);
+    navigation.addListener('blur', () => {
+      clearInterval(interval);
+    });
   }
   loadUserChatMessages = (userToken) => {
-    this.setState({isLoading: true});
+    this.setState({token: userToken,isLoading: true});
     let getChatMessages = {url: 'chat/messages/' + this.state.chat_id};
     try {
       network.getResponse(
@@ -51,19 +58,15 @@ class ChatMessage extends React.Component {
         {},
         userToken,
         (response) => {
-          this.setState({
-            messages: response,
-            token: userToken,
-            isLoading: false,
-          });
+          this.setState({messages: response,isLoading: false});
         },
         (error) => {
-          this.setState({token: userToken, isLoading: false});
+          this.setState({isLoading: false});
           console.log('error', error);
         },
       );
     } catch (exception) {
-      this.setState({token: userToken, isLoading: false});
+      this.setState({isLoading: false});
       console.log('exception', exception);
     }
   };
@@ -103,6 +106,27 @@ class ChatMessage extends React.Component {
         this.setState({isLoading: false});
         console.log('exception', exception);
       }
+    }
+  };
+  loadChatMessages = () => {
+    let chatMessages = {url: 'chat/messages/' + this.state.chat_id};
+    try{
+      network.getResponse(
+        chatMessages,
+        'GET',
+        {},
+        this.state.token,
+        (response) => {
+          if(response && response.length > this.state.messages.length){
+            this.setState({messages: response});
+          }
+        },
+        (error) => {
+          console.log('error', error);
+        },
+      );
+    }catch(exception){
+      console.log('exception', exception);
     }
   };
   render() {
