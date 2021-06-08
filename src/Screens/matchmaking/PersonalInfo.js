@@ -86,7 +86,7 @@ class PersonalInfo extends React.Component {
   }
   componentDidMount() {
     const user = this.context;
-    if (user.length) {
+    if(user.length){
       this.updateAccessToken(user[0].token);
     }
     storage.getData('myprofile').then((myprofile) => {

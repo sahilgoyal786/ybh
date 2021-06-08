@@ -337,14 +337,16 @@ const Home = () => {
         {},
         userDetail.token || '',
         (response) => {
-          if(response && response.status == "activate"){
+          if(response.profile && response.profile.status == "activate"){
             return navigation.navigate('MyConnection');
-          }else if(response && response.status == "deactivate"){
+          }else if(response.profile && response.profile.status == "deactivate"){
             Toast.show({text: 'Your profile is deactivated by Admin'});
-          }else if(response && response.status == "pending_verification" && response.verify_profile_photo){
+          }else if(response.profile && response.profile.status == "pending_verification" && response.profile.verify_profile_photo){
             Toast.show({text: 'Your profile is awaiting for Admin Approval.'});
-          }else if(response && response.status == "pending_verification"){
+          }else if(response.profile && response.profile.status == "pending_verification" && response.subscription){
             return navigation.navigate('PhotoVerification');
+          }else if(response.profile && response.profile.status == "pending_verification"){
+            return navigation.navigate('Plans');
           }else{
             return navigation.navigate('matchmakingTC');
           }

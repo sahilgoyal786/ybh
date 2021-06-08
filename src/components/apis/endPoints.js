@@ -88,5 +88,6 @@ const EndPoints = {
   getChatMessages: {url: 'chat/messages/{id}'},
   sendMessage: {url: 'chat/message/send'},
   deleteMessage: {url: 'chat/message/delete'},
+  checkSubscriptions: {url: 'check-subscription'},
 };
 export default EndPoints;
