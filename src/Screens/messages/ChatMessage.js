@@ -6,6 +6,8 @@ import {
 } from '../../common/images';
 import styled from 'styled-components/native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
+import InvertibleScrollView from 'react-native-invertible-scroll-view';
+
 import {
   StyleSheet,
   Text,
@@ -13,14 +15,18 @@ import {
   ScrollView,
   View,
   Image,
+  KeyboardAvoidingView,
   ActivityIndicator,
   TouchableWithoutFeedback,
+  Platform,
+  ListView,
 } from 'react-native';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import Header from '../../components/header';
 import {Toast} from 'native-base';
+import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 class ChatMessage extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {
@@ -43,13 +49,13 @@ class ChatMessage extends React.Component {
     }
     let interval = setInterval(() => {
       this.loadChatMessages();
-    },10000);
+    }, 10000);
     navigation.addListener('blur', () => {
       clearInterval(interval);
     });
   }
   loadUserChatMessages = (userToken) => {
-    this.setState({token: userToken,isLoading: true});
+    this.setState({token: userToken, isLoading: true});
     let getChatMessages = {url: 'chat/messages/' + this.state.chat_id};
     try {
       network.getResponse(
@@ -58,7 +64,7 @@ class ChatMessage extends React.Component {
         {},
         userToken,
         (response) => {
-          this.setState({messages: response,isLoading: false});
+          this.setState({messages: response, isLoading: false});
         },
         (error) => {
           this.setState({isLoading: false});
@@ -110,14 +116,14 @@ class ChatMessage extends React.Component {
   };
   loadChatMessages = () => {
     let chatMessages = {url: 'chat/messages/' + this.state.chat_id};
-    try{
+    try {
       network.getResponse(
         chatMessages,
         'GET',
         {},
         this.state.token,
         (response) => {
-          if(response && response.length > this.state.messages.length){
+          if (response && response.length > this.state.messages.length) {
             this.setState({messages: response});
           }
         },
@@ -125,103 +131,249 @@ class ChatMessage extends React.Component {
           console.log('error', error);
         },
       );
-    }catch(exception){
+    } catch (exception) {
       console.log('exception', exception);
     }
   };
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
-        {this.state.isLoading && (
-          <ActivityIndicator
-            color="#fff"
-            size="large"
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: '#00000080',
-              zIndex: 9999,
-            }}
-          />
-        )}
-        <Image
-          source={bottomCurve}
-          style={{
-            width: widthPercentageToDP(100),
-            height: 200,
-            position: 'absolute',
-            bottom: -100,
-          }}
-          resizeMode="contain"
-        />
-        <Header
-          title={this.state.name}
-          backButton="true"
-          userImage={this.state.photo}
-          showRightDrawer={false}
-        />
-        <ScrollView
-          alwaysBounceHorizontal={false}
-          alwaysBounceVertical={false}
-          bounces={false}
-          style={{padding: 5, paddingTop: 20}}
-          contentContainerStyle={{paddingBottom: 0}}>
-          {this.state.messages && (
-            <View>
-              {this.state.messages.map((list, index) => {
-                if (list.receiver != this.state.receiver) {
-                  return (
-                    <MessageWrap key={index}>
+      //https://github.com/himanshuchauhan/react-native-whatsapp-ui
+      <View style={{flex: 1}}>
+        <View style={styles.header}></View>
+        <KeyboardAvoidingView behavior="padding" style={styles.keyboard}>
+          <FlatList
+            // enableEmptySections
+            // noScroll
+            renderScrollComponent={(props) => (
+              <InvertibleScrollView {...props} inverted />
+            )}
+            data={this.state.messages}
+            contentContainerStyle={{justifyContent: 'flex-end'}}
+            renderItem={(list, index) => {
+              return (
+                <MessageWrap>
+                  {list.receiver != this.state.receiver ? (
+                    <>
                       <UserMessage>
-                        <UserImage
-                          source={
-                            this.state.photo
-                              ? {uri: this.state.photo}
-                              : placeholderProfilePhoto
-                          }
-                          resizeMode="cover"></UserImage>
                         <UserTxtMsg>{list.message}</UserTxtMsg>
                       </UserMessage>
                       <Time>{list.time}</Time>
-                    </MessageWrap>
-                  );
-                } else {
-                  return (
-                    <MessageWrap key={index}>
+                    </>
+                  ) : (
+                    <>
                       <MyMessage>{list.message}</MyMessage>
                       <Time>{list.time}</Time>
-                    </MessageWrap>
-                  );
-                }
-              })}
-            </View>
-          )}
-        </ScrollView>
-        <MessageBottom>
-          <TextInput
-            name="message"
-            style={styles.input}
-            placeholderTextColor={'#fff'}
-            onChangeText={(text) => this.changeMessage(text)}
-            placeholder="Write a message..."
+                    </>
+                  )}
+                </MessageWrap>
+              );
+            }}
           />
-          <TouchableWithoutFeedback
-            disabled={this.state.message == null}
-            onPress={() => this.sendMessage()}>
-            <SendImage
-              source={SendIcon}
-              style={this.state.message == null ? {opacity: 0.4} : {}}
-              resizeMode="contain"></SendImage>
-          </TouchableWithoutFeedback>
-        </MessageBottom>
+          <View style={styles.input}>
+            <TextInput
+              style={{flex: 1}}
+              value={this.state.msg}
+              onChangeText={(msg) => this.setState({msg})}
+              blurOnSubmit={false}
+              onSubmitEditing={() => this.send()}
+              placeholder="Type a message"
+              returnKeyType="send"
+            />
+          </View>
+        </KeyboardAvoidingView>
       </View>
+
+      // <KeyboardAvoidingView
+      //   style={{flex: 1, backgroundColor: '#fff'}}
+      //   keyboardVerticalOffset={Platform.OS == 'ios' ? 400 : 0}>
+      //   {this.state.isLoading && (
+      //     <ActivityIndicator
+      //       color="#fff"
+      //       size="large"
+      //       style={{
+      //         position: 'absolute',
+      //         left: 0,
+      //         top: 0,
+      //         right: 0,
+      //         bottom: 0,
+      //         backgroundColor: '#00000080',
+      //         zIndex: 9999,
+      //       }}
+      //     />
+      //   )}
+      //   <Image
+      //     source={bottomCurve}
+      //     style={{
+      //       width: widthPercentageToDP(100),
+      //       height: 200,
+      //       position: 'absolute',
+      //       bottom: -100,
+      //     }}
+      //     resizeMode="contain"
+      //   />
+      //   <Header
+      //     title={this.state.name}
+      //     backButton="true"
+      //     userImage={this.state.photo}
+      //     showRightDrawer={false}
+      //   />
+      //   <ScrollView
+      //     alwaysBounceHorizontal={false}
+      //     alwaysBounceVertical={false}
+      //     bounces={false}
+      //     style={{padding: 5, paddingTop: 20}}
+      //     contentContainerStyle={{paddingBottom: 0}}>
+      //     {this.state.messages && (
+      //       <View>
+      //         {this.state.messages.map((list, index) => {
+      //           if (list.receiver != this.state.receiver) {
+      //             return (
+      //               <MessageWrap key={index}>
+      //                 <UserMessage>
+      //                   <UserImage
+      //                     source={
+      //                       this.state.photo
+      //                         ? {uri: this.state.photo}
+      //                         : placeholderProfilePhoto
+      //                     }
+      //                     resizeMode="cover"></UserImage>
+      //                   <UserTxtMsg>{list.message}</UserTxtMsg>
+      //                 </UserMessage>
+      //                 <Time>{list.time}</Time>
+      //               </MessageWrap>
+      //             );
+      //           } else {
+      //             return (
+      //               <MessageWrap key={index}>
+      //                 <MyMessage>{list.message}</MyMessage>
+      //                 <Time>{list.time}</Time>
+      //               </MessageWrap>
+      //             );
+      //           }
+      //         })}
+      //       </View>
+      //     )}
+      //   </ScrollView>
+      //   <MessageBottom>
+      //     <TextInput
+      //       name="message"
+      //       style={styles.input}
+      //       placeholderTextColor={'#fff'}
+      //       onChangeText={(text) => this.changeMessage(text)}
+      //       placeholder="Write a message..."
+      //     />
+      //     <TouchableWithoutFeedback
+      //       disabled={this.state.message == null}
+      //       onPress={() => this.sendMessage()}>
+      //       <SendImage
+      //         source={SendIcon}
+      //         style={this.state.message == null ? {opacity: 0.4} : {}}
+      //         resizeMode="contain"></SendImage>
+      //     </TouchableWithoutFeedback>
+      //   </MessageBottom>
+      // </KeyboardAvoidingView>
     );
   }
 }
+
 const styles = StyleSheet.create({
+  keyboard: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  image: {},
+  header: {
+    height: 65,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#075e54',
+  },
+  left: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  right: {
+    flexDirection: 'row',
+  },
+  chatTitle: {
+    color: '#fff',
+    fontWeight: '600',
+    margin: 10,
+    fontSize: 15,
+  },
+  chatImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    margin: 5,
+  },
+  input: {
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    padding: 10,
+    height: 40,
+    backgroundColor: '#fff',
+    margin: 10,
+    shadowColor: '#3d3d3d',
+    shadowRadius: 2,
+    shadowOpacity: 0.5,
+    shadowOffset: {
+      height: 1,
+    },
+  },
+  eachMsg: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    margin: 5,
+  },
+  rightMsg: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    margin: 5,
+    alignSelf: 'flex-end',
+  },
+  userPic: {
+    height: 40,
+    width: 40,
+    margin: 5,
+    borderRadius: 20,
+    backgroundColor: '#f8f8f8',
+  },
+  msgBlock: {
+    width: 220,
+    borderRadius: 5,
+    backgroundColor: '#ffffff',
+    padding: 10,
+    shadowColor: '#3d3d3d',
+    shadowRadius: 2,
+    shadowOpacity: 0.5,
+    shadowOffset: {
+      height: 1,
+    },
+  },
+  rightBlock: {
+    width: 220,
+    borderRadius: 5,
+    backgroundColor: '#97c163',
+    padding: 10,
+    shadowColor: '#3d3d3d',
+    shadowRadius: 2,
+    shadowOpacity: 0.5,
+    shadowOffset: {
+      height: 1,
+    },
+  },
+  msgTxt: {
+    fontSize: 15,
+    color: '#555',
+    fontWeight: '600',
+  },
+  rightTxt: {
+    fontSize: 15,
+    color: '#202020',
+    fontWeight: '600',
+  },
   input: {
     height: 45,
     padding: 10,
