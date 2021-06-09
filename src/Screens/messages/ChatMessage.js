@@ -37,6 +37,7 @@ class ChatMessage extends React.Component {
       photo: props.route.params.photo,
       isLoading: true,
       message: null,
+      hasMoreMessages: true,
       messages: [],
       token: null,
       page: 0,
@@ -59,6 +60,10 @@ class ChatMessage extends React.Component {
   loadUserChatMessages = (refresh = false) => {
     const user = this.context;
     let userToken = user[0].token;
+
+    if (!refresh && !this.state.hasMoreMessages) {
+      return;
+    }
     if (!refresh) {
       this.setState({isLoading: true});
     }
@@ -92,6 +97,8 @@ class ChatMessage extends React.Component {
               page: response.current_page,
               totalPage: response.last_page,
             });
+          } else {
+            this.setState({hasMoreMessages: false});
           }
         },
         (error) => {
@@ -143,6 +150,9 @@ class ChatMessage extends React.Component {
     }
   };
   render() {
+    let msgDate = null;
+    let lastMsgDate = null;
+    let dateTag = false;
     return (
       <View style={{flex: 1}}>
         <Header
@@ -161,23 +171,53 @@ class ChatMessage extends React.Component {
             alwaysBounceVertical={false}
             onEndReached={() => this.loadUserChatMessages()}
             onEndReachedThreshold={this.state.messages.length ? 0.5 : 0}
+            keyExtractor={() => Math.random()}
             data={this.state.messages}
             contentContainerStyle={{justifyContent: 'flex-end'}}
             renderItem={(list) => {
+              if (list.index == 0) {
+                msgDate = list.item.date;
+              } else if (msgDate !== list.item.date) {
+                lastMsgDate = msgDate;
+                msgDate = list.item.date;
+                dateTag = true;
+              } else {
+                dateTag = false;
+              }
+
               return (
-                <View style={styles.messageWrap} key={list.index}>
-                  {list.item.receiver != this.state.receiver ? (
-                    <View style={styles.userMessageWrap}>
-                      <Text style={styles.userTxtMsg}>{list.item.message}</Text>
-                      <Text style={styles.time}>{list.item.time}</Text>
+                <>
+                  {/* {dateTag && (
+                    <View style={styles.dateTagWrap}>
+                      <Text style={styles.dateTag}>{lastMsgDate}</Text>
                     </View>
-                  ) : (
-                    <>
-                      <Text style={styles.myMessage}>{list.item.message}</Text>
-                      <Text style={styles.time}>{list.item.time}</Text>
-                    </>
-                  )}
-                </View>
+                  )} */}
+                  <View style={styles.messageWrap}>
+                    {list.item.receiver != this.state.receiver ? (
+                      <View style={styles.userMessageWrap}>
+                        <View style={styles.userTxtMsg}>
+                          <Text style={styles.userTxtMsgTxt}>
+                            {list.item.message}
+                          </Text>
+                        </View>
+                        <Text style={styles.time}>
+                          {list.item.date + ' ' + list.item.time}
+                        </Text>
+                      </View>
+                    ) : (
+                      <>
+                        <View style={styles.myMessage}>
+                          <Text style={styles.myMessageTxt}>
+                            {list.item.message}
+                          </Text>
+                        </View>
+                        <Text style={styles.time}>
+                          {list.item.date + ' ' + list.item.time}
+                        </Text>
+                      </>
+                    )}
+                  </View>
+                </>
               );
             }}
           />
@@ -262,8 +302,10 @@ const styles = StyleSheet.create({
     shadowOffset: {
       height: 1,
     },
-    color: '#484848',
     marginBottom: 5,
+  },
+  userTxtMsgTxt: {
+    color: '#484848',
     fontSize: 15,
   },
   myMessage: {
@@ -281,9 +323,11 @@ const styles = StyleSheet.create({
     shadowOffset: {
       height: 1,
     },
-    color: '#fff',
     marginBottom: 5,
     marginLeft: 'auto',
+  },
+  myMessageTxt: {
+    color: '#fff',
     fontSize: 15,
   },
   time: {
