@@ -85,7 +85,7 @@ const EndPoints = {
   getChats: {url: 'chats'},
   createChat: {url: 'chat/create'},
   deleteChat: {url: 'chat/delete'},
-  getChatMessages: {url: 'chat/messages/{id}'},
+  getChatMessages: {url: 'chat/messages'},
   sendMessage: {url: 'chat/message/send'},
   deleteMessage: {url: 'chat/message/delete'},
   checkSubscriptions: {url: 'check-subscription'},

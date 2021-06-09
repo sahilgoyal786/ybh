@@ -1,14 +1,11 @@
 import React from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {bottomCurve, DotIcon, UserProfileIcons} from '../../common/images';
+import {DotIcon, UserProfileIcons} from '../../common/images';
 import styled from 'styled-components/native';
-import {widthPercentageToDP} from 'react-native-responsive-screen';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import {
   Text,
-  ScrollView,
   View,
   Image,
   TouchableWithoutFeedback,
@@ -16,6 +13,7 @@ import {
 } from 'react-native';
 import Header from '../../components/header';
 import {Toast} from 'native-base';
+import {FlatList} from 'react-native-gesture-handler';
 
 class MyConnection extends React.Component {
   static contextType = userDetailContext;
@@ -26,38 +24,43 @@ class MyConnection extends React.Component {
       token: '',
       showPopover: '',
       profiles: [],
-      activeTab: 'connected'
+      activeTab: 'connected',
+      page: 0,
+      totalPage: 1,
+      loadingMore: false,
     };
   }
   componentDidMount() {
     const user = this.context;
     const {navigation} = this.props;
     navigation.addListener('focus', () => {
-      if(user.length){
+      if (user.length) {
         this.LoadConnections(user[0].token);
       }
     });
   }
-  LoadConnections = (token) => {
+  LoadConnections = (userToken) => {
+    this.setState({token: userToken, isLoading: true});
     try {
       let connUrl = EndPoints.myConnections;
-      if(this.state.activeTab == "pending"){
+      if (this.state.activeTab == 'pending') {
         connUrl = EndPoints.pendingConnections;
       }
       network.getResponse(
         connUrl,
         'GET',
         {},
-        token,
+        userToken,
         (response) => {
           this.setState({
-            profiles: response,
-            token: token,
+            profiles: response.data,
+            page: response.current_page,
+            totalPage: response.last_page,
             isLoading: false,
           });
         },
         (error) => {
-          this.setState({token: token, isLoading: false});
+          this.setState({isLoading: false});
           console.log('error', error);
         },
       );
@@ -76,10 +79,10 @@ class MyConnection extends React.Component {
         this.state.token,
         (response) => {
           this.setState({isLoading: false});
-          if(response && response.message){
+          if (response && response.message) {
             Toast.show({text: response.message});
           }
-          this.state.profiles.splice(indexNum,1);
+          this.state.profiles.splice(indexNum, 1);
           this.setState({profiles: this.state.profiles});
         },
         (error) => {
@@ -180,15 +183,15 @@ class MyConnection extends React.Component {
     }
   };
   changeTab = (tab) => {
-    if(this.state.activeTab != tab){
+    if (this.state.activeTab != tab) {
       this.setState({profiles: []});
       this.loadTabData(tab);
     }
-  }
+  };
   loadTabData = (tab) => {
     try {
       let connUrl = EndPoints.myConnections;
-      if(tab == "pending"){
+      if (tab == 'pending') {
         connUrl = EndPoints.pendingConnections;
       }
       this.setState({isLoading: true});
@@ -199,9 +202,11 @@ class MyConnection extends React.Component {
         this.state.token,
         (response) => {
           this.setState({
-            profiles: response,
+            profiles: response.data,
+            page: response.current_page,
+            totalPage: response.last_page,
             isLoading: false,
-            activeTab: tab
+            activeTab: tab,
           });
         },
         (error) => {
@@ -213,145 +218,248 @@ class MyConnection extends React.Component {
       this.setState({isLoading: false});
       console.log('exception', exception);
     }
-  }
-  render() {
-    const {navigation} = this.props;
-    const profileLists = [];
-    if(this.state.profiles.length){
-      this.state.profiles.forEach((item, index) => {
-        let popup = [];
-        if (this.state.showPopover === item.id) {
-          popup.push(
-            <Popover key={'popup' + index}>
-              <TouchableWithoutFeedback
-                onPress={() => this.disconnectRequest(item.id, index)}>
-                <PopoverBtn style={{borderBottomWidth: 1, borderColor: '#ddd'}}>
-                  <IconImage
-                    source={UserProfileIcons['delete']}
-                    resizeMode="contain"></IconImage>
-                  <Text>Remove</Text>
-                </PopoverBtn>
-              </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback
-                onPress={() => this.createChats(item.user_id)}>
-                <PopoverBtn>
-                  <IconImage
-                    source={UserProfileIcons['colormessage']}
-                    resizeMode="contain"></IconImage>
-                  <Text>Message</Text>
-                </PopoverBtn>
-              </TouchableWithoutFeedback>
-            </Popover>,
-          );
-        }
-        profileLists.push(
-          <UserList key={index}>
-            <UserListInner>
-              <TouchableWithoutFeedback onPress={() => this.showPopup(item.id)}>
-                <DotImage source={DotIcon} resizeMode="contain"></DotImage>
-              </TouchableWithoutFeedback>
-              {popup}
-              <UserImage
-                source={{uri: item.photo}}
-                resizeMode="cover"></UserImage>
-              <UserData>
-                <TouchableWithoutFeedback
-                  onPress={() => {
-                    this.setState({showPopover: false});
-                    navigation.navigate('UserProfile', {profile_id: item.id});
-                  }}>
-                  <UserName>{item.username}</UserName>
-                </TouchableWithoutFeedback>
-                <UserMessage>
-                  {item.state}, {item.country}, {item.age}
-                </UserMessage>
-              </UserData>
-            </UserListInner>
-          </UserList>,
+  };
+  loadMoreTabData = () => {
+    if (
+      this.state.profiles.length &&
+      this.state.totalPage > 0 &&
+      this.state.page != this.state.totalPage
+    ) {
+      let connUrl;
+      let current_page = this.state.page + 1;
+      this.setState({page: current_page, loadingMore: true});
+      connUrl = {url: 'matchmaking/profiles/?page=' + current_page};
+      if (this.state.activeTab == 'pending') {
+        connUrl = {url: 'matchmaking/pending-profiles/?page=' + current_page};
+      }
+      try {
+        network.getResponse(
+          connUrl,
+          'GET',
+          {},
+          this.state.token,
+          (response) => {
+            let profiles = this.state.profiles.concat(response.data);
+            this.setState({
+              profiles: profiles,
+              loadingMore: false,
+              totalPage: response.last_page,
+            });
+          },
+          (error) => {
+            this.setState({loadingMore: false});
+            console.log('error', error);
+          },
         );
-      });
+      } catch (exception) {
+        this.setState({loadingMore: false});
+        console.log('exception', exception);
+      }
     }
-    return (
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
-        {this.state.isLoading && (
-          <ActivityIndicator color="#fff" size="large" style={{position: 'absolute',left: 0,top: 0,right: 0,bottom: 0,backgroundColor: '#00000080',zIndex: 9999}}/>
-        )}
-        <Image
-          source={bottomCurve}
-          style={{
-            width: widthPercentageToDP(100),
-            height: 200,
-            position: 'absolute',
-            bottom: -100,
-          }}
-          resizeMode="contain"></Image>
-        <Header title="My Connections" backButton="true" searchBtn="true" myProfileBtn="true" chatBtn={true} showRightDrawer={false}/>
-        <TopBar>
-          <TopBarInner>
-            <ItemLeft 
-              style={(this.state.activeTab == 'connected') ? {backgroundColor: '#f9bc16',color: '#fff'} : {}}
-              onPress={() => this.changeTab('connected')}
-            >Connected</ItemLeft>
-            <ItemRight 
-              style={(this.state.activeTab == 'pending') ? {backgroundColor: '#f9bc16',color: '#fff'} : {}}
-              onPress={() => this.changeTab('pending')}
-            >Pending</ItemRight>
-          </TopBarInner>
-        </TopBar>
-        <ScrollView
-          alwaysBounceHorizontal={false}
-          alwaysBounceVertical={false}
-          bounces={false}
-          style={{padding: 8, paddingTop: 20}}
-          contentContainerStyle={{paddingBottom: 40}}>
-          {(this.state.activeTab == 'connected') && (
-            <ConnectionWrap>{profileLists}</ConnectionWrap>
-          )}
-          {(this.state.activeTab == 'pending') && (
-            <View style={{paddingLeft: 10,paddingRight: 10}}>
-              {this.state.profiles && (
-                <View>
-                  {this.state.profiles.map((profile,index) => {
-                    if(profile.user_id === profile.mylist.connection_id){
-                      return (
-                        <ListLayout key={index}>
-                          <PUImage source={{uri: profile.photo}}></PUImage>
-                          <ListData>
-                            <View style={{flexDirection: 'row',alignItems: 'center'}}>
-                              <Text style={{fontSize: 18,fontWeight: '700',marginRight: 7}}>{profile.username}</Text>
-                              <Text style={{fontSize: 16}}>send you request</Text>
-                            </View>
-                            <ListButtons>
-                              <ReqButton onPress={() => this.acceptMatchRequest(profile.user_id,index)}
-                                style={{backgroundColor: 'green'}}>Accept</ReqButton>
-                              <ReqButton onPress={() => this.declineMatchRequest(profile.user_id,index)}>Decline</ReqButton>
-                            </ListButtons>
-                          </ListData>
-                        </ListLayout>
-                      );
-                    }else{
-                      return (
-                        <ListLayout key={index}>
-                          <PUImage source={{uri: profile.photo}}></PUImage>
-                          <ListData>
-                            <View style={{flexDirection: 'row',alignItems: 'center'}}>
-                              <Text style={{fontSize: 16}}>You send an request to</Text>
-                              <Text style={{fontSize: 18,fontWeight: '700',marginLeft: 7}}>{profile.username}</Text>
-                            </View>
-                            <ListButtons>
-                              <ReqButton onPress={() => this.disconnectRequest(profile.id,index)}>Withdraw</ReqButton>
-                            </ListButtons>
-                          </ListData>
-                        </ListLayout>
-                      );
-                    }
-                  })}
-                </View>
+  };
+  renderItem = (item, index) => {
+    const {navigation} = this.props;
+    if (this.state.activeTab == 'connected') {
+      return (
+        <UserList key={index}>
+          <UserListInner>
+            <TouchableWithoutFeedback onPress={() => this.showPopup(item.id)}>
+              <DotImage source={DotIcon} resizeMode="contain"></DotImage>
+            </TouchableWithoutFeedback>
+            {this.state.showPopover === item.id && (
+              <Popover key={'popup' + index}>
+                <TouchableWithoutFeedback
+                  onPress={() => this.disconnectRequest(item.id, index)}>
+                  <PopoverBtn
+                    style={{borderBottomWidth: 1, borderColor: '#ddd'}}>
+                    <IconImage
+                      source={UserProfileIcons['delete']}
+                      resizeMode="contain"></IconImage>
+                    <Text>Remove</Text>
+                  </PopoverBtn>
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback
+                  onPress={() => this.createChats(item.user_id)}>
+                  <PopoverBtn>
+                    <IconImage
+                      source={UserProfileIcons['colormessage']}
+                      resizeMode="contain"></IconImage>
+                    <Text>Message</Text>
+                  </PopoverBtn>
+                </TouchableWithoutFeedback>
+              </Popover>
+            )}
+            <UserImage
+              source={{uri: item.photo}}
+              resizeMode="cover"></UserImage>
+            <UserData>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  this.setState({showPopover: false});
+                  navigation.navigate('UserProfile', {profile_id: item.id});
+                }}>
+                <UserName>{item.username}</UserName>
+              </TouchableWithoutFeedback>
+              <UserMessage>
+                {item.state}, {item.country}, {item.age}
+              </UserMessage>
+            </UserData>
+          </UserListInner>
+        </UserList>
+      );
+    } else {
+      return (
+        <ListLayout key={index} style={{marginLeft: 10, marginRight: 10}}>
+          <PUImage source={{uri: item.photo}}></PUImage>
+          <ListData>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              {item.user_id === item.mylist.connection_id && (
+                <>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: '700',
+                      marginRight: 7,
+                    }}>
+                    {item.username}
+                  </Text>
+                  <Text style={{fontSize: 16}}>send you request</Text>
+                </>
+              )}
+              {item.user_id != item.mylist.connection_id && (
+                <>
+                  <Text style={{fontSize: 16}}>You send an request to</Text>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: '700',
+                      marginLeft: 7,
+                    }}>
+                    {item.username}
+                  </Text>
+                </>
               )}
             </View>
-          )}
-        </ScrollView>
+            <ListButtons>
+              {item.user_id === item.mylist.connection_id && (
+                <>
+                  <ReqButton
+                    onPress={() => this.acceptMatchRequest(item.user_id, index)}
+                    style={{backgroundColor: 'green'}}>
+                    Accept
+                  </ReqButton>
+                  <ReqButton
+                    onPress={() =>
+                      this.declineMatchRequest(item.user_id, index)
+                    }>
+                    Decline
+                  </ReqButton>
+                </>
+              )}
+              {item.user_id != item.mylist.connection_id && (
+                <>
+                  <ReqButton
+                    onPress={() => this.disconnectRequest(item.id, index)}>
+                    Withdraw
+                  </ReqButton>
+                </>
+              )}
+            </ListButtons>
+          </ListData>
+        </ListLayout>
+      );
+    }
+  };
+  ListEmptyComponent = () => {
+    return (
+      <View
+        style={{
+          flexGrow: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        {this.state.isLoading || this.state.loadingMore ? (
+          <ActivityIndicator color="#A073C4" size="large" />
+        ) : (
+          <Text>No request found.</Text>
+        )}
       </View>
+    );
+  };
+  ListHeaderComponent = () => {
+    return (
+      <View>
+        <Header
+          title="My Connections"
+          backButton="true"
+          searchBtn="true"
+          myProfileBtn="true"
+          chatBtn={true}
+          showRightDrawer={false}
+        />
+        <TopBar>
+          <TopBarInner>
+            <ItemLeft
+              style={
+                this.state.activeTab == 'connected'
+                  ? {backgroundColor: '#f9bc16', color: '#fff'}
+                  : {}
+              }
+              onPress={() => this.changeTab('connected')}>
+              Connected
+            </ItemLeft>
+            <ItemRight
+              style={
+                this.state.activeTab == 'pending'
+                  ? {backgroundColor: '#f9bc16', color: '#fff'}
+                  : {}
+              }
+              onPress={() => this.changeTab('pending')}>
+              Pending
+            </ItemRight>
+          </TopBarInner>
+        </TopBar>
+      </View>
+    );
+  };
+  render() {
+    return (
+      <>
+        {this.state.activeTab == 'connected' && (
+          <FlatList
+            bounces={false}
+            alwaysBounceVertical={false}
+            onEndReached={() => this.loadMoreTabData()}
+            onEndReachedThreshold={this.state.profiles.length ? 0.5 : 0}
+            data={this.state.profiles}
+            renderItem={({item, index}) => this.renderItem(item, index)}
+            keyExtractor={() => Math.random().toString()}
+            numColumns={2}
+            stickyHeaderIndices={[0]}
+            ListEmptyComponent={() => this.ListEmptyComponent()}
+            ListHeaderComponent={() => this.ListHeaderComponent()}
+          />
+        )}
+        {this.state.activeTab == 'pending' && (
+          <FlatList
+            bounces={false}
+            alwaysBounceVertical={false}
+            onEndReached={() => this.loadMoreTabData()}
+            onEndReachedThreshold={this.state.profiles.length ? 0.5 : 0}
+            data={this.state.profiles}
+            renderItem={({item, index}) => this.renderItem(item, index)}
+            keyExtractor={() => Math.random().toString()}
+            numColumns={1}
+            stickyHeaderIndices={[0]}
+            ListEmptyComponent={() => this.ListEmptyComponent()}
+            ListHeaderComponent={() => this.ListHeaderComponent()}
+          />
+        )}
+      </>
     );
   }
 }
@@ -381,7 +489,7 @@ const ListData = styled(View)({
   flexDirection: 'column',
   padding: 5,
   paddingLeft: 15,
-  paddingRight: 15
+  paddingRight: 15,
 });
 const ListButtons = styled(View)({
   flexDirection: 'row',
@@ -395,12 +503,13 @@ const ReqButton = styled(Text)({
   color: '#fff',
   borderRadius: 5,
   marginRight: 10,
-  fontWeight: 700
+  fontWeight: 700,
 });
 const TopBar = styled(View)({
   flexDirection: 'column',
   alignItems: 'center',
-  height: 40
+  height: 40,
+  marginBottom: 15,
 });
 const TopBarInner = styled(View)({
   flex: 1,
@@ -418,7 +527,7 @@ const ItemLeft = styled(Text)({
   color: '#111',
   border: '2px solid #f9bc16',
   borderTopLeftRadius: 20,
-  borderBottomLeftRadius: 20
+  borderBottomLeftRadius: 20,
 });
 const ItemRight = styled(Text)({
   padding: 0,
@@ -430,7 +539,7 @@ const ItemRight = styled(Text)({
   color: '#111',
   border: '2px solid #f9bc16',
   borderTopRightRadius: 20,
-  borderBottomRightRadius: 20
+  borderBottomRightRadius: 20,
 });
 const Popover = styled(View)({
   display: 'flex',

@@ -12,21 +12,20 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  ScrollView,
   View,
   Image,
   KeyboardAvoidingView,
   ActivityIndicator,
-  TouchableWithoutFeedback,
   Platform,
-  ListView,
+  Dimensions,
 } from 'react-native';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import Header from '../../components/header';
 import {Toast} from 'native-base';
-import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
+import {FlatList} from 'react-native-gesture-handler';
+const {width} = Dimensions.get('window');
 class ChatMessage extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {
@@ -39,32 +38,61 @@ class ChatMessage extends React.Component {
       isLoading: false,
       message: null,
       messages: [],
+      token: null,
+      page: 0,
+      totalPage: 1,
+      loadingMore: false,
     };
   }
   componentDidMount() {
     const user = this.context;
+    this.setState({token: user[0].token});
     const {navigation} = this.props;
-    if (user.length) {
-      this.loadUserChatMessages(user[0].token);
-    }
+    this.loadUserChatMessages();
     let interval = setInterval(() => {
-      this.loadChatMessages();
+      this.loadUserChatMessages(true);
     }, 10000);
     navigation.addListener('blur', () => {
       clearInterval(interval);
     });
   }
-  loadUserChatMessages = (userToken) => {
-    this.setState({token: userToken, isLoading: true});
-    let getChatMessages = {url: 'chat/messages/' + this.state.chat_id};
+  loadUserChatMessages = (refresh = false) => {
+    const user = this.context;
+    let userToken = user[0].token;
+    if (!refresh) {
+      this.setState({isLoading: true});
+    }
     try {
+      let currentPage = this.state.page + 1;
+      if (refresh) {
+        currentPage = 1;
+      }
+      let data = {
+        chat_id: this.state.chat_id,
+        page: currentPage,
+      };
+      if (refresh && this.state.messages.length) {
+        data['last'] = this.state.messages[0].id;
+      }
       network.getResponse(
-        getChatMessages,
-        'GET',
-        {},
+        EndPoints.getChatMessages,
+        'POST',
+        data,
         userToken,
         (response) => {
-          this.setState({messages: response, isLoading: false});
+          let msgs = this.state.messages;
+          if (refresh && response.length) {
+            msgs.unshift(response);
+            this.setState({messages: msgs});
+          } else {
+            let messages = msgs.concat(response.data);
+            this.setState({
+              messages: messages,
+              page: response.current_page,
+              totalPage: response.last_page,
+              isLoading: false,
+            });
+          }
         },
         (error) => {
           this.setState({isLoading: false});
@@ -96,7 +124,7 @@ class ChatMessage extends React.Component {
             this.setState({isLoading: false, message: null});
             if (response && response.data) {
               let messages = this.state.messages;
-              messages.push(response.data);
+              messages.unshift(response.data);
               this.setState({messages: messages});
             }
             if (response && response.message) {
@@ -114,164 +142,70 @@ class ChatMessage extends React.Component {
       }
     }
   };
-  loadChatMessages = () => {
-    let chatMessages = {url: 'chat/messages/' + this.state.chat_id};
-    try {
-      network.getResponse(
-        chatMessages,
-        'GET',
-        {},
-        this.state.token,
-        (response) => {
-          if (response && response.length > this.state.messages.length) {
-            this.setState({messages: response});
-          }
-        },
-        (error) => {
-          console.log('error', error);
-        },
-      );
-    } catch (exception) {
-      console.log('exception', exception);
-    }
-  };
   render() {
     return (
-      //https://github.com/himanshuchauhan/react-native-whatsapp-ui
       <View style={{flex: 1}}>
-        <View style={styles.header}></View>
-        <KeyboardAvoidingView behavior="padding" style={styles.keyboard}>
+        <Header
+          title={this.state.name}
+          backButton="true"
+          userImage={this.state.photo}
+          showRightDrawer={false}
+        />
+        <KeyboardAvoidingView style={styles.keyboard}>
           <FlatList
-            // enableEmptySections
-            // noScroll
-            renderScrollComponent={(props) => (
-              <InvertibleScrollView {...props} inverted />
-            )}
+            inverted
+            bounces={false}
+            alwaysBounceVertical={false}
+            onEndReached={() => this.loadUserChatMessages()}
+            onEndReachedThreshold={this.state.messages.length ? 0.5 : 0}
             data={this.state.messages}
             contentContainerStyle={{justifyContent: 'flex-end'}}
-            renderItem={(list, index) => {
+            renderItem={(list) => {
               return (
-                <MessageWrap>
-                  {list.receiver != this.state.receiver ? (
-                    <>
-                      <UserMessage>
-                        <UserTxtMsg>{list.message}</UserTxtMsg>
-                      </UserMessage>
-                      <Time>{list.time}</Time>
-                    </>
+                <View style={styles.messageWrap} key={list.index}>
+                  {list.item.receiver != this.state.receiver ? (
+                    <View style={styles.userMessageWrap}>
+                      <Text style={styles.userTxtMsg}>{list.item.message}</Text>
+                      <Text style={styles.time}>{list.item.time}</Text>
+                    </View>
                   ) : (
                     <>
-                      <MyMessage>{list.message}</MyMessage>
-                      <Time>{list.time}</Time>
+                      <Text style={styles.myMessage}>{list.item.message}</Text>
+                      <Text style={styles.time}>{list.item.time}</Text>
                     </>
                   )}
-                </MessageWrap>
+                </View>
               );
             }}
+            ListEmptyComponent={
+              <View
+                style={{
+                  flexGrow: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                {this.state.isLoading || this.state.loadingMore ? (
+                  <ActivityIndicator color="#A073C4" size="large" />
+                ) : (
+                  <></>
+                )}
+              </View>
+            }
           />
-          <View style={styles.input}>
+          <View style={styles.bottomWrap}>
             <TextInput
-              style={{flex: 1}}
-              value={this.state.msg}
-              onChangeText={(msg) => this.setState({msg})}
+              style={styles.input}
+              value={this.state.message}
+              onChangeText={(msg) => this.changeMessage(msg)}
               blurOnSubmit={false}
-              onSubmitEditing={() => this.send()}
-              placeholder="Type a message"
+              onSubmitEditing={() => this.sendMessage()}
+              placeholder="Write a message..."
               returnKeyType="send"
+              placeholderTextColor="#fff"
             />
           </View>
         </KeyboardAvoidingView>
       </View>
-
-      // <KeyboardAvoidingView
-      //   style={{flex: 1, backgroundColor: '#fff'}}
-      //   keyboardVerticalOffset={Platform.OS == 'ios' ? 400 : 0}>
-      //   {this.state.isLoading && (
-      //     <ActivityIndicator
-      //       color="#fff"
-      //       size="large"
-      //       style={{
-      //         position: 'absolute',
-      //         left: 0,
-      //         top: 0,
-      //         right: 0,
-      //         bottom: 0,
-      //         backgroundColor: '#00000080',
-      //         zIndex: 9999,
-      //       }}
-      //     />
-      //   )}
-      //   <Image
-      //     source={bottomCurve}
-      //     style={{
-      //       width: widthPercentageToDP(100),
-      //       height: 200,
-      //       position: 'absolute',
-      //       bottom: -100,
-      //     }}
-      //     resizeMode="contain"
-      //   />
-      //   <Header
-      //     title={this.state.name}
-      //     backButton="true"
-      //     userImage={this.state.photo}
-      //     showRightDrawer={false}
-      //   />
-      //   <ScrollView
-      //     alwaysBounceHorizontal={false}
-      //     alwaysBounceVertical={false}
-      //     bounces={false}
-      //     style={{padding: 5, paddingTop: 20}}
-      //     contentContainerStyle={{paddingBottom: 0}}>
-      //     {this.state.messages && (
-      //       <View>
-      //         {this.state.messages.map((list, index) => {
-      //           if (list.receiver != this.state.receiver) {
-      //             return (
-      //               <MessageWrap key={index}>
-      //                 <UserMessage>
-      //                   <UserImage
-      //                     source={
-      //                       this.state.photo
-      //                         ? {uri: this.state.photo}
-      //                         : placeholderProfilePhoto
-      //                     }
-      //                     resizeMode="cover"></UserImage>
-      //                   <UserTxtMsg>{list.message}</UserTxtMsg>
-      //                 </UserMessage>
-      //                 <Time>{list.time}</Time>
-      //               </MessageWrap>
-      //             );
-      //           } else {
-      //             return (
-      //               <MessageWrap key={index}>
-      //                 <MyMessage>{list.message}</MyMessage>
-      //                 <Time>{list.time}</Time>
-      //               </MessageWrap>
-      //             );
-      //           }
-      //         })}
-      //       </View>
-      //     )}
-      //   </ScrollView>
-      //   <MessageBottom>
-      //     <TextInput
-      //       name="message"
-      //       style={styles.input}
-      //       placeholderTextColor={'#fff'}
-      //       onChangeText={(text) => this.changeMessage(text)}
-      //       placeholder="Write a message..."
-      //     />
-      //     <TouchableWithoutFeedback
-      //       disabled={this.state.message == null}
-      //       onPress={() => this.sendMessage()}>
-      //       <SendImage
-      //         source={SendIcon}
-      //         style={this.state.message == null ? {opacity: 0.4} : {}}
-      //         resizeMode="contain"></SendImage>
-      //     </TouchableWithoutFeedback>
-      //   </MessageBottom>
-      // </KeyboardAvoidingView>
     );
   }
 }
@@ -281,202 +215,106 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  image: {},
-  header: {
-    height: 65,
+  bottomWrap: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#075e54',
+    alignSelf: 'flex-end',
+    height: 60,
+    padding: 10,
+    backgroundColor: '#7b43a5',
+    shadowColor: '#3d3d3d',
+    shadowRadius: 2,
+    shadowOpacity: 0.5,
+    shadowOffset: {
+      height: 1,
+    },
   },
-  left: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  right: {
-    flexDirection: 'row',
-  },
-  chatTitle: {
+  input: {
+    flex: 1,
+    height: 40,
+    fontSize: 16,
     color: '#fff',
-    fontWeight: '600',
-    margin: 10,
-    fontSize: 15,
   },
-  chatImage: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    margin: 5,
+  userMessageWrap: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    marginBottom: 5,
   },
-  input: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    padding: 10,
-    height: 40,
-    backgroundColor: '#fff',
-    margin: 10,
-    shadowColor: '#3d3d3d',
-    shadowRadius: 2,
-    shadowOpacity: 0.5,
-    shadowOffset: {
-      height: 1,
-    },
-  },
-  eachMsg: {
+  myMessageWrap: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    margin: 5,
-  },
-  rightMsg: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    margin: 5,
+    marginBottom: 5,
     alignSelf: 'flex-end',
   },
-  userPic: {
-    height: 40,
-    width: 40,
-    margin: 5,
-    borderRadius: 20,
-    backgroundColor: '#f8f8f8',
-  },
-  msgBlock: {
-    width: 220,
-    borderRadius: 5,
-    backgroundColor: '#ffffff',
-    padding: 10,
-    shadowColor: '#3d3d3d',
-    shadowRadius: 2,
-    shadowOpacity: 0.5,
-    shadowOffset: {
-      height: 1,
-    },
-  },
-  rightBlock: {
-    width: 220,
-    borderRadius: 5,
-    backgroundColor: '#97c163',
-    padding: 10,
-    shadowColor: '#3d3d3d',
-    shadowRadius: 2,
-    shadowOpacity: 0.5,
-    shadowOffset: {
-      height: 1,
-    },
-  },
-  msgTxt: {
-    fontSize: 15,
-    color: '#555',
-    fontWeight: '600',
-  },
-  rightTxt: {
-    fontSize: 15,
-    color: '#202020',
-    fontWeight: '600',
-  },
-  input: {
-    height: 45,
-    padding: 10,
+  messageWrap: {
+    flex: 1,
+    flexDirection: 'column',
+    padding: 5,
     paddingLeft: 15,
     paddingRight: 15,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#fff',
+  },
+  userImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 40,
+    marginRight: 10,
+  },
+  userTxtMsg: {
+    maxWidth: width - 80,
+    borderRadius: 20,
+    borderBottomLeftRadius: 0,
+    backgroundColor: '#efefef',
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    shadowColor: '#3d3d3d',
+    shadowRadius: 2,
+    shadowOpacity: 0.5,
+    shadowOffset: {
+      height: 1,
+    },
+    color: '#484848',
+    marginBottom: 5,
+    fontSize: 15,
+  },
+  myMessage: {
+    maxWidth: width - 40,
+    borderRadius: 20,
+    borderBottomRightRadius: 0,
+    backgroundColor: '#7b43a5',
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    shadowColor: '#3d3d3d',
+    shadowRadius: 2,
+    shadowOpacity: 0.5,
+    shadowOffset: {
+      height: 1,
+    },
     color: '#fff',
-    fontSize: 16,
+    marginBottom: 5,
+    marginLeft: 'auto',
+    fontSize: 15,
+  },
+  time: {
+    textAlign: 'right',
+    color: '#a0a0a0',
+    fontSize: 12,
+  },
+  dateTagWrap: {
     flex: 1,
-    marginRight: 15,
+    alignItems: 'center',
+    marginBottom: 10,
   },
-});
-const MessageBottom = styled(View)({
-  height: 65,
-  flexDirection: 'row',
-  padding: 10,
-  paddingLeft: 15,
-  paddingRight: 15,
-  backgroundColor: '#7b43a5',
-  alignItems: 'center',
-});
-const DayTag = styled(Text)({
-  padding: 7,
-  paddingLeft: 20,
-  paddingRight: 20,
-  borderRadius: 20,
-  backgroundColor: '#fff',
-  fontSize: 16,
-  color: '#7b43a5',
-  textAlign: 'center',
-  shadowColor: '#000',
-  shadowOffset: {
-    width: 1,
-    height: 1,
+  dateTag: {
+    padding: 5,
+    paddingLeft: 12,
+    paddingRight: 12,
+    backgroundColor: '#ebf7ff',
+    color: '#333',
+    borderRadius: 10,
+    fontSize: 12,
   },
-  shadowOpacity: '0.2',
-  shadowRadius: 5,
-  elevation: '5',
-  margin: 'auto',
-  marginTop: 15,
-  marginBottom: 15,
-});
-const MessageWrap = styled(View)({
-  flex: 1,
-  flexDirection: 'column',
-  padding: 5,
-  paddingLeft: 15,
-  paddingRight: 15,
-});
-const UserMessage = styled(View)({
-  flexDirection: 'row',
-});
-const UserImage = styled(Image)({
-  width: 40,
-  height: 40,
-  borderRadius: 40,
-  marginRight: 10,
-});
-const UserTxtMsg = styled(Text)({
-  flex: 1,
-  paddingTop: 10,
-  paddingBottom: 15,
-  paddingLeft: 20,
-  paddingRight: 20,
-  borderRadius: 20,
-  borderBottomRightRadius: 0,
-  backgroundColor: '#fff',
-  fontSize: 14,
-  lineHeight: '20px',
-  color: '#484848',
-  shadowColor: '#000',
-  shadowOffset: {
-    width: 1,
-    height: 1,
-  },
-  shadowOpacity: '0.2',
-  shadowRadius: 5,
-  elevation: '5',
-  marginBottom: 5,
-});
-const MyMessage = styled(Text)({
-  paddingTop: 10,
-  paddingBottom: 15,
-  paddingLeft: 20,
-  paddingRight: 20,
-  borderRadius: 20,
-  borderBottomRightRadius: 0,
-  backgroundColor: '#7b43a5',
-  fontSize: 14,
-  lineHeight: '20px',
-  color: '#fff',
-  maxWidth: 280,
-  marginLeft: 'auto',
-  marginBottom: 5,
-});
-const Time = styled(Text)({
-  textAlign: 'right',
-  color: '#a0a0a0',
-});
-const SendImage = styled(Image)({
-  width: 40,
-  height: 40,
 });
 export default ChatMessage;

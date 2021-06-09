@@ -17,6 +17,7 @@ import userDetailContext from '../../common/userDetailContext';
 import Header from '../../components/header';
 import storage from '../../components/apis/storage';
 import {Toast} from 'native-base';
+import {FlatList} from 'react-native-gesture-handler';
 
 class Search extends React.Component {
   static contextType = userDetailContext;
@@ -24,58 +25,45 @@ class Search extends React.Component {
     super(props);
     this.state = {
       isLoading: false,
-      refreshing: false,
-      token: null,
       search: null,
-      profiles: null,
-      filters: {
-        age: [18, 60],
-        children: null,
-        education: null,
-        religion: null,
-        partnerheight: [140, 200],
-        build: null,
-        ethnicity: null,
-        smoker: null,
-        religiosity: null,
-        family: null,
-      },
+      profiles: [],
+      page: 0,
+      totalPage: 1,
     };
   }
   componentDidMount() {
-    const user = this.context;
     const {navigation} = this.props;
     navigation.addListener('focus', () => {
-      if (user.length) {
-        this.searchUsers(user[0].token);
-      }
+      this.searchUsers();
     });
   }
-  updateAccessToken = (userToken) => {
-    this.setState({token: userToken});
-    this.searchUsers();
-  };
   updateData = (value) => {
     this.setState({search: value});
   };
-  searchUsers = (userToken) => {
-    this.setState({token: userToken});
+  searchUsers = () => {
+    const user = this.context;
+    let userToken = user[0].token;
     storage.getData('filter').then((filter) => {
       filter = JSON.parse(filter);
       if (filter) {
-        this.setState({isLoading: true, filters: filter});
+        this.setState({isLoading: true});
         try {
+          let current_page = this.state.page + 1;
+          filter['page'] = current_page;
           network.getResponse(
             EndPoints.searchMatchProfile,
             'POST',
             filter,
             userToken,
             (response) => {
-              if (response && response.length) {
-                this.setState({isLoading: false, profiles: response});
-              } else {
-                this.setState({isLoading: false, profiles: []});
-                Toast.show({text: 'No user found.'});
+              if (response.data && response.data.length) {
+                let userProfiles = this.state.profiles.concat(response.data);
+                this.setState({
+                  isLoading: false,
+                  profiles: userProfiles,
+                  page: response.current_page,
+                  totalPage: response.last_page,
+                });
               }
             },
             (error) => {
@@ -90,128 +78,80 @@ class Search extends React.Component {
       }
     });
   };
-  onRefreshSearch = () => {
-    this.setState({refreshing: true});
-    storage.getData('filter').then((filter) => {
-      filter = JSON.parse(filter);
-      if (filter) {
-        this.setState({filters: filter});
-        try {
-          network.getResponse(
-            EndPoints.searchMatchProfile,
-            'POST',
-            filter,
-            this.state.token,
-            (response) => {
-              if (response && response.length) {
-                this.setState({refreshing: false, profiles: response});
-              } else {
-                this.setState({refreshing: false, profiles: []});
-                Toast.show({text: 'No user found.'});
-              }
-            },
-            (error) => {
-              this.setState({refreshing: false});
-              console.log('error', error);
-            },
-          );
-        } catch (exception) {
-          this.setState({refreshing: false});
-          console.log('exception', exception);
-        }
-      }
-    });
-  };
-
-  render() {
+  renderItem = (item, index) => {
     const {navigation} = this.props;
     return (
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
-        {this.state.isLoading && (
-          <ActivityIndicator
-            color="#fff"
-            size="large"
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: '#00000080',
-              zIndex: 9999,
-            }}
-          />
-        )}
-        <Image
-          source={bottomCurve}
-          style={{
-            width: widthPercentageToDP(100),
-            height: 200,
-            position: 'absolute',
-            bottom: -100,
-          }}
-          resizeMode="contain"
-        />
-        <Header title="Search" backButton="true" filterButton="true" showRightDrawer={false}/>
-        {this.state.profiles && (
-          <ScrollView
-            alwaysBounceHorizontal={false}
-            alwaysBounceVertical={false}
-            bounces={false}
-            style={{padding: 5, paddingTop: 20}}
-            contentContainerStyle={{paddingBottom: 40}}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefreshSearch}
-              />
-            }>
-            <UserListWrap>
-              {this.state.profiles.map((profile, index) => {
-                return (
-                  <TouchableWithoutFeedback
-                    key={index}
-                    onPress={() =>
-                      navigation.navigate('UserProfile', {
-                        profile_id: profile.id,
-                      })
-                    }>
-                    <UserList>
-                      <UserName>{profile.username}</UserName>
-                      <UserData>
-                        <IconImage
-                          source={SearchIcons['age']}
-                          resizeMode="contain"
-                        />
-                        <UserDataText>{profile.age}</UserDataText>
-                        <IconImage
-                          source={SearchIcons['address']}
-                          resizeMode="contain"
-                        />
-                        <UserDataText>
-                          {profile.state}, {profile.country}
-                        </UserDataText>
-                      </UserData>
-                    </UserList>
-                  </TouchableWithoutFeedback>
-                );
-              })}
-            </UserListWrap>
-          </ScrollView>
+      <TouchableWithoutFeedback
+        key={index}
+        onPress={() =>
+          navigation.navigate('UserProfile', {
+            profile_id: item.id,
+          })
+        }>
+        <UserList>
+          <UserName>{item.username}</UserName>
+          <UserData>
+            <IconImage source={SearchIcons['age']} resizeMode="contain" />
+            <UserDataText>{item.age}</UserDataText>
+            <IconImage source={SearchIcons['address']} resizeMode="contain" />
+            <UserDataText>
+              {item.state}, {item.country}
+            </UserDataText>
+          </UserData>
+        </UserList>
+      </TouchableWithoutFeedback>
+    );
+  };
+  ListEmptyComponent = () => {
+    return (
+      <View
+        style={{
+          flexGrow: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        {this.state.isLoading || this.state.loadingMore ? (
+          <ActivityIndicator color="#A073C4" size="large" />
+        ) : (
+          <Text>No user found.</Text>
         )}
       </View>
     );
+  };
+  ListHeaderComponent = () => {
+    return (
+      <Header
+        title="Search"
+        backButton="true"
+        filterButton="true"
+        showRightDrawer={false}
+      />
+    );
+  };
+
+  render() {
+    return (
+      <FlatList
+        bounces={false}
+        alwaysBounceVertical={false}
+        onEndReached={() => this.searchUsers()}
+        onEndReachedThreshold={this.state.profiles.length ? 0.5 : 0}
+        data={this.state.profiles}
+        renderItem={({item, index}) => this.renderItem(item, index)}
+        keyExtractor={() => Math.random().toString()}
+        numColumns={1}
+        stickyHeaderIndices={[0]}
+        ListEmptyComponent={() => this.ListEmptyComponent()}
+        ListHeaderComponent={() => this.ListHeaderComponent()}
+      />
+    );
   }
 }
-const UserListWrap = styled(View)({
-  flex: 1,
-  flexDirection: 'column',
-  paddingLeft: 10,
-  paddingRight: 10,
-});
 const UserList = styled(View)({
   flex: 1,
   margin: 10,
+  marginLeft: 20,
+  marginRight: 20,
   padding: 20,
   paddingLeft: 30,
   paddingRight: 30,
