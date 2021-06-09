@@ -84,7 +84,7 @@ class ChatMessage extends React.Component {
           if (refresh && response.length) {
             msgs.unshift(response);
             this.setState({messages: msgs});
-          } else {
+          } else if (!refresh && response.data && response.data.length) {
             let messages = msgs.concat(response.data);
             this.setState({
               messages: messages,
