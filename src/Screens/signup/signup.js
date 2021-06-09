@@ -211,6 +211,7 @@ const Signup = () => {
               <TextInput
                 name="name"
                 placeholder="Choose Username"
+                placeholderTextColor={'#afafaf'}
                 onChangeText={handleChange('name')}
                 onBlur={handleBlur('name')}
                 value={values.name}
@@ -224,6 +225,7 @@ const Signup = () => {
               <TextInput
                 name="email"
                 placeholder="Email"
+                placeholderTextColor={'#afafaf'}
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
                 value={values.email}
@@ -239,6 +241,7 @@ const Signup = () => {
               <TextInput
                 name="password"
                 placeholder={'Password'}
+                placeholderTextColor={'#afafaf'}
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
                 value={values.password}
@@ -253,6 +256,7 @@ const Signup = () => {
               <TextInput
                 name="password_confirmation"
                 placeholder={'Confirm Password'}
+                placeholderTextColor={'#afafaf'}
                 onChangeText={handleChange('password_confirmation')}
                 onBlur={handleBlur('password_confirmation')}
                 value={values.password_confirmation}

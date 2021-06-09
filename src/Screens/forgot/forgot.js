@@ -111,7 +111,7 @@ const Forgot = () => {
                 autoCapitalize="none"
                 value={values.email}
                 placeholder="Email"
-                placeholderTextColor="#484848"
+                placeholderTextColor={'#afafaf'}
                 style={styles.PassTyle}
               />
 

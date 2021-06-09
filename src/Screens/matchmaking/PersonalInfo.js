@@ -18,7 +18,7 @@ import {
   AddProfilePhotoIcon,
   Uploadimageicon,
   ProfileNextIcon,
-  ProfilePrevIcon
+  ProfilePrevIcon,
 } from '../../common/images';
 import Button from '../../components/button';
 import styled from 'styled-components/native';
@@ -86,12 +86,12 @@ class PersonalInfo extends React.Component {
   }
   componentDidMount() {
     const user = this.context;
-    if(user.length){
+    if (user.length) {
       this.updateAccessToken(user[0].token);
     }
     storage.getData('myprofile').then((myprofile) => {
       myprofile = JSON.parse(myprofile);
-      if(myprofile){
+      if (myprofile) {
         this.setState({profile: myprofile});
       }
     });
@@ -872,7 +872,7 @@ class PersonalInfo extends React.Component {
                       value={this.state.profile[item.name]}
                       style={styles.input}
                       placeholder={item.placeholder}
-                      placeholderTextColor={"#484848"}
+                      placeholderTextColor={'#afafaf'}
                       onChangeText={(text) =>
                         this.updateProfileData(item.name, text)
                       }
@@ -885,12 +885,13 @@ class PersonalInfo extends React.Component {
                       name={item.name}
                       value={this.state.profile[item.name]}
                       style={
-                        !this.state.emailValidate && this.state.profile[item.name]
+                        !this.state.emailValidate &&
+                        this.state.profile[item.name]
                           ? {borderBottomColor: '#f00'}
                           : {}
                       }
                       placeholder={item.placeholder}
-                      placeholderTextColor={"#484848"}
+                      placeholderTextColor={'#afafaf'}
                       onChangeText={(text) =>
                         this.validateEmailData(item.name, text)
                       }
@@ -912,7 +913,7 @@ class PersonalInfo extends React.Component {
                         style={styles.input}
                         pointerEvents="box-only"
                         placeholder={item.placeholder}
-                        placeholderTextColor={"#484848"}
+                        placeholderTextColor={'#afafaf'}
                       />
                       {this.state.showDatePicker &&
                         this.state.showDatePicker == item.name && (
@@ -929,7 +930,9 @@ class PersonalInfo extends React.Component {
                             display="default"
                             onChange={(event, selectedDate) => {
                               if (selectedDate) {
-                                console.log(GetFormattedDateWithMonth(selectedDate));
+                                console.log(
+                                  GetFormattedDateWithMonth(selectedDate),
+                                );
                                 this.updateProfileData(
                                   item.name,
                                   GetFormattedDateWithMonth(selectedDate),
@@ -1046,7 +1049,7 @@ class PersonalInfo extends React.Component {
                     value={this.state.profile[item.name]}
                     style={styles.input}
                     placeholder={item.placeholder}
-                    placeholderTextColor={"#484848"}
+                    placeholderTextColor={'#afafaf'}
                     onChangeText={(text) =>
                       this.updateProfileData(item.name, text)
                     }
@@ -1109,7 +1112,7 @@ class PersonalInfo extends React.Component {
                   //   value={this.state.profile[item.name]}
                   //   style={styles.input}
                   //   placeholder={item.placeholder}
-                  //   placeholderTextColor={"#484848"}
+                  //   placeholderTextColor={"#afafaf"}
                   //   onChangeText={(text) =>
                   //     this.updateProfileData(item.name, text)
                   //   }
@@ -1118,14 +1121,28 @@ class PersonalInfo extends React.Component {
               }
             })}
             {this.state.currentStep < steps.length && (
-              <View style={{flexDirection: 'row',alignItems: 'center',justifyContent: 'center'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
                 {this.state.currentStep > 1 && (
-                  <TouchableOpacity onPress={() => this.previousSteps(this.state.currentStep)}>
+                  <TouchableOpacity
+                    onPress={() => this.previousSteps(this.state.currentStep)}>
                     <ProfilePrev source={ProfilePrevIcon}></ProfilePrev>
                   </TouchableOpacity>
                 )}
-                <TouchableOpacity disabled={this.checkValidation(step.validation)} onPress={() => this.chaneSteps(this.state.currentStep)}>
-                  <ProfileNext source={ProfileNextIcon} style={this.checkValidation(step.validation) ? {opacity: 0.4} : {}}></ProfileNext>
+                <TouchableOpacity
+                  disabled={this.checkValidation(step.validation)}
+                  onPress={() => this.chaneSteps(this.state.currentStep)}>
+                  <ProfileNext
+                    source={ProfileNextIcon}
+                    style={
+                      this.checkValidation(step.validation)
+                        ? {opacity: 0.4}
+                        : {}
+                    }></ProfileNext>
                 </TouchableOpacity>
               </View>
             )}
@@ -1256,7 +1273,7 @@ const ProfilePrev = styled(Image)({
   height: 70,
   margin: 'auto',
   marginTop: 20,
-  marginRight: 15
+  marginRight: 15,
 });
 const Heading = styled(Text)({
   fontSize: 20,

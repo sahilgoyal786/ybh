@@ -136,6 +136,7 @@ const Login = (props) => {
                 value={values.email}
                 placeholder="Email"
                 autoCapitalize="none"
+                placeholderTextColor={'#afafaf'}
                 style={styles.userName}
               />
               {errors.email && touched.email && (
@@ -151,6 +152,7 @@ const Login = (props) => {
                 onBlur={handleBlur('password')}
                 value={values.password}
                 placeholder="Password"
+                placeholderTextColor={'#afafaf'}
                 style={styles.PassTyle}
               />
 

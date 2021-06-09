@@ -143,7 +143,7 @@ const SetPassword = ({route, navigation}) => {
                 onBlur={handleBlur('otp')}
                 value={values.otp}
                 placeholder="Verification Code"
-                placeholderTextColor="#AAAAAA"
+                placeholderTextColor={'#afafaf'}
                 editable={!verified}
                 style={styles.PassTyle}
               />
@@ -159,7 +159,7 @@ const SetPassword = ({route, navigation}) => {
                 value={values.password}
                 editable={verified}
                 placeholder="Password"
-                placeholderTextColor="#AAAAAA"
+                placeholderTextColor={'#afafaf'}
                 style={styles.PassTyle}
                 secureTextEntry
               />
@@ -173,7 +173,7 @@ const SetPassword = ({route, navigation}) => {
                 editable={verified}
                 value={values.password_confirmation}
                 placeholder="Confirm Password"
-                placeholderTextColor="#AAAAAA"
+                placeholderTextColor={'#afafaf'}
                 style={styles.PassTyle}
                 secureTextEntry
               />

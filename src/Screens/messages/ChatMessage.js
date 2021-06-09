@@ -35,7 +35,7 @@ class ChatMessage extends React.Component {
       receiver: props.route.params.receiver,
       name: props.route.params.name,
       photo: props.route.params.photo,
-      isLoading: false,
+      isLoading: true,
       message: null,
       messages: [],
       token: null,
@@ -80,6 +80,7 @@ class ChatMessage extends React.Component {
         data,
         userToken,
         (response) => {
+          this.setState({isLoading: false});
           let msgs = this.state.messages;
           if (refresh && response.length) {
             msgs.unshift(response);
@@ -90,7 +91,6 @@ class ChatMessage extends React.Component {
               messages: messages,
               page: response.current_page,
               totalPage: response.last_page,
-              isLoading: false,
             });
           }
         },
@@ -108,7 +108,7 @@ class ChatMessage extends React.Component {
     this.setState({message: value});
   };
   sendMessage = () => {
-    if (this.state.message.length) {
+    if (this.state.message && this.state.message.length) {
       this.setState({isLoading: true});
       try {
         network.getResponse(
@@ -151,6 +151,9 @@ class ChatMessage extends React.Component {
           userImage={this.state.photo}
           showRightDrawer={false}
         />
+        {this.state.isLoading && (
+          <ActivityIndicator color="#A073C4" size="large" />
+        )}
         <KeyboardAvoidingView style={styles.keyboard}>
           <FlatList
             inverted
@@ -177,20 +180,6 @@ class ChatMessage extends React.Component {
                 </View>
               );
             }}
-            ListEmptyComponent={
-              <View
-                style={{
-                  flexGrow: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                {this.state.isLoading || this.state.loadingMore ? (
-                  <ActivityIndicator color="#A073C4" size="large" />
-                ) : (
-                  <></>
-                )}
-              </View>
-            }
           />
           <View style={styles.bottomWrap}>
             <TextInput
