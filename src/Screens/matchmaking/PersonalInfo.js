@@ -24,6 +24,8 @@ import Button from '../../components/button';
 import styled from 'styled-components/native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {
   StyleSheet,
   Text,
@@ -1194,14 +1196,14 @@ class PersonalInfo extends React.Component {
           backButton="true"
           showRightDrawer={false}
         />
-        <ScrollView
+        <KeyboardAwareScrollView
           alwaysBounceHorizontal={false}
           alwaysBounceVertical={false}
           bounces={false}
           style={{padding: 15, paddingTop: 20}}
           contentContainerStyle={{paddingBottom: 60}}>
           {stepData}
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </View>
     );
   }

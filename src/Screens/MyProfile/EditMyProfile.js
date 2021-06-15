@@ -33,6 +33,8 @@ import {
   Image,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
@@ -46,6 +48,7 @@ import {countries} from '../../common/countries';
 import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {GetFormattedDateWithMonth} from '../../common/helpers';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 
 class EditMyProfile extends React.Component {
   static contextType = userDetailContext;
@@ -1223,14 +1226,14 @@ class EditMyProfile extends React.Component {
           backButton="true"
           showRightDrawer={false}
         />
-        <ScrollView
+        <KeyboardAwareScrollView
           alwaysBounceHorizontal={false}
           alwaysBounceVertical={false}
           bounces={false}
           style={{padding: 15, paddingTop: 20}}
           contentContainerStyle={{paddingBottom: 60}}>
           {stepData}
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </View>
     );
   }

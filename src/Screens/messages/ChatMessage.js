@@ -164,7 +164,9 @@ class ChatMessage extends React.Component {
         {this.state.isLoading && (
           <ActivityIndicator color="#A073C4" size="large" />
         )}
-        <KeyboardAvoidingView style={styles.keyboard}>
+        <KeyboardAvoidingView
+          style={styles.keyboard}
+          behavior={Platform.OS == 'ios' ? 'padding' : ''}>
           <FlatList
             inverted
             bounces={false}
@@ -231,6 +233,7 @@ class ChatMessage extends React.Component {
               placeholder="Write a message..."
               returnKeyType="send"
               placeholderTextColor="#fff"
+              multiline={true}
             />
           </View>
         </KeyboardAvoidingView>
@@ -247,7 +250,6 @@ const styles = StyleSheet.create({
   bottomWrap: {
     flexDirection: 'row',
     alignSelf: 'flex-end',
-    height: 60,
     padding: 10,
     backgroundColor: '#7b43a5',
     shadowColor: '#3d3d3d',
@@ -259,9 +261,10 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 40,
     fontSize: 16,
     color: '#fff',
+    maxHeight: 80,
+    minHeight: 40,
   },
   userMessageWrap: {
     flexDirection: 'column',
