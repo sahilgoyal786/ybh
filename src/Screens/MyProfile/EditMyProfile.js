@@ -196,16 +196,11 @@ class EditMyProfile extends React.Component {
         this.state.profile,
         this.state.token,
         (response) => {
-          console.log(response);
           this.setState({isLoading: false});
           if (response && response.message) {
             Toast.show({text: response.message});
           }
-          if (response && response.changePicture) {
-            navigation.navigate('Home');
-          } else {
-            navigation.navigate('MyProfile');
-          }
+          navigation.navigate('MyProfile');
         },
         (error) => {
           this.setState({isLoading: false});

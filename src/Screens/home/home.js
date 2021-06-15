@@ -337,17 +337,33 @@ const Home = () => {
         {},
         userDetail.token || '',
         (response) => {
-          if(response.profile && response.profile.status == "activate"){
+          if (response.profile && response.profile.status == 'activate') {
             return navigation.navigate('MyConnection');
-          }else if(response.profile && response.profile.status == "deactivate"){
+          } else if (
+            response.profile &&
+            response.profile.status == 'deactivate'
+          ) {
             Toast.show({text: 'Your profile is deactivated by Admin'});
-          }else if(response.profile && response.profile.status == "pending_verification" && response.profile.verify_profile_photo){
+          } else if (
+            response.profile &&
+            response.profile.status == 'pending_verification' &&
+            response.profile.verify_profile_photo
+          ) {
             Toast.show({text: 'Your profile is awaiting for Admin Approval.'});
-          }else if(response.profile && response.profile.status == "pending_verification" && response.subscription){
+          } else if (
+            response.profile &&
+            response.profile.status == 'pending_verification' &&
+            !response.profile.verify_profile_photo
+          ) {
             return navigation.navigate('PhotoVerification');
-          }else if(response.profile && response.profile.status == "pending_verification"){
+          } else if (
+            response.profile &&
+            response.profile.status == 'pending_verification' &&
+            response.profile.verify_profile_photo &&
+            !response.subscription
+          ) {
             return navigation.navigate('Plans');
-          }else{
+          } else {
             return navigation.navigate('matchmakingTC');
           }
         },
@@ -502,8 +518,14 @@ const Home = () => {
               paddingLeft: 10,
               paddingRight: 10,
             }}>
-            <TouchableOpacity onPress={() => getMatchMakingProfile()} style={{marginBottom: 10}}>
-              <Image source={MatchLogo} style={{width: '100%',height: 130,padding: 0}} resizeMode="contain"/>
+            <TouchableOpacity
+              onPress={() => getMatchMakingProfile()}
+              style={{marginBottom: 10}}>
+              <Image
+                source={MatchLogo}
+                style={{width: '100%', height: 130, padding: 0}}
+                resizeMode="contain"
+              />
             </TouchableOpacity>
             <LeaderBoard userDetailTemp={userDetail} />
           </View>

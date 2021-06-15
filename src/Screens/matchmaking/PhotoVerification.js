@@ -60,7 +60,7 @@ class PhotoVerification extends React.Component {
         (response) => {
           this.setState({profile_photo: response.url, isLoading: false});
           Toast.show({text: response.message});
-          navigation.navigate('Welcomeuser');
+          navigation.navigate('Plans');
         },
         (error) => {
           this.setState({isLoading: false});
