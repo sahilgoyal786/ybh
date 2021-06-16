@@ -24,6 +24,9 @@ import ContentLoader from 'react-native-easy-content-loader';
 import {Toast} from 'native-base';
 import Button from '../../components/button';
 import {Share} from 'react-native';
+import userDetailContext from '../../common/userDetailContext';
+import network from '../../components/apis/network';
+import EndPoints from '../../components/apis/endPoints';
 
 const RelationMeter = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -32,10 +35,26 @@ const RelationMeter = ({navigation}) => {
   const [questions, setQuestions] = useState(null);
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [savedResponses, setSavedResponses] = useState([]);
+  const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
 
   function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
   }
+
+  const shareClicks = () => {
+    network.getResponse(
+      EndPoints.shareClicks,
+      'POST',
+      {page: 'RelationMeter'},
+      userDetail.token,
+      (response) => {
+        console.log('success', response);
+      },
+      (error) => {
+        console.log('error', error);
+      },
+    );
+  };
 
   const submitAnswer = (answer) => {
     let ans_id = 0;
@@ -276,6 +295,7 @@ const RelationMeter = ({navigation}) => {
             marginTop: 60,
           }}
           onPress={() => {
+            shareClicks();
             Share.share({
               message:
                 'Hey! I have found a way to measure my love life. Come and measure yours and learn what how to improve it. Download app from https://ybhive.app',

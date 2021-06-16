@@ -356,13 +356,6 @@ const Home = () => {
             !response.profile.verify_profile_photo
           ) {
             return navigation.navigate('PhotoVerification');
-          } else if (
-            response.profile &&
-            response.profile.status == 'pending_verification' &&
-            response.profile.verify_profile_photo &&
-            !response.subscription
-          ) {
-            return navigation.navigate('Plans');
           } else {
             return navigation.navigate('matchmakingTC');
           }

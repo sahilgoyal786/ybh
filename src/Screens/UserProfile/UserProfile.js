@@ -11,9 +11,19 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
-import {Text, ScrollView, View, Image, ActivityIndicator} from 'react-native';
+import {
+  Text,
+  ScrollView,
+  View,
+  Image,
+  Modal,
+  TouchableWithoutFeedback,
+  ActivityIndicator,
+} from 'react-native';
 import Header from '../../components/header';
 import {Toast} from 'native-base';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import FastImage from 'react-native-fast-image';
 class UserProfile extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {
@@ -23,6 +33,7 @@ class UserProfile extends React.Component {
       isLoading: true,
       token: '',
       profile: {},
+      showModal: false,
     };
   }
   componentDidMount() {
@@ -351,18 +362,28 @@ class UserProfile extends React.Component {
           style={{padding: 30, paddingTop: 20}}
           contentContainerStyle={{paddingBottom: 40}}>
           <UserProfileWrap>
-            <UserImage
-              source={
-                this.state.profile.photo
-                  ? {uri: this.state.profile.photo}
-                  : placeholderProfilePhoto
-              }
-              blurRadius={
-                this.state.profile.mylist && this.state.profile.mylist.status
-                  ? 0
-                  : 6
-              }
-              resizeMode="cover"></UserImage>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                if (
+                  this.state.profile.mylist &&
+                  this.state.profile.mylist.status
+                ) {
+                  this.setState({showModal: true});
+                }
+              }}>
+              <UserImage
+                source={
+                  this.state.profile.photo
+                    ? {uri: this.state.profile.photo}
+                    : placeholderProfilePhoto
+                }
+                blurRadius={
+                  this.state.profile.mylist && this.state.profile.mylist.status
+                    ? 0
+                    : 6
+                }
+                resizeMode="cover"></UserImage>
+            </TouchableWithoutFeedback>
             <UserName>{this.state.profile.username}</UserName>
             <UserData>
               Age: {this.state.profile.age}, {this.state.profile.country}
@@ -403,7 +424,11 @@ class UserProfile extends React.Component {
                 What do you like to do for fun with your partner?
               </PHeading>
               <PValueWrap>
-                <PValue>{this.state.profile.partner_fun}</PValue>
+                {this.state.profile &&
+                  this.state.profile.partner_fun &&
+                  this.state.profile.partner_fun.map((item, index) => {
+                    return <PValue key={index}>{item}</PValue>;
+                  })}
               </PValueWrap>
             </PartnerFunSec>
             <LookingForSec>
@@ -457,6 +482,46 @@ class UserProfile extends React.Component {
             )}
           </UserProfileWrap>
         </ScrollView>
+        <Modal visible={this.state.showModal}>
+          <View
+            style={{
+              position: 'absolute',
+              left: 20,
+              top: 40,
+              height: 25,
+              backgroundColor: 'white',
+              width: 25,
+              borderRadius: 40,
+              zIndex: 100,
+            }}>
+            <Text
+              style={{
+                color: 'black',
+                textAlign: 'center',
+                height: 25,
+                width: 25,
+                textAlignVertical: 'center',
+                fontWeight: '900',
+                lineHeight: 25,
+              }}
+              onPress={() => this.setState({showModal: false})}>
+              X
+            </Text>
+          </View>
+          <ImageViewer
+            imageUrls={[{url: this.state.profile.photo}]}
+            enableSwipeDown={true}
+            index={null}
+            onCancel={() => this.setState({showModal: false})}
+            renderImage={(props) => <FastImage {...props} />}
+            enablePreload={true}
+            saveToLocalByLongPress={false}
+            loadingRender={() => {
+              return <ActivityIndicator color="white" />;
+            }}
+            renderIndicator={() => {}}
+          />
+        </Modal>
       </View>
     );
   }

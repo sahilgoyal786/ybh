@@ -11,10 +11,14 @@ import {
   View,
   Image,
   ActivityIndicator,
+  Modal,
+  TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native';
 import Header from '../../components/header';
 import {Toast} from 'native-base';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import FastImage from 'react-native-fast-image';
 class MyProfile extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {
@@ -23,6 +27,7 @@ class MyProfile extends React.Component {
       isLoading: true,
       token: '',
       profile: {},
+      showModal: false,
     };
   }
   componentDidMount() {
@@ -97,14 +102,17 @@ class MyProfile extends React.Component {
           style={{padding: 30, paddingTop: 20}}
           contentContainerStyle={{paddingBottom: 40}}>
           <UserProfileWrap>
-            <UserImage
-              source={
-                this.state.profile.photo
-                  ? {uri: this.state.profile.photo}
-                  : placeholderProfilePhoto
-              }
-              resizeMode="cover"
-            />
+            <TouchableWithoutFeedback
+              onPress={() => this.setState({showModal: true})}>
+              <UserImage
+                source={
+                  this.state.profile.photo
+                    ? {uri: this.state.profile.photo}
+                    : placeholderProfilePhoto
+                }
+                resizeMode="cover"
+              />
+            </TouchableWithoutFeedback>
             <UserName>{this.state.profile.username}</UserName>
             <UserData>
               Age: {this.state.profile.age}, {this.state.profile.country}
@@ -154,7 +162,11 @@ class MyProfile extends React.Component {
                 What do you like to do for fun with your partner?
               </PHeading>
               <PValueWrap>
-                <PValue>{this.state.profile.partner_fun}</PValue>
+                {this.state.profile &&
+                  this.state.profile.partner_fun &&
+                  this.state.profile.partner_fun.map((item, index) => {
+                    return <PValue key={index}>{item}</PValue>;
+                  })}
               </PValueWrap>
             </PartnerFunSec>
             <LookingForSec>
@@ -204,6 +216,46 @@ class MyProfile extends React.Component {
             </LookingForSec>
           </UserProfileWrap>
         </ScrollView>
+        <Modal visible={this.state.showModal}>
+          <View
+            style={{
+              position: 'absolute',
+              left: 20,
+              top: 40,
+              height: 25,
+              backgroundColor: 'white',
+              width: 25,
+              borderRadius: 40,
+              zIndex: 100,
+            }}>
+            <Text
+              style={{
+                color: 'black',
+                textAlign: 'center',
+                height: 25,
+                width: 25,
+                textAlignVertical: 'center',
+                fontWeight: '900',
+                lineHeight: 25,
+              }}
+              onPress={() => this.setState({showModal: false})}>
+              X
+            </Text>
+          </View>
+          <ImageViewer
+            imageUrls={[{url: this.state.profile.photo}]}
+            enableSwipeDown={true}
+            index={null}
+            onCancel={() => this.setState({showModal: false})}
+            renderImage={(props) => <FastImage {...props} />}
+            enablePreload={true}
+            saveToLocalByLongPress={false}
+            loadingRender={() => {
+              return <ActivityIndicator color="white" />;
+            }}
+            renderIndicator={() => {}}
+          />
+        </Modal>
       </View>
     );
   }

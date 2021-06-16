@@ -1,8 +1,15 @@
 import React, {Component, useContext} from 'react';
 import {Text, StyleSheet, View, TouchableOpacity, Image} from 'react-native';
-import {useNavigation,DrawerActions} from '@react-navigation/native';
+import {useNavigation, DrawerActions} from '@react-navigation/native';
 import styled from 'styled-components/native';
-import {menu,headerView,search,fillter,profileWhiteIcon,chatIcon} from '../common/images';
+import {
+  menu,
+  headerView,
+  search,
+  fillterBlack,
+  profileWhiteIcon,
+  chatIcon,
+} from '../common/images';
 import ResponsiveImage from 'react-native-responsive-image';
 import {
   heightPercentageToDP,
@@ -12,7 +19,16 @@ import {backicon} from '../common/images';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import userDetailContext from '../common/userDetailContext';
 
-const Header = ({title,backButton=false,showRightDrawer=true,searchBtn=false,userImage=false,filterButton=false,chatBtn=false,myProfileBtn=false}) => {
+const Header = ({
+  title,
+  backButton = false,
+  showRightDrawer = true,
+  searchBtn = false,
+  userImage = false,
+  filterButton = false,
+  chatBtn = false,
+  myProfileBtn = false,
+}) => {
   const navigation = useNavigation();
   return (
     <View style={{width: widthPercentageToDP(100), height: 120}}>
@@ -25,7 +41,7 @@ const Header = ({title,backButton=false,showRightDrawer=true,searchBtn=false,use
         }}
       />
       <WelcomeView>
-        <View style={{flex: 1, flexDirection: 'row',alignContent: 'center'}}>
+        <View style={{flex: 1, flexDirection: 'row', alignContent: 'center'}}>
           <TouchableOpacity
             onPress={() => {
               if (backButton !== false)
@@ -51,7 +67,15 @@ const Header = ({title,backButton=false,showRightDrawer=true,searchBtn=false,use
             }}>
             <View style={{flexDirection: 'row'}}>
               {userImage !== false && (
-                <Image source={{uri: userImage}} style={{width: 40,height: 40,borderRadius: 40,marginLeft: 10,marginRight: 10}}></Image>
+                <Image
+                  source={{uri: userImage}}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 40,
+                    marginLeft: 10,
+                    marginRight: 10,
+                  }}></Image>
               )}
               <WelcomeText
                 style={{
@@ -71,12 +95,16 @@ const Header = ({title,backButton=false,showRightDrawer=true,searchBtn=false,use
         )}
         {myProfileBtn !== false && (
           <TouchableOpacity onPress={() => navigation.navigate('MyProfile')}>
-            <MenuIcon source={profileWhiteIcon} initHeight="30" initWidth="30" />
+            <MenuIcon
+              source={profileWhiteIcon}
+              initHeight="30"
+              initWidth="30"
+            />
           </TouchableOpacity>
         )}
         {filterButton !== false && (
           <TouchableOpacity onPress={() => navigation.navigate('Filter')}>
-            <MenuIcon source={fillter} initHeight="30" initWidth="30" />
+            <MenuIcon source={fillterBlack} initHeight="30" initWidth="30" />
           </TouchableOpacity>
         )}
         {searchBtn !== false && (

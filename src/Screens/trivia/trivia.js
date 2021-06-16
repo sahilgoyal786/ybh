@@ -33,6 +33,8 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {sendResponsesToServer} from '../../common/helpers';
 import {ActivityIndicator} from 'react-native';
 import {Share} from 'react-native';
+import network from '../../components/apis/network';
+import EndPoints from '../../components/apis/endPoints';
 
 const Trivia = ({navigation}) => {
   const [question, setQuestion] = useState(null);
@@ -44,6 +46,21 @@ const Trivia = ({navigation}) => {
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const [triviaBottom, setTriviaBottom] = React.useState(false);
   const [isSyncing, setIsSyncing] = React.useState(false);
+
+  const shareClicks = () => {
+    network.getResponse(
+      EndPoints.shareClicks,
+      'POST',
+      {page: 'Trivia'},
+      userDetail.token,
+      (response) => {
+        console.log('success', response);
+      },
+      (error) => {
+        console.log('error', error);
+      },
+    );
+  };
 
   const submitAnswer = () => {
     if (selectedAnswer === null) {
@@ -307,6 +324,7 @@ const Trivia = ({navigation}) => {
                     marginTop: 80,
                   }}
                   onPress={() => {
+                    shareClicks();
                     Share.share({
                       message:
                         'Hey! Come have fun with doing trivia and more on ybhapp. Download app from https://ybhive.app',
@@ -329,8 +347,7 @@ const Trivia = ({navigation}) => {
                           setIsSyncing(true);
                         } else {
                           Toast.show({
-                            text:
-                              'Nothing to sync, please answer some questions first and then press sync.',
+                            text: 'Nothing to sync, please answer some questions first and then press sync.',
                             duration: 3000,
                           });
                         }

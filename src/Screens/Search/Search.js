@@ -34,13 +34,13 @@ class Search extends React.Component {
   componentDidMount() {
     const {navigation} = this.props;
     navigation.addListener('focus', () => {
-      this.searchUsers();
+      this.searchUsers(1);
     });
   }
   updateData = (value) => {
     this.setState({search: value});
   };
-  searchUsers = () => {
+  searchUsers = (initLoad = 0) => {
     const user = this.context;
     let userToken = user[0].token;
     storage.getData('filter').then((filter) => {
@@ -48,7 +48,12 @@ class Search extends React.Component {
       if (filter) {
         this.setState({isLoading: true});
         try {
-          let current_page = this.state.page + 1;
+          let current_page = this.state.page;
+          if (initLoad) {
+            this.setState({profiles: []});
+            current_page = 0;
+          }
+          current_page += 1;
           filter['page'] = current_page;
           network.getResponse(
             EndPoints.searchMatchProfile,
@@ -57,7 +62,8 @@ class Search extends React.Component {
             userToken,
             (response) => {
               if (response.data && response.data.length) {
-                let userProfiles = this.state.profiles.concat(response.data);
+                let userProfiles = this.state.profiles;
+                userProfiles = userProfiles.concat(response.data);
                 this.setState({
                   isLoading: false,
                   profiles: userProfiles,
@@ -110,7 +116,7 @@ class Search extends React.Component {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        {this.state.isLoading || this.state.loadingMore ? (
+        {this.state.isLoading ? (
           <ActivityIndicator color="#A073C4" size="large" />
         ) : (
           <Text>No user found.</Text>
@@ -179,9 +185,8 @@ const UserData = styled(View)({
   flexDirection: 'row',
 });
 const UserDataText = styled(Text)({
-  fontSize: 18,
+  fontSize: 16,
   color: '#484848',
-  fontWeight: 700,
   lineHeight: '20px',
   marginRight: 20,
 });

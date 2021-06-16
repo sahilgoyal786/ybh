@@ -89,5 +89,8 @@ const EndPoints = {
   sendMessage: {url: 'chat/message/send'},
   deleteMessage: {url: 'chat/message/delete'},
   checkSubscriptions: {url: 'check-subscription'},
+  newInstalls: {url: 'new-installs'},
+  shareClicks: {url: 'share-clicks'},
+  userSessions: {url: 'user-sessions'},
 };
 export default EndPoints;

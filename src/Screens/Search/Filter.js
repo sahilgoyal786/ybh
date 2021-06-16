@@ -80,7 +80,7 @@ class Filter extends React.Component {
           'Bachelor Degree',
           'Masters',
           'PhD',
-          "Don't Mater",
+          "Don't Matter",
         ],
       },
       {
@@ -189,14 +189,7 @@ class Filter extends React.Component {
             </View>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <RangeSlider
-                range={[
-                  this.state.filter[item.name]
-                    ? this.state.filter[item.name][0]
-                    : item.fromValue,
-                  this.state.filter[item.name]
-                    ? this.state.filter[item.name][1]
-                    : item.toValue,
-                ]}
+                range={this.state.filter[item.name]}
                 style={{
                   width: '100%',
                   height: 40,
@@ -207,12 +200,17 @@ class Filter extends React.Component {
                 maximumValue={item.toValue}
                 step={1}
                 inboundColor="#7b43a5"
-                slideOnTap={false}
+                slideOnTap={true}
                 thumbStyle={{padding: 5}}
                 trackHeight={2}
-                onValueChange={(value) =>
-                  this.updateStateValue(item.name, value)
-                }
+                onValueChange={(value) => {
+                  if (
+                    this.state.filter[item.name][0] != value[0] ||
+                    this.state.filter[item.name][1] != value[1]
+                  ) {
+                    this.updateStateValue(item.name, value);
+                  }
+                }}
               />
             </View>
             <BottomLineWrap></BottomLineWrap>

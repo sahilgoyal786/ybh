@@ -70,7 +70,7 @@ class EditMyProfile extends React.Component {
         country: null,
         profession: null,
         gender: null,
-        looking_for: null,
+        looking_for: [],
         partner_fun: null,
         children: null,
         married: null,
@@ -145,6 +145,16 @@ class EditMyProfile extends React.Component {
   };
   updateProfileData = (label, value) => {
     this.state.profile[label] = value;
+    this.setState({profile: this.state.profile});
+  };
+  updateMultiProfileData = (label, value) => {
+    var oldValues = this.state.profile[label] ? this.state.profile[label] : [];
+    if (oldValues && oldValues.includes(value)) {
+      oldValues = oldValues.filter((item) => item !== value);
+    } else {
+      oldValues = oldValues.concat(value);
+    }
+    this.state.profile[label] = oldValues;
     this.setState({profile: this.state.profile});
   };
   setShowDatePicker = (name) => {
@@ -389,8 +399,8 @@ class EditMyProfile extends React.Component {
           {
             type: 'select',
             label: 'looking_for',
-            icon: LookingForIcon['marrige'],
-            name: 'Marrige',
+            icon: LookingForIcon['marriage'],
+            name: 'Marriage',
           },
           {
             type: 'select',
@@ -406,106 +416,107 @@ class EditMyProfile extends React.Component {
         process: 33.334,
         icon: MatchIcons['icon5'],
         name: 'What do you like to do for Fun with your partner?',
+        subtext: '(Multiple Selection Applicable)',
         validation: ['partner_fun'],
         fields: [
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon1'],
             name: 'Plan a Date Night (or Day)',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon2'],
             name: 'Exercise',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon3'],
             name: 'Cook Together',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon4'],
             name: 'Couples Massage',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon5'],
             name: 'Redecorate',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon6'],
             name: 'Dance',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon7'],
             name: 'Reading',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon8'],
             name: 'Listen to a Podcast or Audiobook',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon9'],
             name: 'Start a new Hobby',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon10'],
             name: 'Play Games',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon11'],
             name: 'Watch TV and Movies',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon12'],
             name: 'Take a Walk',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon13'],
             name: 'Travel',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon14'],
             name: 'Shopping',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon15'],
             name: 'Browse the Web',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon16'],
             name: 'Visit family and friends',
           },
           {
-            type: 'select',
+            type: 'multiselect',
             label: 'partner_fun',
             icon: PartnerFunIcon['icon17'],
             name: 'Others',
@@ -904,6 +915,7 @@ class EditMyProfile extends React.Component {
               </View>
             )}
             {step.name && <Heading>{step.name}</Heading>}
+            {step.subtext && <SubHeadingText>{step.subtext}</SubHeadingText>}
             {step.fields.map((item, index) => {
               if (item.type == 'text') {
                 if (item.subType == 'text') {
@@ -997,6 +1009,25 @@ class EditMyProfile extends React.Component {
                     <SingleElement
                       style={
                         this.state.profile[item.label] == item.name
+                          ? {borderColor: '#f9bc16'}
+                          : {}
+                      }>
+                      <PImage source={item.icon}></PImage>
+                      <PText>{item.name}</PText>
+                    </SingleElement>
+                  </TouchableWithoutFeedback>
+                );
+              } else if (item.type == 'multiselect') {
+                return (
+                  <TouchableWithoutFeedback
+                    key={index}
+                    onPress={() =>
+                      this.updateMultiProfileData(item.label, item.name)
+                    }>
+                    <SingleElement
+                      style={
+                        this.state.profile[item.label] &&
+                        this.state.profile[item.label].includes(item.name)
                           ? {borderColor: '#f9bc16'}
                           : {}
                       }>
@@ -1309,6 +1340,14 @@ const Heading = styled(Text)({
   alignItems: 'center',
   color: '#484848',
   fontWeight: 700,
+});
+const SubHeadingText = styled(Text)({
+  fontSize: 14,
+  margin: 'auto',
+  marginTop: -10,
+  marginBottom: 20,
+  alignItems: 'center',
+  color: '#484848',
 });
 const SingleElement = styled(View)({
   flex: 1,

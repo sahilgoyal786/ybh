@@ -20,6 +20,7 @@ export const CompatibilityMenuIcon = require('../assets/icons/compatibility-icon
 export const menu = require('../assets/icons/menu.png');
 export const search = require('../assets/icons/search.png');
 export const fillter = require('../assets/icons/fillter.png');
+export const fillterBlack = require('../assets/icons/fillter-black.png');
 export const dots = require('../assets/icons/trivia-bg-img.png');
 export const headerView = require('../assets/icons/headerview.png');
 export const botomView = require('../assets/icons/curb-bg.png');
@@ -106,7 +107,7 @@ export const MatchIcons = {
   icon12: require('../assets/icons/matchmaking/icon12.png'),
   icon13: require('../assets/icons/matchmaking/icon13.png'),
   icon14: require('../assets/icons/matchmaking/icon14.png'),
-  icon15: require('../assets/icons/matchmaking/icon15.png')
+  icon15: require('../assets/icons/matchmaking/icon15.png'),
 };
 export const ProfileIcon1 = require('../assets/icons/matchmaking/icon1.png');
 export const ProfileIcon2 = require('../assets/icons/matchmaking/icon2.png');
@@ -140,19 +141,19 @@ export const BuildIcon = {
 };
 export const ChildrenIcon = {
   yes: require('../assets/icons/matchmaking/children/yes.png'),
-  no: require('../assets/icons/matchmaking/children/no.png')
+  no: require('../assets/icons/matchmaking/children/no.png'),
 };
 export const CurrentStatusIcons = {
   single: require('../assets/icons/matchmaking/current-status/single.png'),
   married: require('../assets/icons/matchmaking/current-status/married.png'),
   divorced: require('../assets/icons/matchmaking/current-status/divorced.png'),
-  widowed: require('../assets/icons/matchmaking/current-status/widowed.png')
+  widowed: require('../assets/icons/matchmaking/current-status/widowed.png'),
 };
 export const EducationIcon = {
   bachelor: require('../assets/icons/matchmaking/education/bachelor.png'),
   masters: require('../assets/icons/matchmaking/education/masters.png'),
   secondary: require('../assets/icons/matchmaking/education/secondary.png'),
-  phd: require('../assets/icons/matchmaking/education/phd.png')
+  phd: require('../assets/icons/matchmaking/education/phd.png'),
 };
 export const EthnicityIcons = {
   arab: require('../assets/icons/matchmaking/ethnicity/arab.png'),
@@ -160,7 +161,7 @@ export const EthnicityIcons = {
   black: require('../assets/icons/matchmaking/ethnicity/black.png'),
   white: require('../assets/icons/matchmaking/ethnicity/white.png'),
   other: require('../assets/icons/matchmaking/ethnicity/other.png'),
-  mixed: require('../assets/icons/matchmaking/ethnicity/mixed.png')
+  mixed: require('../assets/icons/matchmaking/ethnicity/mixed.png'),
 };
 export const GenderIcon = {
   male: require('../assets/icons/matchmaking/gender/male.png'),
@@ -169,11 +170,11 @@ export const GenderIcon = {
 export const HairIcons = {
   bald: require('../assets/icons/matchmaking/hair/bald.png'),
   short: require('../assets/icons/matchmaking/hair/short.png'),
-  long: require('../assets/icons/matchmaking/hair/long.png')
+  long: require('../assets/icons/matchmaking/hair/long.png'),
 };
 export const LookingForIcon = {
   friendship: require('../assets/icons/matchmaking/looking-for/friendship.png'),
-  marrige: require('../assets/icons/matchmaking/looking-for/marrige.png')
+  marriage: require('../assets/icons/matchmaking/looking-for/marriage.png'),
 };
 export const MarriedIcon = {
   yes: require('../assets/icons/matchmaking/married/yes.png'),
@@ -196,7 +197,7 @@ export const PartnerFunIcon = {
   icon14: require('../assets/icons/matchmaking/partner-fun/icon14.png'),
   icon15: require('../assets/icons/matchmaking/partner-fun/icon15.png'),
   icon16: require('../assets/icons/matchmaking/partner-fun/icon16.png'),
-  icon17: require('../assets/icons/matchmaking/partner-fun/icon17.png')
+  icon17: require('../assets/icons/matchmaking/partner-fun/icon17.png'),
 };
 export const ProfessionIcon = {
   govt: require('../assets/icons/matchmaking/profession/govt.png'),
@@ -209,28 +210,28 @@ export const ProfessionIcon = {
 export const ReligionIcons = {
   christian: require('../assets/icons/matchmaking/religion/christian.png'),
   muslim: require('../assets/icons/matchmaking/religion/muslim.png'),
-  other: require('../assets/icons/matchmaking/religion/other.png')
+  other: require('../assets/icons/matchmaking/religion/other.png'),
 };
 export const SmokeIcon = {
   never: require('../assets/icons/matchmaking/smoke/never.png'),
   regularly: require('../assets/icons/matchmaking/smoke/regularly.png'),
   social: require('../assets/icons/matchmaking/smoke/social.png'),
-  quit: require('../assets/icons/matchmaking/smoke/quit.png')
+  quit: require('../assets/icons/matchmaking/smoke/quit.png'),
 };
 export const Uploadimageicon = {
   take: require('../assets/icons/matchmaking/upload-image/take-picture.png'),
-  upload: require('../assets/icons/matchmaking/upload-image/upload-from-device.png')
+  upload: require('../assets/icons/matchmaking/upload-image/upload-from-device.png'),
 };
 export const SearchIcons = {
-  age : require('../assets/icons/age.png'),
-  address : require('../assets/icons/address.png'),
-  fillter : require('../assets/icons/fillter.png')
+  age: require('../assets/icons/age.png'),
+  address: require('../assets/icons/address.png'),
+  fillter: require('../assets/icons/fillter.png'),
 };
 export const UserProfileIcons = {
-  connect : require('../assets/icons/connect.png'),
-  disconnect : require('../assets/icons/disconnect.png'),
-  message : require('../assets/icons/message.png'),
-  colormessage : require('../assets/icons/message1.png'),
-  pending : require('../assets/icons/pending.png'),
-  delete : require('../assets/icons/remove.png'),
+  connect: require('../assets/icons/connect.png'),
+  disconnect: require('../assets/icons/disconnect.png'),
+  message: require('../assets/icons/message.png'),
+  colormessage: require('../assets/icons/message1.png'),
+  pending: require('../assets/icons/pending.png'),
+  delete: require('../assets/icons/remove.png'),
 };

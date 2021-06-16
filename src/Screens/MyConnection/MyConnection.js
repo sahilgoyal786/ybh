@@ -289,21 +289,31 @@ class MyConnection extends React.Component {
                 </TouchableWithoutFeedback>
               </Popover>
             )}
-            <UserImage
-              source={{uri: item.photo}}
-              resizeMode="cover"></UserImage>
-            <UserData>
-              <TouchableWithoutFeedback
+            <TouchableWithoutFeedback
+              onPress={() => {
+                this.setState({showPopover: false});
+                navigation.navigate('UserProfile', {profile_id: item.id});
+              }}>
+              <UserImage
                 onPress={() => {
                   this.setState({showPopover: false});
                   navigation.navigate('UserProfile', {profile_id: item.id});
-                }}>
+                }}
+                source={{uri: item.photo}}
+                resizeMode="cover"></UserImage>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                this.setState({showPopover: false});
+                navigation.navigate('UserProfile', {profile_id: item.id});
+              }}>
+              <UserData>
                 <UserName>{item.username}</UserName>
-              </TouchableWithoutFeedback>
-              <UserMessage>
-                {item.state}, {item.country}, {item.age}
-              </UserMessage>
-            </UserData>
+                <UserMessage>
+                  {item.state}, {item.country}, {item.age}
+                </UserMessage>
+              </UserData>
+            </TouchableWithoutFeedback>
           </UserListInner>
         </UserList>
       );

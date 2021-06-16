@@ -1,5 +1,5 @@
 import React from 'react';
-import {Platform, View} from 'react-native';
+import {AppState, Platform, View} from 'react-native';
 import {Notifications} from 'react-native-notifications';
 import EndPoints from '../components/apis/endPoints';
 import network from '../components/apis/network';
@@ -13,16 +13,68 @@ export default class PushNotificationManager extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {notification: null, dialogVisible: false, dialogMessageVisible: false};
+    this.state = {
+      notification: null,
+      dialogVisible: false,
+      dialogMessageVisible: false,
+      appState: AppState.currentState,
+      fromTime: Date.now(),
+      toTime: null,
+    };
   }
 
   componentDidMount() {
     this.registerDevice();
     this.registerNotificationEvents();
+    AppState.addEventListener('change', this.handleAppStateChange);
   }
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+  handleAppStateChange = (nextAppState) => {
+    const [userDetail] = this.context;
+    if (nextAppState.match(/inactive|background/)) {
+      let toTime = Date.now();
+      let fromTime = this.state.fromTime;
+      if (userDetail && userDetail.token) {
+        network.getResponse(
+          EndPoints.userSessions,
+          'POST',
+          {session_from: fromTime, session_to: toTime},
+          userDetail.token,
+          (response) => {
+            console.log('response', response);
+          },
+          (error) => {
+            console.log('error', error);
+          },
+        );
+      }
+    } else if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      this.setState({fromTime: Date.now()});
+    }
+    this.setState({appState: nextAppState});
+  };
 
   registerDevice = () => {
     Notifications.events().registerRemoteNotificationsRegistered((event) => {
+      if (event && event.deviceToken) {
+        network.getResponse(
+          EndPoints.newInstalls,
+          'POST',
+          {device_token: event.deviceToken},
+          '',
+          (response) => {
+            console.log('response', response);
+          },
+          (error) => {
+            console.log('error', error);
+          },
+        );
+      }
       // TODO: Send the token to my server so it could send back push notifications...
       const [userDetail, changeUserDetail] = this.context;
       //let device_token = await storage.getData('device_token');
@@ -113,7 +165,7 @@ export default class PushNotificationManager extends React.Component {
   };
 
   doStuff = (notification, userDetail = {}, changeUserDetail = {}) => {
-    if(notification.payload.type){
+    if (notification.payload.type) {
       console.log(notification.payload.type);
       switch (notification.payload.type) {
         case 'photo_approved':
@@ -150,13 +202,13 @@ export default class PushNotificationManager extends React.Component {
             },
           );
           // RootNavigation.navigate('TnC');
-        break;
+          break;
         case 'voting':
           storage.removeData(EndPoints.votingImages);
-        break;
+          break;
         case 'received_message':
-          this.setState({dialogMessageVisible: true,dialogVisible: false});
-        break;
+          this.setState({dialogMessageVisible: true, dialogVisible: false});
+          break;
 
         default:
           break;
@@ -207,8 +259,13 @@ export default class PushNotificationManager extends React.Component {
               onPress: () => {
                 this.setState({dialogMessageVisible: false});
                 let chat = JSON.parse(this.state.notification.payload.chat);
-                RootNavigation.navigate('ChatMessage',{chat_id: chat.id,receiver: chat.user.user_id,name: chat.user.username,photo: chat.user.photo});
-              }
+                RootNavigation.navigate('ChatMessage', {
+                  chat_id: chat.id,
+                  receiver: chat.user.user_id,
+                  name: chat.user.username,
+                  photo: chat.user.photo,
+                });
+              },
             }}
           />
         )}
