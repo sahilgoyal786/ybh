@@ -61,7 +61,7 @@ class ChatMessage extends React.Component {
     this.setState({token: user[0].token});
     const {navigation} = this.props;
     this.loadUserChatMessages();
-    let interval = setInterval(() => {
+    var interval = setInterval(() => {
       this.loadUserChatMessages(true);
     }, 10000);
     navigation.addListener('blur', () => {
