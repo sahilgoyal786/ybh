@@ -3,11 +3,14 @@ import {
   bottomCurve,
   placeholderProfilePhoto,
   SendIcon,
+  EditIcon,
 } from '../../common/images';
 import styled from 'styled-components/native';
-import {widthPercentageToDP} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP,
+  widthPercentageToDP,
+} from 'react-native-responsive-screen';
 import InvertibleScrollView from 'react-native-invertible-scroll-view';
-
 import {
   StyleSheet,
   Text,
@@ -18,12 +21,15 @@ import {
   ActivityIndicator,
   Platform,
   Dimensions,
+  TouchableWithoutFeedback,
 } from 'react-native';
+import Button from '../../components/button';
+import {Dialog} from 'react-native-simple-dialogs';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import Header from '../../components/header';
-import {Toast} from 'native-base';
+import {Textarea, Toast} from 'native-base';
 import {FlatList} from 'react-native-gesture-handler';
 const {width} = Dimensions.get('window');
 class ChatMessage extends React.Component {
@@ -43,6 +49,11 @@ class ChatMessage extends React.Component {
       page: 0,
       totalPage: 1,
       loadingMore: false,
+      editable: false,
+      editableMsgId: null,
+      editableMsg: null,
+      editableIndex: null,
+      dialog: false,
     };
   }
   componentDidMount() {
@@ -133,9 +144,12 @@ class ChatMessage extends React.Component {
               let messages = this.state.messages;
               messages.unshift(response.data);
               this.setState({messages: messages});
-            }
-            if (response && response.message) {
-              Toast.show({text: response.message});
+            } else if (response && response.message) {
+              Toast.show({
+                text: response.message,
+                type: 'danger',
+                duration: 3000,
+              });
             }
           },
           (error) => {
@@ -147,6 +161,91 @@ class ChatMessage extends React.Component {
         this.setState({isLoading: false});
         console.log('exception', exception);
       }
+    } else {
+      Toast.show({text: 'Message is not valid.'});
+    }
+  };
+  onLongPressFun = (item, index) => {
+    this.setState({
+      editable: true,
+      editableMsgId: item.id,
+      editableMsg: item.message,
+      editableIndex: index,
+    });
+  };
+  editMessage = () => {
+    try {
+      this.setState({isLoading: true});
+      network.getResponse(
+        EndPoints.updateMessage,
+        'POST',
+        {msg_id: this.state.editableMsgId, message: this.state.editableMsg},
+        this.state.token,
+        (response) => {
+          if (response && response.data) {
+            var result = this.state.messages.map((el) =>
+              el.id == response.data.id
+                ? {
+                    ...el,
+                    message: response.data.message,
+                    editable: response.data.editable,
+                  }
+                : el,
+            );
+            this.setState({
+              messages: result,
+              dialog: false,
+              isLoading: false,
+              editable: false,
+              editableMsgId: null,
+              editableMsg: null,
+              editableIndex: null,
+            });
+          } else if (response && response.message) {
+            Toast.show({
+              text: response.message,
+              type: 'danger',
+              duration: 3000,
+            });
+          }
+        },
+        (error) => {
+          this.setState({isLoading: false});
+          console.log('error', error);
+        },
+      );
+    } catch (exception) {
+      this.setState({isLoading: false});
+      console.log('exception', exception);
+    }
+  };
+  deleteMessage = () => {
+    try {
+      this.setState({isLoading: true});
+      network.getResponse(
+        EndPoints.deleteMessage,
+        'POST',
+        {message_id: this.state.editableMsgId},
+        this.state.token,
+        (response) => {
+          console.log(response);
+          this.state.messages.splice(this.state.editableIndex, 1);
+          this.setState({
+            isLoading: false,
+            editable: false,
+            editableMsgId: null,
+            editableMsg: null,
+            editableIndex: null,
+          });
+        },
+        (error) => {
+          this.setState({isLoading: false});
+          console.log('error', error);
+        },
+      );
+    } catch (exception) {
+      this.setState({isLoading: false});
+      console.log('exception', exception);
     }
   };
   render() {
@@ -164,6 +263,54 @@ class ChatMessage extends React.Component {
         {this.state.isLoading && (
           <ActivityIndicator color="#A073C4" size="large" />
         )}
+        <Dialog
+          visible={this.state.dialog}
+          onTouchoutside={() =>
+            this.setState({
+              dialog: false,
+              editable: false,
+              editableMsgId: null,
+              editableMsg: null,
+              editableIndex: null,
+            })
+          }>
+          <View>
+            <Textarea
+              rowSpan={5}
+              value={this.state.editableMsg}
+              placeholder="Enter your message...."
+              style={{
+                borderWidth: 1,
+                borderColor: '#ccc',
+                borderRadius: 5,
+                padding: 10,
+              }}
+              onChangeText={(textMsg) => this.setState({editableMsg: textMsg})}
+            />
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Button
+              onPress={() => this.editMessage()}
+              style={styles.DialogBtn}
+              name={'Submit'}
+              linear
+            />
+            <Button
+              onPress={() =>
+                this.setState({
+                  dialog: false,
+                  editable: false,
+                  editableMsgId: null,
+                  editableMsg: null,
+                  editableIndex: null,
+                })
+              }
+              style={styles.DialogBtn}
+              name={'Cancel'}
+              secondary
+            />
+          </View>
+        </Dialog>
         <KeyboardAvoidingView
           style={styles.keyboard}
           behavior={Platform.OS == 'ios' ? 'padding' : ''}>
@@ -197,22 +344,76 @@ class ChatMessage extends React.Component {
                   <View style={styles.messageWrap}>
                     {list.item.receiver != this.state.receiver ? (
                       <View style={styles.userMessageWrap}>
-                        <View style={styles.userTxtMsg}>
-                          <Text style={styles.userTxtMsgTxt}>
-                            {list.item.message}
-                          </Text>
-                        </View>
+                        {list.item.editable ? (
+                          <View
+                            style={{
+                              flex: 1,
+                              flexDirection: 'row',
+                              alignSelf: 'flex-start',
+                              alignItems: 'center',
+                            }}>
+                            <View style={styles.userTxtMsg}>
+                              <Text style={styles.userTxtMsgTxt}>
+                                {list.item.message}
+                              </Text>
+                            </View>
+                            <Image
+                              source={EditIcon}
+                              style={{
+                                width: 15,
+                                height: 15,
+                                marginLeft: 8,
+                              }}></Image>
+                          </View>
+                        ) : (
+                          <View style={styles.userTxtMsg}>
+                            <Text style={styles.userTxtMsgTxt}>
+                              {list.item.message}
+                            </Text>
+                          </View>
+                        )}
                         <Text style={styles.time}>
                           {list.item.date + ' ' + list.item.time}
                         </Text>
                       </View>
                     ) : (
                       <>
-                        <View style={styles.myMessage}>
-                          <Text style={styles.myMessageTxt}>
-                            {list.item.message}
-                          </Text>
-                        </View>
+                        {list.item.editable ? (
+                          <View
+                            style={{
+                              flex: 1,
+                              flexDirection: 'row',
+                              alignSelf: 'flex-end',
+                              alignItems: 'center',
+                            }}>
+                            <Image
+                              source={EditIcon}
+                              style={{
+                                width: 15,
+                                height: 15,
+                                marginRight: 8,
+                              }}></Image>
+                            <View style={styles.myMessage}>
+                              <Text
+                                style={styles.myMessageTxt}
+                                onLongPress={() =>
+                                  this.onLongPressFun(list.item, list.index)
+                                }>
+                                {list.item.message}
+                              </Text>
+                            </View>
+                          </View>
+                        ) : (
+                          <View style={styles.myMessage}>
+                            <Text
+                              style={styles.myMessageTxt}
+                              onLongPress={() =>
+                                this.onLongPressFun(list.item, list.index)
+                              }>
+                              {list.item.message}
+                            </Text>
+                          </View>
+                        )}
                         <Text style={styles.time}>
                           {list.item.date + ' ' + list.item.time}
                         </Text>
@@ -223,6 +424,32 @@ class ChatMessage extends React.Component {
               );
             }}
           />
+          {this.state.editable && (
+            <View style={styles.bottomDrawerWrap}>
+              <Text
+                style={styles.bottomDrawItem}
+                onPress={() => this.setState({dialog: true})}>
+                Edit
+              </Text>
+              <Text
+                style={styles.bottomDrawItem}
+                onPress={() => this.deleteMessage()}>
+                Delete
+              </Text>
+              <Text
+                style={styles.bottomDrawItem}
+                onPress={() =>
+                  this.setState({
+                    editable: false,
+                    editableMsgId: null,
+                    editableMsg: null,
+                    editableIndex: null,
+                  })
+                }>
+                Cancel
+              </Text>
+            </View>
+          )}
           <View style={styles.bottomWrap}>
             <TextInput
               style={styles.input}
@@ -235,6 +462,16 @@ class ChatMessage extends React.Component {
               placeholderTextColor="#fff"
               multiline={true}
             />
+            <TouchableWithoutFeedback onPress={() => this.sendMessage()}>
+              <Image
+                source={SendIcon}
+                style={{
+                  width: 30,
+                  height: 30,
+                  marginLeft: 10,
+                }}
+              />
+            </TouchableWithoutFeedback>
           </View>
         </KeyboardAvoidingView>
       </View>
@@ -243,6 +480,30 @@ class ChatMessage extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  DialogBtn: {
+    marginTop: 15,
+    width: '50%',
+    height: 40,
+  },
+  bottomDrawerWrap: {
+    flex: 1,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 999,
+    backgroundColor: '#fff',
+    borderTopColor: '#ddd',
+    borderTopWidth: 1,
+  },
+  bottomDrawItem: {
+    padding: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    borderBottomColor: '#ddd',
+    borderBottomWidth: 1,
+    fontSize: 15,
+  },
   keyboard: {
     flex: 1,
     justifyContent: 'center',
@@ -250,6 +511,7 @@ const styles = StyleSheet.create({
   bottomWrap: {
     flexDirection: 'row',
     alignSelf: 'flex-end',
+    alignItems: 'center',
     padding: 10,
     backgroundColor: '#7b43a5',
     shadowColor: '#3d3d3d',
@@ -312,7 +574,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   myMessage: {
-    maxWidth: width - 40,
+    maxWidth: width - 80,
     borderRadius: 20,
     borderBottomRightRadius: 0,
     backgroundColor: '#7b43a5',

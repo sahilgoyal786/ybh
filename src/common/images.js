@@ -129,6 +129,7 @@ export const SwipeTnCIcon = require('../assets/icons/matchmaking/swipe-icon.png'
 export const ProfileNextIcon = require('../assets/icons/matchmaking/next-icon.png');
 export const ProfilePrevIcon = require('../assets/icons/matchmaking/prev-icon.png');
 export const SendIcon = require('../assets/icons/send-icon.png');
+export const EditIcon = require('../assets/icons/edit.png');
 export const DotIcon = require('../assets/icons/dots-icon.png');
 export const chatIcon = require('../assets/icons/chat-icon.png');
 

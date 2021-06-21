@@ -87,6 +87,7 @@ const EndPoints = {
   deleteChat: {url: 'chat/delete'},
   getChatMessages: {url: 'chat/messages'},
   sendMessage: {url: 'chat/message/send'},
+  updateMessage: {url: 'chat/message/update'},
   deleteMessage: {url: 'chat/message/delete'},
   checkSubscriptions: {url: 'check-subscription'},
   newInstalls: {url: 'new-installs'},
