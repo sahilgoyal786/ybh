@@ -19,7 +19,7 @@ class Filter extends React.Component {
     super(props);
     this.state = {
       filter: {
-        age: [18, 60],
+        age: [18, 90],
         children: '',
         education: '',
         religion: '',
@@ -54,6 +54,22 @@ class Filter extends React.Component {
     eval(index == 0 ? item.fromLabel : item.toLabel);
     return label;
   };
+  resetFilter = () => {
+    let oldFilter = {
+      age: [18, 90],
+      children: '',
+      education: '',
+      religion: '',
+      partnerheight: [140, 200],
+      build: '',
+      ethnicity: '',
+      smoker: '',
+      religiosity: '',
+      family: '',
+    };
+    this.setState({filter: oldFilter});
+    storage.setData('filter', JSON.stringify(oldFilter));
+  };
   render() {
     const filters = [
       {
@@ -63,7 +79,7 @@ class Filter extends React.Component {
         fromLabel: 'label = value + " Years"',
         toLabel: 'label = value + " Years"',
         fromValue: 18,
-        toValue: 60,
+        toValue: 90,
       },
       {
         type: 'text',
@@ -230,6 +246,18 @@ class Filter extends React.Component {
           }}
           resizeMode="contain"></Image>
         <Header title="Filter" backButton="true" showRightDrawer={false} />
+        <Text
+          onPress={() => this.resetFilter()}
+          style={{
+            padding: 5,
+            position: 'absolute',
+            right: 10,
+            top: 50,
+            fontWeight: 'bold',
+            fontSize: 16,
+          }}>
+          Reset
+        </Text>
         <ScrollView
           alwaysBounceHorizontal={false}
           alwaysBounceVertical={false}

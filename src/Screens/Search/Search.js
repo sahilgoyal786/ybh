@@ -29,60 +29,112 @@ class Search extends React.Component {
       profiles: [],
       page: 0,
       totalPage: 1,
+      starting: true,
+      filter: {
+        age: [18, 90],
+        children: '',
+        education: '',
+        religion: '',
+        partnerheight: [140, 200],
+        build: '',
+        ethnicity: '',
+        smoker: '',
+        religiosity: '',
+        family: '',
+      },
     };
   }
   componentDidMount() {
     const {navigation} = this.props;
     navigation.addListener('focus', () => {
-      this.searchUsers(1);
+      this.searchUsers();
     });
   }
   updateData = (value) => {
     this.setState({search: value});
   };
-  searchUsers = (initLoad = 0) => {
+  searchUsers = () => {
     const user = this.context;
     let userToken = user[0].token;
     storage.getData('filter').then((filter) => {
-      filter = JSON.parse(filter);
-      if (filter) {
-        this.setState({isLoading: true});
-        try {
-          let current_page = this.state.page;
-          if (initLoad) {
-            this.setState({profiles: []});
-            current_page = 0;
+      let filterObj = JSON.parse(filter);
+      if (filterObj) {
+        if (
+          this.state.starting ||
+          JSON.stringify(filterObj) !== JSON.stringify(this.state.filter)
+        ) {
+          this.setState({
+            profiles: [],
+            isLoading: true,
+            filter: filterObj,
+            starting: false,
+          });
+          try {
+            network.getResponse(
+              EndPoints.searchMatchProfile,
+              'POST',
+              filterObj,
+              userToken,
+              (response) => {
+                if (response.data && response.data.length) {
+                  let userProfiles = this.state.profiles;
+                  userProfiles = userProfiles.concat(response.data);
+                  this.setState({
+                    isLoading: false,
+                    profiles: userProfiles,
+                    page: response.current_page,
+                    totalPage: response.last_page,
+                  });
+                }
+              },
+              (error) => {
+                this.setState({isLoading: false});
+                console.log('error', error);
+              },
+            );
+          } catch (exception) {
+            this.setState({isLoading: false});
+            console.log('exception', exception);
           }
-          current_page += 1;
-          filter['page'] = current_page;
-          network.getResponse(
-            EndPoints.searchMatchProfile,
-            'POST',
-            filter,
-            userToken,
-            (response) => {
-              if (response.data && response.data.length) {
-                let userProfiles = this.state.profiles;
-                userProfiles = userProfiles.concat(response.data);
-                this.setState({
-                  isLoading: false,
-                  profiles: userProfiles,
-                  page: response.current_page,
-                  totalPage: response.last_page,
-                });
-              }
-            },
-            (error) => {
-              this.setState({isLoading: false});
-              console.log('error', error);
-            },
-          );
-        } catch (exception) {
-          this.setState({isLoading: false});
-          console.log('exception', exception);
         }
       }
     });
+  };
+  loadMoreUsers = () => {
+    const user = this.context;
+    let userToken = user[0].token;
+    let filterData = this.state.filter;
+    this.setState({isLoading: true});
+    try {
+      let current_page = this.state.page;
+      current_page += 1;
+      filterData['page'] = current_page;
+      network.getResponse(
+        EndPoints.searchMatchProfile,
+        'POST',
+        filterData,
+        userToken,
+        (response) => {
+          if (response.data && response.data.length) {
+            let userProfiles = this.state.profiles;
+            userProfiles = userProfiles.concat(response.data);
+            this.setState({
+              isLoading: false,
+              profiles: userProfiles,
+              page: response.current_page,
+              totalPage: response.last_page,
+            });
+          }
+        },
+        (error) => {
+          this.setState({isLoading: false});
+          console.log('error', error);
+        },
+      );
+    } catch (exception) {
+      this.setState({isLoading: false});
+      console.log('exception', exception);
+    }
   };
   renderItem = (item, index) => {
     const {navigation} = this.props;
@@ -140,7 +192,7 @@ class Search extends React.Component {
       <FlatList
         bounces={false}
         alwaysBounceVertical={false}
-        onEndReached={() => this.searchUsers()}
+        onEndReached={() => this.loadMoreUsers()}
         onEndReachedThreshold={this.state.profiles.length ? 0.5 : 0}
         data={this.state.profiles}
         renderItem={({item, index}) => this.renderItem(item, index)}

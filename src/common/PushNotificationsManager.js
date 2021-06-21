@@ -117,7 +117,7 @@ export default class PushNotificationManager extends React.Component {
   registerNotificationEvents = () => {
     Notifications.events().registerNotificationReceivedForeground(
       (notification, completion) => {
-        console.log('Notification Received - Foreground', notification);
+        // console.log('Notification Received - Foreground', notification);
         // Calling completion on iOS with `alert: true` will present the native iOS inApp notification.
         this.setState({notification: notification});
         this.setState({dialogVisible: true});
@@ -144,7 +144,7 @@ export default class PushNotificationManager extends React.Component {
 
     Notifications.events().registerNotificationReceivedBackground(
       (notification, completion) => {
-        console.log('Notification Received - Background', notification);
+        // console.log('Notification Received - Background', notification);
         const [userDetail, changeUserDetail] = this.context;
         this.doStuff(notification, userDetail, changeUserDetail);
         // Calling completion on iOS with `alert: true` will present the native iOS inApp notification.
@@ -261,9 +261,9 @@ export default class PushNotificationManager extends React.Component {
                 let chat = JSON.parse(this.state.notification.payload.chat);
                 RootNavigation.navigate('ChatMessage', {
                   chat_id: chat.id,
-                  receiver: chat.user.user_id,
-                  name: chat.user.username,
-                  photo: chat.user.photo,
+                  receiver: chat.sender.user_id,
+                  name: chat.sender.username,
+                  photo: chat.sender.photo,
                 });
               },
             }}
