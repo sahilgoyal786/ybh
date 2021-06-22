@@ -5,6 +5,7 @@ import {widthPercentageToDP} from 'react-native-responsive-screen';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
+import GlobalStyles from '../../common/styles';
 import {
   Text,
   ScrollView,
@@ -68,10 +69,10 @@ class MyProfile extends React.Component {
     const {navigation} = this.props;
     const btns = [];
     return (
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
+      <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
         {this.state.isLoading && (
           <ActivityIndicator
-            color="#fff"
+            color={{...GlobalStyles.whiteTextColor}}
             size="large"
             style={{
               position: 'absolute',
@@ -121,14 +122,16 @@ class MyProfile extends React.Component {
               onPress={() => navigation.navigate('EditMyProfile')}>
               <View
                 style={{
+                  ...GlobalStyles.primaryBackgroundColor,
                   padding: 5,
-                  backgroundColor: '#7b43a5',
                   borderRadius: 5,
                   paddingLeft: 25,
                   paddingRight: 25,
                   marginTop: 15,
                 }}>
-                <Text style={{color: 'white'}}>Edit Profile</Text>
+                <Text style={{...GlobalStyles.whiteTextColor}}>
+                  Edit Profile
+                </Text>
               </View>
             </TouchableOpacity>
             <ProfileData>
@@ -212,18 +215,20 @@ class MyProfile extends React.Component {
             </LookingForSec>
             <LookingForSec>
               <PHeading>About Us</PHeading>
-              <Text>{this.state.profile.aboutus}</Text>
+              <Text style={{...GlobalStyles.secondaryTextColor}}>
+                {this.state.profile.aboutus}
+              </Text>
             </LookingForSec>
           </UserProfileWrap>
         </ScrollView>
         <Modal visible={this.state.showModal}>
           <View
             style={{
+              ...GlobalStyles.whiteBackgroundColor,
               position: 'absolute',
               left: 20,
               top: 40,
               height: 25,
-              backgroundColor: 'white',
               width: 25,
               borderRadius: 40,
               zIndex: 100,
@@ -251,7 +256,9 @@ class MyProfile extends React.Component {
             enablePreload={true}
             saveToLocalByLongPress={false}
             loadingRender={() => {
-              return <ActivityIndicator color="white" />;
+              return (
+                <ActivityIndicator color={{...GlobalStyles.whiteTextColor}} />
+              );
             }}
             renderIndicator={() => {}}
           />
@@ -273,25 +280,25 @@ const UserImage = styled(Image)({
   marginBottom: 10,
 });
 const UserName = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 18,
   lineHeight: '25px',
-  color: '#7b43a5',
   fontWeight: 700,
   textAlign: 'center',
 });
 const UserData = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 16,
-  color: '#484848',
   textAlign: 'center',
 });
 const ProfileData = styled(View)({
+  ...GlobalStyles.primaryBorderColor,
   display: 'flex',
   flex: 1,
   flexDirection: 'row',
   flexWrap: 'wrap',
   marginTop: 30,
   borderBottomWidth: 1,
-  borderColor: '#ddd',
 });
 const ListHalfData = styled(View)({
   flex: '0 0 50%',
@@ -299,14 +306,15 @@ const ListHalfData = styled(View)({
   marginBottom: 15,
 });
 const Label = styled(Text)({
+  ...GlobalStyles.primaryTextColor,
   fontSize: 15,
   marginBottom: 3,
   fontFamily: 'FuturaPT-Light',
 });
 const LabelValue = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 18,
-  color: '#484848',
-  fontWeight: 700,
+  fontWeight: 600,
   fontFamily: 'FuturaPT-Medium',
 });
 const PartnerFunSec = styled(View)({
@@ -316,30 +324,29 @@ const PartnerFunSec = styled(View)({
   width: '100%',
 });
 const LookingForSec = styled(View)({
+  ...GlobalStyles.primaryBorderColor,
   marginTop: 20,
   flex: 1,
   flexDirection: 'column',
   width: '100%',
   borderTopWidth: 1,
-  borderColor: '#ddd',
   paddingTop: 20,
 });
 const PHeading = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 18,
-  lineHeight: '25px',
-  color: '#484848',
-  fontWeight: 700,
-  marginBottom: 10,
+  lineHeight: '23px',
+  fontWeight: 600,
+  marginBottom: 15,
 });
 const PValueWrap = styled(View)({
   flexDirection: 'row',
   flexWrap: 'wrap',
 });
 const PValue = styled(Text)({
+  ...GlobalStyles.primaryBoxWrap,
   fontSize: 16,
-  color: '#7b43a5',
   borderWidth: 1,
-  borderColor: '#7b43a5',
   padding: 7,
   paddingLeft: 20,
   paddingRight: 20,
