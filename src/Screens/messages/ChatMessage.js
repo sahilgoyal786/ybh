@@ -31,6 +31,7 @@ import userDetailContext from '../../common/userDetailContext';
 import Header from '../../components/header';
 import {Textarea, Toast} from 'native-base';
 import {FlatList} from 'react-native-gesture-handler';
+import GlobalStyles from '../../common/styles';
 const {width} = Dimensions.get('window');
 class ChatMessage extends React.Component {
   static contextType = userDetailContext;
@@ -253,7 +254,7 @@ class ChatMessage extends React.Component {
     let lastMsgDate = null;
     let dateTag = false;
     return (
-      <View style={{flex: 1}}>
+      <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
         <Header
           title={this.state.name}
           backButton="true"
@@ -261,9 +262,13 @@ class ChatMessage extends React.Component {
           showRightDrawer={false}
         />
         {this.state.isLoading && (
-          <ActivityIndicator color="#A073C4" size="large" />
+          <ActivityIndicator
+            color={{...GlobalStyles.customTextColor.color}}
+            size="large"
+          />
         )}
         <Dialog
+          dialogStyle={{...GlobalStyles.screenBackgroundColor}}
           visible={this.state.dialog}
           onTouchoutside={() =>
             this.setState({
@@ -280,8 +285,9 @@ class ChatMessage extends React.Component {
               value={this.state.editableMsg}
               placeholder="Enter your message...."
               style={{
+                ...GlobalStyles.secondaryBorderColor,
+                ...GlobalStyles.primaryTextColor,
                 borderWidth: 1,
-                borderColor: '#ccc',
                 borderRadius: 5,
                 padding: 10,
               }}
@@ -486,21 +492,22 @@ const styles = StyleSheet.create({
     height: 40,
   },
   bottomDrawerWrap: {
+    ...GlobalStyles.secondaryBackgroundColor,
+    ...GlobalStyles.primaryBorderColor,
     flex: 1,
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     zIndex: 999,
-    backgroundColor: '#fff',
-    borderTopColor: '#ddd',
     borderTopWidth: 1,
   },
   bottomDrawItem: {
+    ...GlobalStyles.primaryBorderColor,
+    ...GlobalStyles.secondaryTextColor,
     padding: 10,
     paddingLeft: 20,
     paddingRight: 20,
-    borderBottomColor: '#ddd',
     borderBottomWidth: 1,
     fontSize: 15,
   },
@@ -509,12 +516,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   bottomWrap: {
+    ...GlobalStyles.primaryBackgroundColor,
+    ...GlobalStyles.shadowColor,
     flexDirection: 'row',
     alignSelf: 'flex-end',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#7b43a5',
-    shadowColor: '#3d3d3d',
     shadowRadius: 2,
     shadowOpacity: 0.5,
     shadowOffset: {
@@ -522,9 +529,9 @@ const styles = StyleSheet.create({
     },
   },
   input: {
+    ...GlobalStyles.whiteTextColor,
     flex: 1,
     fontSize: 16,
-    color: '#fff',
     maxHeight: 80,
     minHeight: 40,
   },
@@ -553,15 +560,15 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   userTxtMsg: {
+    ...GlobalStyles.userMsgBackgroundColor,
+    ...GlobalStyles.shadowColor,
     maxWidth: width - 80,
     borderRadius: 20,
     borderBottomLeftRadius: 0,
-    backgroundColor: '#efefef',
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 20,
     paddingRight: 20,
-    shadowColor: '#3d3d3d',
     shadowRadius: 2,
     shadowOpacity: 0.5,
     shadowOffset: {
@@ -570,19 +577,19 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   userTxtMsgTxt: {
-    color: '#484848',
+    ...GlobalStyles.secondaryTextColor,
     fontSize: 15,
   },
   myMessage: {
+    ...GlobalStyles.primaryBackgroundColor,
+    ...GlobalStyles.shadowColor,
     maxWidth: width - 80,
     borderRadius: 20,
     borderBottomRightRadius: 0,
-    backgroundColor: '#7b43a5',
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 20,
     paddingRight: 20,
-    shadowColor: '#3d3d3d',
     shadowRadius: 2,
     shadowOpacity: 0.5,
     shadowOffset: {
@@ -592,12 +599,12 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   myMessageTxt: {
-    color: '#fff',
+    ...GlobalStyles.whiteTextColor,
     fontSize: 15,
   },
   time: {
+    ...GlobalStyles.timeTextColor,
     textAlign: 'right',
-    color: '#a0a0a0',
     fontSize: 12,
   },
   dateTagWrap: {
@@ -606,11 +613,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   dateTag: {
+    ...GlobalStyles.dateBackgroundColor,
+    ...GlobalStyles.dateTextColor,
     padding: 5,
     paddingLeft: 12,
     paddingRight: 12,
-    backgroundColor: '#ebf7ff',
-    color: '#333',
     borderRadius: 10,
     fontSize: 12,
   },

@@ -49,7 +49,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {GetFormattedDateWithMonth} from '../../common/helpers';
 import storage from '../../components/apis/storage';
-
+import GlobalStyles from '../../common/styles';
 class PersonalInfo extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {
@@ -1003,14 +1003,20 @@ class PersonalInfo extends React.Component {
                     <View style={{flex: 1, flexDirection: 'row'}}>
                       <Text
                         style={{
+                          ...GlobalStyles.secondaryTextColor,
                           flex: 1,
                           justifyContent: 'flex-start',
                           fontSize: 18,
-                          fontWeight: '700',
+                          fontWeight: '600',
                         }}>
                         {item.minLabel}
                       </Text>
-                      <Text style={{fontSize: 18, fontWeight: '700'}}>
+                      <Text
+                        style={{
+                          ...GlobalStyles.secondaryTextColor,
+                          fontSize: 18,
+                          fontWeight: '600',
+                        }}>
                         {item.maxLabel}
                       </Text>
                     </View>
@@ -1030,10 +1036,11 @@ class PersonalInfo extends React.Component {
                     </View>
                     <Text
                       style={{
+                        ...GlobalStyles.secondaryTextColor,
                         textAlign: 'center',
                         marginBottom: 10,
                         fontSize: 18,
-                        fontWeight: '700',
+                        fontWeight: '600',
                       }}>
                       {this.convertedCentoFeet()}
                     </Text>
@@ -1130,7 +1137,6 @@ class PersonalInfo extends React.Component {
                     useNativeAndroidPickerStyle={false}
                     Icon={() => {
                       return (
-                        // <Image source={downarrow} style={{width: 12, height: 12}} />
                         <FontAwesome5Icon
                           name="caret-down"
                           style={{fontSize: 15}}
@@ -1138,19 +1144,6 @@ class PersonalInfo extends React.Component {
                       );
                     }}
                   />
-                  // <TextInput
-                  //   key={index}
-                  //   multiline={true}
-                  //   numberOfLines={item.line}
-                  //   name={item.name}
-                  //   value={this.state.profile[item.name]}
-                  //   style={styles.input}
-                  //   placeholder={item.placeholder}
-                  //   placeholderTextColor={"#afafaf"}
-                  //   onChangeText={(text) =>
-                  //     this.updateProfileData(item.name, text)
-                  //   }
-                  // />
                 );
               }
             })}
@@ -1198,7 +1191,7 @@ class PersonalInfo extends React.Component {
       }
     });
     return (
-      <View style={{flex: 1, backgroundColor: 'white'}}>
+      <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
         {this.state.isLoading && (
           <ActivityIndicator
             color="#fff"
@@ -1242,10 +1235,10 @@ class PersonalInfo extends React.Component {
 }
 const styles = StyleSheet.create({
   input: {
+    ...GlobalStyles.secondaryTextColor,
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#484848',
-    color: '#484848',
     fontSize: 18,
     marginBottom: 20,
     flex: 1,
@@ -1254,10 +1247,10 @@ const styles = StyleSheet.create({
   },
 });
 const EmailInput = styled(TextInput)({
+  ...GlobalStyles.secondaryTextColor,
   padding: 10,
   borderBottomWidth: 1,
   borderBottomColor: '#484848',
-  color: '#484848',
   fontSize: 18,
   marginBottom: 20,
   flex: 1,
@@ -1310,32 +1303,32 @@ const ProfilePrev = styled(Image)({
   marginRight: 15,
 });
 const Heading = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 20,
   margin: 'auto',
   marginBottom: 20,
   alignItems: 'center',
-  color: '#484848',
-  fontWeight: 700,
+  fontWeight: 600,
 });
 const SubHeadingText = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 14,
   margin: 'auto',
   marginTop: -10,
   marginBottom: 20,
   alignItems: 'center',
-  color: '#484848',
 });
 const SingleElement = styled(View)({
+  ...GlobalStyles.secondaryBackgroundColor,
+  ...GlobalStyles.shadowColor,
+  ...GlobalStyles.primaryBorderColor,
   flex: 1,
   flexDirection: 'row',
   width: '100%',
   padding: 12,
   borderWidth: 2,
-  borderColor: '#fff',
   borderRadius: 5,
-  backgroundColor: '#fff',
   marginBottom: 15,
-  shadowColor: '#000',
   shadowOffset: {
     width: 1,
     height: 1,
@@ -1350,8 +1343,8 @@ const PImage = styled(Image)({
   marginRight: 20,
 });
 const PText = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 20,
-  color: '#484848',
   fontWeight: 600,
   lineHeight: '30px',
 });

@@ -4,7 +4,6 @@ import {useNavigation, DrawerActions} from '@react-navigation/native';
 import styled from 'styled-components/native';
 import {
   menu,
-  headerView,
   search,
   fillterBlack,
   profileWhiteIcon,
@@ -18,7 +17,7 @@ import {
 import {backicon} from '../common/images';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import userDetailContext from '../common/userDetailContext';
-
+import {GlobalImages} from '../common/styles';
 const Header = ({
   title,
   backButton = false,
@@ -33,7 +32,7 @@ const Header = ({
   return (
     <View style={{width: widthPercentageToDP(100), height: 120}}>
       <Image
-        source={headerView}
+        source={GlobalImages.header}
         style={{
           width: widthPercentageToDP(100),
           height: 107,

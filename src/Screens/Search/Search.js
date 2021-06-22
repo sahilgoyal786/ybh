@@ -18,7 +18,7 @@ import Header from '../../components/header';
 import storage from '../../components/apis/storage';
 import {Toast} from 'native-base';
 import {FlatList} from 'react-native-gesture-handler';
-
+import GlobalStyles from '../../common/styles';
 class Search extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {
@@ -171,7 +171,9 @@ class Search extends React.Component {
         {this.state.isLoading ? (
           <ActivityIndicator color="#A073C4" size="large" />
         ) : (
-          <Text>No user found.</Text>
+          <Text style={{...GlobalStyles.secondaryTextColor}}>
+            No user found.
+          </Text>
         )}
       </View>
     );
@@ -190,6 +192,7 @@ class Search extends React.Component {
   render() {
     return (
       <FlatList
+        style={{...GlobalStyles.screenBackgroundColor}}
         bounces={false}
         alwaysBounceVertical={false}
         onEndReached={() => this.loadMoreUsers()}
@@ -206,6 +209,7 @@ class Search extends React.Component {
   }
 }
 const UserList = styled(View)({
+  ...GlobalStyles.secondaryBackgroundColor,
   flex: 1,
   margin: 10,
   marginLeft: 20,
@@ -215,7 +219,6 @@ const UserList = styled(View)({
   paddingRight: 30,
   marginBottom: 15,
   borderRadius: 10,
-  backgroundColor: '#fff',
   shadowColor: '#000',
   shadowOffset: {
     width: 1,
@@ -226,10 +229,10 @@ const UserList = styled(View)({
   elevation: '5',
 });
 const UserName = styled(Text)({
+  ...GlobalStyles.customTextColor,
   fontSize: 18,
   lineHeight: '20px',
-  color: '#7b43a5',
-  fontWeight: 700,
+  fontWeight: 600,
   marginBottom: 8,
 });
 const UserData = styled(View)({
@@ -237,8 +240,8 @@ const UserData = styled(View)({
   flexDirection: 'row',
 });
 const UserDataText = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 16,
-  color: '#484848',
   lineHeight: '20px',
   marginRight: 20,
 });

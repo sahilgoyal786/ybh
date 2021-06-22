@@ -26,7 +26,8 @@ import network from '../../components/apis/network';
 import endpoints from '../../components/apis/endPoints';
 import {Toast} from 'native-base';
 import {SetPasswordValidationSchema} from '../../common/validations';
-import globalstyles from '../../common/styles';
+import GlobalStyles from '../../common/styles';
+import {GlobalImages} from '../../common/styles';
 
 const SetPassword = ({route, navigation}) => {
   const [verified, setVerified] = useState(false);
@@ -37,7 +38,9 @@ const SetPassword = ({route, navigation}) => {
     <KeyboardAwareScrollView
       contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
       <View>
-        <HeaaderBackgroundImage source={loginHeader} imageStyle="stretch">
+        <HeaaderBackgroundImage
+          source={GlobalImages.loginHeader}
+          imageStyle="stretch">
           <Top>
             <TouchableOpacity
               style={{
@@ -78,14 +81,12 @@ const SetPassword = ({route, navigation}) => {
               },
               (error) => {
                 setIsLoading(false);
-                // console.log(error, 'forgot fail');
                 if (error.message) {
                   Toast.show({text: error.message, duration: 4000});
                 }
                 navigation.navigate('Login');
               },
             );
-            // console.log(values);
           }}>
           {({
             handleChange,
@@ -103,8 +104,8 @@ const SetPassword = ({route, navigation}) => {
                 }}>
                 <Text
                   style={{
+                    ...GlobalStyles.secondaryTextColor,
                     fontSize: 18,
-                    color: '#484848',
                     fontWeight: '200',
                     fontFamily: 'FuturaPT-Medium',
                     marginBottom: 20,
@@ -113,7 +114,6 @@ const SetPassword = ({route, navigation}) => {
                 </Text>
               </View>
               <TextInput
-                // editable={!verified}
                 keyboardType="number-pad"
                 maxLength={6}
                 onChangeText={(text) => {
@@ -131,8 +131,6 @@ const SetPassword = ({route, navigation}) => {
                       },
                       (error) => {
                         setIsLoading(false);
-                        console.log(error, 'error');
-                        // console.log(error, 'forgot fail');
                         if (error.message) {
                           Toast.show({text: 'Please check the code.'});
                         }
@@ -196,19 +194,19 @@ const SetPassword = ({route, navigation}) => {
         </Formik>
       </View>
       <FooterBackgroundImage
-        source={loginFooter}
+        source={GlobalImages.loginFooter}
         imageStyle="stretch"></FooterBackgroundImage>
     </KeyboardAwareScrollView>
   );
 };
 const HeaaderBackgroundImage = styled(ImageBackground)({
-  height: hp(40),
+  height: hp(42),
   alignContent: 'center',
   justifyContent: 'center',
   marginBottom: 40,
 });
 const FooterBackgroundImage = styled(ImageBackground)({
-  height: hp(18),
+  height: hp(20),
   alignContent: 'center',
   justifyContent: 'center',
   marginBottom: 0,
@@ -219,13 +217,12 @@ const Top = styled(View)({
   justifyContent: 'flex-end',
 });
 const Bottom = styled(Text)({
-  color: '#ffffff',
+  ...GlobalStyles.whiteTextColor,
   fontSize: 25,
-  // fontWeight: '300',
   fontFamily: 'FuturaPT-Medium',
 });
 const Discrip = styled(Text)({
-  color: 'white',
+  ...GlobalStyles.whiteTextColor,
   fontSize: 15,
   fontWeight: '500',
 });
@@ -250,6 +247,8 @@ export const styles = StyleSheet.create({
     marginRight: wp(5),
   },
   userName: {
+    ...GlobalStyles.secondaryTextColor,
+    ...GlobalStyles.secondaryBorderColor,
     borderBottomWidth: 1,
     paddingVertical: hp(1),
     width: wp(78),
@@ -257,6 +256,8 @@ export const styles = StyleSheet.create({
     marginTop: 8,
   },
   PassTyle: {
+    ...GlobalStyles.secondaryTextColor,
+    ...GlobalStyles.secondaryBorderColor,
     borderBottomWidth: 1,
     paddingVertical: hp(1),
     width: wp(78),
@@ -271,12 +272,12 @@ export const styles = StyleSheet.create({
     width: wp(78),
   },
   account: {
-    color: '#484848',
+    ...GlobalStyles.secondaryTextColor,
     fontSize: 16,
   },
   gosignup: {
+    ...GlobalStyles.secondaryTextColor,
     textDecorationLine: 'underline',
-    color: '#484848',
   },
   containerchecked: {
     backgroundColor: 0,
@@ -284,7 +285,7 @@ export const styles = StyleSheet.create({
     marginRight: '4%',
   },
   error_message: {
-    ...globalstyles.error_message,
+    ...GlobalStyles.error_message,
     width: wp(78),
   },
 });

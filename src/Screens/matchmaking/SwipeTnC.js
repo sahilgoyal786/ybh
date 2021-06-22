@@ -6,11 +6,11 @@ import styled from 'styled-components/native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {Text, ScrollView, View, Image} from 'react-native';
 import Header from '../../components/header';
-
+import GlobalStyles from '../../common/styles';
 const SwipeTnC = () => {
   const navigation = useNavigation();
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
       <Image
         source={bottomCurve}
         style={{
@@ -35,6 +35,7 @@ const SwipeTnC = () => {
           <TopImage source={SwipeTnCIcon} resizeMode="contain"></TopImage>
           <Text
             style={{
+              ...GlobalStyles.secondaryTextColor,
               width: '100%',
               fontSize: 16,
               lineHeight: 24,
@@ -44,6 +45,7 @@ const SwipeTnC = () => {
           </Text>
           <Text
             style={{
+              ...GlobalStyles.secondaryTextColor,
               width: '100%',
               fontSize: 16,
               lineHeight: 24,
@@ -53,6 +55,7 @@ const SwipeTnC = () => {
           </Text>
           <Text
             style={{
+              ...GlobalStyles.secondaryTextColor,
               width: '100%',
               fontSize: 16,
               lineHeight: 24,

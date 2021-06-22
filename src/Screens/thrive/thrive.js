@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-//import {Text, StyleSheet, View, ImageBackground, Image} from 'react-native';
 import {bottomCurve} from '../../common/images';
 import styled from 'styled-components/native';
 import ResponsiveImage from 'react-native-responsive-image';
@@ -7,9 +6,7 @@ import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-//import { ScrollView} from 'react-native-gesture-handler';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
-
 import {
   StyleSheet,
   TouchableOpacity,
@@ -31,7 +28,8 @@ import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import {TextInput} from 'react-native-gesture-handler';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-//import { Image } from 'native-base';
+import {GlobalImages} from '../../common/styles';
+import GlobalStyles from '../../common/styles';
 
 const Thrive = ({route, navigation}) => {
   const [loadingMore, setLoadingMore] = React.useState(false);
@@ -180,7 +178,7 @@ const Thrive = ({route, navigation}) => {
 
   return (
     <FlatList
-      // keyboardShouldPersistTaps="handled"
+      style={{...GlobalStyles.screenBackgroundColor}}
       keyExtractor={() => Math.random().toString()}
       bounces={false}
       onEndReached={() => {

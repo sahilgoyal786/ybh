@@ -32,16 +32,22 @@ import network from '../../components/apis/network';
 import endpoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import {Toast} from 'native-base';
-
+import GlobalStyles from '../../common/styles';
+import {GlobalImages} from '../../common/styles';
 const Forgot = () => {
   const navigation = useNavigation();
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const [isLoading, setIsLoading] = useState(false);
   return (
     <KeyboardAwareScrollView
-      contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
+      contentContainerStyle={{
+        ...GlobalStyles.screenBackgroundColor,
+        flexGrow: 1,
+      }}>
       <View>
-        <HeaaderBackgroundImage source={loginHeader} imageStyle="stretch">
+        <HeaaderBackgroundImage
+          source={GlobalImages.loginHeader}
+          imageStyle="stretch">
           <Top>
             <TouchableOpacity
               style={{
@@ -96,8 +102,8 @@ const Forgot = () => {
                 }}>
                 <Text
                   style={{
+                    ...GlobalStyles.secondaryTextColor,
                     fontSize: 18,
-                    color: '#484848',
                     fontWeight: '200',
                     fontFamily: 'FuturaPT-Medium',
                   }}>
@@ -127,19 +133,19 @@ const Forgot = () => {
         </Formik>
       </View>
       <FooterBackgroundImage
-        source={loginFooter}
+        source={GlobalImages.loginFooter}
         imageStyle="stretch"></FooterBackgroundImage>
     </KeyboardAwareScrollView>
   );
 };
 const HeaaderBackgroundImage = styled(ImageBackground)({
-  height: hp(40),
+  height: hp(42),
   alignContent: 'center',
   justifyContent: 'center',
   marginBottom: 40,
 });
 const FooterBackgroundImage = styled(ImageBackground)({
-  height: hp(18),
+  height: hp(20),
   alignContent: 'center',
   justifyContent: 'center',
   marginBottom: 0,
@@ -152,7 +158,6 @@ const Top = styled(View)({
 const Bottom = styled(Text)({
   color: '#ffffff',
   fontSize: 25,
-  // fontWeight: '300',
   fontFamily: 'FuturaPT-Medium',
 });
 const Discrip = styled(Text)({
@@ -174,13 +179,14 @@ const MainView = styled.View({
 const Checkicons = styled(ResponsiveImage)({
   tintColor: '#000',
 });
-
 export const styles = StyleSheet.create({
   fogot: {
     justifyContent: 'center',
     marginRight: wp(5),
   },
   userName: {
+    ...GlobalStyles.secondaryTextColor,
+    ...GlobalStyles.secondaryBorderColor,
     borderBottomWidth: 1,
     paddingVertical: hp(1),
     width: wp(80),
@@ -188,6 +194,8 @@ export const styles = StyleSheet.create({
     marginTop: hp(1),
   },
   PassTyle: {
+    ...GlobalStyles.secondaryTextColor,
+    ...GlobalStyles.secondaryBorderColor,
     borderBottomWidth: 1,
     paddingVertical: hp(1),
     width: wp(78),
@@ -202,12 +210,12 @@ export const styles = StyleSheet.create({
     width: wp(78),
   },
   account: {
-    color: '#484848',
+    ...GlobalStyles.secondaryTextColor,
     fontSize: 16,
   },
   gosignup: {
+    ...GlobalStyles.secondaryTextColor,
     textDecorationLine: 'underline',
-    color: '#484848',
   },
   containerchecked: {
     backgroundColor: 0,

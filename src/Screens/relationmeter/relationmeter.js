@@ -27,7 +27,8 @@ import {Share} from 'react-native';
 import userDetailContext from '../../common/userDetailContext';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
-
+import {GlobalImages} from '../../common/styles';
+import GlobalStyles from '../../common/styles';
 const RelationMeter = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [relationshipMeterScore, setRelationshipMeterScore] = useState(null);
@@ -205,9 +206,9 @@ const RelationMeter = ({navigation}) => {
   }, [answeredQuestions]);
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
       <Image
-        source={bottomCurve}
+        source={GlobalImages.footer}
         style={{
           width: widthPercentageToDP(100),
           height: 200,
@@ -341,15 +342,16 @@ const AgreeText = styled(Text)({
   fontFamily: 'FuturaPT-Book',
 });
 const ViewSec = styled(View)({
+  ...GlobalStyles.secondaryBackgroundColor,
   flexDirection: 'row',
   borderWidth: 4,
   borderColor: '#986CBF',
   margin: 15,
   padding: 20,
-  backgroundColor: '#FAF9FF',
   borderRadius: 4,
 });
 const TextLong = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   marginLeft: widthPercentageToDP(1),
   fontFamily: 'FuturaPT-Light',
   fontSize: 17,

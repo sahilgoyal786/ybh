@@ -32,6 +32,8 @@ import FastImage from 'react-native-fast-image';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
+import {GlobalImages} from '../../common/styles';
+import GlobalStyles from '../../common/styles';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -65,7 +67,7 @@ const Thrivedetails = ({route, navigation}) => {
   }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
       <Image
         source={bottomCurve}
         style={{

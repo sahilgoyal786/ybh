@@ -4,7 +4,9 @@ export const slider2 = require('../assets/icons/icon2.png');
 export const slider3 = require('../assets/icons/icon3.png');
 export const loginbackground = require('../assets/icons/login-screen-bgone.png');
 export const loginHeader = require('../assets/icons/login-screen-header.png');
+export const loginHeaderDark = require('../assets/icons/login-screen-header-dark.png');
 export const loginFooter = require('../assets/icons/login-screen-footer.png');
+export const loginFooterDark = require('../assets/icons/login-screen-footer-dark.png');
 
 export const unchecked = require('../assets/icons/blank-square.png');
 export const iconchecked = require('../assets/icons/check-box.png');
@@ -23,9 +25,11 @@ export const fillter = require('../assets/icons/fillter.png');
 export const fillterBlack = require('../assets/icons/fillter-black.png');
 export const dots = require('../assets/icons/trivia-bg-img.png');
 export const headerView = require('../assets/icons/headerview.png');
+export const headerViewDark = require('../assets/icons/headerview-dark.png');
 export const botomView = require('../assets/icons/curb-bg.png');
 
 export const bottomCurve = require('../assets/icons/bottom-curb.png');
+export const bottomCurveDark = require('../assets/icons/bottom-curb-dark.png');
 export const image15 = require('../assets/icons/img8.png');
 export const signupsec = require('../assets/icons/login-screen-bgone.png');
 export const menubackground = require('../assets/icons/login-screen-bgone.png');
@@ -85,6 +89,7 @@ export const sync = require('../assets/icons/sync.png');
 export const dryclnradio = require('../assets/icons/dry-clean.png');
 
 export const selectedTabCurve = require('../assets/icons/bottomtab-selected.png');
+export const selectedTabCurveDark = require('../assets/icons/bottomtab-selected-dark.png');
 export const placeholderProfilePhoto = require('../assets/icons/blank_portrait.png');
 
 export const PlanBackground = require('../assets/icons/matchmaking/plan-background.png');

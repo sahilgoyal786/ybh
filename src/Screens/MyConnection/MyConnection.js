@@ -14,7 +14,7 @@ import {
 import Header from '../../components/header';
 import {Toast} from 'native-base';
 import {FlatList} from 'react-native-gesture-handler';
-
+import GlobalStyles from '../../common/styles';
 class MyConnection extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {
@@ -326,25 +326,34 @@ class MyConnection extends React.Component {
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
+                flexWrap: 'wrap',
               }}>
               {item.user_id === item.mylist.connection_id && (
                 <>
                   <Text
                     style={{
+                      ...GlobalStyles.secondaryTextColor,
                       fontSize: 18,
                       fontWeight: '700',
                       marginRight: 7,
                     }}>
                     {item.username}
                   </Text>
-                  <Text style={{fontSize: 16}}>send you request</Text>
+                  <Text
+                    style={{...GlobalStyles.secondaryTextColor, fontSize: 16}}>
+                    send you request
+                  </Text>
                 </>
               )}
               {item.user_id != item.mylist.connection_id && (
                 <>
-                  <Text style={{fontSize: 16}}>You send an request to</Text>
+                  <Text
+                    style={{...GlobalStyles.secondaryTextColor, fontSize: 16}}>
+                    You send an request to
+                  </Text>
                   <Text
                     style={{
+                      ...GlobalStyles.secondaryTextColor,
                       fontSize: 18,
                       fontWeight: '700',
                       marginLeft: 7,
@@ -395,7 +404,9 @@ class MyConnection extends React.Component {
         {this.state.isLoading || this.state.loadingMore ? (
           <ActivityIndicator color="#A073C4" size="large" />
         ) : (
-          <Text>No request found.</Text>
+          <Text style={{...GlobalStyles.secondaryTextColor}}>
+            No request found.
+          </Text>
         )}
       </View>
     );
@@ -441,6 +452,7 @@ class MyConnection extends React.Component {
       <>
         {this.state.activeTab == 'connected' && (
           <FlatList
+            style={{...GlobalStyles.screenBackgroundColor}}
             bounces={false}
             alwaysBounceVertical={false}
             onEndReached={() => this.loadMoreTabData()}
@@ -456,6 +468,7 @@ class MyConnection extends React.Component {
         )}
         {this.state.activeTab == 'pending' && (
           <FlatList
+            style={{...GlobalStyles.screenBackgroundColor}}
             bounces={false}
             alwaysBounceVertical={false}
             onEndReached={() => this.loadMoreTabData()}
@@ -474,15 +487,16 @@ class MyConnection extends React.Component {
   }
 }
 const ListLayout = styled(View)({
+  ...GlobalStyles.secondaryBackgroundColor,
+  ...GlobalStyles.primaryBorderColor,
+  ...GlobalStyles.shadowColor,
   flexDirection: 'row',
   alignItems: 'center',
   flex: 1,
   marginBottom: 15,
-  backgroundColor: '#fff',
-  border: '1px solid #ddd',
+  borderWidth: 1,
   borderRadius: 5,
   overflow: 'hidden',
-  shadowColor: '#000',
   shadowOffset: {
     width: 1,
     height: 1,
@@ -506,11 +520,11 @@ const ListButtons = styled(View)({
   marginTop: 8,
 });
 const ReqButton = styled(Text)({
+  ...GlobalStyles.whiteTextColor,
   padding: 8,
   paddingLeft: 20,
   paddingRight: 20,
   backgroundColor: '#f00',
-  color: '#fff',
   borderRadius: 5,
   marginRight: 10,
   fontWeight: 700,

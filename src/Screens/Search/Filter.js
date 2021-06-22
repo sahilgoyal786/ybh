@@ -1,5 +1,5 @@
 import React from 'react';
-import {bottomCurve} from '../../common/images';
+import {bottomCurve, bottomCurveDark} from '../../common/images';
 import styled from 'styled-components/native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {
@@ -13,7 +13,8 @@ import Header from '../../components/header';
 import storage from '../../components/apis/storage';
 import {RangeSlider} from '@sharcoux/slider';
 import {Label} from 'native-base';
-
+import {GlobalImages} from '../../common/styles';
+import GlobalStyles from '../../common/styles';
 class Filter extends React.Component {
   constructor(props) {
     super(props);
@@ -167,9 +168,9 @@ class Filter extends React.Component {
                 style={
                   this.state.filter[item.name] == innerItem
                     ? {
-                        backgroundColor: '#7b43a5',
-                        borderColor: '#7b43a5',
-                        color: '#fff',
+                        ...GlobalStyles.whiteTextColor,
+                        ...GlobalStyles.primaryBackgroundColor,
+                        ...GlobalStyles.borderColor,
                       }
                     : {}
                 }>
@@ -192,14 +193,20 @@ class Filter extends React.Component {
             <View style={{flex: 1, flexDirection: 'row'}}>
               <Text
                 style={{
+                  ...GlobalStyles.secondaryTextColor,
                   flex: 1,
                   justifyContent: 'flex-start',
                   fontSize: 18,
-                  fontWeight: '700',
+                  fontWeight: '600',
                 }}>
                 {this.mapLabel(item, 0)}
               </Text>
-              <Text style={{fontSize: 18, fontWeight: '700'}}>
+              <Text
+                style={{
+                  ...GlobalStyles.secondaryTextColor,
+                  fontSize: 18,
+                  fontWeight: '600',
+                }}>
                 {this.mapLabel(item, 1)}
               </Text>
             </View>
@@ -235,9 +242,9 @@ class Filter extends React.Component {
       }
     });
     return (
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
+      <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
         <Image
-          source={bottomCurve}
+          source={GlobalImages.footer}
           style={{
             width: widthPercentageToDP(100),
             height: 200,
@@ -249,6 +256,7 @@ class Filter extends React.Component {
         <Text
           onPress={() => this.resetFilter()}
           style={{
+            ...GlobalStyles.secondaryTextColor,
             padding: 5,
             position: 'absolute',
             right: 10,
@@ -279,10 +287,11 @@ const DataWrap = styled(View)({
   flexWrap: 'wrap',
 });
 const FValue = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
+  ...GlobalStyles.primaryBorderColor,
+  ...GlobalStyles.secondaryBackgroundColor,
   fontSize: 16,
-  color: '#484848',
   borderWidth: 1,
-  borderColor: '#ddd',
   padding: 7,
   paddingLeft: 20,
   paddingRight: 20,
@@ -291,17 +300,17 @@ const FValue = styled(Text)({
   marginRight: 8,
 });
 const BottomLineWrap = styled(View)({
+  ...GlobalStyles.primaryBorderColor,
   flex: 1,
   borderBottomWidth: 1,
-  borderColor: '#ddd',
   paddingBottom: 15,
   marginBottom: 15,
 });
 const Heading = styled(Text)({
-  fontSize: 20,
-  marginBottom: 25,
+  ...GlobalStyles.secondaryTextColor,
+  fontSize: 18,
+  marginBottom: 23,
   alignItems: 'center',
-  color: '#484848',
-  fontWeight: 700,
+  fontWeight: 600,
 });
 export default Filter;

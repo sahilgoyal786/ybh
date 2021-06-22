@@ -6,13 +6,13 @@ import {
   widthPercentageToDP,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {selectedTabCurve} from '../common/images';
 import ResponsiveImage from 'react-native-responsive-image';
 import Trivia from '../Screens/trivia/trivia';
 import LinearGradient from 'react-native-linear-gradient';
 import userDetailContext from './userDetailContext';
 import storage from '../components/apis/storage';
-
+import GlobalStyles from '../common/styles';
+import {GlobalImages} from '../common/styles';
 const BottomTab = ({state, descriptors, navigation}) => {
   const [userDetail, changeUserDetail] = useContext(userDetailContext);
 
@@ -74,7 +74,7 @@ const BottomTab = ({state, descriptors, navigation}) => {
                 style={
                   isFocused
                     ? {
-                        backgroundColor: '#9F74C5',
+                        ...GlobalStyles.BottomtabBackgroundColor,
                         height: 70,
                         width: widthPercentageToDP(20),
                         marginTop: 20,
@@ -83,10 +83,10 @@ const BottomTab = ({state, descriptors, navigation}) => {
                         zIndex: 1,
                       }
                     : {
+                        ...GlobalStyles.BottomtabBackgroundColor,
                         height: 70,
                         width: widthPercentageToDP(20),
                         marginTop: 20,
-                        backgroundColor: '#9F74C5',
                         alignItems: 'center',
                         justifyContent: 'center',
                       }
@@ -94,8 +94,14 @@ const BottomTab = ({state, descriptors, navigation}) => {
                 <LinearGradient
                   colors={
                     isFocused
-                      ? ['#9F74C5', '#8F64B5', '#7F54A5']
-                      : ['#9F74C5', '#9F74C5']
+                      ? [
+                          GlobalStyles.gradientColorsFrom,
+                          GlobalStyles.gradientColorsTo,
+                        ]
+                      : [
+                          GlobalStyles.gradientColorsFrom,
+                          GlobalStyles.gradientColorsFrom,
+                        ]
                   }
                   style={{
                     bottom: 0,
@@ -112,9 +118,12 @@ const BottomTab = ({state, descriptors, navigation}) => {
                       height: 20,
                       width: widthPercentageToDP(20) + 10,
                       top: -16,
-                      left: -5,
+                      left: 0,
                     }}>
-                    <Image source={selectedTabCurve} resizeMode="contain" />
+                    <Image
+                      source={GlobalImages.tabCurve}
+                      resizeMode="contain"
+                    />
                   </View>
                 )}
                 {typeof userDetail['user'] !== 'undefined' &&

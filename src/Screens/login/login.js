@@ -8,9 +8,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {useState} from 'react';
-
-import {loginHeader, loginFooter} from '../../common/images';
-
 import styled from 'styled-components/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
@@ -26,12 +23,12 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation} from '@react-navigation/native';
 import {LoginValidationSchema} from '../../common/validations';
 import {AuthContext} from '../../common/AuthContext';
-import globalstyles from '../../common/styles';
+import GlobalStyles from '../../common/styles';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import storage from '../../components/apis/storage';
 import {Toast} from 'native-base';
-
+import {GlobalImages} from '../../common/styles';
 const Login = (props) => {
   const navigation = useNavigation();
   const {signIn} = React.useContext(AuthContext);
@@ -65,9 +62,14 @@ const Login = (props) => {
 
   return (
     <KeyboardAwareScrollView
-      contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
+      contentContainerStyle={{
+        ...GlobalStyles.screenBackgroundColor,
+        flexGrow: 1,
+      }}>
       <View>
-        <HeaaderBackgroundImage source={loginHeader} imageStyle="stretch">
+        <HeaaderBackgroundImage
+          source={GlobalImages.loginHeader}
+          imageStyle="stretch">
           <Top>
             <Bottom>SIGN IN </Bottom>
             <Discrip>Enter Your User Name and Password</Discrip>
@@ -77,8 +79,6 @@ const Login = (props) => {
       <View style={{flex: 1, flexGrow: 1, minHeight: hp(30)}}>
         <Formik
           initialValues={{
-            // email: 'sahilgoyal1@gmail.com',
-            // password: '123456789',
             email: '',
             password: '',
           }}
@@ -102,7 +102,6 @@ const Login = (props) => {
                   storage.setData('user', JSON.stringify(response.user));
                   signIn(response);
                 } else {
-                  // console.log('console.log(error),',error)
                 }
               },
               (error) => {
@@ -143,8 +142,6 @@ const Login = (props) => {
                 <Text style={styles.error_message}>{errors.email}</Text>
               )}
               <TextInput
-                // onChangeText={handleChange('email')}
-                // onBlur={handleBlur('email')}
                 value={values.pass}
                 placeholder="PASSWORD"
                 secureTextEntry={true}
@@ -155,7 +152,6 @@ const Login = (props) => {
                 placeholderTextColor={'#afafaf'}
                 style={styles.PassTyle}
               />
-
               {errors.password && touched.password && (
                 <Text style={styles.error_message}>{errors.password}</Text>
               )}
@@ -172,9 +168,6 @@ const Login = (props) => {
 
               <Button
                 onPress={handleSubmit}
-                // onPress={() => {
-                //   navigation.navigate('Welcomeuser');
-                // }}
                 style={styles.loginbuttin}
                 name={'Login'}
                 isLoading={isLoading}
@@ -197,19 +190,19 @@ const Login = (props) => {
         </Formik>
       </View>
       <FooterBackgroundImage
-        source={loginFooter}
+        source={GlobalImages.loginFooter}
         imageStyle="stretch"></FooterBackgroundImage>
     </KeyboardAwareScrollView>
   );
 };
 const HeaaderBackgroundImage = styled(ImageBackground)({
-  height: heightPercentageToDP(40),
+  height: heightPercentageToDP(42),
   alignContent: 'center',
   justifyContent: 'center',
   marginBottom: 40,
 });
 const FooterBackgroundImage = styled(ImageBackground)({
-  height: heightPercentageToDP(18),
+  height: heightPercentageToDP(20),
   alignContent: 'center',
   justifyContent: 'center',
   marginBottom: 0,
@@ -222,13 +215,11 @@ const Top = styled(View)({
 const Bottom = styled(Text)({
   color: '#ffffff',
   fontSize: 25,
-  // fontWeight: '300',
   fontFamily: 'FuturaPT-Medium',
 });
 const Discrip = styled(Text)({
   color: 'white',
   fontSize: 13,
-  // fontWeight: '500',
   fontFamily: 'FuturaPT-Medium',
 });
 const SigninButton = styled.View({
@@ -254,6 +245,8 @@ export const styles = StyleSheet.create({
     marginRight: wp(5),
   },
   userName: {
+    ...GlobalStyles.secondaryTextColor,
+    ...GlobalStyles.secondaryBorderColor,
     borderBottomWidth: 1,
     paddingVertical: hp(1),
     width: '100%',
@@ -261,6 +254,8 @@ export const styles = StyleSheet.create({
     marginTop: hp(1.9),
   },
   PassTyle: {
+    ...GlobalStyles.secondaryTextColor,
+    ...GlobalStyles.secondaryBorderColor,
     borderBottomWidth: 1,
     paddingVertical: hp(0.8),
     width: '100%',
@@ -268,21 +263,22 @@ export const styles = StyleSheet.create({
     marginTop: hp(3),
   },
   Forgotstyle: {
+    ...GlobalStyles.secondaryTextColor,
     fontSize: 14,
     fontFamily: 'FuturaPT-Medium',
-    color: '#484848',
   },
   loginbuttin: {
     marginTop: hp(3),
   },
   account: {
-    color: '#484848',
+    ...GlobalStyles.secondaryTextColor,
     fontSize: 16,
     fontFamily: 'FuturaPT-Light',
+    marginBottom: 20,
   },
   gosignup: {
+    ...GlobalStyles.secondaryTextColor,
     textDecorationLine: 'underline',
-    color: '#484848',
     fontFamily: 'FuturaPT-Light',
   },
   containerchecked: {
@@ -292,6 +288,6 @@ export const styles = StyleSheet.create({
     fontFamily: 'FuturaPT-Light',
     color: 'red',
   },
-  error_message: globalstyles.error_message,
+  error_message: GlobalStyles.error_message,
 });
 export default Login;

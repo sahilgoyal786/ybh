@@ -1,11 +1,6 @@
 import React, {useState} from 'react';
 import {Text, StyleSheet, View, ImageBackground, FlatList} from 'react-native';
-import {
-  loginFooter,
-  loginHeader,
-  signupslider1,
-  signupslider2,
-} from '../../common/images';
+import {signupslider1, signupslider2} from '../../common/images';
 import styled from 'styled-components/native';
 import Button from '../../components/button';
 import LinearGradient from 'react-native-linear-gradient';
@@ -33,7 +28,8 @@ import {SignupValidationSchema} from '../../common/validations';
 import userDetailContest from '../../common/userDetailContext';
 import EndPoints from '../../components/apis/endPoints';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-
+import GlobalStyles from '../../common/styles';
+import {GlobalImages} from '../../common/styles';
 const Signup = () => {
   const [Tab, setTab] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -106,10 +102,13 @@ const Signup = () => {
   };
   return (
     <KeyboardAwareScrollView
-      contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
+      contentContainerStyle={{
+        ...GlobalStyles.screenBackgroundColor,
+        flexGrow: 1,
+      }}>
       <View>
         <HeaaderBackgroundImage
-          source={loginHeader}
+          source={GlobalImages.loginHeader}
           imageStyle="stretch"
           contentContainerStyle={{flex: 1, marginBottom: 100}}>
           <View
@@ -135,21 +134,11 @@ const Signup = () => {
               layout={'default'}
               layoutCardOffset={10}
             />
-            {/* <Pagination
-              dotsLength={data.length}
-              activeDotIndex={Tab}
-              renderDots={_renderDots}
-            /> */}
           </TopSec>
         </HeaaderBackgroundImage>
       </View>
       <Formik
         initialValues={{
-          // name: 'Sahil',
-          // email:
-          //   'sahil' + Math.floor(Math.random() * 1000) + '@32bitsolutions.com',
-          // password: '123456789',
-          // password_confirmation: '123456789',
           name: '',
           email: '',
           password: '',
@@ -173,7 +162,6 @@ const Signup = () => {
                   text: response.message,
                   duration: 5000,
                 });
-              // console.log(response);
               navigation.navigate('VerifyEmail', {email: response.user.email});
             },
             (error) => {
@@ -206,7 +194,7 @@ const Signup = () => {
           touched,
           isValid,
         }) => (
-          <View>
+          <SigninButton>
             <TextInputView>
               <TextInput
                 name="name"
@@ -270,19 +258,33 @@ const Signup = () => {
               </Text>
             )}
             <TextInputView>
-              <Text style={{fontSize: 16, marginTop: 20}}>
+              <Text
+                style={{
+                  ...GlobalStyles.secondaryTextColor,
+                  fontSize: 16,
+                  marginTop: 20,
+                }}>
                 <FontAwesome5Icon
                   solid={termsAgreed}
                   name={!termsAgreed ? 'square' : 'check-square'}
                   onPress={() => setTermsAgreed(!termsAgreed)}
-                  style={{fontSize: 18, padding: 4, color: '#A073C4'}}
-                />{' '}
+                  style={{
+                    ...GlobalStyles.customTextColor,
+                    fontSize: 18,
+                    padding: 4,
+                    marginRight: 5,
+                  }}
+                />
+                {'  '}
                 <Text onPress={() => setTermsAgreed(!termsAgreed)}>
                   I agree to the{' '}
                 </Text>
                 <Text
                   onPress={() => navigation.navigate('TnC')}
-                  style={{textDecorationLine: 'underline', color: '#A073C4'}}>
+                  style={{
+                    ...GlobalStyles.customTextColor,
+                    textDecorationLine: 'underline',
+                  }}>
                   terms and conditions
                 </Text>
               </Text>
@@ -301,16 +303,16 @@ const Signup = () => {
               isLoading={isLoading}
               linear
             />
-          </View>
+          </SigninButton>
         )}
       </Formik>
       <AlreadyAccountText>
         Already have an account?{' '}
         <AlreadyAccountText
           style={{
+            ...GlobalStyles.secondaryTextColor,
             textDecorationLine: 'underline',
             fontFamily: 'FuturaPT-Light',
-            color: '#484848',
           }}
           onPress={() => {
             navigation.navigate('Login');
@@ -318,11 +320,9 @@ const Signup = () => {
           Sign in
         </AlreadyAccountText>
       </AlreadyAccountText>
-
       <FooterBackgroundImage
-        source={loginFooter}
+        source={GlobalImages.loginFooter}
         imageStyle="stretch"></FooterBackgroundImage>
-      {/* </ScrollView> */}
     </KeyboardAwareScrollView>
   );
 };
@@ -334,21 +334,20 @@ const HeaaderBackgroundImage = styled(ImageBackground)({
   marginBottom: 60,
 });
 const FooterBackgroundImage = styled(ImageBackground)({
-  height: hp(18),
+  height: hp(20),
   alignContent: 'center',
   justifyContent: 'center',
   marginBottom: 0,
 });
 const BackgroundImage = styled(ImageBackground)({
   flex: 1,
-  // height: wp(150),
   alignItems: 'center',
 });
 const Top = styled(Text)({
+  ...GlobalStyles.whiteTextColor,
   textAlign: 'center',
   fontSize: 25,
   fontWeight: '400',
-  color: '#ffffff',
   fontFamily: 'Futura-Medium',
 });
 const TopSec = styled.View({});
@@ -360,16 +359,21 @@ const TextInputView = styled(View)({
   marginTop: hp(1),
 });
 const EmailVerText = styled.Text({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 12,
   marginTop: hp(1),
-  color: '#484848',
   textAlign: 'center',
   fontFamily: 'FuturaPT-Light',
   width: wp(80),
-  // backgroundColor: 'red',
+});
+const SigninButton = styled.View({
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  width: wp(78),
+  alignSelf: 'center',
 });
 const AlreadyAccountText = styled.Text({
-  color: '#484848',
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 16,
   textAlign: 'center',
   marginTop: hp(3),
@@ -377,14 +381,6 @@ const AlreadyAccountText = styled.Text({
   fontFamily: 'FuturaPT-Light',
 });
 const styles = StyleSheet.create({
-  error_message: {
-    fontSize: 10,
-    color: 'red',
-    width: wp(78),
-    alignSelf: 'center',
-    marginTop: 5,
-    marginBottom: 5,
-  },
   slider: {
     flexGrow: 0,
   },
@@ -392,12 +388,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: hp(6),
   },
-
   dotContainerStyle: {
     marginTop: -hp(2),
     width: wp(2),
   },
-
   activeDotStyle: {
     width: 10,
     height: 10,
@@ -413,11 +407,14 @@ const styles = StyleSheet.create({
     borderColor: LightPink,
   },
   inputField: {
+    ...GlobalStyles.secondaryTextColor,
+    ...GlobalStyles.secondaryBorderColor,
     borderBottomWidth: 1,
     paddingVertical: hp(1),
-    width: wp(78),
     fontSize: 17,
     marginTop: 8,
+    fontFamily: 'FuturaPT-Light',
   },
+  error_message: GlobalStyles.error_message,
 });
 export default Signup;

@@ -11,6 +11,7 @@ import {Text, ScrollView, View, Image, ActivityIndicator} from 'react-native';
 import Header from '../../components/header';
 import {Toast} from 'native-base';
 import ImagePicker from 'react-native-image-picker';
+import GlobalStyles from '../../common/styles';
 class PhotoVerification extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {
@@ -76,7 +77,7 @@ class PhotoVerification extends React.Component {
   };
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: 'white'}}>
+      <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
         {this.state.isLoading && (
           <ActivityIndicator
             color="#fff"
@@ -114,7 +115,12 @@ class PhotoVerification extends React.Component {
           contentContainerStyle={{paddingBottom: 40}}>
           <View style={{marginBottom: 20, alignItems: 'center'}}>
             <Heading>Keep your face still and look into the circle.</Heading>
-            <Text style={{fontSize: 16, lineHeight: 24}}>
+            <Text
+              style={{
+                ...GlobalStyles.secondaryTextColor,
+                fontSize: 16,
+                lineHeight: 24,
+              }}>
               Without verifying your photo you cannot use this app. We have to
               make sure is a safe environment.
             </Text>
@@ -129,7 +135,13 @@ class PhotoVerification extends React.Component {
                   : placeholderProfilePhoto
               }
             />
-            <Text style={{fontSize: 17, lineHeight: 24, textAlign: 'center'}}>
+            <Text
+              style={{
+                ...GlobalStyles.secondaryTextColor,
+                fontSize: 17,
+                lineHeight: 24,
+                textAlign: 'center',
+              }}>
               Your photo will not be posted or stored once verified.
             </Text>
             <Button
@@ -145,9 +157,9 @@ class PhotoVerification extends React.Component {
   }
 }
 const Heading = styled(Text)({
+  ...GlobalStyles.customTextColor,
   fontSize: 20,
   marginBottom: 10,
-  color: '#7b43a5',
   lineHeight: 26,
 });
 const ProfileImage = styled(Image)({

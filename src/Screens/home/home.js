@@ -23,9 +23,8 @@ import Header from '../../components/header';
 import ThriveArticle from '../../components/thriveArticle';
 import userDetailContext from '../../common/userDetailContext';
 import FastImage from 'react-native-fast-image';
-
 import ContentLoader from 'react-native-easy-content-loader';
-import {bottomCurve, MatchLogo} from '../../common/images';
+import {MatchLogo} from '../../common/images';
 import LeaderBoard from '../../components/leaderBoard';
 import Button from '../../components/button';
 import network from '../../components/apis/network';
@@ -40,7 +39,8 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import {Toast} from 'native-base';
 let RNFS = require('react-native-fs');
-
+import {GlobalImages} from '../../common/styles';
+import GlobalStyles from '../../common/styles';
 const Home = () => {
   const [votingImages, setVotingImages] = React.useState([]);
   const [votingEnabled, setVotingEnabled] = React.useState(true);
@@ -370,9 +370,9 @@ const Home = () => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
       <Image
-        source={bottomCurve}
+        source={GlobalImages.footer}
         style={{
           width: widthPercentageToDP(100),
           height: 200,
@@ -821,6 +821,7 @@ const styles = StyleSheet.create({
     margin: 6,
   },
   sectionHeading: {
+    ...GlobalStyles.secondaryTextColor,
     marginLeft: 10,
     marginTop: 20,
     marginBottom: 8,

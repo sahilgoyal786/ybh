@@ -27,6 +27,8 @@ import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import {GlobalImages} from '../../common/styles';
+import GlobalStyles from '../../common/styles';
 
 const CompatibilityTestsHome = ({navigation}) => {
   const [dialog, setDialog] = useState(false);
@@ -62,9 +64,9 @@ const CompatibilityTestsHome = ({navigation}) => {
     );
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
       <Image
-        source={bottomCurve}
+        source={GlobalImages.footer}
         style={{
           width: widthPercentageToDP(100),
           height: 200,
@@ -115,18 +117,18 @@ const CompatibilityTestsHome = ({navigation}) => {
   );
 };
 const ImagesWelcome = styled(View)({
+  ...GlobalStyles.secondaryBackgroundColor,
+  ...GlobalStyles.shadowColor,
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
   marginHorizontal: 15,
-  backgroundColor: '#FFF',
   marginTop: 2,
   marginBottom: 2,
   borderRadius: 4,
   padding: 20,
   flex: 1,
   borderColor: '#F4F5F6',
-  shadowColor: '#F4F5F6',
   shadowOpacity: '1',
   shadowRadius: 2,
   elevation: '2',
@@ -134,6 +136,7 @@ const ImagesWelcome = styled(View)({
 
 const styles = StyleSheet.create({
   categoryHeading: {
+    ...GlobalStyles.secondaryTextColor,
     fontSize: 20,
     fontFamily: 'FuturaPT-Book',
     flex: 1,
@@ -143,8 +146,8 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   rightArrow: {
+    ...GlobalStyles.primaryTextColor,
     fontSize: 24,
-    color: 'purple',
   },
 });
 export default CompatibilityTestsHome;
