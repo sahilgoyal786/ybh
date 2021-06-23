@@ -6,7 +6,7 @@ import ResponsiveImage from 'react-native-responsive-image';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import styled from 'styled-components';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-
+import GlobalStyles from '../common/styles';
 let size = 60;
 
 const ThriveArticle = ({article = {}, compact, navigate}) => {
@@ -71,9 +71,10 @@ const ThriveArticle = ({article = {}, compact, navigate}) => {
 
 const textWrapperStyles = function (size) {
   return {
-    backgroundColor: '#FBF8FF',
+    ...GlobalStyles.secondaryBackgroundColor,
+    ...GlobalStyles.primaryBorderColor,
+    ...GlobalStyles.secondaryTextColor,
     fontSize: 12,
-    color: 'gray',
     borderRadius: 5,
     marginLeft: (size - 60) / 2 + 20,
     marginTop: -(size - 60 + 70),
@@ -84,7 +85,6 @@ const textWrapperStyles = function (size) {
     paddingBottom: 10,
     fontFamily: 'FuturaPT-Medium',
     borderWidth: 2,
-    borderColor: '#E1E1E1',
     borderTopWidth: 0,
     borderLeftWidth: 0,
   };
@@ -96,26 +96,26 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   title: {
+    ...GlobalStyles.primaryTextColor,
     fontSize: 13,
     fontWeight: 'bold',
     marginBottom: 2,
-    color: '#000',
     fontFamily: 'FuturaPT-Medium',
   },
   title_large: {
+    ...GlobalStyles.primaryTextColor,
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 2,
-    color: '#000',
     fontFamily: 'FuturaPT-Medium',
   },
   text_content: {
+    ...GlobalStyles.secondaryTextColor,
     fontSize: 12,
-    color: 'gray',
   },
   text_content_large: {
+    ...GlobalStyles.secondaryTextColor,
     fontSize: 14,
-    color: 'gray',
   },
   wrapper: {
     marginTop: 0,

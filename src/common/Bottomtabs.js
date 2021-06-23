@@ -11,8 +11,7 @@ import Trivia from '../Screens/trivia/trivia';
 import LinearGradient from 'react-native-linear-gradient';
 import userDetailContext from './userDetailContext';
 import storage from '../components/apis/storage';
-import GlobalStyles from '../common/styles';
-import {GlobalImages} from '../common/styles';
+import GlobalStyles, {GlobalImages} from '../common/styles';
 const BottomTab = ({state, descriptors, navigation}) => {
   const [userDetail, changeUserDetail] = useContext(userDetailContext);
 

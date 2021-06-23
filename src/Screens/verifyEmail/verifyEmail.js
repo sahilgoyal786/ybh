@@ -23,10 +23,9 @@ import {backicon} from '../../common/images';
 import network from '../../components/apis/network';
 import endpoints from '../../components/apis/endPoints';
 import {Toast} from 'native-base';
-import globalstyles from '../../common/styles';
 import storage from '../../components/apis/storage';
 import {AuthContext} from '../../common/AuthContext';
-
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const verifyEmail = ({route, navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(10);
@@ -261,7 +260,7 @@ export const styles = StyleSheet.create({
     marginRight: '4%',
   },
   error_message: {
-    ...globalstyles.error_message,
+    ...GlobalStyles.error_message,
     width: wp(78),
   },
 });

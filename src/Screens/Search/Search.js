@@ -18,7 +18,7 @@ import Header from '../../components/header';
 import storage from '../../components/apis/storage';
 import {Toast} from 'native-base';
 import {FlatList} from 'react-native-gesture-handler';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 class Search extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {

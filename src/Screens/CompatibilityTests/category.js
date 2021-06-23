@@ -24,6 +24,7 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {StackActions} from '@react-navigation/native';
 import {ActionTypes} from '../../redux/ActionTypes';
 import {Share} from 'react-native';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const CompatibilityTestsCategory = ({route, navigation}) => {
   const [questions, setQuestions] = useState([]);
   const [myAnswers, setMyAnswers] = useState([]);
@@ -137,9 +138,9 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
           <View style={{flexDirection: 'column', paddingLeft: 10}}>
             <Text
               style={{
+                ...GlobalStyles.secondaryTextColor,
                 width: widthPercentageToDP(100) - 70,
                 fontSize: 16,
-                color: '#000',
                 fontFamily: 'FuturaPT-Light',
                 marginBottom: 5,
               }}>
@@ -174,7 +175,12 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
                           style={{color: '#A073C4', fontSize: 20}}
                         />
                       )}
-                      <Text style={{paddingLeft: 10, fontSize: 14}}>
+                      <Text
+                        style={{
+                          ...GlobalStyles.secondaryTextColor,
+                          paddingLeft: 10,
+                          fontSize: 14,
+                        }}>
                         {choice.ans}
                       </Text>
                     </View>
@@ -220,6 +226,7 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
 
   return (
     <FlatList
+      style={{...GlobalStyles.screenBackgroundColor}}
       bounces={false}
       alwaysBounceVertical={false}
       contentContainerStyle={
@@ -248,7 +255,7 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
         </View>
       }
       ListHeaderComponent={
-        <View style={{backgroundColor: 'white'}}>
+        <View style={{...GlobalStyles.screenBackgroundColor}}>
           <Header
             title={
               category !== null
@@ -261,11 +268,11 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
             <View>
               <View
                 style={{
+                  ...GlobalStyles.secondaryBorderColor,
+                  ...GlobalStyles.shadowColor,
                   flexDirection: 'row',
                   marginHorizontal: 20,
                   borderWidth: 1,
-                  borderColor: '#F4F5F6',
-                  shadowColor: '#F4F5F6',
                   shadowOffset: {
                     width: 0,
                     height: 1,
@@ -277,6 +284,7 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
                 }}>
                 <TextInput
                   style={{
+                    ...GlobalStyles.secondaryTextColor,
                     height: 60,
                     fontSize: 18,
                     flexGrow: 1,
@@ -284,6 +292,7 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
                   }}
                   autoCapitalize="none"
                   placeholder="Search a user by email or username"
+                  placeholderTextColor={GlobalStyles.secondaryTextColor.color}
                   value={search}
                   onBlur={() => setResults(null)}
                   onChangeText={(text) => setSearch(text)}
@@ -292,11 +301,11 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
                 <FontAwesome5Icon
                   name={loadingMore || isLoading ? 'spinner' : 'search'}
                   style={{
+                    ...GlobalStyles.secondaryTextColor,
                     width: 40,
                     fontSize: 17,
                     textAlign: 'center',
                     lineHeight: 60,
-                    color: 'grey',
                     fontWeight: '300',
                   }}
                   onPress={() => performSearch()}
@@ -387,8 +396,7 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
                 if (test_id === null) {
                   if (user === null) {
                     Toast.show({
-                      text:
-                        'Please choose a user to send the compatibility test to.',
+                      text: 'Please choose a user to send the compatibility test to.',
                       duration: 3000,
                     });
                     return;
@@ -396,8 +404,7 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
                     questions.length !== Object.keys(myAnswers).length
                   ) {
                     Toast.show({
-                      text:
-                        'Please answer all the questions before sending the test over to someone.',
+                      text: 'Please answer all the questions before sending the test over to someone.',
                       duration: 3000,
                     });
                     return;
@@ -418,7 +425,7 @@ const CompatibilityTestsCategory = ({route, navigation}) => {
               zIndex: -10,
             }}>
             <Image
-              source={bottomCurve}
+              source={GlobalImages.footer}
               style={{
                 width: widthPercentageToDP(100),
                 height: 230,

@@ -11,7 +11,7 @@ import {Text, ScrollView, View, Image, ActivityIndicator} from 'react-native';
 import Header from '../../components/header';
 import {Toast} from 'native-base';
 import ImagePicker from 'react-native-image-picker';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 class PhotoVerification extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {

@@ -18,7 +18,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {ConfirmDialog} from 'react-native-simple-dialogs';
 import {Toast} from 'native-base';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const MyPhotos = () => {
   const [currentImageId, setcurrentImageId] = React.useState(0);
   const [currentImageIndex, setcurrentImageIndex] = React.useState(0);
@@ -43,14 +43,14 @@ const MyPhotos = () => {
           {item.is_approved == 0 && (
             <Text
               style={{
+                ...GlobalStyles.secondaryBackgroundColor,
+                ...GlobalStyles.secondaryTextColor,
                 position: 'absolute',
                 right: 0,
                 zIndex: 10,
-                backgroundColor: 'white',
                 padding: 4,
                 marginRight: 4,
                 marginTop: 10,
-                color: '#777777',
                 fontSize: 10,
               }}>
               <FontAwesome5Icon name="clock" /> Pending Approval
@@ -71,12 +71,10 @@ const MyPhotos = () => {
             style={{
               color: '#ffffff',
               fontFamily: 'FuturaPt-Medium',
-
               fontSize: 15,
             }}>
             {item.created_at_formatted}
           </Text>
-
           <TouchableOpacity
             onPress={() => {
               setcurrentImageId(item.id);
@@ -100,7 +98,6 @@ const MyPhotos = () => {
   };
 
   const deletePhoto = async () => {
-    // alert(currentImageId);
     network.getResponse(
       EndPoints.deletePhoto,
       'POST',
@@ -162,6 +159,7 @@ const MyPhotos = () => {
 
   return (
     <FlatList
+      style={{...GlobalStyles.screenBackgroundColor}}
       bounces={false}
       alwaysBounceVertical={false}
       onEndReached={() => {
@@ -191,7 +189,9 @@ const MyPhotos = () => {
       ListEmptyComponent={
         <View
           style={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>You haven't uploaded any photos yet.</Text>
+          <Text style={{...GlobalStyles.secondaryTextColor}}>
+            You haven't uploaded any photos yet.
+          </Text>
         </View>
       }
       ListHeaderComponent={
@@ -224,7 +224,7 @@ const MyPhotos = () => {
             />
           )}
           <Image
-            source={bottomCurve}
+            source={GlobalImages.footer}
             style={{
               width: widthPercentageToDP(100),
               height: 200,

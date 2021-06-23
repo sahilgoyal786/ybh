@@ -28,8 +28,7 @@ import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import {TextInput} from 'react-native-gesture-handler';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import {GlobalImages} from '../../common/styles';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 
 const Thrive = ({route, navigation}) => {
   const [loadingMore, setLoadingMore] = React.useState(false);
@@ -57,12 +56,10 @@ const Thrive = ({route, navigation}) => {
       />
     </ListItem>
   );
-
   const LoadBlogs = () => {
     const tempBlogsArray = [];
     setLoadingMore(true);
     let params = {page, keyword};
-    // console.log(page, totalPages);
     if (totalPages > -1 && page > totalPages) {
       return;
     } else {
@@ -70,13 +67,8 @@ const Thrive = ({route, navigation}) => {
       setPage(page + 1);
     }
     if (selectedCategory !== 0 && categories[selectedCategory - 1]) {
-      // console.log(
-      //   selectedCategory - 1,
-      //   categories[selectedCategory - 1].category,
-      // );
       params['category'] = categories[selectedCategory - 1].category;
     }
-    // console.log(params);
     try {
       network.getResponse(
         EndPoints.blogs,
@@ -84,12 +76,10 @@ const Thrive = ({route, navigation}) => {
         params,
         userDetail.token,
         (response) => {
-          // console.log('(response.categories)', response);
           if (response.categories && response.blogs.current_page == 1) {
             setCategories(response.categories);
           }
           if (response.category) {
-            // console.log('category', response.category);
           }
           response = response.blogs;
           for (let i = 0; i < response.data.length; i++) {
@@ -140,7 +130,6 @@ const Thrive = ({route, navigation}) => {
             flexDirection: 'row',
             marginLeft: 15,
             marginRight: 15,
-            backgroundColor: 'white',
             marginBottom: 5,
           }}>
           {categoriesTemp.map((item, index) => {
@@ -151,11 +140,10 @@ const Thrive = ({route, navigation}) => {
                 style={
                   index == selectedCategory
                     ? {
+                        ...GlobalStyles.primaryBackgroundColor,
                         color: 'white',
                       }
-                    : {
-                        backgroundColor: '#FFFFFFFF',
-                      }
+                    : {}
                 }
                 onPress={() => {
                   setSelectedCategory(index);
@@ -224,20 +212,22 @@ const Thrive = ({route, navigation}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text>Nothing to show.</Text>
+            <Text style={{...GlobalStyles.secondaryTextColor}}>
+              Nothing to show.
+            </Text>
           </View>
         )
       }
       ListHeaderComponent={
-        <View style={{backgroundColor: 'white'}}>
+        <View style={{...GlobalStyles.screenBackgroundColor}}>
           <Header title="Thrive" backButton="true" />
           <View
             style={{
+              ...GlobalStyles.shadowColor,
               flexDirection: 'row',
               marginHorizontal: 15,
               borderWidth: 1,
               borderColor: '#F4F5F6',
-              shadowColor: '#F4F5F6',
               shadowOffset: {
                 width: 0,
                 height: 1,
@@ -249,6 +239,7 @@ const Thrive = ({route, navigation}) => {
             }}>
             <TextInput
               style={{
+                ...GlobalStyles.secondaryTextColor,
                 height: 60,
                 fontSize: 18,
                 flexGrow: 1,
@@ -260,11 +251,11 @@ const Thrive = ({route, navigation}) => {
             <FontAwesome5Icon
               name={loadingMore ? 'spinner' : 'search'}
               style={{
+                ...GlobalStyles.secondaryTextColor,
                 width: 40,
                 fontSize: 17,
                 textAlign: 'center',
                 lineHeight: 60,
-                color: 'grey',
                 fontWeight: '300',
               }}
               onPress={() => performSearch()}
@@ -288,7 +279,7 @@ const Thrive = ({route, navigation}) => {
             zIndex: -10,
           }}>
           <Image
-            source={bottomCurve}
+            source={GlobalImages.footer}
             style={{
               width: widthPercentageToDP(100),
               height: 200,
@@ -312,13 +303,13 @@ const Thrive = ({route, navigation}) => {
 };
 
 const Category = styled(Text)({
+  ...GlobalStyles.secondaryBackgroundColor,
+  ...GlobalStyles.secondaryTextColor,
   padding: 10,
-  backgroundColor: '#F9BC16',
   marginRight: 20,
   marginBottom: 10,
   borderRadius: 8,
   textTransform: 'capitalize',
-  color: 'grey',
 });
 
 export default Thrive;

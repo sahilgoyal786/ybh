@@ -32,8 +32,7 @@ import network from '../../components/apis/network';
 import endpoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import {Toast} from 'native-base';
-import GlobalStyles from '../../common/styles';
-import {GlobalImages} from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const Forgot = () => {
   const navigation = useNavigation();
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);

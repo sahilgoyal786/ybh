@@ -23,6 +23,7 @@ import {Textarea, Toast} from 'native-base';
 import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {ActionTypes} from '../../redux/ActionTypes';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const AdviceCategory = ({route, navigation}) => {
   const dispatch = useDispatch();
   const ques = useSelector((state) => state.Questions.questionList);
@@ -64,11 +65,11 @@ const AdviceCategory = ({route, navigation}) => {
             }}>
             <Text
               style={{
+                ...GlobalStyles.secondaryTextColor,
                 width: widthPercentageToDP(100) - 70,
                 fontSize: 16,
                 paddingLeft: 10,
                 paddingBottom: 10,
-                color: '#000',
                 fontFamily: 'FuturaPT-Light',
                 minHeight: 50,
               }}
@@ -166,6 +167,7 @@ const AdviceCategory = ({route, navigation}) => {
 
   return (
     <FlatList
+      style={{...GlobalStyles.screenBackgroundColor}}
       bounces={false}
       alwaysBounceVertical={false}
       onEndReached={() => {
@@ -195,12 +197,14 @@ const AdviceCategory = ({route, navigation}) => {
           {isLoading || loadingMore ? (
             <ActivityIndicator color="#A073C4" size="large" />
           ) : (
-            <Text>No questions have been asked yet, be the first one.</Text>
+            <Text style={{...GlobalStyles.secondaryTextColor}}>
+              No questions have been asked yet, be the first one.
+            </Text>
           )}
         </View>
       }
       ListHeaderComponent={
-        <View style={{backgroundColor: 'white'}}>
+        <View style={{...GlobalStyles.screenBackgroundColor}}>
           <Header
             title={Category !== '' ? Category : route.params.title}
             backButton="true"
@@ -244,11 +248,11 @@ const AdviceCategory = ({route, navigation}) => {
           {Search && (
             <View
               style={{
+                ...GlobalStyles.shadowColor,
+                ...GlobalStyles.secondaryBorderColor,
                 flexDirection: 'row',
                 marginHorizontal: 20,
                 borderWidth: 1,
-                borderColor: '#F4F5F6',
-                shadowColor: '#F4F5F6',
                 shadowOffset: {
                   width: 0,
                   height: 1,
@@ -260,6 +264,7 @@ const AdviceCategory = ({route, navigation}) => {
               }}>
               <TextInput
                 style={{
+                  ...GlobalStyles.secondaryTextColor,
                   height: 60,
                   fontSize: 18,
                   flexGrow: 1,
@@ -271,11 +276,11 @@ const AdviceCategory = ({route, navigation}) => {
               <FontAwesome5Icon
                 name={loadingMore ? 'spinner' : 'search'}
                 style={{
+                  ...GlobalStyles.secondaryTextColor,
                   width: 40,
                   fontSize: 17,
                   textAlign: 'center',
                   lineHeight: 60,
-                  color: 'grey',
                   fontWeight: '300',
                 }}
                 onPress={() => performSearch()}
@@ -302,16 +307,16 @@ const AdviceCategory = ({route, navigation}) => {
             }}
             style={{
               inputAndroid: {
+                ...GlobalStyles.secondaryTextColor,
                 backgroundColor: 'transparent',
                 textAlign: 'right',
                 paddingRight: 35,
                 alignSelf: 'flex-end',
-                color: 'black',
               },
               inputIOS: {
+                ...GlobalStyles.secondaryTextColor,
                 backgroundColor: 'transparent',
                 alignSelf: 'flex-end',
-                color: 'black',
                 textAlign: 'right',
                 paddingRight: 35,
               },
@@ -331,7 +336,13 @@ const AdviceCategory = ({route, navigation}) => {
             Icon={() => {
               return (
                 // <Image source={downarrow} style={{width: 12, height: 12}} />
-                <FontAwesome5Icon name="caret-down" style={{fontSize: 15}} />
+                <FontAwesome5Icon
+                  name="caret-down"
+                  style={{
+                    ...GlobalStyles.secondaryTextColor,
+                    fontSize: 15,
+                  }}
+                />
               );
             }}
           />
@@ -362,7 +373,7 @@ const AdviceCategory = ({route, navigation}) => {
             />
           )}
           <Image
-            source={bottomCurve}
+            source={GlobalImages.footer}
             style={{
               width: widthPercentageToDP(100),
               height: 230,
@@ -370,15 +381,19 @@ const AdviceCategory = ({route, navigation}) => {
             resizeMode="contain"
           />
 
-          <Dialog visible={dialog} onTouchoutside={() => setDialog(false)}>
+          <Dialog
+            visible={dialog}
+            onTouchoutside={() => setDialog(false)}
+            dialogStyle={{...GlobalStyles.secondaryBackgroundColor}}>
             <View>
               <Textarea
                 rowSpan={10}
                 value={text}
                 placeholder="Describe your situation..."
                 style={{
+                  ...GlobalStyles.secondaryTextColor,
+                  ...GlobalStyles.primaryBorderColor,
                   borderWidth: 1,
-                  borderColor: '#ccc',
                   borderRadius: 5,
                   padding: 10,
                 }}
@@ -392,8 +407,7 @@ const AdviceCategory = ({route, navigation}) => {
                 onPress={() => {
                   if (text.length < 20) {
                     Toast.show({
-                      text:
-                        'Please describe your situation, before submitting.',
+                      text: 'Please describe your situation, before submitting.',
                     });
                   } else {
                     setIsLoading(true);
@@ -450,10 +464,10 @@ const AdviceCategory = ({route, navigation}) => {
   );
 };
 const SecView = styled(View)({
+  ...GlobalStyles.customBorderColor,
   flexDirection: 'row',
   justifyContent: 'space-between',
   borderBottomWidth: 0.7,
-  borderBottomColor: 'rgba(0,0,0,.1)',
   margin: 10,
   marginBottom: 10,
 });

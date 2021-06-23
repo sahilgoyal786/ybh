@@ -15,7 +15,7 @@ import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import Header from '../../components/header';
 import {Toast} from 'native-base';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 class MessageLists extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {
@@ -62,7 +62,7 @@ class MessageLists extends React.Component {
       <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
         {this.state.isLoading && (
           <ActivityIndicator
-            color={{...GlobalStyles.whiteTextColor}}
+            color={GlobalStyles.whiteTextColor.color}
             size="large"
             style={{
               position: 'absolute',

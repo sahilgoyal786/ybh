@@ -27,8 +27,7 @@ import {Share} from 'react-native';
 import userDetailContext from '../../common/userDetailContext';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
-import {GlobalImages} from '../../common/styles';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const RelationMeter = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [relationshipMeterScore, setRelationshipMeterScore] = useState(null);

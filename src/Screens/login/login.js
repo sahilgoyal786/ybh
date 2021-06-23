@@ -23,12 +23,11 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useNavigation} from '@react-navigation/native';
 import {LoginValidationSchema} from '../../common/validations';
 import {AuthContext} from '../../common/AuthContext';
-import GlobalStyles from '../../common/styles';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import storage from '../../components/apis/storage';
 import {Toast} from 'native-base';
-import {GlobalImages} from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const Login = (props) => {
   const navigation = useNavigation();
   const {signIn} = React.useContext(AuthContext);

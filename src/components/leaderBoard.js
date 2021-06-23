@@ -9,7 +9,7 @@ import {
 import {FlatList, ScrollView} from 'react-native-gesture-handler';
 import userDetailContext from '../common/userDetailContext';
 import {ActivityIndicator} from 'react-native';
-
+import GlobalStyles from '../common/styles';
 const LeaderBoard = ({userDetailTemp = false}) => {
   let temp = userDetailTemp;
   const data = temp ? (temp.leaderBoard ? temp.leaderBoard.users : []) : [];
@@ -54,7 +54,7 @@ const LeaderBoard = ({userDetailTemp = false}) => {
 };
 
 const BoxView = styled(View)({
-  backgroundColor: '#9A6FC0',
+  ...GlobalStyles.LeaderBackgroundColor,
   borderRadius: 6,
 });
 const ViewFlatList = styled(View)({
@@ -69,12 +69,12 @@ const ViewBox = styled(View)({
   paddingVertical: heightPercentageToDP(1),
 });
 const TextRank = styled(Text)({
-  textAlign: 'left',
   color: '#484848',
+  textAlign: 'left',
   fontFamily: 'FuturaPT-Medium',
 });
 const TitleRank = styled(Text)({
-  color: '#ffffff',
+  ...GlobalStyles.whiteTextColor,
   fontWeight: '600',
   marginTop: 2,
   marginBottom: 4,
@@ -83,7 +83,7 @@ const TitleRank = styled(Text)({
 
 const styles = StyleSheet.create({
   item: {
-    color: '#ffffff',
+    ...GlobalStyles.whiteTextColor,
     marginLeft: widthPercentageToDP(2),
     fontSize: 12,
     fontFamily: 'FuturaPT-Medium',

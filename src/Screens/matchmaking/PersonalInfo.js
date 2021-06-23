@@ -49,7 +49,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {GetFormattedDateWithMonth} from '../../common/helpers';
 import storage from '../../components/apis/storage';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 class PersonalInfo extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {

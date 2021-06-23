@@ -26,8 +26,7 @@ import network from '../../components/apis/network';
 import endpoints from '../../components/apis/endPoints';
 import {Toast} from 'native-base';
 import {SetPasswordValidationSchema} from '../../common/validations';
-import GlobalStyles from '../../common/styles';
-import {GlobalImages} from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 
 const SetPassword = ({route, navigation}) => {
   const [verified, setVerified] = useState(false);

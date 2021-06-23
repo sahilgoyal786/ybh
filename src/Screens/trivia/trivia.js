@@ -35,7 +35,7 @@ import {ActivityIndicator} from 'react-native';
 import {Share} from 'react-native';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
-
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const Trivia = ({navigation}) => {
   const [question, setQuestion] = useState(null);
   const [questions, setQuestions] = useState(null);
@@ -190,9 +190,9 @@ const Trivia = ({navigation}) => {
   }, [answeredQuestions]);
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
       <Image
-        source={bottomCurve}
+        source={GlobalImages.footer}
         style={{
           width: widthPercentageToDP(100),
           height: 200,
@@ -240,7 +240,11 @@ const Trivia = ({navigation}) => {
                               if (result == 0) setSelectedAnswer(answer.id);
                             }}>
                             <Body style={{padding: 10, paddingRight: 20}}>
-                              <Text style={{textTransform: 'capitalize'}}>
+                              <Text
+                                style={{
+                                  ...GlobalStyles.secondaryTextColor,
+                                  textTransform: 'capitalize',
+                                }}>
                                 {answer.ans}
                               </Text>
                             </Body>
@@ -307,10 +311,19 @@ const Trivia = ({navigation}) => {
                 )}
                 {question == null && (
                   <>
-                    <Text style={{fontSize: 25, marginBottom: 10}}>
+                    <Text
+                      style={{
+                        ...GlobalStyles.secondaryTextColor,
+                        fontSize: 25,
+                        marginBottom: 10,
+                      }}>
                       Superb!
                     </Text>
-                    <Text style={{paddingRight: 20}}>
+                    <Text
+                      style={{
+                        ...GlobalStyles.secondaryTextColor,
+                        paddingRight: 20,
+                      }}>
                       Seems you've completed all the questions, please come back
                       later for more.
                     </Text>
@@ -417,12 +430,11 @@ const ContainerView = styled(View)({
   flexDirection: 'row',
 });
 const TitleTextlong = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   width: widthPercentageToDP(45),
-  color: '#484848',
   fontSize: 18,
   width: '96%',
   fontFamily: 'FuturaPT-Light',
-  // marginTop: -heightPercentageToDP(6),
 });
 const TitleText = styled(Text)({
   color: '#905BBC',

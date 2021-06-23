@@ -32,7 +32,6 @@ import Header from '../../components/header';
 import userDetailContext from '../../common/userDetailContext';
 import network from '../../components/apis/network';
 import endpoint from '../../components/apis/endPoints';
-import globalstyles from '../../common/styles';
 import {AuthContext} from '../../common/AuthContext';
 import ImagePicker from 'react-native-image-picker';
 import EndPoints from '../../components/apis/endPoints';
@@ -42,7 +41,7 @@ import {
   UpdatePasswordValidationSchema,
 } from '../../common/validations';
 import FastImage from 'react-native-fast-image';
-
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const Profile = () => {
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
 
@@ -97,9 +96,9 @@ const Profile = () => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
       <Image
-        source={bottomCurve}
+        source={GlobalImages.footer}
         style={{
           width: widthPercentageToDP(100),
           height: 200,
@@ -200,6 +199,7 @@ const Profile = () => {
                 value={values.username}
                 onChangeText={handleChange('username')}
                 onBlur={handleBlur('username')}
+                style={{...GlobalStyles.secondaryTextColor}}
               />
               {errors.username && touched.username && (
                 <Text style={styles.error_message}>{errors.username}</Text>
@@ -207,8 +207,8 @@ const Profile = () => {
 
               <Input
                 style={{
+                  ...GlobalStyles.secondaryTextColor,
                   fontFamily: 'FuturaPT-Light',
-                  color: '#CCC',
                 }}
                 placeholder="test@gmail.com"
                 label="Email"
@@ -287,6 +287,7 @@ const Profile = () => {
                   name="current_password"
                   onChangeText={handleChange('current_password')}
                   onBlur={handleBlur('current_password')}
+                  style={{...GlobalStyles.secondaryTextColor}}
                 />
                 {touched && errors.current_password && (
                   <Text style={styles.error_message}>
@@ -302,6 +303,7 @@ const Profile = () => {
                   name="password"
                   onChangeText={handleChange('password')}
                   onBlur={handleBlur('password')}
+                  style={{...GlobalStyles.secondaryTextColor}}
                 />
                 {touched && errors.password && (
                   <Text style={styles.error_message}>{errors.password}</Text>
@@ -316,6 +318,7 @@ const Profile = () => {
                   name="password_confirmation"
                   onChangeText={handleChange('password_confirmation')}
                   onBlur={handleBlur('password_confirmation')}
+                  style={{...GlobalStyles.secondaryTextColor}}
                 />
                 {touched && errors.password_confirmation && (
                   <Text style={styles.error_message}>
@@ -355,7 +358,7 @@ const FirstView = styled(View)({
 });
 const styles = StyleSheet.create({
   error_message: {
-    ...globalstyles.error_message,
+    ...GlobalStyles.error_message,
     paddingLeft: 10,
     marginBottom: 25,
     marginTop: -10,

@@ -39,8 +39,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import {Toast} from 'native-base';
 let RNFS = require('react-native-fs');
-import {GlobalImages} from '../../common/styles';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const Home = () => {
   const [votingImages, setVotingImages] = React.useState([]);
   const [votingEnabled, setVotingEnabled] = React.useState(true);

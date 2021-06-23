@@ -25,7 +25,7 @@ import network from '../../components/apis/network';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import FastImage from 'react-native-fast-image';
 import {Toast} from 'native-base';
-
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const Gallery = ({route, navigation}) => {
   const latestPhotosURLS = route.params.latestPhotosURLS;
   const type = route.params.type;
@@ -163,6 +163,7 @@ const Gallery = ({route, navigation}) => {
 
   return (
     <FlatList
+      style={{...GlobalStyles.screenBackgroundColor}}
       bounces={false}
       onEndReached={() => {
         if (photos.length && totalPages && page <= totalPages) {
@@ -190,7 +191,9 @@ const Gallery = ({route, navigation}) => {
           {loadingMore ? (
             <ActivityIndicator color="#A073C4" size="large" />
           ) : (
-            <Text>Nothing to show.</Text>
+            <Text style={{...GlobalStyles.secondaryTextColor}}>
+              Nothing to show.
+            </Text>
           )}
         </View>
       }
@@ -224,7 +227,7 @@ const Gallery = ({route, navigation}) => {
             />
           )}
           <Image
-            source={bottomCurve}
+            source={GlobalImages.footer}
             style={{
               width: widthPercentageToDP(100),
               height: 200,

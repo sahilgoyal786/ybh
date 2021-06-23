@@ -29,6 +29,7 @@ import {Dialog} from 'react-native-simple-dialogs';
 import {Textarea, Toast} from 'native-base';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {ActionTypes} from '../../redux/ActionTypes';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const CompatibilityTestResult = ({route, navigation}) => {
   const [score, setScore] = useState(50);
   const [other_user, setOtherUser] = useState(null);
@@ -64,9 +65,9 @@ const CompatibilityTestResult = ({route, navigation}) => {
   }, []);
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
       <Image
-        source={bottomCurve}
+        source={GlobalImages.footer}
         style={{
           width: widthPercentageToDP(100),
           height: 200,
@@ -93,13 +94,18 @@ const CompatibilityTestResult = ({route, navigation}) => {
               <ActivityIndicator size="large" color="purple" />
             ) : (
               <>
-                <Text style={{color: '#454545', fontSize: 24, marginTop: 20}}>
+                <Text
+                  style={{
+                    ...GlobalStyles.secondaryTextColor,
+                    fontSize: 24,
+                    marginTop: 20,
+                  }}>
                   Compatibility Score
                 </Text>
 
                 <Text
                   style={{
-                    color: 'purple',
+                    ...GlobalStyles.customTextColor,
                     fontSize: 35,
                     fontWeight: 'bold',
                     marginTop: 10,
@@ -108,6 +114,7 @@ const CompatibilityTestResult = ({route, navigation}) => {
                 </Text>
                 <Text
                   style={{
+                    ...GlobalStyles.secondaryTextColor,
                     textTransform: 'capitalize',
                     marginTop: 10,
                     fontSize: 18,
@@ -122,6 +129,7 @@ const CompatibilityTestResult = ({route, navigation}) => {
                   }}>
                   <Text
                     style={{
+                      ...GlobalStyles.secondaryTextColor,
                       padding: 10,
                       fontSize: 20,
                       flex: 1,
@@ -132,6 +140,7 @@ const CompatibilityTestResult = ({route, navigation}) => {
                   </Text>
                   <Text
                     style={{
+                      ...GlobalStyles.secondaryTextColor,
                       padding: 10,
                       paddingHorizontal: 0,
                       fontSize: 20,
@@ -144,6 +153,7 @@ const CompatibilityTestResult = ({route, navigation}) => {
                   </Text>
                   <Text
                     style={{
+                      ...GlobalStyles.secondaryTextColor,
                       padding: 10,
                       fontSize: 20,
                       flex: 1,

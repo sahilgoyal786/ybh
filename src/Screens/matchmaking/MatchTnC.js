@@ -10,7 +10,7 @@ import {
 import {StyleSheet, Text, ScrollView, View, Image} from 'react-native';
 import Header from '../../components/header';
 import HTML from 'react-native-render-html';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const MatchTnC = () => {
   const navigation = useNavigation();
   return (

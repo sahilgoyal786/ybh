@@ -14,7 +14,7 @@ import {
 import Header from '../../components/header';
 import {Toast} from 'native-base';
 import {FlatList} from 'react-native-gesture-handler';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 class MyConnection extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {

@@ -5,7 +5,7 @@ import {widthPercentageToDP} from 'react-native-responsive-screen';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 import {
   Text,
   ScrollView,
@@ -72,7 +72,7 @@ class MyProfile extends React.Component {
       <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
         {this.state.isLoading && (
           <ActivityIndicator
-            color={{...GlobalStyles.whiteTextColor}}
+            color={GlobalStyles.whiteTextColor.color}
             size="large"
             style={{
               position: 'absolute',
@@ -86,7 +86,7 @@ class MyProfile extends React.Component {
           />
         )}
         <Image
-          source={bottomCurve}
+          source={GlobalImages.footer}
           style={{
             width: widthPercentageToDP(100),
             height: 200,
@@ -257,7 +257,7 @@ class MyProfile extends React.Component {
             saveToLocalByLongPress={false}
             loadingRender={() => {
               return (
-                <ActivityIndicator color={{...GlobalStyles.whiteTextColor}} />
+                <ActivityIndicator color={GlobalStyles.whiteTextColor.color} />
               );
             }}
             renderIndicator={() => {}}

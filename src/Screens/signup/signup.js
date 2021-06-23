@@ -28,8 +28,7 @@ import {SignupValidationSchema} from '../../common/validations';
 import userDetailContest from '../../common/userDetailContext';
 import EndPoints from '../../components/apis/endPoints';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import GlobalStyles from '../../common/styles';
-import {GlobalImages} from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const Signup = () => {
   const [Tab, setTab] = useState(0);
   const [isLoading, setIsLoading] = useState(false);

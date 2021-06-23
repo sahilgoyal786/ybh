@@ -31,7 +31,7 @@ import ContentLoader from 'react-native-easy-content-loader';
 import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import storage from '../../components/apis/storage';
-
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 // import { Form } from 'formik';
 const LatestPhotos = ({route, navigation}) => {
   const [userDetail, changeUserDetail] = useContext(userDetailContext);
@@ -171,7 +171,7 @@ const LatestPhotos = ({route, navigation}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
       <Header title="Latest Photos" backButton="true" />
 
       <ScrollView
@@ -234,7 +234,9 @@ const LatestPhotos = ({route, navigation}) => {
                     height: widthPercentageToDP(25) - 9,
                     justifyContent: 'center',
                   }}>
-                  <Text>Nothing to show</Text>
+                  <Text style={{...GlobalStyles.secondaryTextColor}}>
+                    Nothing to show
+                  </Text>
                 </View>
               )
             }
@@ -367,15 +369,15 @@ const LatestPhotos = ({route, navigation}) => {
                 onDonePress={() => onChangeMonth(selectedMonth)}
                 style={{
                   inputAndroid: {
-                    color: 'black',
+                    ...GlobalStyles.secondaryTextColor,
                     paddingRight: 35,
                     textAlign: 'right',
                     fontSize: 16,
                   },
                   inputIOS: {
+                    ...GlobalStyles.secondaryTextColor,
                     backgroundColor: 'transparent',
                     alignSelf: 'flex-end',
-                    color: 'black',
                     textAlign: 'right',
                     paddingRight: 35,
                   },
@@ -391,10 +393,9 @@ const LatestPhotos = ({route, navigation}) => {
                 useNativeAndroidPickerStyle={false}
                 Icon={() => {
                   return (
-                    // <Image source={downarrow} style={{width: 12, height: 12}} />
                     <FontAwesome5Icon
                       name="caret-down"
-                      style={{fontSize: 20}}
+                      style={{...GlobalStyles.secondaryTextColor, fontSize: 20}}
                     />
                   );
                 }}
@@ -477,7 +478,7 @@ const LatestPhotos = ({route, navigation}) => {
               navigation.navigate('ShareImage');
             }}
             linear
-            name=" Upload Photo"
+            name="Upload Photo"
             style={{marginTop: 40, width: widthPercentageToDP(100) - 20}}
             icon={
               <FontAwesome5Icon
@@ -630,9 +631,9 @@ const ImagesView = styled(FastImage)({
   zIndex: -99,
 });
 const TextView = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 19,
   fontWeight: '600',
-  color: '#484848',
   fontFamily: 'FuturaPT-Book',
 });
 const Voting = styled(View)({

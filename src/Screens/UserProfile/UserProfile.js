@@ -24,6 +24,7 @@ import Header from '../../components/header';
 import {Toast} from 'native-base';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import FastImage from 'react-native-fast-image';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 class UserProfile extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {
@@ -324,10 +325,10 @@ class UserProfile extends React.Component {
       );
     }
     return (
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
+      <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
         {this.state.isLoading && (
           <ActivityIndicator
-            color="#fff"
+            color={GlobalStyles.whiteTextColor.color}
             size="large"
             style={{
               position: 'absolute',
@@ -341,7 +342,7 @@ class UserProfile extends React.Component {
           />
         )}
         <Image
-          source={bottomCurve}
+          source={GlobalImages.footer}
           style={{
             width: widthPercentageToDP(100),
             height: 200,
@@ -477,7 +478,9 @@ class UserProfile extends React.Component {
             {this.state.profile.mylist && this.state.profile.mylist.status && (
               <LookingForSec>
                 <PHeading>About Us</PHeading>
-                <Text>{this.state.profile.aboutus}</Text>
+                <Text style={{...GlobalStyles.secondaryTextColor}}>
+                  {this.state.profile.aboutus}
+                </Text>
               </LookingForSec>
             )}
           </UserProfileWrap>
@@ -550,18 +553,18 @@ const UserName = styled(Text)({
   textAlign: 'center',
 });
 const UserData = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 16,
-  color: '#484848',
   textAlign: 'center',
 });
 const ProfileData = styled(View)({
+  ...GlobalStyles.primaryBorderColor,
   display: 'flex',
   flex: 1,
   flexDirection: 'row',
   flexWrap: 'wrap',
   marginTop: 30,
   borderBottomWidth: 1,
-  borderColor: '#ddd',
 });
 const ListHalfData = styled(View)({
   flex: '0 0 50%',
@@ -569,13 +572,14 @@ const ListHalfData = styled(View)({
   marginBottom: 15,
 });
 const Label = styled(Text)({
+  ...GlobalStyles.primaryTextColor,
   fontSize: 15,
   marginBottom: 3,
   fontFamily: 'FuturaPT-Light',
 });
 const LabelValue = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 18,
-  color: '#484848',
   fontWeight: 700,
   fontFamily: 'FuturaPT-Medium',
 });
@@ -586,18 +590,18 @@ const PartnerFunSec = styled(View)({
   width: '100%',
 });
 const LookingForSec = styled(View)({
+  ...GlobalStyles.secondaryBorderColor,
   marginTop: 20,
   flex: 1,
   flexDirection: 'column',
   width: '100%',
   borderTopWidth: 1,
-  borderColor: '#ddd',
   paddingTop: 20,
 });
 const PHeading = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 18,
   lineHeight: '25px',
-  color: '#484848',
   fontWeight: 700,
   marginBottom: 10,
 });
@@ -606,10 +610,9 @@ const PValueWrap = styled(View)({
   flexWrap: 'wrap',
 });
 const PValue = styled(Text)({
+  ...GlobalStyles.primaryBoxWrap,
   fontSize: 16,
-  color: '#7b43a5',
   borderWidth: 1,
-  borderColor: '#7b43a5',
   padding: 7,
   paddingLeft: 20,
   paddingRight: 20,

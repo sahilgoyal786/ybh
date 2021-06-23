@@ -13,8 +13,7 @@ import Header from '../../components/header';
 import storage from '../../components/apis/storage';
 import {RangeSlider} from '@sharcoux/slider';
 import {Label} from 'native-base';
-import {GlobalImages} from '../../common/styles';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 class Filter extends React.Component {
   constructor(props) {
     super(props);

@@ -37,7 +37,7 @@ import userDetailContext from '../../common/userDetailContext';
 import {Toast} from 'native-base';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import storage from '../../components/apis/storage';
-
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const ShareImage = () => {
   const navigation = useNavigation();
   const [checked, setChecked] = useState(true);
@@ -106,9 +106,9 @@ const ShareImage = () => {
   }, []);
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
       <Image
-        source={bottomCurve}
+        source={GlobalImages.footer}
         style={{
           width: widthPercentageToDP(100),
           height: 200,
@@ -139,6 +139,7 @@ const ShareImage = () => {
           <CheckBox
             title="I agree to terms & conditions"
             textStyle={{
+              ...GlobalStyles.secondaryTextColor,
               fontSize: 14,
               fontWeight: '400',
               fontFamily: 'FuturaPT-Medium',
@@ -296,6 +297,7 @@ const ImagesView = styled(ResponsiveImage)({
   borderRadius: 0,
 });
 const FirstText = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   padding: 15,
   fontFamily: 'FuturaPT-Light',
   fontSize: 14,
@@ -309,19 +311,20 @@ const SecText = styled(Text)({
   fontSize: 14,
 });
 const SubHeading = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   marginLeft: widthPercentageToDP(4),
   fontFamily: 'FuturaPT-Book',
   fontSize: 18,
   paddingTop: 10,
 });
 const MainView = styled(View)({
+  ...GlobalStyles.secondaryBackgroundColor,
+  ...GlobalStyles.primaryBorderColor,
   borderRadius: 4,
-  borderColor: '#DEDFE0',
   margin: 15,
   marginTop: 0,
   padding: 10,
   paddingTop: 0,
-  backgroundColor: '#FAF9FF',
   borderRightWidth: 4,
   borderBottomWidth: 4,
 });

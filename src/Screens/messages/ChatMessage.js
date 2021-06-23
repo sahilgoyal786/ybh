@@ -31,7 +31,7 @@ import userDetailContext from '../../common/userDetailContext';
 import Header from '../../components/header';
 import {Textarea, Toast} from 'native-base';
 import {FlatList} from 'react-native-gesture-handler';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const {width} = Dimensions.get('window');
 class ChatMessage extends React.Component {
   static contextType = userDetailContext;
@@ -263,7 +263,7 @@ class ChatMessage extends React.Component {
         />
         {this.state.isLoading && (
           <ActivityIndicator
-            color={{...GlobalStyles.customTextColor.color}}
+            color={GlobalStyles.whiteTextColor.color}
             size="large"
           />
         )}

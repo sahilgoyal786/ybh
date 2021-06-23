@@ -24,7 +24,7 @@ import {boolean} from 'yup';
 import {Toast} from 'native-base';
 import {findIndex} from 'react-native-draggable-grid/src/utils';
 import storage from '../../components/apis/storage';
-
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const CompatibilityTestRequests = ({route, navigation}) => {
   const [tests, setTests] = useState([]);
   const [invites, setInvites] = useState([]);
@@ -145,23 +145,27 @@ const CompatibilityTestRequests = ({route, navigation}) => {
             marginLeft: 10,
           }}>
           <View style={{flex: 4}}>
-            <Text style={{fontSize: 20, color: '#454545'}}>
+            <Text
+              style={{
+                ...GlobalStyles.secondaryTextColor,
+                fontSize: 20,
+              }}>
               {item.user_id == userDetail.user.id
                 ? item.invited_user.username
                 : item.user.username}
             </Text>
             <Text
               style={{
+                ...GlobalStyles.customTextColor,
                 flexGrow: 1,
                 textTransform: 'capitalize',
-                color: 'purple',
                 fontWeight: 'bold',
                 fontSize: 12,
               }}>
               {item.category.replace('_', ' ')}
               <Text
                 style={{
-                  color: '#454545',
+                  ...GlobalStyles.secondaryTextColor,
                   fontStyle: 'italic',
                   fontWeight: 'normal',
                 }}>
@@ -317,6 +321,7 @@ const CompatibilityTestRequests = ({route, navigation}) => {
 
   return (
     <FlatList
+      style={{...GlobalStyles.screenBackgroundColor}}
       bounces={false}
       alwaysBounceVertical={false}
       contentContainerStyle={
@@ -340,12 +345,14 @@ const CompatibilityTestRequests = ({route, navigation}) => {
           {isLoading || loadingMore ? (
             <ActivityIndicator color="#A073C4" size="large" />
           ) : (
-            <Text>No tests/requests to show.</Text>
+            <Text style={{...GlobalStyles.secondaryTextColor}}>
+              No tests/requests to show.
+            </Text>
           )}
         </View>
       }
       ListHeaderComponent={
-        <View style={{backgroundColor: 'white'}}>
+        <View style={{...GlobalStyles.screenBackgroundColor}}>
           <Header title={'My Tests/Requests'} backButton="true" />
         </View>
       }
@@ -374,7 +381,7 @@ const CompatibilityTestRequests = ({route, navigation}) => {
             />
           )}
           <Image
-            source={bottomCurve}
+            source={GlobalImages.footer}
             style={{
               width: widthPercentageToDP(100),
               height: 230,

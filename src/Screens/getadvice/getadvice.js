@@ -27,7 +27,7 @@ import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const GetAdvice2 = () => {
   const navigation = useNavigation();
   const [dialog, setDialog] = useState(false);
@@ -48,9 +48,9 @@ const GetAdvice2 = () => {
   ];
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
       <Image
-        source={bottomCurve}
+        source={GlobalImages.footer}
         style={{
           width: widthPercentageToDP(100),
           height: 200,
@@ -91,18 +91,18 @@ const GetAdvice2 = () => {
   );
 };
 const ImagesWelcome = styled(View)({
+  ...GlobalStyles.secondaryBackgroundColor,
+  ...GlobalStyles.primaryBorderColor,
+  ...GlobalStyles.shadowColor,
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
   marginHorizontal: 15,
-  backgroundColor: '#FFF',
   marginTop: 2,
   marginBottom: 2,
   borderRadius: 4,
   padding: 20,
   flex: 1,
-  borderColor: '#F4F5F6',
-  shadowColor: '#F4F5F6',
   shadowOpacity: '1',
   shadowRadius: 2,
   elevation: '2',
@@ -118,8 +118,8 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
   },
   rightArrow: {
+    ...GlobalStyles.primaryTextColor,
     fontSize: 24,
-    color: 'purple',
   },
 });
 export default GetAdvice2;

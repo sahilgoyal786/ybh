@@ -32,8 +32,7 @@ import FastImage from 'react-native-fast-image';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
-import {GlobalImages} from '../../common/styles';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -84,7 +83,7 @@ const Thrivedetails = ({route, navigation}) => {
         bounces={false}
         style={{paddingTop: 20}}
         contentContainerStyle={{paddingBottom: 40}}>
-        <View style={{backgroundColor: 'white'}}>
+        <View style={{...GlobalStyles.screenBackgroundColor}}>
           <LastImage>
             {thriveTop && (
               <TouchableOpacity onPress={() => Linking.openURL(thriveTop.url)}>
@@ -106,7 +105,13 @@ const Thrivedetails = ({route, navigation}) => {
               </TouchableOpacity>
             )}
           </LastImage>
-          <Text style={{marginTop: 15, paddingHorizontal: 10, fontSize: 20}}>
+          <Text
+            style={{
+              ...GlobalStyles.secondaryTextColor,
+              marginTop: 15,
+              paddingHorizontal: 10,
+              fontSize: 20,
+            }}>
             {article.title}
           </Text>
           <View style={{justifyContent: 'flex-start'}}>
@@ -118,8 +123,8 @@ const Thrivedetails = ({route, navigation}) => {
               }}>
               <Text
                 style={{
+                  ...GlobalStyles.secondaryTextColor,
                   fontSize: 10,
-                  color: 'gray',
                   marginTop: heightPercentageToDP(1),
                 }}>
                 <FontAwesome5Icon name="calendar-alt" />{' '}
@@ -141,6 +146,7 @@ const Thrivedetails = ({route, navigation}) => {
           />
           <View style={{marginTop: 15, padding: 10, marginBottom: 10}}>
             <HTML
+              styles={{...GlobalStyles.secondaryTextColor}}
               source={{html: article.content}}
               imagesMaxWidth={widthPercentageToDP(100) - 30}
               contentWidth={widthPercentageToDP(100) - 30}

@@ -175,8 +175,7 @@ const VotingPage = ({route, navigation}) => {
           onPress={() => {
             if (selectedImageIndex < 0) {
               Toast.show({
-                text:
-                  'Please choose your favourite photo, by long pressing it.',
+                text: 'Please choose your favourite photo, by long pressing it.',
                 duration: 4000,
               });
               return;

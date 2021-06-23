@@ -49,7 +49,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {GetFormattedDateWithMonth} from '../../common/helpers';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
-import GlobalStyles from '../../common/styles';
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 class EditMyProfile extends React.Component {
   static contextType = userDetailContext;
   constructor(props) {

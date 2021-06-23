@@ -27,9 +27,7 @@ import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import {GlobalImages} from '../../common/styles';
-import GlobalStyles from '../../common/styles';
-
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const CompatibilityTestsHome = ({navigation}) => {
   const [dialog, setDialog] = useState(false);
   const [text, setText] = useState('Describe your situation...');
@@ -133,7 +131,6 @@ const ImagesWelcome = styled(View)({
   shadowRadius: 2,
   elevation: '2',
 });
-
 const styles = StyleSheet.create({
   categoryHeading: {
     ...GlobalStyles.secondaryTextColor,

@@ -29,7 +29,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {ActionTypes} from '../../redux/ActionTypes';
 import reducer from '../../redux/reducer';
 import ResponsiveImage from 'react-native-responsive-image';
-
+import GlobalStyles, {GlobalImages} from '../../common/styles';
 const QuestionDetail = ({navigation, route}) => {
   const {question} = route.params;
   const dispatch = useDispatch();
@@ -248,9 +248,9 @@ const QuestionDetail = ({navigation, route}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{...GlobalStyles.screenBackgroundColor, flex: 1}}>
       <Image
-        source={bottomCurve}
+        source={GlobalImages.footer}
         style={{
           width: widthPercentageToDP(100),
           height: 200,
@@ -284,9 +284,9 @@ const QuestionDetail = ({navigation, route}) => {
           <Heading>Responses</Heading>
           <Text
             style={{
+              ...GlobalStyles.customTextColor,
               textAlign: 'right',
               marginRight: 5,
-              color: '#A073C4',
             }}
             onPress={() => {
               setReplyTo(false);
@@ -301,7 +301,13 @@ const QuestionDetail = ({navigation, route}) => {
           renderItem={({item}) => renderResponse(item)}
           keyExtractor={(item) => item.id.toString()}
           ListEmptyComponent={
-            <Text style={{marginLeft: 5, marginBottom: 20, marginTop: 15}}>
+            <Text
+              style={{
+                ...GlobalStyles.secondaryTextColor,
+                marginLeft: 5,
+                marginBottom: 20,
+                marginTop: 15,
+              }}>
               No one has responded yet, be the first one
             </Text>
           }
@@ -323,6 +329,7 @@ const QuestionDetail = ({navigation, route}) => {
           />
         </View>
         <Dialog
+          dialogStyle={{...GlobalStyles.secondaryBackgroundColor}}
           visible={dialog}
           onTouchoutside={() => {
             setEditReponse(false);
@@ -336,8 +343,9 @@ const QuestionDetail = ({navigation, route}) => {
               value={yourResponse}
               onChangeText={(text) => setYourResponse(text)}
               style={{
+                ...GlobalStyles.secondaryTextColor,
+                ...GlobalStyles.primaryBorderColor,
                 borderWidth: 1,
-                borderColor: '#ccc',
                 borderRadius: 5,
                 padding: 10,
               }}
@@ -346,15 +354,18 @@ const QuestionDetail = ({navigation, route}) => {
             <CheckBox
               title="Post as anonymous"
               textStyle={{
+                ...GlobalStyles.secondaryTextColor,
                 fontSize: 16,
                 fontWeight: '400',
                 fontFamily: 'FuturaPT-Medium',
-                color: 'black',
               }}
               checkedIcon={
                 <FontAwesome5Icon
                   name="check-square"
-                  style={{fontSize: 20, color: '#A073C4'}}
+                  style={{
+                    fontSize: 20,
+                    color: '#A073C4',
+                  }}
                   solid
                 />
               }
@@ -504,44 +515,46 @@ const QuestionDetail = ({navigation, route}) => {
   );
 };
 const Score = styled(View)({
+  ...GlobalStyles.secondaryTextColor,
   marginLeft: 20,
   marginTop: 10,
   flexDirection: 'row',
   justifyContent: 'space-between',
 });
 const User = styled(Text)({
+  ...GlobalStyles.customTextColor,
   fontSize: 13,
-  color: '#A073C4',
   marginLeft: -widthPercentageToDP(3),
   fontFamily: 'FuturaPT-Book',
   fontStyle: 'italic',
 });
 const TimingText = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontFamily: 'FuturaPT-Book',
   fontSize: 8,
-  color: '#484848',
   marginLeft: widthPercentageToDP(4),
 });
 const BasicText = styled(Text)({
-  // padding: 15,
+  ...GlobalStyles.secondaryTextColor,
   fontFamily: 'FuturaPT-Light',
   fontSize: 16,
   width: widthPercentageToDP(100) - 40,
   textAlign: 'justify',
 });
 const BasicTextFullWidth = styled(Text)({
-  // padding: 15,
+  ...GlobalStyles.secondaryTextColor,
   fontFamily: 'FuturaPT-Light',
   fontSize: 16,
   width: widthPercentageToDP(100) - 40,
   textAlign: 'justify',
 });
 const Card = styled(View)({
+  ...GlobalStyles.secondaryBackgroundColor,
+  ...GlobalStyles.primaryBorderColor,
+  ...GlobalStyles.shadowColor,
   borderRadius: 4,
   padding: 10,
   borderWidth: 1,
-  borderColor: '#F4F5F6',
-  shadowColor: '#F4F5F6',
   shadowOffset: {
     width: 0,
     height: 0.1,
@@ -549,12 +562,11 @@ const Card = styled(View)({
   shadowOpacity: '0.9',
   shadowRadius: 7,
   elevation: '3',
-  background: 'white',
   marginBottom: 10,
 });
 const Heading = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
   fontSize: 16,
-  color: '#484848',
   fontWeight: '500',
   fontFamily: 'FuturaPT-Medium',
   marginLeft: 5,

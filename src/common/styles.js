@@ -11,9 +11,8 @@ import {
   selectedTabCurve,
   selectedTabCurveDark,
 } from '../common/images';
-// const colorScheme = Appearance.getColorScheme();
-
-const colorScheme = 'dark';
+const colorScheme = Appearance.getColorScheme();
+// const colorScheme = 'dark';
 
 export const GlobalImages = {
   header: colorScheme == 'light' ? headerView : headerViewDark,
@@ -22,7 +21,6 @@ export const GlobalImages = {
   loginFooter: colorScheme == 'light' ? loginFooter : loginFooterDark,
   tabCurve: colorScheme == 'light' ? selectedTabCurve : selectedTabCurveDark,
 };
-
 const styles = {
   error_message: {
     fontSize: 10,
@@ -55,11 +53,17 @@ const styles = {
   userMsgBackgroundColor: {
     backgroundColor: colorScheme == 'light' ? '#efefef' : '#2e3235',
   },
+  LeaderBackgroundColor: {
+    backgroundColor: colorScheme == 'light' ? '#9A6FC0' : '#6d528d',
+  },
   primaryBackgroundColor: {
     backgroundColor: colorScheme == 'light' ? '#7b43a5' : '#7b43a5',
   },
   secondaryBackgroundColor: {
     backgroundColor: colorScheme == 'light' ? '#fff' : '#2e3235',
+  },
+  customBackgroundColor: {
+    backgroundColor: colorScheme == 'light' ? '#F6BC18' : '#2e3235',
   },
   screenBackgroundColor: {
     backgroundColor: colorScheme == 'light' ? '#fff' : '#1f2326',
@@ -81,6 +85,9 @@ const styles = {
   },
   secondaryBorderColor: {
     borderColor: colorScheme == 'light' ? '#7b43a5' : '#2e3235',
+  },
+  customBorderColor: {
+    borderColor: colorScheme == 'light' ? '#ddd' : '#2e3235',
   },
   primaryBoxWrap: {
     color: colorScheme == 'light' ? '#7b43a5' : '#e3e7ea',
