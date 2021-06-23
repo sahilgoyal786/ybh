@@ -119,7 +119,9 @@ class MessageLists extends React.Component {
                       <MessageData>
                         <UserName>{chat.user.username}</UserName>
                         {chat.message && (
-                          <UserMessage>{chat.message}</UserMessage>
+                          <UserMessage ellipsizeMode="head" numberOfLines={1}>
+                            {chat.message}
+                          </UserMessage>
                         )}
                       </MessageData>
                     </MessageList>
@@ -176,6 +178,8 @@ const UserName = styled(Text)({
 });
 const UserMessage = styled(Text)({
   ...GlobalStyles.custom2TextColor,
+
   fontSize: 16,
 });
+
 export default MessageLists;

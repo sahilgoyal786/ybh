@@ -146,6 +146,46 @@ const Thrivedetails = ({route, navigation}) => {
           />
           <View style={{marginTop: 15, padding: 10, marginBottom: 10}}>
             <HTML
+              tagsStyles={{
+                p: {...GlobalStyles.secondaryTextColor},
+                div: {...GlobalStyles.secondaryTextColor},
+                span: {...GlobalStyles.secondaryTextColor},
+                ul: {...GlobalStyles.secondaryTextColor, marginTop: 20},
+                ol: {...GlobalStyles.secondaryTextColor, marginTop: 20},
+                li: {...GlobalStyles.secondaryTextColor},
+                strong: {...GlobalStyles.secondaryTextColor},
+                b: {...GlobalStyles.secondaryTextColor},
+                h1: {...GlobalStyles.secondaryTextColor},
+                h2: {...GlobalStyles.secondaryTextColor},
+                body: {...GlobalStyles.secondaryTextColor},
+              }}
+              listsPrefixesRenderers={{
+                ol: (htmlAttribs, children, convertedCSSStyles, passProps) => {
+                  console.log('children', children);
+                  return (
+                    <Text
+                      style={{
+                        ...GlobalStyles.secondaryTextColor,
+                        marginRight: 5,
+                        marginTop: 1,
+                        fontSize: 12,
+                      }}>
+                      {passProps.index + 1}
+                    </Text>
+                  );
+                },
+                ul: (htmlAttribs, children, convertedCSSStyles, passProps) => {
+                  return (
+                    <FontAwesome5Icon
+                      name="arrow-right"
+                      style={{
+                        ...GlobalStyles.secondaryTextColor,
+                        marginTop: 3,
+                        marginRight: 5,
+                      }}></FontAwesome5Icon>
+                  );
+                },
+              }}
               styles={{...GlobalStyles.secondaryTextColor}}
               source={{html: article.content}}
               imagesMaxWidth={widthPercentageToDP(100) - 30}

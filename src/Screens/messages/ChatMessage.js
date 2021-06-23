@@ -462,7 +462,7 @@ class ChatMessage extends React.Component {
               value={this.state.message}
               onChangeText={(msg) => this.changeMessage(msg)}
               blurOnSubmit={false}
-              onSubmitEditing={() => this.sendMessage()}
+              // onSubmitEditing={() => this.sendMessage()}
               placeholder="Write a message..."
               returnKeyType="send"
               placeholderTextColor="#fff"
