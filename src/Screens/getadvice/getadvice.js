@@ -110,6 +110,7 @@ const ImagesWelcome = styled(View)({
 
 const styles = StyleSheet.create({
   categoryHeading: {
+    ...GlobalStyles.secondaryTextColor,
     fontSize: 20,
     fontFamily: 'FuturaPT-Book',
     flex: 1,
