@@ -43,9 +43,14 @@ const verifyEmail = ({route, navigation}) => {
   // }, []);
   return (
     <KeyboardAwareScrollView
-      contentContainerStyle={{flexGrow: 1, backgroundColor: 'white'}}>
+      contentContainerStyle={{
+        flexGrow: 1,
+        ...GlobalStyles.screenBackgroundColor,
+      }}>
       <View>
-        <HeaaderBackgroundImage source={loginHeader} imageStyle="stretch">
+        <HeaaderBackgroundImage
+          source={GlobalImages.loginHeader}
+          imageStyle="stretch">
           <Top>
             <TouchableOpacity
               style={{
@@ -73,8 +78,7 @@ const verifyEmail = ({route, navigation}) => {
             <Text
               style={{
                 fontSize: 18,
-
-                color: '#484848',
+                ...GlobalStyles.secondaryTextColor,
                 fontWeight: '200',
                 fontFamily: 'FuturaPT-Medium',
               }}>
@@ -118,14 +122,23 @@ const verifyEmail = ({route, navigation}) => {
                 }
               }}
               placeholder="Verification Code"
-              placeholderTextColor="#484848"
+              placeholderTextColor={GlobalStyles.secondaryTextColor.color}
               style={{textAlign: 'center', width: '100%', ...styles.PassTyle}}
             />
             <Text
               style={
                 isLoading
-                  ? {opacity: 0.2, marginVertical: 20, alignSelf: 'flex-end'}
-                  : {marginVertical: 20, alignSelf: 'flex-end'}
+                  ? {
+                      opacity: 0.2,
+                      marginVertical: 20,
+                      alignSelf: 'flex-end',
+                      color: GlobalStyles.secondaryTextColor.color,
+                    }
+                  : {
+                      marginVertical: 20,
+                      alignSelf: 'flex-end',
+                      color: GlobalStyles.secondaryTextColor.color,
+                    }
               }
               onPress={() => {
                 if (isLoading) {
@@ -171,7 +184,7 @@ const verifyEmail = ({route, navigation}) => {
         </SigninButton>
       </View>
       <FooterBackgroundImage
-        source={loginFooter}
+        source={GlobalImages.loginFooter}
         imageStyle="stretch"></FooterBackgroundImage>
     </KeyboardAwareScrollView>
   );
@@ -238,6 +251,8 @@ export const styles = StyleSheet.create({
     width: wp(78),
     fontSize: 20,
     marginTop: 10,
+    ...GlobalStyles.secondaryTextColor,
+    ...GlobalStyles.secondaryBorderColor,
   },
   Forgotstyle: {
     fontSize: 12,
