@@ -126,7 +126,7 @@ const Button = ({
           {isLoading ? (
             <ActivityIndicator color="#FFF" />
           ) : (
-            <Text style={{color: '#fff'}}>{name}</Text>
+            <Text style={{color: custom.color}}>{name}</Text>
           )}
         </CustomButton>
       ) : (

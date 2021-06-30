@@ -264,7 +264,7 @@ class UserProfile extends React.Component {
             <Button
               onPress={() => this.setState({dialog: true})}
               style={{
-                backgroundColor: '#7b43a5',
+                backgroundColor: '#f9bc16',
                 borderRadius: 5,
                 padding: 5,
                 paddingLeft: 20,
@@ -274,7 +274,7 @@ class UserProfile extends React.Component {
               }}
               name={'Report'}
               isLoading={this.state.blockLoading}
-              custom={true}
+              custom={{color: '#333'}}
             />
             <TouchableOpacity
               onPress={() => this.disconnectRequest()}

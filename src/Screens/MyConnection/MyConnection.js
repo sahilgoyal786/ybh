@@ -391,7 +391,7 @@ class MyConnection extends React.Component {
                     style={{backgroundColor: 'green', marginRight: 10}}
                     name={'Accept'}
                     isLoading={this.state.isLoading}
-                    custom={true}
+                    custom={{color: '#fff'}}
                   />
                   <Button
                     onPress={() =>
@@ -400,7 +400,7 @@ class MyConnection extends React.Component {
                     style={{...GlobalStyles.errorBgColor}}
                     name={'Decline'}
                     isLoading={this.state.isLoading}
-                    custom={true}
+                    custom={{color: '#fff'}}
                   />
                 </>
               )}
@@ -410,7 +410,7 @@ class MyConnection extends React.Component {
                   style={{...GlobalStyles.errorBgColor}}
                   name={'Withdraw'}
                   isLoading={this.state.isLoading}
-                  custom={true}
+                  custom={{color: '#fff'}}
                 />
               )}
             </ListButtons>
