@@ -17,7 +17,7 @@ import {
 import {backicon} from '../common/images';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import userDetailContext from '../common/userDetailContext';
-import {GlobalImages} from '../common/styles';
+import GlobalStyles, {GlobalImages} from '../common/styles';
 const Header = ({
   title,
   backButton = false,
@@ -27,6 +27,7 @@ const Header = ({
   filterButton = false,
   chatBtn = false,
   myProfileBtn = false,
+  unread = null,
 }) => {
   const navigation = useNavigation();
   return (
@@ -90,6 +91,7 @@ const Header = ({
         {chatBtn !== false && (
           <TouchableOpacity onPress={() => navigation.navigate('MessageLists')}>
             <MenuIcon source={chatIcon} initHeight="30" initWidth="30" />
+            {unread && <UnreadIcon />}
           </TouchableOpacity>
         )}
         {myProfileBtn !== false && (
@@ -143,6 +145,15 @@ const MenuIcon = styled(ResponsiveImage)({
 });
 const BackIcon = styled(ResponsiveImage)({
   top: 10,
+});
+const UnreadIcon = styled(View)({
+  ...GlobalStyles.errorBgColor,
+  width: 10,
+  height: 10,
+  borderRadius: 10,
+  position: 'absolute',
+  top: 0,
+  right: 15,
 });
 
 export default Header;

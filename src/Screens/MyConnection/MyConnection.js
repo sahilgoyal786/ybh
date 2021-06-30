@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from 'react-native';
+import Button from '../../components/button';
 import Header from '../../components/header';
 import {Toast} from 'native-base';
 import {FlatList} from 'react-native-gesture-handler';
@@ -28,6 +29,8 @@ class MyConnection extends React.Component {
       page: 0,
       totalPage: 1,
       loadingMore: false,
+      pendingProfiles: null,
+      unread: null,
     };
   }
   componentDidMount() {
@@ -53,9 +56,11 @@ class MyConnection extends React.Component {
         userToken,
         (response) => {
           this.setState({
-            profiles: response.data,
-            page: response.current_page,
-            totalPage: response.last_page,
+            pendingProfiles: response.pending,
+            unread: response.unread,
+            profiles: response.profiles.data,
+            page: response.profiles.current_page,
+            totalPage: response.profiles.last_page,
             isLoading: false,
           });
         },
@@ -81,6 +86,9 @@ class MyConnection extends React.Component {
           this.setState({isLoading: false});
           if (response && response.message) {
             Toast.show({text: response.message});
+          }
+          if (response && response.pending) {
+            this.setState({pendingProfiles: response.pending});
           }
           this.state.profiles.splice(indexNum, 1);
           this.setState({profiles: this.state.profiles});
@@ -108,6 +116,9 @@ class MyConnection extends React.Component {
           if (response && response.message) {
             Toast.show({text: response.message});
           }
+          if (response && response.pending) {
+            this.setState({pendingProfiles: response.pending});
+          }
           this.state.profiles.splice(indexNum, 1);
           this.setState({profiles: this.state.profiles});
         },
@@ -133,6 +144,9 @@ class MyConnection extends React.Component {
           this.setState({isLoading: false, showPopover: false});
           if (response && response.message) {
             Toast.show({text: response.message});
+          }
+          if (response && response.pending) {
+            this.setState({pendingProfiles: response.pending});
           }
           this.state.profiles.splice(indexNum, 1);
           this.setState({profiles: this.state.profiles});
@@ -202,9 +216,11 @@ class MyConnection extends React.Component {
         this.state.token,
         (response) => {
           this.setState({
-            profiles: response.data,
-            page: response.current_page,
-            totalPage: response.last_page,
+            pendingProfiles: response.pending,
+            unread: response.unread,
+            profiles: response.profiles.data,
+            page: response.profiles.current_page,
+            totalPage: response.profiles.last_page,
             isLoading: false,
             activeTab: tab,
           });
@@ -239,11 +255,13 @@ class MyConnection extends React.Component {
           {},
           this.state.token,
           (response) => {
-            let profiles = this.state.profiles.concat(response.data);
+            let profiles = this.state.profiles.concat(response.profiles.data);
             this.setState({
+              pendingProfiles: response.pending,
+              unread: response.unread,
               profiles: profiles,
               loadingMore: false,
-              totalPage: response.last_page,
+              totalPage: response.profiles.last_page,
             });
           },
           (error) => {
@@ -264,7 +282,9 @@ class MyConnection extends React.Component {
         <UserList key={index}>
           <UserListInner>
             <TouchableWithoutFeedback onPress={() => this.showPopup(item.id)}>
-              <DotImage source={DotIcon} resizeMode="contain"></DotImage>
+              <DotImageWrap>
+                <DotImage source={DotIcon} resizeMode="contain"></DotImage>
+              </DotImageWrap>
             </TouchableWithoutFeedback>
             {this.state.showPopover === item.id && (
               <Popover key={'popup' + index}>
@@ -275,7 +295,7 @@ class MyConnection extends React.Component {
                     <IconImage
                       source={UserProfileIcons['delete']}
                       resizeMode="contain"></IconImage>
-                    <Text>Remove</Text>
+                    <Text style={{...GlobalStyles.primaryFont}}>Remove</Text>
                   </PopoverBtn>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback
@@ -284,7 +304,7 @@ class MyConnection extends React.Component {
                     <IconImage
                       source={UserProfileIcons['colormessage']}
                       resizeMode="contain"></IconImage>
-                    <Text>Message</Text>
+                    <Text style={{...GlobalStyles.primaryFont}}>Message</Text>
                   </PopoverBtn>
                 </TouchableWithoutFeedback>
               </Popover>
@@ -333,14 +353,14 @@ class MyConnection extends React.Component {
                   <Text
                     style={{
                       ...GlobalStyles.secondaryTextColor,
-                      fontSize: 18,
+                      fontSize: 14,
                       fontWeight: '700',
                       marginRight: 7,
                     }}>
                     {item.username}
                   </Text>
                   <Text
-                    style={{...GlobalStyles.secondaryTextColor, fontSize: 16}}>
+                    style={{...GlobalStyles.secondaryTextColor, fontSize: 14}}>
                     send you request
                   </Text>
                 </>
@@ -348,13 +368,13 @@ class MyConnection extends React.Component {
               {item.user_id != item.mylist.connection_id && (
                 <>
                   <Text
-                    style={{...GlobalStyles.secondaryTextColor, fontSize: 16}}>
+                    style={{...GlobalStyles.secondaryTextColor, fontSize: 14}}>
                     You send an request to
                   </Text>
                   <Text
                     style={{
                       ...GlobalStyles.secondaryTextColor,
-                      fontSize: 18,
+                      fontSize: 14,
                       fontWeight: '700',
                       marginLeft: 7,
                     }}>
@@ -366,26 +386,32 @@ class MyConnection extends React.Component {
             <ListButtons>
               {item.user_id === item.mylist.connection_id && (
                 <>
-                  <ReqButton
+                  <Button
                     onPress={() => this.acceptMatchRequest(item.user_id, index)}
-                    style={{backgroundColor: 'green'}}>
-                    Accept
-                  </ReqButton>
-                  <ReqButton
+                    style={{backgroundColor: 'green', marginRight: 10}}
+                    name={'Accept'}
+                    isLoading={this.state.isLoading}
+                    custom={true}
+                  />
+                  <Button
                     onPress={() =>
                       this.declineMatchRequest(item.user_id, index)
-                    }>
-                    Decline
-                  </ReqButton>
+                    }
+                    style={{...GlobalStyles.errorBgColor}}
+                    name={'Decline'}
+                    isLoading={this.state.isLoading}
+                    custom={true}
+                  />
                 </>
               )}
               {item.user_id != item.mylist.connection_id && (
-                <>
-                  <ReqButton
-                    onPress={() => this.disconnectRequest(item.id, index)}>
-                    Withdraw
-                  </ReqButton>
-                </>
+                <Button
+                  onPress={() => this.disconnectRequest(item.id, index)}
+                  style={{...GlobalStyles.errorBgColor}}
+                  name={'Withdraw'}
+                  isLoading={this.state.isLoading}
+                  custom={true}
+                />
               )}
             </ListButtons>
           </ListData>
@@ -404,7 +430,12 @@ class MyConnection extends React.Component {
         {this.state.isLoading || this.state.loadingMore ? (
           <ActivityIndicator color="#A073C4" size="large" />
         ) : (
-          <Text style={{...GlobalStyles.secondaryTextColor}}>
+          <Text
+            style={{
+              ...GlobalStyles.secondaryTextColor,
+              ...GlobalStyles.primaryFont,
+              fontSize: 16,
+            }}>
             No request found.
           </Text>
         )}
@@ -420,28 +451,47 @@ class MyConnection extends React.Component {
           searchBtn="true"
           myProfileBtn="true"
           chatBtn={true}
+          unread={this.state.unread}
           showRightDrawer={false}
         />
         <TopBar>
           <TopBarInner>
-            <ItemLeft
-              style={
-                this.state.activeTab == 'connected'
-                  ? {backgroundColor: '#f9bc16', color: '#fff'}
-                  : {}
-              }
+            <TouchableWithoutFeedback
               onPress={() => this.changeTab('connected')}>
-              Connected
-            </ItemLeft>
-            <ItemRight
-              style={
-                this.state.activeTab == 'pending'
-                  ? {backgroundColor: '#f9bc16', color: '#fff'}
-                  : {}
-              }
-              onPress={() => this.changeTab('pending')}>
-              Pending
-            </ItemRight>
+              <ItemLeftWrap
+                style={
+                  this.state.activeTab == 'connected'
+                    ? {backgroundColor: '#f9bc16'}
+                    : {}
+                }>
+                <Text
+                  style={
+                    this.state.activeTab == 'connected'
+                      ? {...GlobalStyles.primaryFont, color: '#fff'}
+                      : {...GlobalStyles.primaryFont}
+                  }>
+                  Connected
+                </Text>
+              </ItemLeftWrap>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => this.changeTab('pending')}>
+              <ItemRightWrap
+                style={
+                  this.state.activeTab == 'pending'
+                    ? {backgroundColor: '#f9bc16'}
+                    : {}
+                }>
+                {this.state.pendingProfiles && <CustomBadge />}
+                <Text
+                  style={
+                    this.state.activeTab == 'pending'
+                      ? {...GlobalStyles.primaryFont, color: '#fff'}
+                      : {...GlobalStyles.primaryFont}
+                  }>
+                  Pending
+                </Text>
+              </ItemRightWrap>
+            </TouchableWithoutFeedback>
           </TopBarInner>
         </TopBar>
       </View>
@@ -519,16 +569,6 @@ const ListButtons = styled(View)({
   flexDirection: 'row',
   marginTop: 8,
 });
-const ReqButton = styled(Text)({
-  ...GlobalStyles.whiteTextColor,
-  padding: 8,
-  paddingLeft: 20,
-  paddingRight: 20,
-  backgroundColor: '#f00',
-  borderRadius: 5,
-  marginRight: 10,
-  fontWeight: 700,
-});
 const TopBar = styled(View)({
   flexDirection: 'column',
   alignItems: 'center',
@@ -541,29 +581,43 @@ const TopBarInner = styled(View)({
   justifyContent: 'center',
   height: 40,
 });
-const ItemLeft = styled(Text)({
+const ItemLeftWrap = styled(View)({
   padding: 0,
   paddingLeft: 25,
   paddingRight: 25,
   backgroundColor: '#fff',
   height: 40,
-  lineHeight: 40,
   color: '#111',
   border: '2px solid #f9bc16',
   borderTopLeftRadius: 20,
   borderBottomLeftRadius: 20,
+  alignItems: 'center',
+  justifyContent: 'center',
 });
-const ItemRight = styled(Text)({
+const ItemRightWrap = styled(View)({
   padding: 0,
   paddingLeft: 25,
   paddingRight: 25,
   backgroundColor: '#fff',
   height: 40,
-  lineHeight: 40,
   color: '#111',
   border: '2px solid #f9bc16',
   borderTopRightRadius: 20,
   borderBottomRightRadius: 20,
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'relative',
+});
+const CustomBadge = styled(View)({
+  ...GlobalStyles.errorBgColor,
+  color: '#fff',
+  width: 15,
+  height: 15,
+  borderRadius: 15,
+  textAlign: 'center',
+  position: 'absolute',
+  top: -5,
+  right: -5,
 });
 const Popover = styled(View)({
   display: 'flex',
@@ -571,7 +625,7 @@ const Popover = styled(View)({
   flexDirection: 'column',
   position: 'absolute',
   top: 10,
-  right: 25,
+  right: 50,
   zIndex: 999,
   borderRadius: 5,
   backgroundColor: '#fff',
@@ -615,13 +669,22 @@ const UserListInner = styled(View)({
   shadowRadius: 5,
   elevation: '10',
 });
+const DotImageWrap = styled(View)({
+  width: 40,
+  height: 40,
+  position: 'absolute',
+  top: 5,
+  right: 5,
+  zIndex: 999,
+  backgroundColor: '#00000080',
+  borderRadius: 10,
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+});
 const DotImage = styled(Image)({
   width: 10,
   height: 20,
-  position: 'absolute',
-  top: 8,
-  right: 10,
-  zIndex: 999,
 });
 const UserImage = styled(Image)({
   width: '100%',
@@ -634,17 +697,19 @@ const UserData = styled(View)({
   left: 0,
   right: 0,
   padding: 10,
-  backgroundColor: '#00000040',
+  backgroundColor: '#00000080',
   borderBottomLeftRadius: 10,
   borderBottomRightRadius: 10,
 });
 const UserName = styled(Text)({
+  ...GlobalStyles.primaryFont,
   fontSize: 16,
   color: '#f9bc16',
   fontWeight: 700,
   textAlign: 'center',
 });
 const UserMessage = styled(Text)({
+  ...GlobalStyles.primaryFont,
   fontSize: 13,
   color: '#fff',
   textAlign: 'center',

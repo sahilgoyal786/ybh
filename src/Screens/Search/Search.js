@@ -29,6 +29,7 @@ class Search extends React.Component {
       profiles: [],
       page: 0,
       totalPage: 1,
+      totalSearchUser: null,
       starting: true,
       filter: {
         age: [18, 90],
@@ -76,15 +77,18 @@ class Search extends React.Component {
               filterObj,
               userToken,
               (response) => {
+                this.setState({isLoading: false});
                 if (response.data && response.data.length) {
                   let userProfiles = this.state.profiles;
                   userProfiles = userProfiles.concat(response.data);
                   this.setState({
-                    isLoading: false,
                     profiles: userProfiles,
                     page: response.current_page,
                     totalPage: response.last_page,
+                    totalSearchUser: response.total,
                   });
+                } else {
+                  this.setState({totalSearchUser: null});
                 }
               },
               (error) => {
@@ -163,15 +167,11 @@ class Search extends React.Component {
   ListEmptyComponent = () => {
     return (
       <View
-        style={{
-          flexGrow: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+        style={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
         {this.state.isLoading ? (
           <ActivityIndicator color="#A073C4" size="large" />
         ) : (
-          <Text style={{...GlobalStyles.secondaryTextColor}}>
+          <Text style={{...GlobalStyles.secondaryTextColor, fontSize: 16}}>
             No user found.
           </Text>
         )}
@@ -180,12 +180,17 @@ class Search extends React.Component {
   };
   ListHeaderComponent = () => {
     return (
-      <Header
-        title="Search"
-        backButton="true"
-        filterButton="true"
-        showRightDrawer={false}
-      />
+      <>
+        <Header
+          title="Search"
+          backButton="true"
+          filterButton="true"
+          showRightDrawer={false}
+        />
+        {this.state.totalSearchUser && (
+          <TotalUser>{this.state.totalSearchUser} result(s) found.</TotalUser>
+        )}
+      </>
     );
   };
 
@@ -227,6 +232,14 @@ const UserList = styled(View)({
   shadowOpacity: '0.2',
   shadowRadius: 5,
   elevation: '5',
+});
+const TotalUser = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
+  fontSize: 18,
+  lineHeight: '20px',
+  fontWeight: 600,
+  marginBottom: 8,
+  textAlign: 'center',
 });
 const UserName = styled(Text)({
   ...GlobalStyles.customTextColor,

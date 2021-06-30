@@ -23,6 +23,7 @@ const Button = ({
   icon = false,
   secondary = false,
   tertiary = false,
+  custom = false,
   ...props
 }) => {
   return (
@@ -120,6 +121,14 @@ const Button = ({
             )}
           </LinearGradientColor>
         </LinearButton>
+      ) : custom ? (
+        <CustomButton {...props} onPress={onPress}>
+          {isLoading ? (
+            <ActivityIndicator color="#FFF" />
+          ) : (
+            <Text style={{color: '#fff'}}>{name}</Text>
+          )}
+        </CustomButton>
       ) : (
         <TouchableOpacityButton onPress={onPress}>
           {isLoading ? (
@@ -132,6 +141,15 @@ const Button = ({
     </>
   );
 };
+const CustomButton = styled(TouchableOpacity)({
+  padding: 8,
+  paddingLeft: 20,
+  paddingRight: 20,
+  borderRadius: 5,
+  justifyContent: 'center',
+  backgroundColor: 'transparent',
+  alignItems: 'center',
+});
 const TouchableOpacityButton = styled(TouchableOpacity)({
   justifyContent: 'center',
   width: wp(78),

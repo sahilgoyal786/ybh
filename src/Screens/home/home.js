@@ -24,7 +24,7 @@ import ThriveArticle from '../../components/thriveArticle';
 import userDetailContext from '../../common/userDetailContext';
 import FastImage from 'react-native-fast-image';
 import ContentLoader from 'react-native-easy-content-loader';
-import {MatchLogo} from '../../common/images';
+import {MatchLogo, MatchedLogo} from '../../common/images';
 import LeaderBoard from '../../components/leaderBoard';
 import Button from '../../components/button';
 import network from '../../components/apis/network';
@@ -62,6 +62,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [homeBottom, setHomeBottom] = React.useState(false);
   const [homeTopRight, setHomeTopRight] = React.useState(false);
+  const [matchedEnabled, setMatchedEnabled] = React.useState(false);
 
   var votingImagesPlaceholder = [];
   var latestPhotosPlaceholder = [];
@@ -328,44 +329,87 @@ const Home = () => {
       },
     );
   };
-  const getMatchMakingProfile = () => {
-    try {
-      network.getResponse(
-        EndPoints.checkMatchProfile,
-        'GET',
-        {},
-        userDetail.token || '',
-        (response) => {
-          if (response.profile && response.profile.status == 'activate') {
-            return navigation.navigate('MyConnection');
-          } else if (
-            response.profile &&
-            response.profile.status == 'deactivate'
-          ) {
-            Toast.show({text: 'Your profile is deactivated by Admin'});
-          } else if (
-            response.profile &&
-            response.profile.status == 'pending_verification' &&
-            response.profile.verify_profile_photo
-          ) {
-            Toast.show({text: 'Your profile is awaiting for Admin Approval.'});
-          } else if (
-            response.profile &&
-            response.profile.status == 'pending_verification' &&
-            !response.profile.verify_profile_photo
-          ) {
-            return navigation.navigate('PhotoVerification');
-          } else {
-            return navigation.navigate('matchmakingTC');
-          }
-        },
-        (error) => {
-          console.log('error', error);
-        },
-      );
-    } catch (exception) {
-      console.log('exception', exception);
+
+  const checkCacheExpired = (value) => {
+    if (Math.floor(Date.now() / 1000) > value.timestamp + 5 * 60 * 60) {
+      return true;
+    } else {
+      return false;
     }
+  };
+
+  const getMatchMakingProfile = () => {
+    storage.getData('checkMatchProfile').then((value) => {
+      if (value == null || checkCacheExpired(JSON.parse(value))) {
+        try {
+          network.getResponse(
+            EndPoints.checkMatchProfile,
+            'GET',
+            {},
+            userDetail.token || '',
+            (response) => {
+              storage.setData('checkMatchProfile', JSON.stringify(response));
+              if (response.profile && response.profile.status == 'activate') {
+                setMatchedEnabled(true);
+                return navigation.navigate('MyConnection');
+              } else if (
+                response.profile &&
+                response.profile.status == 'deactivate'
+              ) {
+                Toast.show({text: 'Your profile is deactivated by Admin'});
+              } else if (
+                response.profile &&
+                response.profile.status == 'pending_verification' &&
+                response.profile.verify_profile_photo
+              ) {
+                Toast.show({
+                  text: 'Your profile is awaiting for Admin Approval.',
+                });
+              } else if (
+                response.profile &&
+                response.profile.status == 'pending_verification' &&
+                !response.profile.verify_profile_photo
+              ) {
+                return navigation.navigate('PhotoVerification');
+              } else {
+                return navigation.navigate('matchmakingTC');
+              }
+            },
+            (error) => {
+              console.log('error', error);
+            },
+          );
+        } catch (exception) {
+          console.log('exception', exception);
+        }
+      } else {
+        console.log('Loaded from cache');
+        let response = JSON.parse(value);
+        if (response.profile && response.profile.status == 'activate') {
+          setMatchedEnabled(true);
+          return navigation.navigate('MyConnection');
+        } else if (
+          response.profile &&
+          response.profile.status == 'deactivate'
+        ) {
+          Toast.show({text: 'Your profile is deactivated by Admin'});
+        } else if (
+          response.profile &&
+          response.profile.status == 'pending_verification' &&
+          response.profile.verify_profile_photo
+        ) {
+          Toast.show({text: 'Your profile is awaiting for Admin Approval.'});
+        } else if (
+          response.profile &&
+          response.profile.status == 'pending_verification' &&
+          !response.profile.verify_profile_photo
+        ) {
+          return navigation.navigate('PhotoVerification');
+        } else {
+          return navigation.navigate('matchmakingTC');
+        }
+      }
+    });
   };
 
   return (
@@ -509,12 +553,13 @@ const Home = () => {
               alignContent: 'stretch',
               paddingLeft: 10,
               paddingRight: 10,
+              position: 'relative',
             }}>
             <TouchableOpacity
               onPress={() => getMatchMakingProfile()}
               style={{marginBottom: 10}}>
               <Image
-                source={MatchLogo}
+                source={matchedEnabled ? MatchedLogo : MatchLogo}
                 style={{width: '100%', height: 130, padding: 0}}
                 resizeMode="contain"
               />

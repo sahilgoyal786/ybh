@@ -160,6 +160,12 @@ class MyProfile extends React.Component {
                 <LabelValue>{this.state.profile.children}</LabelValue>
               </ListHalfData>
             </ProfileData>
+            <AboutMeSec>
+              <PHeading>About Me</PHeading>
+              <Text style={{...GlobalStyles.secondaryTextColor}}>
+                {this.state.profile.aboutus}
+              </Text>
+            </AboutMeSec>
             <PartnerFunSec>
               <PHeading>
                 What do you like to do for fun with your partner?
@@ -212,12 +218,6 @@ class MyProfile extends React.Component {
                   <LabelValue>{this.state.profile.height}cm</LabelValue>
                 </ListHalfData>
               </PValueWrap>
-            </LookingForSec>
-            <LookingForSec>
-              <PHeading>About Us</PHeading>
-              <Text style={{...GlobalStyles.secondaryTextColor}}>
-                {this.state.profile.aboutus}
-              </Text>
             </LookingForSec>
           </UserProfileWrap>
         </ScrollView>
@@ -292,7 +292,7 @@ const UserData = styled(Text)({
   textAlign: 'center',
 });
 const ProfileData = styled(View)({
-  ...GlobalStyles.primaryBorderColor,
+  ...GlobalStyles.secondaryBorderColor,
   display: 'flex',
   flex: 1,
   flexDirection: 'row',
@@ -323,8 +323,17 @@ const PartnerFunSec = styled(View)({
   flexDirection: 'column',
   width: '100%',
 });
+const AboutMeSec = styled(View)({
+  ...GlobalStyles.secondaryBorderColor,
+  marginTop: 20,
+  flex: 1,
+  flexDirection: 'column',
+  width: '100%',
+  borderBottomWidth: 1,
+  paddingBottom: 20,
+});
 const LookingForSec = styled(View)({
-  ...GlobalStyles.primaryBorderColor,
+  ...GlobalStyles.secondaryBorderColor,
   marginTop: 20,
   flex: 1,
   flexDirection: 'column',

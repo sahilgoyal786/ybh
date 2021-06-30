@@ -93,5 +93,6 @@ const EndPoints = {
   newInstalls: {url: 'new-installs'},
   shareClicks: {url: 'share-clicks'},
   userSessions: {url: 'user-sessions'},
+  reportRequest: {url: 'report-users'},
 };
 export default EndPoints;

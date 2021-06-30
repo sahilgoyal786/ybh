@@ -12,6 +12,7 @@ import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
 import userDetailContext from '../../common/userDetailContext';
 import {
+  StyleSheet,
   Text,
   ScrollView,
   View,
@@ -20,8 +21,10 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
 } from 'react-native';
+import {Dialog} from 'react-native-simple-dialogs';
+import Button from '../../components/button';
 import Header from '../../components/header';
-import {Toast} from 'native-base';
+import {Textarea, Toast} from 'native-base';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import FastImage from 'react-native-fast-image';
 import GlobalStyles, {GlobalImages} from '../../common/styles';
@@ -35,6 +38,9 @@ class UserProfile extends React.Component {
       token: '',
       profile: {},
       showModal: false,
+      blockLoading: false,
+      dialog: false,
+      reportMessage: null,
     };
   }
   componentDidMount() {
@@ -195,47 +201,97 @@ class UserProfile extends React.Component {
       console.log('exception', exception);
     }
   };
+  reportRequest = () => {
+    this.setState({isLoading: true, blockLoading: true});
+    try {
+      network.getResponse(
+        EndPoints.reportRequest,
+        'POST',
+        {
+          message: this.state.reportMessage,
+          reported_id: this.state.profile.user_id,
+        },
+        this.state.token,
+        (response) => {
+          console.log(response);
+          this.setState({
+            isLoading: false,
+            blockLoading: false,
+            reportMessage: null,
+            dialog: false,
+          });
+          if (response && response.message) {
+            Toast.show({text: response.message});
+          }
+        },
+        (error) => {
+          this.setState({isLoading: false, blockLoading: false});
+          console.log('error', error);
+        },
+      );
+    } catch (exception) {
+      this.setState({isLoading: false, blockLoading: false});
+      console.log('exception', exception);
+    }
+  };
   render() {
     const btns = [];
     if (this.state.profile.mylist && this.state.profile.mylist.status) {
       btns.push(
-        <View
-          key={'btnInList'}
-          style={{
-            flexDirection: 'row',
-            marginTop: 10,
-          }}>
-          <TouchableOpacity onPress={() => this.createChats()}>
-            <View
+        <>
+          <View
+            key={'btnInList'}
+            style={{
+              flexDirection: 'row',
+              marginTop: 10,
+            }}>
+            <TouchableOpacity onPress={() => this.createChats()}>
+              <View
+                style={{
+                  padding: 5,
+                  backgroundColor: '#7b43a5',
+                  borderRadius: 5,
+                  flexDirection: 'row',
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                }}>
+                <IconImage
+                  source={UserProfileIcons['message']}
+                  resizeMode="contain"></IconImage>
+                <Text style={{color: 'white'}}>Message</Text>
+              </View>
+            </TouchableOpacity>
+            <Button
+              onPress={() => this.setState({dialog: true})}
               style={{
-                padding: 5,
                 backgroundColor: '#7b43a5',
                 borderRadius: 5,
-                flexDirection: 'row',
+                padding: 5,
                 paddingLeft: 20,
                 paddingRight: 20,
-              }}>
-              <IconImage
-                source={UserProfileIcons['message']}
-                resizeMode="contain"></IconImage>
-              <Text style={{color: 'white'}}>Message</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.disconnectRequest()}
-            style={{
-              marginLeft: 10,
-            }}>
-            <View
+                marginLeft: 15,
+                height: 30,
+              }}
+              name={'Report'}
+              isLoading={this.state.blockLoading}
+              custom={true}
+            />
+            <TouchableOpacity
+              onPress={() => this.disconnectRequest()}
               style={{
-                padding: 5,
+                marginLeft: 10,
               }}>
-              <IconImage
-                source={UserProfileIcons['disconnect']}
-                resizeMode="contain"></IconImage>
-            </View>
-          </TouchableOpacity>
-        </View>,
+              <View
+                style={{
+                  padding: 5,
+                }}>
+                <IconImage
+                  source={UserProfileIcons['disconnect']}
+                  resizeMode="contain"></IconImage>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </>,
       );
     } else if (
       this.state.profile.mylist &&
@@ -420,6 +476,14 @@ class UserProfile extends React.Component {
                 <LabelValue>{this.state.profile.children}</LabelValue>
               </ListHalfData>
             </ProfileData>
+            {this.state.profile.mylist && this.state.profile.mylist.status && (
+              <AboutMeSec>
+                <PHeading>About Me</PHeading>
+                <Text style={{...GlobalStyles.secondaryTextColor}}>
+                  {this.state.profile.aboutus}
+                </Text>
+              </AboutMeSec>
+            )}
             <PartnerFunSec>
               <PHeading>
                 What do you like to do for fun with your partner?
@@ -475,14 +539,6 @@ class UserProfile extends React.Component {
                 </ListHalfData>
               </PValueWrap>
             </LookingForSec>
-            {this.state.profile.mylist && this.state.profile.mylist.status && (
-              <LookingForSec>
-                <PHeading>About Us</PHeading>
-                <Text style={{...GlobalStyles.secondaryTextColor}}>
-                  {this.state.profile.aboutus}
-                </Text>
-              </LookingForSec>
-            )}
           </UserProfileWrap>
         </ScrollView>
         <Modal visible={this.state.showModal}>
@@ -525,10 +581,61 @@ class UserProfile extends React.Component {
             renderIndicator={() => {}}
           />
         </Modal>
+        <Dialog
+          dialogStyle={{...GlobalStyles.screenBackgroundColor}}
+          visible={this.state.dialog}
+          onTouchoutside={() =>
+            this.setState({
+              dialog: false,
+              reportMessage: null,
+            })
+          }>
+          <View>
+            <Textarea
+              rowSpan={5}
+              value={this.state.reportMessage}
+              placeholder="Enter your message...."
+              style={{
+                ...GlobalStyles.secondaryBorderColor,
+                ...GlobalStyles.primaryTextColor,
+                borderWidth: 1,
+                borderRadius: 5,
+                padding: 10,
+              }}
+              onChangeText={(msg) => this.setState({reportMessage: msg})}
+            />
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Button
+              onPress={() => this.reportRequest()}
+              style={styles.DialogBtn}
+              name={'Submit'}
+              linear
+            />
+            <Button
+              onPress={() =>
+                this.setState({
+                  dialog: false,
+                  reportMessage: null,
+                })
+              }
+              style={styles.DialogBtn}
+              name={'Cancel'}
+              secondary
+            />
+          </View>
+        </Dialog>
       </View>
     );
   }
 }
+const styles = StyleSheet.create({
+  DialogBtn: {
+    marginTop: 15,
+    width: '50%',
+    height: 40,
+  },
+});
 const UserProfileWrap = styled(View)({
   flex: 1,
   flexDirection: 'column',
@@ -558,7 +665,7 @@ const UserData = styled(Text)({
   textAlign: 'center',
 });
 const ProfileData = styled(View)({
-  ...GlobalStyles.primaryBorderColor,
+  ...GlobalStyles.secondaryBorderColor,
   display: 'flex',
   flex: 1,
   flexDirection: 'row',
@@ -588,6 +695,15 @@ const PartnerFunSec = styled(View)({
   flex: 1,
   flexDirection: 'column',
   width: '100%',
+});
+const AboutMeSec = styled(View)({
+  ...GlobalStyles.secondaryBorderColor,
+  marginTop: 20,
+  flex: 1,
+  flexDirection: 'column',
+  width: '100%',
+  borderBottomWidth: 1,
+  paddingBottom: 20,
 });
 const LookingForSec = styled(View)({
   ...GlobalStyles.secondaryBorderColor,

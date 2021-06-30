@@ -11,8 +11,8 @@ import {
   selectedTabCurve,
   selectedTabCurveDark,
 } from '../common/images';
-const colorScheme = Appearance.getColorScheme();
-// const colorScheme = 'dark';
+// const colorScheme = Appearance.getColorScheme();
+const colorScheme = 'dark';
 
 export const GlobalImages = {
   header: colorScheme == 'light' ? headerView : headerViewDark,
@@ -30,6 +30,9 @@ const styles = {
     marginBottom: 10,
     fontFamily: 'FuturaPT-Light',
   },
+  errorBgColor: {
+    backgroundColor: colorScheme == 'light' ? '#f00' : '#f46262',
+  },
   errorTextColor: {
     color: colorScheme == 'light' ? '#f00' : '#f46262',
   },
@@ -44,6 +47,9 @@ const styles = {
   },
   shadowColor: {
     shadowColor: '#3d3d3d',
+  },
+  primaryFont: {
+    fontFamily: 'FuturaPT-Medium',
   },
   gradientColorsFrom: colorScheme == 'light' ? '#9F74C5' : '#514164',
   gradientColorsTo: colorScheme == 'light' ? '#7F54A5' : '#6d528d',

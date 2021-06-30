@@ -67,10 +67,6 @@ const network = {
         file_name,
       );
     }
-
-    // storage.getData('access_token').then((res) => {
-
-    // });
   },
   getResponseFromServer: function (
     endpoint,
@@ -91,7 +87,6 @@ const network = {
           formData.append(key + '[]', item);
         });
       } else {
-        // console.log('NOT AN OBJECT');
         formData.append(key, data[key]);
       }
     }
@@ -115,10 +110,6 @@ const network = {
     if (access_token) {
       headers['Authorization'] = 'Bearer ' + access_token;
     }
-    // else {
-    // console.log('no access_token');
-    // }
-    // console.log(api_host + endpoint);
     axios({
       method: type,
       url: api_host + endpoint.url,
@@ -126,7 +117,6 @@ const network = {
       data: formData,
     })
       .then((response) => {
-        // console.log(response.data);
         if (response.data) {
           if (type.toLowerCase() == 'get') {
             response.data.timestamp = Math.floor(Date.now() / 1000);
