@@ -177,6 +177,7 @@ class MyConnection extends React.Component {
             name: response.user.username,
             receiver: response.user.user_id,
             photo: response.user.photo,
+            status: response.status,
           });
         },
         (error) => {

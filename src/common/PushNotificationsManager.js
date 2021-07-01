@@ -264,6 +264,7 @@ export default class PushNotificationManager extends React.Component {
                   receiver: chat.sender.user_id,
                   name: chat.sender.username,
                   photo: chat.sender.photo,
+                  status: chat.status,
                 });
               },
             }}

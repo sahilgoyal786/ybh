@@ -10,6 +10,7 @@ import {
   loginFooterDark,
   selectedTabCurve,
   selectedTabCurveDark,
+  UserProfileIcons,
 } from '../common/images';
 const colorScheme = Appearance.getColorScheme();
 // const colorScheme = 'dark';
@@ -20,6 +21,10 @@ export const GlobalImages = {
   loginHeader: colorScheme == 'light' ? loginHeader : loginHeaderDark,
   loginFooter: colorScheme == 'light' ? loginFooter : loginFooterDark,
   tabCurve: colorScheme == 'light' ? selectedTabCurve : selectedTabCurveDark,
+  disconnect:
+    colorScheme == 'light'
+      ? UserProfileIcons['disconnect']
+      : UserProfileIcons['disconnectWhite'],
 };
 const styles = {
   error_message: {

@@ -237,6 +237,8 @@ export const SearchIcons = {
 export const UserProfileIcons = {
   connect: require('../assets/icons/connect.png'),
   disconnect: require('../assets/icons/disconnect.png'),
+  disconnectWhite: require('../assets/icons/disconnect-white.png'),
+  block: require('../assets/icons/blocked.png'),
   message: require('../assets/icons/message.png'),
   colormessage: require('../assets/icons/message1.png'),
   pending: require('../assets/icons/pending.png'),

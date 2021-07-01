@@ -189,6 +189,7 @@ class UserProfile extends React.Component {
             name: response.user.username,
             receiver: response.user.user_id,
             photo: response.user.photo,
+            status: response.status,
           });
         },
         (error) => {
@@ -261,23 +262,8 @@ class UserProfile extends React.Component {
                 <Text style={{color: 'white'}}>Message</Text>
               </View>
             </TouchableOpacity>
-            <Button
-              onPress={() => this.setState({dialog: true})}
-              style={{
-                backgroundColor: '#f9bc16',
-                borderRadius: 5,
-                padding: 5,
-                paddingLeft: 20,
-                paddingRight: 20,
-                marginLeft: 15,
-                height: 30,
-              }}
-              name={'Report'}
-              isLoading={this.state.blockLoading}
-              custom={{color: '#333'}}
-            />
             <TouchableOpacity
-              onPress={() => this.disconnectRequest()}
+              onPress={() => this.setState({dialog: true})}
               style={{
                 marginLeft: 10,
               }}>
@@ -286,7 +272,17 @@ class UserProfile extends React.Component {
                   padding: 5,
                 }}>
                 <IconImage
-                  source={UserProfileIcons['disconnect']}
+                  source={UserProfileIcons['block']}
+                  resizeMode="contain"></IconImage>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.disconnectRequest()}>
+              <View
+                style={{
+                  padding: 5,
+                }}>
+                <IconImage
+                  source={GlobalImages.disconnect}
                   resizeMode="contain"></IconImage>
               </View>
             </TouchableOpacity>
@@ -591,6 +587,15 @@ class UserProfile extends React.Component {
             })
           }>
           <View>
+            <Text
+              style={{
+                ...GlobalStyles.secondaryTextColor,
+                ...GlobalStyles.fontFamily,
+                fontSize: 16,
+                marginBottom: 10,
+              }}>
+              Report User
+            </Text>
             <Textarea
               rowSpan={5}
               value={this.state.reportMessage}

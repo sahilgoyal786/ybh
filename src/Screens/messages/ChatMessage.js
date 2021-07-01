@@ -42,6 +42,7 @@ class ChatMessage extends React.Component {
       receiver: props.route.params.receiver,
       name: props.route.params.name,
       photo: props.route.params.photo,
+      status: props.route.params.status,
       isLoading: true,
       message: null,
       hasMoreMessages: true,
@@ -456,29 +457,42 @@ class ChatMessage extends React.Component {
               </Text>
             </View>
           )}
-          <View style={styles.bottomWrap}>
-            <TextInput
-              style={styles.input}
-              value={this.state.message}
-              onChangeText={(msg) => this.changeMessage(msg)}
-              blurOnSubmit={false}
-              // onSubmitEditing={() => this.sendMessage()}
-              placeholder="Write a message..."
-              returnKeyType="send"
-              placeholderTextColor="#fff"
-              multiline={true}
-            />
-            <TouchableWithoutFeedback onPress={() => this.sendMessage()}>
-              <Image
-                source={SendIcon}
-                style={{
-                  width: 30,
-                  height: 30,
-                  marginLeft: 10,
-                }}
+          {this.state.status ? (
+            <View style={styles.bottomWrap}>
+              <TextInput
+                style={styles.input}
+                value={this.state.message}
+                onChangeText={(msg) => this.changeMessage(msg)}
+                blurOnSubmit={false}
+                placeholder="Write a message..."
+                returnKeyType="send"
+                placeholderTextColor="#fff"
+                multiline={true}
               />
-            </TouchableWithoutFeedback>
-          </View>
+              <TouchableWithoutFeedback onPress={() => this.sendMessage()}>
+                <Image
+                  source={SendIcon}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    marginLeft: 10,
+                  }}
+                />
+              </TouchableWithoutFeedback>
+            </View>
+          ) : (
+            <View style={styles.bottomWrap}>
+              <Text
+                style={{
+                  ...GlobalStyles.secondaryTextColor,
+                  ...GlobalStyles.primaryFont,
+                  fontSize: 16,
+                }}>
+                You can't send messages to this user because you're no longer a
+                participant.
+              </Text>
+            </View>
+          )}
         </KeyboardAvoidingView>
       </View>
     );

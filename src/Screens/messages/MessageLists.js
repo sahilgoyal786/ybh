@@ -148,6 +148,7 @@ class MessageLists extends React.Component {
                         name: chat.user.username,
                         receiver: chat.user.user_id,
                         photo: chat.user.photo,
+                        status: chat.status,
                       });
                     }}>
                     <MessageList>
