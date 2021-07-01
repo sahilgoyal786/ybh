@@ -503,7 +503,7 @@ const styles = StyleSheet.create({
   DialogBtn: {
     marginTop: 15,
     width: '50%',
-    height: 40,
+    height: heightPercentageToDP(10),
   },
   bottomDrawerWrap: {
     ...GlobalStyles.secondaryBackgroundColor,

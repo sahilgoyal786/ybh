@@ -6,7 +6,10 @@ import {
   UserProfileIcons,
 } from '../../common/images';
 import styled from 'styled-components/native';
-import {widthPercentageToDP} from 'react-native-responsive-screen';
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import network from '../../components/apis/network';
 import EndPoints from '../../components/apis/endPoints';
@@ -638,7 +641,7 @@ const styles = StyleSheet.create({
   DialogBtn: {
     marginTop: 15,
     width: '50%',
-    height: 40,
+    height: heightPercentageToDP(10),
   },
 });
 const UserProfileWrap = styled(View)({

@@ -13,7 +13,7 @@ import {
   UserProfileIcons,
 } from '../common/images';
 const colorScheme = Appearance.getColorScheme();
-// const colorScheme = 'dark';
+// const colorScheme = 'light';
 
 export const GlobalImages = {
   header: colorScheme == 'light' ? headerView : headerViewDark,
