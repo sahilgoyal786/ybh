@@ -20,6 +20,7 @@ class Filter extends React.Component {
     this.state = {
       filter: {
         age: [18, 90],
+        gender: '',
         children: '',
         education: '',
         religion: '',
@@ -57,6 +58,7 @@ class Filter extends React.Component {
   resetFilter = () => {
     let oldFilter = {
       age: [18, 90],
+      gender: '',
       children: '',
       education: '',
       religion: '',
@@ -83,6 +85,12 @@ class Filter extends React.Component {
       },
       {
         type: 'text',
+        name: 'gender',
+        heading: 'Gender',
+        values: ['Male', 'Female', "Don't Care"],
+      },
+      {
+        type: 'text',
         name: 'children',
         heading: 'Should the person have children?',
         values: ['Yes', 'No', "Don't Care"],
@@ -90,7 +98,7 @@ class Filter extends React.Component {
       {
         type: 'text',
         name: 'education',
-        heading: 'Education level of the person?',
+        heading: 'Educational level of the person?',
         values: [
           'Secondary school',
           'Bachelor Degree',
@@ -102,7 +110,7 @@ class Filter extends React.Component {
       {
         type: 'text',
         name: 'religion',
-        heading: 'Should the person to same religion?',
+        heading: 'Should the person be the same religion as you?',
         values: ['Yes', 'No'],
       },
       {
@@ -144,13 +152,13 @@ class Filter extends React.Component {
       {
         type: 'text',
         name: 'religiosity',
-        heading: 'Religiosity should the person be practicing?',
+        heading: 'Should the person be practising their religion?',
         values: ["Don't Care", 'Yes', 'Moderately'],
       },
       {
         type: 'text',
         name: 'family',
-        heading: 'Family are you okay with your partner having?',
+        heading: 'What size of family should your partner have?',
         values: ['Large Family', 'Small', "Don't Care"],
       },
     ];

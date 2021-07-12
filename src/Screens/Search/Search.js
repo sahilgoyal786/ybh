@@ -33,6 +33,7 @@ class Search extends React.Component {
       starting: true,
       filter: {
         age: [18, 90],
+        gender: '',
         children: '',
         education: '',
         religion: '',
@@ -119,6 +120,7 @@ class Search extends React.Component {
         filterData,
         userToken,
         (response) => {
+          delete filterData.page;
           if (response.data && response.data.length) {
             let userProfiles = this.state.profiles;
             userProfiles = userProfiles.concat(response.data);
@@ -131,11 +133,13 @@ class Search extends React.Component {
           }
         },
         (error) => {
+          delete filterData.page;
           this.setState({isLoading: false});
           console.log('error', error);
         },
       );
     } catch (exception) {
+      delete filterData.page;
       this.setState({isLoading: false});
       console.log('exception', exception);
     }
@@ -180,7 +184,7 @@ class Search extends React.Component {
   };
   ListHeaderComponent = () => {
     return (
-      <>
+      <View style={{...GlobalStyles.secondaryBackgroundColor}}>
         <Header
           title="Search"
           backButton="true"
@@ -190,7 +194,7 @@ class Search extends React.Component {
         {this.state.totalSearchUser && (
           <TotalUser>{this.state.totalSearchUser} result(s) found.</TotalUser>
         )}
-      </>
+      </View>
     );
   };
 
