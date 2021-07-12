@@ -16,7 +16,7 @@ class Plans extends React.Component {
       isLoading: false,
       token: null,
       subscription: false,
-      paymenturl: 'https://paystack.com/pay/3y5fpgd7uz',
+      paymenturl: 'https://paystack.com/pay/g6v29kr7ty',
     };
   }
   componentDidMount() {
