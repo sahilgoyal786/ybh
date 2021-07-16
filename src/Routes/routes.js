@@ -52,6 +52,7 @@ import Plans from '../Screens/matchmaking/Plans';
 import PersonalInfo from '../Screens/matchmaking/PersonalInfo';
 import SwipeTnC from '../Screens/matchmaking/SwipeTnC';
 import PhotoVerification from '../Screens/matchmaking/PhotoVerification';
+import ProfileActivation from '../Screens/matchmaking/ProfileActivation';
 import MessageLists from '../Screens/messages/MessageLists';
 import ChatMessage from '../Screens/messages/ChatMessage';
 import MyConnection from '../Screens/MyConnection/MyConnection';
@@ -319,17 +320,39 @@ function Routes() {
                 ) : (
                   <Stack.Navigator headerMode="none">
                     <Stack.Screen name="Welcomeuser" component={HomeDrawer} />
-                    <Stack.Screen name="matchmakingTC" component={matchmakingTC} />
+                    <Stack.Screen
+                      name="matchmakingTC"
+                      component={matchmakingTC}
+                    />
                     <Stack.Screen name="Plans" component={Plans} />
-                    <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
+                    <Stack.Screen
+                      name="PersonalInfo"
+                      component={PersonalInfo}
+                    />
                     <Stack.Screen name="SwipeTnC" component={SwipeTnC} />
-                    <Stack.Screen name="PhotoVerification" component={PhotoVerification} />
+                    <Stack.Screen
+                      name="PhotoVerification"
+                      component={PhotoVerification}
+                    />
+                    <Stack.Screen
+                      name="ProfileActivation"
+                      component={ProfileActivation}
+                    />
                     <Stack.Screen name="UserProfile" component={UserProfile} />
                     <Stack.Screen name="MyProfile" component={MyProfile} />
-                    <Stack.Screen name="EditMyProfile" component={EditMyProfile} />
-                    <Stack.Screen name="MyConnection" component={MyConnection} />
+                    <Stack.Screen
+                      name="EditMyProfile"
+                      component={EditMyProfile}
+                    />
+                    <Stack.Screen
+                      name="MyConnection"
+                      component={MyConnection}
+                    />
                     <Stack.Screen name="Search" component={Search} />
-                    <Stack.Screen name="MessageLists" component={MessageLists} />
+                    <Stack.Screen
+                      name="MessageLists"
+                      component={MessageLists}
+                    />
                     <Stack.Screen name="ChatMessage" component={ChatMessage} />
                     <Stack.Screen name="Filter" component={Filter} />
                   </Stack.Navigator>

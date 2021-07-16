@@ -349,7 +349,11 @@ const Home = () => {
             userDetail.token || '',
             (response) => {
               storage.setData('checkMatchProfile', JSON.stringify(response));
-              if (response.profile && response.profile.status == 'activate') {
+              if (
+                response.profile &&
+                response.profile.status == 'activate' &&
+                userDetail.user.subscription_is_active
+              ) {
                 setMatchedEnabled(true);
                 return navigation.navigate('MyConnection');
               } else if (
@@ -357,6 +361,14 @@ const Home = () => {
                 response.profile.status == 'deactivate'
               ) {
                 Toast.show({text: 'Your profile is deactivated by Admin'});
+              } else if (
+                response.profile &&
+                response.profile.verify_profile_photo &&
+                !userDetail.user.subscription_is_active
+              ) {
+                return navigation.navigate('ProfileActivation', {
+                  profile: response.profile,
+                });
               } else if (
                 response.profile &&
                 response.profile.status == 'pending_verification' &&
@@ -383,9 +395,12 @@ const Home = () => {
           console.log('exception', exception);
         }
       } else {
-        console.log('Loaded from cache');
         let response = JSON.parse(value);
-        if (response.profile && response.profile.status == 'activate') {
+        if (
+          response.profile &&
+          response.profile.status == 'activate' &&
+          userDetail.user.subscription_is_active
+        ) {
           setMatchedEnabled(true);
           return navigation.navigate('MyConnection');
         } else if (
@@ -393,6 +408,14 @@ const Home = () => {
           response.profile.status == 'deactivate'
         ) {
           Toast.show({text: 'Your profile is deactivated by Admin'});
+        } else if (
+          response.profile &&
+          response.profile.verify_profile_photo &&
+          !userDetail.user.subscription_is_active
+        ) {
+          return navigation.navigate('ProfileActivation', {
+            profile: response.profile,
+          });
         } else if (
           response.profile &&
           response.profile.status == 'pending_verification' &&
