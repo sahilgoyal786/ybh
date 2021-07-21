@@ -331,7 +331,7 @@ const Home = () => {
   };
 
   const checkCacheExpired = (value) => {
-    if (Math.floor(Date.now() / 1000) > value.timestamp + 5 * 60 * 60) {
+    if (Math.floor(Date.now() / 1000) > value.timestamp + 300) {
       return true;
     } else {
       return false;

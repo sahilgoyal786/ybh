@@ -94,5 +94,6 @@ const EndPoints = {
   shareClicks: {url: 'share-clicks'},
   userSessions: {url: 'user-sessions'},
   reportRequest: {url: 'report-users'},
+  unsubscribe: {url: 'unsubscribe'},
 };
 export default EndPoints;

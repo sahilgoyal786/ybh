@@ -65,6 +65,32 @@ class MyProfile extends React.Component {
       console.log('exception', exception);
     }
   };
+  unsubscribe = () => {
+    const user = this.context;
+    const {navigation} = this.props;
+    this.setState({isLoading: true});
+    try {
+      network.getResponse(
+        EndPoints.unsubscribe,
+        'GET',
+        {},
+        this.state.token,
+        (response) => {
+          Toast.show({text: response.message});
+          this.setState({isLoading: false});
+          user[0].user.subscription_is_active = false;
+          navigation.navigate('Welcomeuser');
+        },
+        (error) => {
+          this.setState({isLoading: false});
+          console.log('error', error);
+        },
+      );
+    } catch (exception) {
+      this.setState({isLoading: false});
+      console.log('exception', exception);
+    }
+  };
   render() {
     const {navigation} = this.props;
     const btns = [];
@@ -118,22 +144,41 @@ class MyProfile extends React.Component {
             <UserData>
               Age: {this.state.profile.age}, {this.state.profile.country}
             </UserData>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('EditMyProfile')}>
-              <View
-                style={{
-                  ...GlobalStyles.primaryBackgroundColor,
-                  padding: 5,
-                  borderRadius: 5,
-                  paddingLeft: 25,
-                  paddingRight: 25,
-                  marginTop: 15,
-                }}>
-                <Text style={{...GlobalStyles.whiteTextColor}}>
-                  Edit Profile
-                </Text>
-              </View>
-            </TouchableOpacity>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('EditMyProfile')}>
+                <View
+                  style={{
+                    ...GlobalStyles.primaryBackgroundColor,
+                    padding: 5,
+                    borderRadius: 5,
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                    marginTop: 15,
+                    marginRight: 3,
+                  }}>
+                  <Text style={{...GlobalStyles.whiteTextColor}}>
+                    Edit Profile
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.unsubscribe()}>
+                <View
+                  style={{
+                    ...GlobalStyles.errorBgColor,
+                    padding: 5,
+                    borderRadius: 5,
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                    marginTop: 15,
+                    marginLeft: 3,
+                  }}>
+                  <Text style={{...GlobalStyles.whiteTextColor}}>
+                    Unsubscribe
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
             <ProfileData>
               <ListHalfData>
                 <Label>Religion</Label>
