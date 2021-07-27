@@ -338,6 +338,38 @@ const Home = () => {
     }
   };
 
+  const loadMpUrl = (response) => {
+    let profile = response.profile;
+    if (profile && profile.status == 'activate' && response.subscription) {
+      setMatchedEnabled(true);
+      return navigation.navigate('MyConnection');
+    } else if (profile && profile.status == 'deactivate') {
+      Toast.show({text: 'Your profile is deactivated by Admin'});
+    } else if (
+      profile &&
+      profile.verify_profile_photo &&
+      !response.subscription
+    ) {
+      return navigation.navigate('ProfileActivation', {profile: profile});
+    } else if (
+      profile &&
+      profile.status == 'pending_verification' &&
+      profile.verify_profile_photo
+    ) {
+      Toast.show({
+        text: 'Your profile is awaiting for Admin Approval.',
+      });
+    } else if (
+      profile &&
+      profile.status == 'pending_verification' &&
+      !profile.verify_profile_photo
+    ) {
+      return navigation.navigate('PhotoVerification');
+    } else {
+      return navigation.navigate('matchmakingTC');
+    }
+  };
+
   const getMatchMakingProfile = () => {
     storage.getData('checkMatchProfile').then((value) => {
       if (value == null || checkCacheExpired(JSON.parse(value))) {
@@ -349,43 +381,7 @@ const Home = () => {
             userDetail.token || '',
             (response) => {
               storage.setData('checkMatchProfile', JSON.stringify(response));
-              if (
-                response.profile &&
-                response.profile.status == 'activate' &&
-                userDetail.user.subscription_is_active
-              ) {
-                setMatchedEnabled(true);
-                return navigation.navigate('MyConnection');
-              } else if (
-                response.profile &&
-                response.profile.status == 'deactivate'
-              ) {
-                Toast.show({text: 'Your profile is deactivated by Admin'});
-              } else if (
-                response.profile &&
-                response.profile.verify_profile_photo &&
-                !userDetail.user.subscription_is_active
-              ) {
-                return navigation.navigate('ProfileActivation', {
-                  profile: response.profile,
-                });
-              } else if (
-                response.profile &&
-                response.profile.status == 'pending_verification' &&
-                response.profile.verify_profile_photo
-              ) {
-                Toast.show({
-                  text: 'Your profile is awaiting for Admin Approval.',
-                });
-              } else if (
-                response.profile &&
-                response.profile.status == 'pending_verification' &&
-                !response.profile.verify_profile_photo
-              ) {
-                return navigation.navigate('PhotoVerification');
-              } else {
-                return navigation.navigate('matchmakingTC');
-              }
+              loadMpUrl(response);
             },
             (error) => {
               console.log('error', error);
@@ -396,41 +392,7 @@ const Home = () => {
         }
       } else {
         let response = JSON.parse(value);
-        if (
-          response.profile &&
-          response.profile.status == 'activate' &&
-          userDetail.user.subscription_is_active
-        ) {
-          setMatchedEnabled(true);
-          return navigation.navigate('MyConnection');
-        } else if (
-          response.profile &&
-          response.profile.status == 'deactivate'
-        ) {
-          Toast.show({text: 'Your profile is deactivated by Admin'});
-        } else if (
-          response.profile &&
-          response.profile.verify_profile_photo &&
-          !userDetail.user.subscription_is_active
-        ) {
-          return navigation.navigate('ProfileActivation', {
-            profile: response.profile,
-          });
-        } else if (
-          response.profile &&
-          response.profile.status == 'pending_verification' &&
-          response.profile.verify_profile_photo
-        ) {
-          Toast.show({text: 'Your profile is awaiting for Admin Approval.'});
-        } else if (
-          response.profile &&
-          response.profile.status == 'pending_verification' &&
-          !response.profile.verify_profile_photo
-        ) {
-          return navigation.navigate('PhotoVerification');
-        } else {
-          return navigation.navigate('matchmakingTC');
-        }
+        loadMpUrl(response);
       }
     });
   };
