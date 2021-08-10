@@ -371,30 +371,30 @@ const Home = () => {
   };
 
   const getMatchMakingProfile = () => {
-    storage.getData('checkMatchProfile').then((value) => {
-      if (value == null || checkCacheExpired(JSON.parse(value))) {
-        try {
-          network.getResponse(
-            EndPoints.checkMatchProfile,
-            'GET',
-            {},
-            userDetail.token || '',
-            (response) => {
-              storage.setData('checkMatchProfile', JSON.stringify(response));
-              loadMpUrl(response);
-            },
-            (error) => {
-              console.log('error', error);
-            },
-          );
-        } catch (exception) {
-          console.log('exception', exception);
-        }
-      } else {
-        let response = JSON.parse(value);
-        loadMpUrl(response);
-      }
-    });
+    try {
+      network.getResponse(
+        EndPoints.checkMatchProfile,
+        'GET',
+        {},
+        userDetail.token || '',
+        (response) => {
+          storage.setData('checkMatchProfile', JSON.stringify(response));
+          loadMpUrl(response);
+        },
+        (error) => {
+          console.log('error', error);
+        },
+      );
+    } catch (exception) {
+      console.log('exception', exception);
+    }
+    // storage.getData('checkMatchProfile').then((value) => {
+    //   if (value == null || checkCacheExpired(JSON.parse(value))) {
+    //   } else {
+    //     let response = JSON.parse(value);
+    //     loadMpUrl(response);
+    //   }
+    // });
   };
 
   return (
