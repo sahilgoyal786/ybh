@@ -59,13 +59,12 @@ class EditMyProfile extends React.Component {
       isLoading: true,
       showDatePicker: false,
       token: null,
-      emailValidate: false,
       profile: {
         id: null,
         username: null,
         dob: null,
         tribe: null,
-        email: null,
+        phone_number: null,
         state: null,
         country: null,
         profession: null,
@@ -107,7 +106,7 @@ class EditMyProfile extends React.Component {
             username: response.username,
             dob: response.dob,
             tribe: response.tribe,
-            email: response.email,
+            phone_number: response.phone_number,
             state: response.state,
             country: response.country,
             profession: response.profession,
@@ -186,15 +185,6 @@ class EditMyProfile extends React.Component {
       }
     });
     return validate;
-  };
-  validateEmailData = (label, value) => {
-    this.updateProfileData(label, value);
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    if (reg.test(value) === false) {
-      this.setState({emailValidate: false});
-    } else {
-      this.setState({emailValidate: true});
-    }
   };
   updateMyProfile = () => {
     const {navigation} = this.props;
@@ -289,7 +279,14 @@ class EditMyProfile extends React.Component {
         process: 6.667,
         icon: MatchIcons['icon1'],
         name: null,
-        validation: ['username', 'dob', 'tribe', 'email', 'state', 'country'],
+        validation: [
+          'username',
+          'dob',
+          'tribe',
+          'phone_number',
+          'state',
+          'country',
+        ],
         fields: [
           {
             type: 'text',
@@ -306,9 +303,9 @@ class EditMyProfile extends React.Component {
           {type: 'text', subType: 'text', name: 'tribe', placeholder: 'Tribe'},
           {
             type: 'text',
-            subType: 'email',
-            name: 'email',
-            placeholder: 'Email Address',
+            subType: 'number',
+            name: 'phone_number',
+            placeholder: 'Phone Number',
             editable: false,
           },
           {type: 'text', subType: 'text', name: 'state', placeholder: 'State'},
@@ -932,23 +929,18 @@ class EditMyProfile extends React.Component {
                       }
                     />
                   );
-                } else if (item.subType == 'email') {
+                } else if (item.subType == 'number') {
                   return (
-                    <EmailInput
+                    <PhoneInput
                       key={index}
                       editable={item.editable}
                       name={item.name}
                       value={this.state.profile[item.name]}
-                      style={
-                        !this.state.emailValidate &&
-                        this.state.profile[item.name]
-                          ? {borderBottomColor: '#f00'}
-                          : {}
-                      }
+                      style={styles.input}
                       placeholder={item.placeholder}
                       placeholderTextColor={'#afafaf'}
                       onChangeText={(text) =>
-                        this.validateEmailData(item.name, text)
+                        this.updateProfileData(item.name, text)
                       }
                     />
                   );
@@ -1283,7 +1275,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
 });
-const EmailInput = styled(TextInput)({
+const PhoneInput = styled(TextInput)({
   ...GlobalStyles.secondaryTextColor,
   padding: 10,
   borderBottomWidth: 1,

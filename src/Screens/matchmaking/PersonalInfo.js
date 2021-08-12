@@ -59,12 +59,11 @@ class PersonalInfo extends React.Component {
       isLoading: false,
       showDatePicker: false,
       token: null,
-      emailValidate: false,
       profile: {
         username: null,
         dob: '17 Jan 1996',
         tribe: null,
-        email: null,
+        phone_number: null,
         state: null,
         country: null,
         profession: null,
@@ -146,15 +145,6 @@ class PersonalInfo extends React.Component {
       }
     });
     return validate;
-  };
-  validateEmailData = (label, value) => {
-    this.updateProfileData(label, value);
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    if (reg.test(value) === false) {
-      this.setState({emailValidate: false});
-    } else {
-      this.setState({emailValidate: true});
-    }
   };
   createProfile = () => {
     const {navigation} = this.props;
@@ -251,7 +241,14 @@ class PersonalInfo extends React.Component {
         process: 6.667,
         icon: MatchIcons['icon1'],
         name: null,
-        validation: ['username', 'dob', 'tribe', 'email', 'state', 'country'],
+        validation: [
+          'username',
+          'dob',
+          'tribe',
+          'phone_number',
+          'state',
+          'country',
+        ],
         fields: [
           {
             type: 'text',
@@ -268,9 +265,9 @@ class PersonalInfo extends React.Component {
           {type: 'text', subType: 'text', name: 'tribe', placeholder: 'Tribe'},
           {
             type: 'text',
-            subType: 'email',
-            name: 'email',
-            placeholder: 'Email Address',
+            subType: 'number',
+            name: 'phone_number',
+            placeholder: 'Phone Number',
           },
           {type: 'text', subType: 'text', name: 'state', placeholder: 'State'},
           {
@@ -893,14 +890,13 @@ class PersonalInfo extends React.Component {
                       }
                     />
                   );
-                } else if (item.subType == 'email') {
+                } else if (item.subType == 'number') {
                   return (
-                    <EmailInput
+                    <PhoneInput
                       key={index}
                       name={item.name}
                       value={this.state.profile[item.name]}
                       style={
-                        !this.state.emailValidate &&
                         this.state.profile[item.name]
                           ? {borderBottomColor: '#f00'}
                           : {}
@@ -908,7 +904,7 @@ class PersonalInfo extends React.Component {
                       placeholder={item.placeholder}
                       placeholderTextColor={'#afafaf'}
                       onChangeText={(text) =>
-                        this.validateEmailData(item.name, text)
+                        this.updateProfileData(item.name, text)
                       }
                     />
                   );
@@ -1246,7 +1242,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
 });
-const EmailInput = styled(TextInput)({
+const PhoneInput = styled(TextInput)({
   ...GlobalStyles.secondaryTextColor,
   padding: 10,
   borderBottomWidth: 1,
