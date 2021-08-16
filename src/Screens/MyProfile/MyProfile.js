@@ -162,23 +162,28 @@ class MyProfile extends React.Component {
                   </Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.unsubscribe()}>
-                <View
-                  style={{
-                    ...GlobalStyles.errorBgColor,
-                    padding: 5,
-                    borderRadius: 5,
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                    marginTop: 15,
-                    marginLeft: 3,
-                  }}>
-                  <Text style={{...GlobalStyles.whiteTextColor}}>
-                    Unsubscribe
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              {this.state.profile.subscription && (
+                <TouchableOpacity onPress={() => this.unsubscribe()}>
+                  <View
+                    style={{
+                      ...GlobalStyles.errorBgColor,
+                      padding: 5,
+                      borderRadius: 5,
+                      paddingLeft: 15,
+                      paddingRight: 15,
+                      marginTop: 15,
+                      marginLeft: 3,
+                    }}>
+                    <Text style={{...GlobalStyles.whiteTextColor}}>
+                      Unsubscribe
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
             </View>
+            <Text style={{...GlobalStyles.secondaryTextColor, fontSize: 14}}>
+              Expire: {this.state.profile.sub_expire}
+            </Text>
             <ProfileData>
               <ListHalfData>
                 <Label>Religion</Label>
