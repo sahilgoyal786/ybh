@@ -181,7 +181,12 @@ class MyProfile extends React.Component {
                 </TouchableOpacity>
               )}
             </View>
-            <Text style={{...GlobalStyles.secondaryTextColor, fontSize: 14}}>
+            <Text
+              style={{
+                ...GlobalStyles.secondaryTextColor,
+                fontSize: 14,
+                marginTop: 10,
+              }}>
               Expire: {this.state.profile.sub_expire}
             </Text>
             <ProfileData>
