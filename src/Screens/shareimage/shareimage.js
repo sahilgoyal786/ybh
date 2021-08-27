@@ -134,6 +134,11 @@ const ShareImage = () => {
             contain (without limitation) any of the following: profanity, nudity
             or pornographic material.
           </FirstText>
+          <SecondaryText>
+            Please NOTE we do not accept personal pictures. You can share
+            beautiful pictures of designs, architectures, places, foods and more
+            but not images of people
+          </SecondaryText>
         </MainView>
         <MainnnView>
           <CheckBox
@@ -301,6 +306,15 @@ const FirstText = styled(Text)({
   padding: 15,
   fontFamily: 'FuturaPT-Light',
   fontSize: 14,
+  paddingBottom: 0,
+  lineHeight: 20,
+});
+const SecondaryText = styled(Text)({
+  ...GlobalStyles.secondaryTextColor,
+  padding: 15,
+  fontFamily: 'FuturaPT-Light',
+  fontSize: 14,
+  lineHeight: 20,
 });
 const SecText = styled(Text)({
   paddingTop: 1,

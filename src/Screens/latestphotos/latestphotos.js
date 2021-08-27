@@ -314,7 +314,9 @@ const LatestPhotos = ({route, navigation}) => {
                     height: widthPercentageToDP(25) - 9,
                     justifyContent: 'center',
                   }}>
-                  <Text>Nothing to show</Text>
+                  <Text style={{...GlobalStyles.secondaryTextColor}}>
+                    Nothing to show
+                  </Text>
                 </View>
               )
             }
@@ -441,7 +443,9 @@ const LatestPhotos = ({route, navigation}) => {
                     height: widthPercentageToDP(25) - 9,
                     justifyContent: 'center',
                   }}>
-                  <Text>Nothing to show</Text>
+                  <Text style={{...GlobalStyles.secondaryTextColor}}>
+                    Nothing to show
+                  </Text>
                 </View>
               )
             }

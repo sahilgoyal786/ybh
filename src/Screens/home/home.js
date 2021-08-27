@@ -340,7 +340,14 @@ const Home = () => {
 
   const loadMpUrl = (response) => {
     let profile = response.profile;
-    if (profile && profile.status == 'activate' && response.subscription) {
+    if (profile.access) {
+      setMatchedEnabled(true);
+      return navigation.navigate('MyConnection');
+    } else if (
+      profile &&
+      profile.status == 'activate' &&
+      response.subscription
+    ) {
       setMatchedEnabled(true);
       return navigation.navigate('MyConnection');
     } else if (profile && profile.status == 'deactivate') {

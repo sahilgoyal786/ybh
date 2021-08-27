@@ -51,19 +51,10 @@ const SwipeTnC = () => {
               lineHeight: 24,
               marginBottom: 10,
             }}>
-            Welcome! here we treat everyone with kindness and respect.
-          </Text>
-          <Text
-            style={{
-              ...GlobalStyles.secondaryTextColor,
-              width: '100%',
-              fontSize: 16,
-              lineHeight: 24,
-              marginBottom: 10,
-            }}>
-            In our mission to actively keep people safe while trying to meet
-            then significant other. We ask you to join us in adhering to our
-            guidelines.
+            Welcome! Here we treat every one with kindness and respect. It is
+            our mission to actively keep people safe while making friends or
+            meeting their significant other. We ask you to join us in adhering
+            to our community guidelines.
           </Text>
           <Button
             onPress={() => navigation.navigate('PhotoVerification')}

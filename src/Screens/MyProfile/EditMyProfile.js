@@ -308,7 +308,12 @@ class EditMyProfile extends React.Component {
             placeholder: 'Phone Number',
             editable: false,
           },
-          {type: 'text', subType: 'text', name: 'state', placeholder: 'State'},
+          {
+            type: 'text',
+            subType: 'text',
+            name: 'state',
+            placeholder: 'State of Origin',
+          },
           {
             type: 'dropdown',
             options: countries,
