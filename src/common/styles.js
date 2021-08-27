@@ -12,8 +12,8 @@ import {
   selectedTabCurveDark,
   UserProfileIcons,
 } from '../common/images';
-const colorScheme = Appearance.getColorScheme();
-// const colorScheme = 'light';
+// const colorScheme = Appearance.getColorScheme();
+const colorScheme = 'dark';
 
 export const GlobalImages = {
   header: colorScheme == 'light' ? headerView : headerViewDark,

@@ -269,7 +269,12 @@ class PersonalInfo extends React.Component {
             name: 'phone_number',
             placeholder: 'Phone Number',
           },
-          {type: 'text', subType: 'text', name: 'state', placeholder: 'State'},
+          {
+            type: 'text',
+            subType: 'text',
+            name: 'state',
+            placeholder: 'State of Origin',
+          },
           {
             type: 'dropdown',
             options: countries,
