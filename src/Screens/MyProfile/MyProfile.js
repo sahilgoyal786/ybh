@@ -141,9 +141,7 @@ class MyProfile extends React.Component {
               />
             </TouchableWithoutFeedback>
             <UserName>{this.state.profile.username}</UserName>
-            <UserData>
-              Age: {this.state.profile.age}, {this.state.profile.country}
-            </UserData>
+            <UserData>Age: {this.state.profile.age}</UserData>
             <View style={{display: 'flex', flexDirection: 'row'}}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('EditMyProfile')}>
@@ -213,6 +211,14 @@ class MyProfile extends React.Component {
               <ListHalfData>
                 <Label>Do you have children?</Label>
                 <LabelValue>{this.state.profile.children}</LabelValue>
+              </ListHalfData>
+              <ListHalfData>
+                <Label>State of origin</Label>
+                <LabelValue>{this.state.profile.state}</LabelValue>
+              </ListHalfData>
+              <ListHalfData>
+                <Label>Country</Label>
+                <LabelValue>{this.state.profile.country}</LabelValue>
               </ListHalfData>
             </ProfileData>
             <AboutMeSec>

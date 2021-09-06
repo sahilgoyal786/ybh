@@ -340,7 +340,10 @@ const Home = () => {
 
   const loadMpUrl = (response) => {
     let profile = response.profile;
-    if (profile.access) {
+    if (profile && profile.status == 'activate' && profile.trail_access) {
+      setMatchedEnabled(true);
+      return navigation.navigate('MyConnection');
+    } else if (profile && profile.status == 'activate' && profile.access) {
       setMatchedEnabled(true);
       return navigation.navigate('MyConnection');
     } else if (
