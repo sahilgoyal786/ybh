@@ -341,7 +341,7 @@ class MyConnection extends React.Component {
     } else {
       return (
         <ListLayout key={index} style={{marginLeft: 10, marginRight: 10}}>
-          <PUImage source={{uri: item.photo}}></PUImage>
+          <PUImage source={{uri: item.photo}} blurRadius={6}></PUImage>
           <ListData>
             <View
               style={{

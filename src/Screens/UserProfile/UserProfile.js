@@ -441,9 +441,7 @@ class UserProfile extends React.Component {
                 resizeMode="cover"></UserImage>
             </TouchableWithoutFeedback>
             <UserName>{this.state.profile.username}</UserName>
-            <UserData>
-              Age: {this.state.profile.age}, {this.state.profile.country}
-            </UserData>
+            <UserData>Age: {this.state.profile.age}</UserData>
             {btns}
             <ProfileData>
               <ListHalfData>
@@ -473,6 +471,14 @@ class UserProfile extends React.Component {
               <ListHalfData>
                 <Label>Kids</Label>
                 <LabelValue>{this.state.profile.children}</LabelValue>
+              </ListHalfData>
+              <ListHalfData>
+                <Label>State of origin</Label>
+                <LabelValue>{this.state.profile.state}</LabelValue>
+              </ListHalfData>
+              <ListHalfData>
+                <Label>Country</Label>
+                <LabelValue>{this.state.profile.country}</LabelValue>
               </ListHalfData>
             </ProfileData>
             {this.state.profile.mylist && this.state.profile.mylist.status && (
