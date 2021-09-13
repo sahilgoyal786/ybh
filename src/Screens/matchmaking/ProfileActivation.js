@@ -164,15 +164,23 @@ class ProfileActivation extends React.Component {
                 <LabelValue>{this.state.profile.children}</LabelValue>
               </ListHalfData>
             </ProfileData>
-            <Button
-              onPress={() => this.activateNow()}
-              style={{width: '100%', marginTop: 40}}
-              name={'Activate Now'}
-              linear
-            />
-            <ReloadBtn onPress={() => this.checkpaymentStatus()}>
-              Refresh Profile Status
-            </ReloadBtn>
+            {this.state.profile.trail_access ? (
+              <Text style={{...GlobalStyles.secondaryTextColor}}>
+                Free Trial Activated. Please wait for your profile approval.
+              </Text>
+            ) : (
+              <View>
+                <Button
+                  onPress={() => this.activateNow()}
+                  style={{width: '100%', marginTop: 40}}
+                  name={'Activate Now'}
+                  linear
+                />
+                <ReloadBtn onPress={() => this.checkpaymentStatus()}>
+                  Refresh Profile Status
+                </ReloadBtn>
+              </View>
+            )}
           </View>
         </ScrollView>
       </View>
