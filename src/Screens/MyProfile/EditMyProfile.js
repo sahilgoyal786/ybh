@@ -306,7 +306,6 @@ class EditMyProfile extends React.Component {
             subType: 'number',
             name: 'phone_number',
             placeholder: 'Phone Number',
-            editable: false,
           },
           {
             type: 'text',
@@ -938,8 +937,9 @@ class EditMyProfile extends React.Component {
                   return (
                     <PhoneInput
                       key={index}
-                      editable={item.editable}
                       name={item.name}
+                      maxLength={11}
+                      keyboardType="number-pad"
                       value={this.state.profile[item.name]}
                       style={styles.input}
                       placeholder={item.placeholder}

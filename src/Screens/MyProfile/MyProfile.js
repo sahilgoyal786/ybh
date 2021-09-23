@@ -185,7 +185,7 @@ class MyProfile extends React.Component {
                 fontSize: 14,
                 marginTop: 10,
               }}>
-              Expire: {this.state.profile.sub_expire}
+              Subscription renews/ends on: {this.state.profile.sub_expire}
             </Text>
             <ProfileData>
               <ListHalfData>

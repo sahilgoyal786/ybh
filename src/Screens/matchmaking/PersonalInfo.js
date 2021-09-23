@@ -901,6 +901,8 @@ class PersonalInfo extends React.Component {
                       key={index}
                       name={item.name}
                       value={this.state.profile[item.name]}
+                      maxLength={11}
+                      keyboardType="number-pad"
                       style={
                         this.state.profile[item.name]
                           ? {borderBottomColor: '#f00'}
