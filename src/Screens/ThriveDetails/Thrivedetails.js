@@ -41,6 +41,7 @@ const Thrivedetails = ({route, navigation}) => {
   const [thriveBottom, setThriveBottom] = React.useState(false);
   const [userDetail, changeUserDetail] = React.useContext(userDetailContext);
   const {article} = route.params;
+  let counter = 0;
 
   useEffect(() => {
     storage.getData('thrive_top').then((data) => {
@@ -161,7 +162,6 @@ const Thrivedetails = ({route, navigation}) => {
               }}
               listsPrefixesRenderers={{
                 ol: (htmlAttribs, children, convertedCSSStyles, passProps) => {
-                  console.log('children', children);
                   return (
                     <Text
                       style={{
@@ -170,7 +170,9 @@ const Thrivedetails = ({route, navigation}) => {
                         marginTop: 1,
                         fontSize: 12,
                       }}>
-                      {passProps.index + 1}
+                      {Number.isInteger(passProps.index + 1)
+                        ? passProps.index + 1
+                        : ++counter}
                     </Text>
                   );
                 },
